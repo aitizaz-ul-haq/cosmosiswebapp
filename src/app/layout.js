@@ -1,10 +1,11 @@
 // app/layout.js
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from "./context/UserContext"; // ✅ import provider
 
 // ✅ Add Poppins with all weights
 const poppins = Poppins({
-  subsets: ["latin"], // latin covers almost everything; latin-ext if you need extended characters
+  subsets: ["latin"], 
   variable: "--font-poppins",
   weight: [
     "100",
@@ -25,9 +26,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable}`}>
-        {/* <Header /> */}
-        <main className="site-main">{children}</main>
-        {/* <Footer /> */}
+        <UserProvider>
+          {/* <Header /> */}
+          <main className="site-main">{children}</main>
+          {/* <Footer /> */}
+        </UserProvider>
       </body>
     </html>
   );
