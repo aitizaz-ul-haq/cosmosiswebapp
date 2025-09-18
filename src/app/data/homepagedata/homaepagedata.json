@@ -1,0 +1,345 @@
+{
+  "herosection": {
+    "herobottomsectiontextbold": " secure, multi-tenant onboarding platform for asset managers",
+    "herobottomsectiontext": " “and their partners — empowering RMs, simplifying validation, and guiding clients through a seamless, step-by-step journey.”",
+    "herotitlesize": {
+      "320px": "31px",
+      "360px": "42px",
+      "375px": "46px",
+      "390px": "31px",
+      "430px": "35px",
+      "480px": "39px",
+      "600px": "50px",
+      "768px": "60px",
+      "1024px": "55px",
+      "1280px": "70px",
+      "1440px": "70px",
+      "1600px": "77px",
+      "1920px": "90px",
+      "2560px": "120px"
+    },
+    "herotitlewidth": {
+      "320px": "100%",
+      "768px": "100%",
+      "1024px": "70%",
+      "1280px": "70%",
+      "1440px": "62%",
+      "1920px": "59%"
+    },
+    "backgroundImages": {
+      "320px": "/images/cosmisis-home-screen-mobile-back.png",
+      "360px": "/images/cosmisis-home-screen-mobile-back.png",
+      "375px": "/images/cosmisis-home-screen-mobile-back.png",
+      "390px": "/images/cosmisis-home-screen-mobile-back.png",
+      "430px": "/images/cosmisis-home-screen-mobile-back.png",
+      "480px": "/images/cosmisis-home-screen-mobile-back.png",
+      "600px": "/images/cosmisis-home-screen-mobile-back.png",
+      "768px": "/images/cosmisis-home-screen-mobile-back.png",
+      "1024px": "/images/cosmisis-home-screen.png",
+      "1280px": "/images/cosmisis-home-screen.png",
+      "1440px": "/images/cosmisis-home-screen.png",
+      "1600px": "/images/cosmisis-home-screen.png",
+      "1920px": "/images/cosmisis-home-screen.png",
+      "2560px": "/images/cosmisis-home-screen.png"
+    }
+  },
+  "homepagesecondsection": {
+    "tagtitle": "Who We Are & What We Do",
+    "largeheadingleftpart": "Redefine client onboarding through precision, structure, and intelligent control",
+    "firstsectionparaone": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling RMs to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency.",
+    "secondsectionparatwo": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling RMs to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency."
+  },
+  "homepagethirdsection": {
+    "headerheading": "Features That Flow With You",
+    "headerdescription": "A secure, multi-tenant onboarding platform for asset managers and their partners — empowering RMs, simplifying validation, and guiding clients through a seamless, step-by-step journey.",
+    "headerleftimage": {
+      "alt": "cosmosis features header image",
+      "width": "307",
+      "height": "307",
+      "iconlink": "/images/header-left-image.png",
+      "title": "Multi-Step Onboarding",
+      "gridcardtitle": "Multi-Step Onboarding",
+      "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+    },
+    "thirdsectiongridcards": [
+      {
+        "id": "1",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/multisteponboarding.png",
+        "title": "Multi-Step Onboarding",
+        "gridcardtitle": "Multi-Step Onboarding",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "2",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/subscriptionmodel.png",
+        "title": "Future Subscription Model",
+        "gridcardtitle": "Future Subscription Model",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "3",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/secureformvalidation.png",
+        "title": "Secure Document Validation",
+        "gridcardtitle": "Secure Document Validation",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "4",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/stepbystep-process.png",
+        "title": "Step-by-Step Approval Process",
+        "gridcardtitle": "Step-by-Step Approval Process",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "5",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/document-generation.png",
+        "title": "Step-by-Step Approval Process",
+        "gridcardtitle": "Step-by-Step Approval Process",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "6",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/role-based-access.png",
+        "title": "Role-Based Access",
+        "gridcardtitle": "Role-Based Access",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      },
+      {
+        "id": "7",
+        "alt": "cosmosis features grid",
+        "width": "48",
+        "height": "48",
+        "iconlink": "/images/multi-company.png",
+        "title": "Multi-Company Architecture",
+        "gridcardtitle": "Multi-Company Architecture",
+        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      }
+    ]
+  },
+  "homepagefourthsection": {
+    "leftsectiontagtitle": "Benefits of Cosmosis",
+    "leftsectionheading": "Designed to Empower, Built to Deliver Results",
+    "leftsectionpara": "Cosmosis transforms client onboarding into a streamlined, intelligent experience for asset management firms, their RMs, and their clients. By automating manual steps, reducing errors, and centralizing control, Cosmosis frees teams to focus on what matters most: building relationships and delivering value. Whether you're overseeing operations or managing individual client journeys, Cosmosis provides the structure, visibility, and reliability needed to drive success.",
+    "leftsectionbenefitspoint": [
+      {
+        "id": "1",
+        "pointtext": "Faster, more accurate client onboarding"
+      },
+      {
+        "id": "2",
+        "pointtext": "Full visibility and control for Relationship Managers"
+      },
+      {
+        "id": "3",
+        "pointtext": "Secure, step-by-step process with built-in validation"
+      },
+      {
+        "id": "4",
+        "pointtext": "Enhanced compliance and reduced operational risk"
+      },
+      {
+        "id": "5",
+        "pointtext": "Scalable across teams, companies, and future partners"
+      }
+    ],
+    "rightsectionmiddleimage": {
+      "alt": "fourth section middle image",
+      "width": "474",
+      "height": "571",
+      "title": "benefits we provide",
+      "iconlink": "/images/fourth-section-middleimage.png"
+    }
+  },
+  "homepagefifthsection": {
+    "fifthsectionheading": "Your Onboarding Process, Perfected",
+    "fifthsectiondescription": "A guided, step-by-step onboarding experience designed for clarity, control, and collaboration — from initial invitation to final approval. Each stage is structured to ensure secure data collection, RM validation, and a smooth journey for every client.",
+    "fifthsectionheaderimage": {
+      "width": "182",
+      "height": "271",
+      "alt": "header image",
+      "imagelink": "/images/header_right.png",
+      "title": "fifth_section_header_right"
+    },
+    "fifthsectionpointscollection": [
+      {
+        "id": "1",
+        "width": "123",
+        "height": "123",
+        "imagelink": "/images/poin1.png",
+        "title": "first process",
+        "alt": "numeric icon",
+        "pointsheading": "RM Initiates Onboarding",
+        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+      },
+      {
+        "id": "1",
+        "width": "123",
+        "height": "123",
+        "imagelink": "/images/point2.png",
+        "title": "first process",
+        "pointsheading": "RM Initiates Onboarding",
+        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+      },
+      {
+        "id": "1",
+        "width": "123",
+        "height": "123",
+        "imagelink": "/images/point3.png",
+        "title": "first process",
+        "pointsheading": "RM Initiates Onboarding",
+        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+      },
+      {
+        "id": "1",
+        "width": "123",
+        "height": "123",
+        "imagelink": "/images/point4.png",
+        "title": "first process",
+        "pointsheading": "RM Initiates Onboarding",
+        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+      },
+      {
+        "id": "1",
+        "width": "123",
+        "height": "123",
+        "imagelink": "/images/point5.png",
+        "title": "first process",
+        "pointsheading": "RM Initiates Onboarding",
+        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+      }
+    ]
+  },
+  "homepagesixsection": {
+    "leftsectiontagtitle": "Technology Behind",
+    "leftsectionheading": "Engineered for Security, Flexibility, and Precision",
+    "leftsectionpara": "Cosmosis is built on modern, scalable web technologies designed to meet the complex needs of financial institutions. With a multi-tenant architecture, robust role-based access control (RBAC), and encrypted document handling, Cosmosis ensures every interaction is secure, compliant, and auditable. The platform integrates seamlessly with KYC/AML systems and supports future expansion with third-party onboarding via a subscription model — all powered by a clean, modular backend and an intuitive user interface built for speed and clarity.",
+    "leftsectionbenefitspoint": [
+      {
+        "id": "1",
+        "pointtext": "Secure cloud infrastructure with data isolation per company"
+      },
+      {
+        "id": "2",
+        "pointtext": "Role-based access with customizable workflows"
+      },
+      {
+        "id": "3",
+        "pointtext": "Encrypted document storage and audit logging"
+      },
+      {
+        "id": "4",
+        "pointtext": "Scalable onboarding engine for internal and external teams"
+      },
+      {
+        "id": "5",
+        "pointtext": "API-ready for integration with compliance, CRM, and analytics tools"
+      }
+    ],
+    "rightsectionsixmiddleimage": {
+      "alt": "six section middle image",
+      "width": "727",
+      "height": "891",
+      "title": "benefits we provide",
+      "iconlink": "/images/section_six_left_back.png"
+    }
+  },
+  "homepagesevensection": {
+    "leftsectiontagtitle": "Trusted by Teams",
+    "leftsectionheading": "What Our Teams Are Saying",
+    "leftsectionpara": "From relationship managers to compliance leads, our users share how Cosmosis has transformed the way they onboard clients — delivering structure, control, and confidence at every step.",
+    "rightsectiongridstripdata": [
+      {
+        "id": "1",
+        "reviewtext": "“This platform has completely streamlined how we onboard clients. The step-by-step process and real-time validation have brought structure and efficiency we were missing.”",
+        "reviewer": "— Ali Raza, RM Lead, Crescent Asset Management",
+        "alt": "fourth section middle image",
+        "width": "42",
+        "height": "42",
+        "title": "benefits we provide",
+        "iconlink": "/images/quote.png"
+      },
+      {
+        "id": "2",
+        "reviewtext": "“Having dedicated spaces for each company and role-based controls has made compliance and oversight so much easier. It’s exactly what we needed.”",
+        "reviewer": "— Sarah Malik, Compliance Officer, Apex Holdings",
+        "alt": "fourth section middle image",
+        "width": "42",
+        "height": "42",
+        "title": "benefits we provide",
+        "iconlink": "/images/quote.png"
+      },
+      {
+        "id": "3",
+        "reviewtext": "“The dashboards are intuitive and powerful. I can track every client’s progress and documentation in one place — no more chasing email threads.”",
+        "reviewer": "— Omar Khan, Senior Relationship Manager, Orion Capital",
+        "alt": "fourth section middle image",
+        "width": "42",
+        "height": "42",
+        "title": "benefits we provide",
+        "iconlink": "/images/quote.png"
+      }
+    ]
+  },
+  "homepageeightsection": {
+    "leftsectiontagtag": "Cosmosis Mission Statement",
+    "leftsectionheading": "Redefining Onboarding for a Smarter, Safer Financial Ecosystem",
+    "leftsectiontopline": "Experience the platform built to eliminate friction, ensure compliance, and accelerate onboarding.",
+    "leftsectionbottomheading": "Request a Demo",
+    "leftsectionbottomlines": [
+      {
+        "id": "1",
+        "demoline": "Dramatically Simplify Client Onboarding Across Teams & Entities",
+        "alt": "fourth section middle image",
+        "width": "41",
+        "height": "41",
+        "title": "benefits we provide",
+        "iconlink": "/images/tick.png"
+      },
+      {
+        "id": "2",
+        "demoline": "Ensure End-to-End Compliance with Evolving Regulatory Standards",
+        "alt": "fourth section middle image",
+        "width": "41",
+        "height": "41",
+        "title": "benefits we provide",
+        "iconlink": "/images/tick.png"
+      },
+      {
+        "id": "3",
+        "demoline": "Deliver a Seamless, Transparent Experience for RMs and Clients",
+        "alt": "fourth section middle image",
+        "width": "41",
+        "height": "41",
+        "title": "benefits we provide",
+        "iconlink": "/images/tick.png"
+      },
+      {
+        "id": "4",
+        "demoline": "Accelerate Time-to-Revenue by Streamlining the Full Client Journey",
+        "alt": "fourth section middle image",
+        "width": "41",
+        "height": "41",
+        "title": "benefits we provide",
+        "iconlink": "/images/tick.png"
+      }
+    ]
+  }
+}

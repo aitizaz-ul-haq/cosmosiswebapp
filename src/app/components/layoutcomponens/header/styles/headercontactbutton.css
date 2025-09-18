@@ -1,0 +1,43 @@
+.header-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  height: 45px;
+  color: var(--sitewhite);
+  font-size: 15px;
+  font-weight: 600;
+  background-color: var(--sitegreen);
+  border: none;
+  border-radius: 50px;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+}
+
+.header-contact-button:hover {
+  color: var(--sitedark);
+  background-color: var(--sitewhite);
+}
+
+.header-contact-button-two {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  height: 45px;
+  color: var(--sitewhite);
+  font-size: 15px;
+  font-weight: 600;
+  background-color: var(--sitedark);
+  border: none;
+  border-radius: 50px;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+}
+
+.header-contact-button-two:hover {
+  color: var(--sitedark);
+  background-color: var(--sitewhite);
+}

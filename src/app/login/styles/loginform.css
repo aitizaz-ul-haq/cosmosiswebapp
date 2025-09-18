@@ -1,0 +1,58 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  max-width: 350px; /* optional */
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: var(--sitegreen); /* Next.js blue */
+}
+
+.form-input.error {
+  border-color: red;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+  min-height: 14px; /* keeps space even if no error */
+}
+
+.login-btn {
+  width: 100%;
+  padding: 11px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--sitegreen);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: var(--sitedark);
+}
+

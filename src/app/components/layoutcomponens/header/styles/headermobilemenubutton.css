@@ -1,0 +1,335 @@
+/* Button styling */
+.header-mobile-menu-button {
+  width: 50px;
+  height: 50px;
+  padding: 0.1rem;
+  border: none;
+  /* border-radius: 7px; */
+  background: var(--dark-navy-color);
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--dark-navy-color);
+}
+
+/* Full-screen mobile menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(89, 195, 195, 0.9);  */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: rgba(255, 255, 255, 0.2); /* White with opacity */
+  backdrop-filter: blur(20px); /* Background blur */
+  -webkit-backdrop-filter: blur(20px); /* Safari support */
+  z-index: 9999;
+}
+
+/* Close button */
+.mobile-menu-close-button {
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 5.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.mobile-menu-logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 6rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.mobile-menu-close-button:hover {
+  color: black;
+  transform: scale(1.2);
+}
+
+/* Center the menu items */
+.mobile-menu ul {
+  list-style: none; /* Remove bullets */
+  padding-left: 1.2rem;
+  margin: 0;
+  text-align: left;
+}
+
+.mobile-menu li {
+  margin: 0.6rem 0; /* Space between items */
+}
+
+.mobile-menu a {
+  text-decoration: none; /* Remove underline */
+  color: black;
+  font-size: 2rem; /* Large text */
+  font-family: var(--font-playfair);
+  font-weight: 200;
+  transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.submenu-toggle {
+  text-decoration: none; /* Remove underline */
+  color: black;
+  font-size: 2.5rem; /* Large text */
+  font-family: var(--font-playfair);
+  font-weight: 200;
+  transition: color 0.3s ease; /* Smooth hover effect */
+  background: none;
+  border: none;
+}
+
+.submenu-item {
+  color: var(--white-text-color) !important; /* White text */
+  font-size: 1rem !important; /* Large text */
+  font-family: var(--font-playfair) !important;
+  font-weight: 200 !important;
+  transition: color 0.3s ease !important;
+}
+
+.mobile-menu a:hover {
+  color: black; /* Highlight color on hover */
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.submenu.active {
+  max-height: 500px;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.font-poppins {
+  /* Adjust underline appearance */
+  text-decoration: underline;
+  text-decoration-color: #ff6700; /* custom colour */
+  text-decoration-thickness: 1px; /* thickness */
+  text-underline-offset: 5px; /* distance from text */
+}
+
+/* Small phones (<= 320px) */
+@media (max-width: 320px) {
+  .mobile-menu a {
+    font-size: 1.2rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.7rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Standard small phones (<= 360px) */
+@media (max-width: 360px) {
+  .mobile-menu a {
+    font-size: 1.7rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.7rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Standard small phones (<= 360px) */
+@media (max-width: 375px) {
+  .mobile-menu a {
+    font-size: 1.5rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.5rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* iPhone 14, 15 (standard model) */
+@media (min-width: 390px) {
+  .mobile-menu a {
+    font-size: 1.9rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.9rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* iPhone 14 Pro, 15 Pro */
+@media (min-width: 430px) {
+  .mobile-menu a {
+    font-size: 1.9rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.9rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Larger phones and phablets (>= 480px) */
+@media (min-width: 480px) {
+  .mobile-menu a {
+    font-size: 1.9rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.9rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Iphone SE */
+@media (width: 375px) and (height: 667px) {
+  .mobile-menu a {
+    font-size: 1.2rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.2rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Iphone XR */
+@media (width: 414px) and (height: 896px) {
+}
+
+/* Iphone 12 Pro */
+@media (width: 390px) and (height: 844px) {
+}
+
+/* Iphone 14 Pro Max */
+@media (width: 430px) and (height: 932px) {
+}
+
+/* Pixel 7 */
+@media (width: 412px) and (height: 915px) {
+}
+
+/* Samsung Galaxy S8+ */
+@media (width: 360px) and (height: 740px) {
+  .mobile-menu a {
+    font-size: 1.9rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.9rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.4rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Samsung Galaxy S20 Ultra */
+@media (width: 412px) and (height: 915px) {
+}
+
+/* iPad Mini */
+@media (width: 768px) and (height: 1024px) {
+}
+
+/* iPad Air */
+@media (width: 820px) and (height: 1180px) {
+}
+
+/* iPad Pro */
+@media (width: 1024px) and (height: 1366px) {
+}
+
+/* Surface Pro 7 */
+@media (width: 912px) and (height: 1368px) {
+}
+
+/* Surface Duo*/
+@media (width: 540px) and (height: 720px) {
+  .mobile-menu a {
+    font-size: 1.7rem; /* Large text */
+  }
+
+  .submenu-toggle {
+    font-size: 1.7rem;
+    font-weight: 200;
+  }
+
+  .submenu-item {
+    font-size: 1.2rem !important; /* Large text */
+    font-weight: 300 !important;
+  }
+}
+
+/* Samsung Galaxy A51/71 */
+@media (width: 412px) and (height: 914px) {
+}
+
+/* Nest Hub */
+@media (width: 1024px) and (height: 600px) {
+}
+
+/* Nest Hub Max */
+@media (width: 1280px) and (height: 800px) {
+}

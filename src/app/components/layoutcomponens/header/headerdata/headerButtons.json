@@ -1,0 +1,8 @@
+[
+  { "name": "About", "link": "#about", "title": "Back to homepage" },
+  { "name": "Features", "link": "#features", "title": "Back to homepage" },
+  { "name": "Benefits", "link": "#benefits", "title": "Find out who we are" },
+  { "name": "Process", "link": "#process", "title": "Find out who we are" },
+  { "name": "Technology", "link": "#technology", "title": "Back to homepage" },
+  { "name": "Reviews", "link": "#reviews", "title": "Find out who we are" }
+]

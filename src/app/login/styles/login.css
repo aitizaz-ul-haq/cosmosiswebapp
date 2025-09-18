@@ -1,0 +1,104 @@
+.login-container {
+  width: 100%;
+  height: 100vh; /* full viewport height */
+  background-image: url("/images/login-back.png");
+  background-size: cover; /* make sure it fills screen */
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.login-topsection {
+  width: 100%;
+}
+
+.topsection-text-container {
+  width: 50%;
+  padding: 1rem;
+}
+
+.bottomsection-text-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.bottomsection-description {
+  color: var(--sitedark);
+}
+
+.topsection-heading {
+  font-size: 44px;
+  color: var(--sitedark);
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -1px;
+  -webkit-text-stroke: 2px var(--sitedark);
+}
+
+.topsection-description {
+  color: var(--sitedark);
+  font-size: 18px;
+}
+
+.login-midsection {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 19rem;
+}
+
+.midsection-leftpart {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.midsection-rightpart {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.midsection-rightpart-loginform-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.loginform-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.loginform-heading {
+  font-size: 32px;
+  color: var(--sitedark);
+}
+
+.forgot-password-line {
+  color: var(--sitedark);
+}
+
+.backbutton {
+  border: none;
+  background: none;
+  color: var(--sitedark);
+  font-size: 16px;
+  cursor: pointer;
+}
