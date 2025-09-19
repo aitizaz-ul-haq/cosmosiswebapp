@@ -7,17 +7,26 @@ import { logUIAction } from "@/lib/logUIAction";
 
 import "../../styles/loginform.css";
 
-export default function MidSectionLoginFormSection() {
+export default function MidSectionLoginFormSection({ setLoading }) {
   const { login } = useUser();
   const router = useRouter();
   const [error, setError] = useState("");
+  const [pendingError, setPendingError] = useState(""); 
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); 
+    setPendingError(""); 
+    setLoading(true); // show loader immediately
+    const startTime = Date.now();
+
     const username = e.target.username.value.trim();
     const password = e.target.password.value.trim();
 
     const loggedInUser = await login(username, password);
+
+    const elapsed = Date.now() - startTime;
+    const minDuration = 3000; // 3 seconds
 
     if (loggedInUser) {
       // ✅ Log successful login
@@ -32,12 +41,12 @@ export default function MidSectionLoginFormSection() {
         credentials: "include",
       });
 
-      router.push("/dashboard");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, Math.max(0, minDuration - elapsed));
     } else {
-      setError("Invalid username or password ❌");
+      // ❌ Wrong credentials
       await logUIAction("login_failed", { username });
-
-      // ❌ Log failed login attempt
       await fetch("/api/log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,6 +56,16 @@ export default function MidSectionLoginFormSection() {
         }),
         credentials: "include",
       });
+
+     
+
+      setTimeout(() => {
+        setLoading(false); 
+        setError(pendingError || "Invalid username or password ❌");
+      }, Math.max(0, minDuration - elapsed));
+
+       // 🔹 Store the error immediately, show it once loader hides
+      setPendingError("Invalid username or password ❌");
     }
   };
 

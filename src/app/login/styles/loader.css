@@ -1,0 +1,29 @@
+/* ✅ Loader Overlay */
+.loader-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;   /* fills the right part */
+  width: 100%;
+}
+
+.loader {
+  border: 8px solid white; /* background ring */
+  border-top: 8px solid #21CFB2;; /* spinner color (editable via prop) */
+  border-radius: 50%;
+  width: 70px;  /* default size */
+  height: 70px; /* default size */
+  animation: spin 1s linear infinite;
+}
+
+.loader-overlay p {
+  margin-top: 15px;
+  font-size: 32px;
+  color: var(--sitedark); /* change text color */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
