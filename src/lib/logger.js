@@ -1,22 +1,62 @@
-// src/lib/logger.js
-import Log from "@/models/Log";
-import { connectToDatabase } from "@/lib/mongodb";
+// src/lib/logger.js (frontend version)
+let logBuffer = [];
+let flushTimer = null;
 
-export async function logAction({ user, action, metadata = {}, req }) {
-  try {
-    await connectToDatabase();
+// 🔹 Log a UI action (default: batched)
+export function logUIAction(action, metadata = {}, immediate = false) {
+  const logEntry = {
+    action,
+    metadata,
+    timestamp: Date.now(),
+  };
 
-    const log = new Log({
-      userId: user.id,
-      role: user.role,
-      action,
-      metadata,
-      ip: req?.headers?.get("x-forwarded-for") || "unknown",
-      userAgent: req?.headers?.get("user-agent") || "unknown",
-    });
-
-    await log.save();
-  } catch (err) {
-    console.error("Failed to log action:", err);
+  if (immediate) {
+    // 🚀 send directly (critical events: login, logout, errors)
+    sendLogs([logEntry]);
+  } else {
+    // 🌀 batch it
+    logBuffer.push(logEntry);
+    if (logBuffer.length >= 10) flushLogs(); // flush when 10 logs
+    scheduleFlush(); // schedule timed flush
   }
+}
+
+// 🔹 Flush logs (send current buffer)
+async function flushLogs() {
+  if (logBuffer.length === 0) return;
+
+  const logsToSend = [...logBuffer];
+  logBuffer = [];
+
+  await sendLogs(logsToSend);
+}
+
+// 🔹 Send logs to backend
+async function sendLogs(logs) {
+  try {
+    await fetch("/api/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ logs }),
+      credentials: "include",
+    });
+  } catch (err) {
+    console.error("Failed to send logs:", err);
+    // 🔁 Optionally, requeue logs on failure
+    logBuffer.push(...logs);
+  }
+}
+
+// 🔹 Schedule auto-flush every 5 seconds
+function scheduleFlush() {
+  if (flushTimer) return; // already scheduled
+  flushTimer = setTimeout(() => {
+    flushLogs();
+    flushTimer = null;
+  }, 5000);
+}
+
+// 🔹 Before page unload → flush
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", flushLogs);
 }

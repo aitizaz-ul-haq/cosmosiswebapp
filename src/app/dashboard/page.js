@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashboardShell from "./components/dashboardshell/dashboardshell";
 import { dashboardConfigs } from "./config";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function Dashboard() {
   const { user, logout } = useUser();

@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 
 const LogSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    role: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+    role: { type: String, required: false, default: "guest" },
     action: { type: String, required: true },
     metadata: { type: Object, default: {} },
     ip: { type: String },
     userAgent: { type: String },
   },
-  { timestamps: true } // adds createdAt, updatedAt
+  { timestamps: true }
 );
 
 export default mongoose.models.Log || mongoose.model("Log", LogSchema);

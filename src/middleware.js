@@ -7,7 +7,7 @@ const PUBLIC_PATHS = ["/login", "/api/login", "/api/register"];
 
 // ✅ Role-based route mapping
 const ROLE_RULES = {
-  superadmin: ["/dashboard", "/api/companies", "/api/users"], // full access
+  superadmin: ["/dashboard", "/api/companies", "/api/users", "/api/log"], // full access
   supervisor: ["/dashboard", "/api/users"], // can manage RMs/clients inside own company
   rm: ["/dashboard", "/api/users"], // can manage clients only
   client: ["/dashboard"], // only own dashboard
@@ -15,7 +15,10 @@ const ROLE_RULES = {
 
 async function verifyJWT(token) {
   try {
-    return await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    return await jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
   } catch (err) {
     return null;
   }
@@ -45,7 +48,9 @@ export async function middleware(req) {
 
   // ✅ role-based access check
   const allowedPaths = ROLE_RULES[user.role] || [];
-  const isAllowed = allowedPaths.some((allowed) => pathname.startsWith(allowed));
+  const isAllowed = allowedPaths.some((allowed) =>
+    pathname.startsWith(allowed)
+  );
 
   if (!isAllowed) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });

@@ -3,7 +3,7 @@
 import { useUser } from "../../../context/UserContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import { logUIAction } from "@/lib/logUIAction";
 
 import "../../styles/loginform.css";
 
