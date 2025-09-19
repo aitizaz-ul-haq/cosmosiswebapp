@@ -12,12 +12,15 @@ export default function MidSectionLoginFormSection() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const username = e.target.username.value.trim();
     const password = e.target.password.value.trim();
 
-    if (login(username, password)) {
+    const loggedInUser = await login(username, password);
+
+    if (loggedInUser) {
+      // No need to redirect to /superadmin or /supervisor
       router.push("/dashboard");
     } else {
       setError("Invalid username or password ❌");

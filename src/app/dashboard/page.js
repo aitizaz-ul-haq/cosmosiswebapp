@@ -4,8 +4,13 @@ import { useUser } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import SuperAdminDashboard from "./components/superadmindashboard/superadmindashboard";
+import SupervisorDashboard from "./components/supervisordashboard/supervisordashboard";
+import RmDashboard from "./components/rmdashboard/rmdashboard";
+import ClientDashboard from "./components/clientdashboard/clientdashboard";
+
 export default function Dashboard() {
-  const { user, logout } = useUser(); // ✅ include logout
+  const { user, logout } = useUser();
   const router = useRouter();
 
   useEffect(() => {
@@ -15,8 +20,8 @@ export default function Dashboard() {
   if (!user) return <p>Loading...</p>;
 
   const handleLogout = () => {
-    logout();              // clear user state
-    router.push("/login"); // redirect to login
+    logout();
+    router.push("/login");
   };
 
   return (
@@ -24,10 +29,10 @@ export default function Dashboard() {
       <h1>Welcome, {user.username} 👋</h1>
       <p>Your role: {user.role}</p>
 
-      {user.role === "admin" && <p>Admin dashboard content</p>}
-      {user.role === "supervisor" && <p>Supervisor dashboard content</p>}
-      {user.role === "rm" && <p>Relationship Manager dashboard content</p>}
-      {user.role === "client" && <p>Client dashboard content</p>}
+      {user.role === "superadmin" && <SuperAdminDashboard />}
+      {user.role === "supervisor" && <SupervisorDashboard />}
+      {user.role === "rm" && <RmDashboard />}
+      {user.role === "client" && <ClientDashboard />}
 
       <button onClick={handleLogout} style={{ marginTop: "20px" }}>
         Log Out
