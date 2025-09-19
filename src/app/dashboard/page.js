@@ -1,17 +1,16 @@
+// src/app/dashboard/page.js
 "use client";
 
 import { useUser } from "../context/UserContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-import SuperAdminDashboard from "./components/superadmindashboard/superadmindashboard";
-import SupervisorDashboard from "./components/supervisordashboard/supervisordashboard";
-import RmDashboard from "./components/rmdashboard/rmdashboard";
-import ClientDashboard from "./components/clientdashboard/clientdashboard";
+import { useEffect, useState } from "react";
+import DashboardShell from "./components/dashboardshell/dashboardshell";
+import { dashboardConfigs } from "./config";
 
 export default function Dashboard() {
   const { user, logout } = useUser();
   const router = useRouter();
+  const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
     if (!user) router.push("/login");
@@ -24,19 +23,15 @@ export default function Dashboard() {
     router.push("/login");
   };
 
+  const config = dashboardConfigs[user.role] || dashboardConfigs.client;
+
   return (
-    <div>
+    <DashboardShell config={config} onLogout={handleLogout}>
       <h1>Welcome, {user.username} 👋</h1>
-      <p>Your role: {user.role}</p>
+      <p>Role: {user.role}</p>
 
-      {user.role === "superadmin" && <SuperAdminDashboard />}
-      {user.role === "supervisor" && <SupervisorDashboard />}
-      {user.role === "rm" && <RmDashboard />}
-      {user.role === "client" && <ClientDashboard />}
-
-      <button onClick={handleLogout} style={{ marginTop: "20px" }}>
-        Log Out
-      </button>
-    </div>
+      {/* You can later add role-based main content */}
+      <div>Main dashboard content for {user.role}</div>
+    </DashboardShell>
   );
 }
