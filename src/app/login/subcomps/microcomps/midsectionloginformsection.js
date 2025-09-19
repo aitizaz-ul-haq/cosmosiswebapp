@@ -20,10 +20,33 @@ export default function MidSectionLoginFormSection() {
     const loggedInUser = await login(username, password);
 
     if (loggedInUser) {
-      // No need to redirect to /superadmin or /supervisor
+      // ✅ Log successful login
+      await logUIAction("login_success", { username });
+      await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "login_success",
+          metadata: { username },
+        }),
+        credentials: "include",
+      });
+
       router.push("/dashboard");
     } else {
       setError("Invalid username or password ❌");
+      await logUIAction("login_failed", { username });
+
+      // ❌ Log failed login attempt
+      await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "login_failed",
+          metadata: { username },
+        }),
+        credentials: "include",
+      });
     }
   };
 

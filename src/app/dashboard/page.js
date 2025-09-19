@@ -18,7 +18,18 @@ export default function Dashboard() {
 
   if (!user) return <p>Loading...</p>;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // ✅ Log logout before clearing state
+    await fetch("/api/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "logout",
+        metadata: { username: user.username },
+      }),
+      credentials: "include",
+    });
+    await logUIAction("logout", { username: user.username });
     logout();
     router.push("/login");
   };
@@ -26,12 +37,10 @@ export default function Dashboard() {
   const config = dashboardConfigs[user.role] || dashboardConfigs.client;
 
   return (
-    <DashboardShell config={config} onLogout={handleLogout}>
-      <h1>Welcome, {user.username} 👋</h1>
-      <p>Role: {user.role}</p>
-
-      {/* You can later add role-based main content */}
-      <div>Main dashboard content for {user.role}</div>
-    </DashboardShell>
+    <DashboardShell
+      config={config}
+      onLogout={handleLogout}
+      user={user}
+    ></DashboardShell>
   );
 }

@@ -1,7 +1,7 @@
 // src/app/dashboard/DashboardShell.js
 "use client";
 
-export default function DashboardShell({ config, onLogout, children }) {
+export default function DashboardShell({ config, onLogout, children, user }) {
   return (
     <div className="dashboard-container">
       {/* Header */}
@@ -12,6 +12,11 @@ export default function DashboardShell({ config, onLogout, children }) {
 
       {/* Layout */}
       <div className="dashboard-body">
+        <h1>Welcome, {user.username} 👋</h1>
+        <p>Role: {user.role}</p>
+
+        {/* You can later add role-based main content */}
+        <div>Main dashboard content for {user.role}</div>
         {/* Sidebar */}
         <aside className="dashboard-sidebar">
           <ul>
@@ -22,9 +27,7 @@ export default function DashboardShell({ config, onLogout, children }) {
         </aside>
 
         {/* Main Content */}
-        <main className="dashboard-main">
-          {children}
-        </main>
+        <main className="dashboard-main">{children}</main>
       </div>
     </div>
   );
