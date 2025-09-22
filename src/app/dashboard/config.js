@@ -4,9 +4,15 @@ export const dashboardConfigs = {
     header: { logoText: "Super Admin" },
     sidebar: {
       menu: [
-        { key: "companies", label: "Manage Companies" },
-        { key: "users", label: "Manage Supervisors" },
-        { key: "settings", label: "Settings" },
+        { key: "dashboard", label: "Dashboard" },
+        { key: "companies", label: "Companies" },
+        { key: "supervisors", label: "Suprevisors" },
+        { key: "users", label: "Users" },
+        { key: "logs", label: "Logs" },
+        { key: "reports", label: "Reports" },
+        { key: "notifications", label: "Notifications" },
+        { key: "system settings", label: "System Settings" },
+        { key: "profile", label: "Profile" },
       ],
     },
   },

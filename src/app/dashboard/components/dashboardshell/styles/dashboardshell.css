@@ -1,0 +1,69 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #fdfbf9;
+  width: 100%;
+  height: 100vh;
+}
+
+.dashboard-sidebar-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10rem;
+  width: 15%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  background-color: var(--sitedark);
+  color: #fdfbf9;
+}
+
+.dashboard-sidebar-menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  width: 56%;
+}
+
+.menu-options {
+  font-size: 20px;
+}
+
+.dashboard-details-section {
+  width: 85%;
+}
+
+.dasboard-header-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* align-items: left; */
+  /* text-align: center; */
+  padding: 0.8rem;
+  width: 100%;
+  height: 80px;
+  background-color: var(--sitegreen);
+  color: #fdfbf9;
+  font-weight: 600;
+}
+
+.dashboard-header-text-conatiner {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 600;
+}
+
+.dashboard-header-heading {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.dashboard-logout-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
