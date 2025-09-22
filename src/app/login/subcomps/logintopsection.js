@@ -1,8 +1,8 @@
 import TopSectionTextContainer from "./microcomps/topsectiontextcontainer";
 
-import SuccessLoginNotifs from "./notifs/successloginnotif";
-import FailureLoginNotifs from "./notifs/failureloginnotifs";
-import InfoLoginNotifs from "./notifs/infologinnotifs";
+// import SuccessLoginNotifs from "./notifs/successloginnotif";
+// import FailureLoginNotifs from "./notifs/failureloginnotifs";
+// import InfoLoginNotifs from "./notifs/infologinnotifs";
 
 export default function LoginTopSection({
   loginpagetitle,
