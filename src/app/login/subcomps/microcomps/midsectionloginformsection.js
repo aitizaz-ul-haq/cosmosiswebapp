@@ -5,19 +5,32 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { logUIAction } from "@/lib/logUIAction";
 
+import SuccessLoginNotifs from "../notifs/successloginnotif";
+import FailureLoginNotifs from "../notifs/failureloginnotifs";
+import InfoLoginNotifs from "../notifs/infologinnotifs";
+
 import "../../styles/loginform.css";
 
-export default function MidSectionLoginFormSection({ setLoading }) {
+export default function MidSectionLoginFormSection({
+  setLoading,
+  setShowSuccessToast,
+  setShowFailureToast,
+  setShowInfoToast,
+  showSuccessToast,
+  showFailureToast,
+  showInfoToast,
+}) {
   const { login } = useUser();
   const router = useRouter();
-  const [error, setError] = useState("");
-  const [pendingError, setPendingError] = useState(""); 
 
- const handleSubmit = async (e) => {
+  const [error, setError] = useState("");
+  const [pendingError, setPendingError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
-    setPendingError(""); 
-    setLoading(true); // show loader immediately
+    setError("");
+    setPendingError("");
+    setLoading(true);
     const startTime = Date.now();
 
     const username = e.target.username.value.trim();
@@ -26,10 +39,9 @@ export default function MidSectionLoginFormSection({ setLoading }) {
     const loggedInUser = await login(username, password);
 
     const elapsed = Date.now() - startTime;
-    const minDuration = 3000; // 3 seconds
+    const minDuration = 3000;
 
     if (loggedInUser) {
-      // ✅ Log successful login
       await logUIAction("login_success", { username });
       await fetch("/api/log", {
         method: "POST",
@@ -41,11 +53,13 @@ export default function MidSectionLoginFormSection({ setLoading }) {
         credentials: "include",
       });
 
+      setShowSuccessToast(true);
+
       setTimeout(() => {
+        setShowSuccessToast(false);
         router.push("/dashboard");
       }, Math.max(0, minDuration - elapsed));
     } else {
-      // ❌ Wrong credentials
       await logUIAction("login_failed", { username });
       await fetch("/api/log", {
         method: "POST",
@@ -57,20 +71,30 @@ export default function MidSectionLoginFormSection({ setLoading }) {
         credentials: "include",
       });
 
-     
+      setShowFailureToast(true);
+      setShowInfoToast(true);
 
       setTimeout(() => {
-        setLoading(false); 
+        setLoading(false);
         setError(pendingError || "Invalid username or password ❌");
+
+        setTimeout(() => {
+          setShowFailureToast(false);
+          setShowInfoToast(false);
+        }, 3000); // auto hide after 3s
       }, Math.max(0, minDuration - elapsed));
 
-       // 🔹 Store the error immediately, show it once loader hides
       setPendingError("Invalid username or password ❌");
     }
   };
 
   return (
     <div className="loginform-section">
+     {/* ✅ Toasts only render if flags are true */}
+      {showSuccessToast && <SuccessLoginNotifs />}
+      {showFailureToast && <FailureLoginNotifs />}
+      {showInfoToast && <InfoLoginNotifs />}
+
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input

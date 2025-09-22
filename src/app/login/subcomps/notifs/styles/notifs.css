@@ -1,0 +1,126 @@
+.failurenotif-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  background-color: rgb(238, 232, 232);
+  border-radius: 11px;
+  padding: 0.5rem;
+  border: 1px solid red;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 28%;
+  height: 96px;
+}
+
+.failurenotif-text-conatiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  text-align: left;
+}
+
+.failure-icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.failurenotif-description {
+  font-size: 12px;
+  color: var(--sitedark);
+}
+
+.notif-icon {
+  padding-top: 0.1rem;
+}
+
+.successnotif-container {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  gap: 1rem;
+  /* width: 85%; */
+  background-color: rgb(229, 241, 229);
+  border-radius: 11px;
+  padding: 0.5rem;
+  border: 1px solid green;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 28%;
+  height: 96px;
+}
+
+.successnotif-text-conatiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  text-align: left;
+}
+
+.success-icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.successnotif-description {
+  font-size: 12px;
+  color: var(--sitedark);
+}
+
+.notif-icon {
+  padding-top: 0.1rem;
+}
+
+.infonotif-container {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  gap: 1rem;
+  /* width: 85%; */
+  background-color: rgb(237, 237, 247);
+  border-radius: 11px;
+  padding: 0.5rem;
+  border: 1px solid blue;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: fixed;
+  top: 140px;
+  right: 20px;
+  width: 28%;
+  height: 96px;
+}
+
+.infonotif-text-conatiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  text-align: left;
+}
+
+.info-icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.infonotif-description {
+  font-size: 12px;
+  color: var(--sitedark);
+}
+
+.notif-icon {
+  padding-top: 0.1rem;
+}
