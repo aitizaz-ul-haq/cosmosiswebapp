@@ -22,13 +22,13 @@
 .dashboard-sidebar-menu-container {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  width: 56%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* text-align: left; */
+  gap: 0.4rem;
+  width: 80%;
 }
 
-.menu-options {
-  font-size: 20px;
-}
 
 .dashboard-details-section {
   width: 85%;
@@ -63,7 +63,31 @@
 }
 
 .dashboard-logout-button {
-    border: none;
-    background: none;
-    cursor: pointer;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.menu-options {
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 17px;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.menu-options:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* width: 100%; */
+}
+
+.menu-options.active {
+  background-color: var(--sitegreen);
+  font-weight: 600;
+  /* width: 100%; */
 }
