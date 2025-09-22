@@ -3,10 +3,10 @@
 import { useUser } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import DashboardShell from "./components/dashboardshell/dashboardshell";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
 
+import DashboardShell from "./components/dashboardshell/dashboardshell";
 import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
 import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
