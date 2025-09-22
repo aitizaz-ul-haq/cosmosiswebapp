@@ -29,6 +29,10 @@
   width: 80%;
 }
 
+/* .dashboard-menu-icon {
+    width: 11px;
+    height: 11px;
+} */
 
 .dashboard-details-section {
   width: 85%;
@@ -75,7 +79,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.7rem;
   font-size: 17px;
   width: 100%;
   padding: 0.5rem;

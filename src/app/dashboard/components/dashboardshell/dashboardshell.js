@@ -35,9 +35,6 @@ export default function DashboardShell({
               key={item.key}
               onClick={() => setActiveMenu(item.key)}
             >
-              {/* <div className="menu-icon-container">
-               
-              </div> */}
               <Image
                 src={item.iconlink}
                 width="32"
