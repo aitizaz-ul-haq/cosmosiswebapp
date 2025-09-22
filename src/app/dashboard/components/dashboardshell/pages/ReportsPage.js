@@ -1,4 +1,4 @@
 // CompaniesPage.js
 export default function ReportsPage() {
-  return <div>📊 Manage Companies (table of all companies here)</div>;
+  return <div>Reports (table of all reports here)</div>;
 }
