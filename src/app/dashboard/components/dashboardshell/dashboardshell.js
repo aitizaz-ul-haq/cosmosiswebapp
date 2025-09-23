@@ -46,9 +46,9 @@ export default function DashboardShell({
           ))}
         </div>
       </div>
-
       {/* Main Section */}
       <div className="dashboard-details-section">
+        {/* Header Section */}
         <div className="dasboard-header-section">
           <div className="dashboard-header-text-conatiner">
             <h1 className="dashboard-header-heading">{user.username}</h1>
@@ -63,7 +63,7 @@ export default function DashboardShell({
             />
           </button>
         </div>
-
+        {/* Main Section */}
         <div className="dashboard-menus-section">{children}</div>
       </div>
     </div>
