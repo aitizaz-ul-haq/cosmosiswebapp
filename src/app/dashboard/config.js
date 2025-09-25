@@ -10,7 +10,7 @@ export const dashboardConfigs = {
           iconlink: "/images/dashboard.png",
         },
         {
-          key: "demo request",
+          key: "requesteddemonstration",
           label: "Demo Requests",
           iconlink: "/images/request.png",
         },

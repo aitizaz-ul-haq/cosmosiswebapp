@@ -90,6 +90,7 @@ export default function DemoRequestsTable() {
   return (
     <div>
       <h2>Demo Requests</h2>
+      {/* <h1>TANSTACK DEMO REQUESTS PAGE</h1> */}
       <table>
         <thead>
           {table.getHeaderGroups().map((hg) => (
@@ -107,7 +108,7 @@ export default function DemoRequestsTable() {
             </tr>
           ))}
         </thead>
-        asdasdasdas
+        {/* asdasdasdas */}
                 <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
