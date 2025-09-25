@@ -1,15 +1,26 @@
 import nodemailer from "nodemailer";
+import { connectToDatabase } from "@/lib/mongodb";
+import DemoRequest from "@/models/DemoRequest";
 
 export async function POST(req) {
   try {
     const body = await req.json();
     const { firstname, lastname, email, phone, company, role, message } = body;
 
-    console.log("📩 Incoming request body:", body);
-    console.log("🔑 ENV SMTP_USER:", process.env.SMTP_USER);
-    console.log("🔑 ENV SMTP_PASS:", process.env.SMTP_PASS ? "DEFINED" : "MISSING");
-    console.log("🔑 ENV SUPERADMIN_EMAIL:", process.env.SUPERADMIN_EMAIL);
+    // 1. Save request in DB
+    await connectToDatabase();
+    const demoRequest = new DemoRequest({
+      firstname,
+      lastname,
+      email,
+      phone,
+      company,
+      role,
+      message,
+    });
+    await demoRequest.save();
 
+    // 2. Setup transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
@@ -20,6 +31,7 @@ export async function POST(req) {
       },
     });
 
+    // 3. Email to Super Admin
     const adminMailOptions = {
       from: `"Cosmosis Demo Request" <${process.env.SMTP_USER}>`,
       to: process.env.SUPERADMIN_EMAIL,
@@ -35,6 +47,7 @@ export async function POST(req) {
       `,
     };
 
+    // 4. Auto-response to user
     const userMailOptions = {
       from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
       to: email,
@@ -42,15 +55,15 @@ export async function POST(req) {
       html: `<p>Thank you, ${firstname}! We received your request.</p>`,
     };
 
-    const infoAdmin = await transporter.sendMail(adminMailOptions);
-    console.log("✅ Admin mail sent:", infoAdmin.response);
+    await transporter.sendMail(adminMailOptions);
+    await transporter.sendMail(userMailOptions);
 
-    const infoUser = await transporter.sendMail(userMailOptions);
-    console.log("✅ User mail sent:", infoUser.response);
-
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    return new Response(
+      JSON.stringify({ success: true, message: "Emails + DB log created!" }),
+      { status: 200 }
+    );
   } catch (err) {
-    console.error("❌ Error in request-demo:", err);
+    console.error("❌ Error handling demo request:", err);
     return new Response(
       JSON.stringify({ success: false, error: err.message }),
       { status: 500 }

@@ -4,16 +4,53 @@ export const dashboardConfigs = {
     header: { logoText: "Super Admin" },
     sidebar: {
       menu: [
-        { key: "dashboard", label: "Dashboard", iconlink:"/images/dashboard.png" },
-        { key: "demo users", label: "Demo Users", iconlink:"/images/demo.png" },
-        { key: "companies", label: "Companies", iconlink:"/images/building.png" },
-        { key: "supervisors", label: "Suprevisors", iconlink:"/images/manager.png" },
-        { key: "users", label: "Users", iconlink:"/images/multiple-users-silhouette.png" },
-        { key: "logs", label: "Logs", iconlink:"/images/file.png" },
-        { key: "reports", label: "Reports", iconlink:"/images/report.png" },
-        { key: "notifications", label: "Notifications", iconlink:"/images/bell.png" },
-        { key: "system settings", label: "System Settings", iconlink:"/images/settings.png" },
-        { key: "profile", label: "Profile", iconlink:"/images/profile-user.png" },
+        {
+          key: "dashboard",
+          label: "Dashboard",
+          iconlink: "/images/dashboard.png",
+        },
+        {
+          key: "demo request",
+          label: "Demo Requests",
+          iconlink: "/images/request.png",
+        },
+        {
+          key: "demo users",
+          label: "Demo Users",
+          iconlink: "/images/demo.png",
+        },
+        {
+          key: "companies",
+          label: "Companies",
+          iconlink: "/images/building.png",
+        },
+        {
+          key: "supervisors",
+          label: "Suprevisors",
+          iconlink: "/images/manager.png",
+        },
+        {
+          key: "users",
+          label: "Users",
+          iconlink: "/images/multiple-users-silhouette.png",
+        },
+        { key: "logs", label: "Logs", iconlink: "/images/file.png" },
+        { key: "reports", label: "Reports", iconlink: "/images/report.png" },
+        {
+          key: "notifications",
+          label: "Notifications",
+          iconlink: "/images/bell.png",
+        },
+        {
+          key: "system settings",
+          label: "System Settings",
+          iconlink: "/images/settings.png",
+        },
+        {
+          key: "profile",
+          label: "Profile",
+          iconlink: "/images/profile-user.png",
+        },
       ],
     },
   },
