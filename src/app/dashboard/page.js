@@ -15,9 +15,11 @@ import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
 import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
 import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
+import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
 
 const pageMap = {
   dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
+  "demo users": <DemoUsers />,
   companies: <CompaniesPage />,
   supervisors: <SupervisorsPage />,
   users: <UserPage />,

@@ -5,6 +5,7 @@ export const dashboardConfigs = {
     sidebar: {
       menu: [
         { key: "dashboard", label: "Dashboard", iconlink:"/images/dashboard.png" },
+        { key: "demo users", label: "Demo Users", iconlink:"/images/demo.png" },
         { key: "companies", label: "Companies", iconlink:"/images/building.png" },
         { key: "supervisors", label: "Suprevisors", iconlink:"/images/manager.png" },
         { key: "users", label: "Users", iconlink:"/images/multiple-users-silhouette.png" },
