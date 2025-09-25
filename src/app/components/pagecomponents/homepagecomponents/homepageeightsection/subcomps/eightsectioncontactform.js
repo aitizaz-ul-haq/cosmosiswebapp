@@ -28,7 +28,7 @@ export default function EightSectionContactForm() {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/request-demo", {
+      const res = await fetch("/api/requestdemo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -47,6 +47,7 @@ export default function EightSectionContactForm() {
         message: "",
       });
     } catch (err) {
+      console.log("therer is somethign wrong here",err)
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

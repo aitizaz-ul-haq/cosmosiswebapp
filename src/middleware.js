@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 // ✅ Public routes (no auth required)
-const PUBLIC_PATHS = ["/login", "/api/login", "/api/register"];
+const PUBLIC_PATHS = ["/login", "/api/login", "/api/register", "/api/requestdemo",];
 
 // ✅ Role-based route mapping
 const ROLE_RULES = {
