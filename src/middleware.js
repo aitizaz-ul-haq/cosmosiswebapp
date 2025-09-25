@@ -3,11 +3,22 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 // ✅ Public routes (no auth required)
-const PUBLIC_PATHS = ["/login", "/api/login", "/api/register", "/api/requestdemo",];
+const PUBLIC_PATHS = [
+  "/login",
+  "/api/login",
+  "/api/register",
+  "/api/requestdemo",
+];
 
 // ✅ Role-based route mapping
 const ROLE_RULES = {
-  superadmin: ["/dashboard", "/api/companies", "/api/users", "/api/log"], // full access
+  superadmin: [
+    "/dashboard",
+    "/api/companies",
+    "/api/users",
+    "/api/log",
+    "/api/demo-requests",
+  ], // full access
   supervisor: ["/dashboard", "/api/users"], // can manage RMs/clients inside own company
   rm: ["/dashboard", "/api/users"], // can manage clients only
   client: ["/dashboard"], // only own dashboard

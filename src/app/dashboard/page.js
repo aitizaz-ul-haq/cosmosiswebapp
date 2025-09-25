@@ -16,7 +16,9 @@ import NotificationsPage from "./components/dashboardshell/pages/NotificationsPa
 import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
 import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
-import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
+// import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
+// import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
+import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
 
 const pageMap = {
   dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
@@ -29,7 +31,7 @@ const pageMap = {
   notifications: <NotificationsPage />,
   "system settings": <SettingsPage />,
   profile: <ProfilePage />,
-  "demo request": <DemoRequests />,
+  requesteddemonstration: <RequestedDemonstration />,
 };
 
 export default function Dashboard() {
