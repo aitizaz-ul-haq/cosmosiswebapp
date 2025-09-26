@@ -9,7 +9,13 @@ import {
 
 import "./styles/requesteddemonstration.css";
 
-function RequestDetailsModal({ request, onClose, onApprove, onReject, onDelete }) {
+function RequestDetailsModal({
+  request,
+  onClose,
+  onApprove,
+  onReject,
+  onDelete,
+}) {
   if (!request) return null; // don’t render at all when closed
 
   return (
@@ -19,14 +25,30 @@ function RequestDetailsModal({ request, onClose, onApprove, onReject, onDelete }
           ×
         </button>
         <h3>Request Details</h3>
-        <p><b>Name:</b> {request.firstname} {request.lastname}</p>
-        <p><b>Email:</b> {request.email}</p>
-        <p><b>Phone:</b> {request.phone}</p>
-        <p><b>Company:</b> {request.company}</p>
-        <p><b>Role:</b> {request.role}</p>
-        <p><b>Status:</b> {request.status}</p>
-        <p><b>Date:</b> {new Date(request.createdAt).toLocaleString()}</p>
-        <p><b>Message:</b> {request.message}</p>
+        <p>
+          <b>Name:</b> {request.firstname} {request.lastname}
+        </p>
+        <p>
+          <b>Email:</b> {request.email}
+        </p>
+        <p>
+          <b>Phone:</b> {request.phone}
+        </p>
+        <p>
+          <b>Company:</b> {request.company}
+        </p>
+        <p>
+          <b>Role:</b> {request.role}
+        </p>
+        <p>
+          <b>Status:</b> {request.status}
+        </p>
+        <p>
+          <b>Date:</b> {new Date(request.createdAt).toLocaleString()}
+        </p>
+        <p>
+          <b>Message:</b> {request.message}
+        </p>
 
         <div className="demo-requests-modal-actions">
           <button onClick={() => onApprove(request._id)}>Approve</button>
@@ -125,8 +147,12 @@ export default function DemoRequestsTable() {
               <button onClick={() => setSelectedRequest(row.original)}>
                 Details
               </button>
-              <button onClick={() => updateStatus(id, "approved")}>Approve</button>
-              <button onClick={() => updateStatus(id, "rejected")}>Reject</button>
+              <button onClick={() => updateStatus(id, "approved")}>
+                Approve
+              </button>
+              <button onClick={() => updateStatus(id, "rejected")}>
+                Reject
+              </button>
               <button onClick={() => deleteRequest(id)}>Delete</button>
             </div>
           );
@@ -156,7 +182,12 @@ export default function DemoRequestsTable() {
     <div className="demo-requests-container">
       {/* Filters */}
       <div className="demo-requests-header">
-        <h2 className="demo-requests-heading">Demo Requests</h2>
+        <div className="demo-requests-header-text-container">
+          <h2 className="demo-requests-heading">Demo Requests</h2>
+          <p className="demo-requests-description">
+            Mange and address demo requests by companies here
+          </p>
+        </div>
         <div className="demo-requests-filters">
           <select
             value={filterField}
@@ -189,7 +220,10 @@ export default function DemoRequestsTable() {
             <tr key={hg.id}>
               {hg.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>

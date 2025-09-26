@@ -11,7 +11,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 6rem;
+  gap: 4rem;
   width: 15%;
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -71,6 +71,10 @@
   background: none;
   cursor: pointer;
 }
+
+/* .dashboard-menus-section {
+  padding-top: 6rem;
+} */
 
 .menu-options {
   cursor: pointer;

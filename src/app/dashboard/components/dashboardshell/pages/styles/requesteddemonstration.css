@@ -15,8 +15,14 @@
 }
 
 .demo-requests-heading {
-  font-size: 1.5rem;
-  font-weight: 400;
+  font-size: 3rem;
+  font-weight: 500;
+  color: var(--sitedark);
+}
+
+.demo-requests-description {
+  font-size: 16px;
+  font-weight: 500;
   color: var(--sitedark);
 }
 
@@ -43,6 +49,7 @@
 .demo-requests-table thead tr {
   background-color: #d3d6de;
   color: var(--sitedark);
+  /* border: 1px solid var(--sitegreen); */
 }
 
 .demo-requests-table th,
