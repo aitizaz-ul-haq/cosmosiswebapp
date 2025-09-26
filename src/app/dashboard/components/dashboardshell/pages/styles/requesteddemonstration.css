@@ -50,26 +50,66 @@
   margin-right: 8px;
   padding: 6px 12px;
   font-size: 0.8rem;
+  font-weight: 600;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
-.demo-requests-table button:first-child {
-  background-color: #16a34a;
+/* Approve button */
+.demo-requests-table button:nth-child(1) {
+  background-color: var(--sitegreen);
   color: white;
 }
-
-.demo-requests-table button:first-child:hover {
-  background-color: #15803d;
+.demo-requests-table button:nth-child(1):hover {
+  opacity: 0.9;
 }
 
-.demo-requests-table button:last-child {
+/* Reject button */
+.demo-requests-table button:nth-child(2) {
+  background-color: var(--sitedark);
+  color: white;
+}
+.demo-requests-table button:nth-child(2):hover {
+  opacity: 0.9;
+}
+
+/* Delete button */
+.demo-requests-table button:nth-child(3) {
   background-color: #dc2626;
   color: white;
 }
-
-.demo-requests-table button:last-child:hover {
+.demo-requests-table button:nth-child(3):hover {
   background-color: #b91c1c;
+}
+
+/* Loader */
+.demo-requests-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  flex-direction: column;
+}
+
+.demo-requests-spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid var(--sitegreen);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.demo-requests-loader-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--sitedark);
 }

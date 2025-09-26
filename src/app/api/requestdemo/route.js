@@ -7,8 +7,27 @@ export async function POST(req) {
     const body = await req.json();
     const { firstname, lastname, email, phone, company, role, message } = body;
 
-    // 1. Save request in DB
+    // 1. Connect DB
     await connectToDatabase();
+
+    // 2. Check if this email already has a non-rejected request
+    const existing = await DemoRequest.findOne({
+      email,
+      status: { $ne: "rejected" }, // allow resubmission only if last one was rejected
+    });
+
+    if (existing) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error:
+            "A demo request already exists for this email. Please wait for approval or rejection before submitting again.",
+        }),
+        { status: 400 }
+      );
+    }
+
+    // 3. Save request in DB
     const demoRequest = new DemoRequest({
       firstname,
       lastname,
@@ -17,10 +36,11 @@ export async function POST(req) {
       company,
       role,
       message,
+      status: "pending", // ensure default status
     });
     await demoRequest.save();
 
-    // 2. Setup transporter
+    // 4. Setup transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
@@ -31,7 +51,7 @@ export async function POST(req) {
       },
     });
 
-    // 3. Email to Super Admin
+    // 5. Email to Super Admin
     const adminMailOptions = {
       from: `"Cosmosis Demo Request" <${process.env.SMTP_USER}>`,
       to: process.env.SUPERADMIN_EMAIL,
@@ -47,19 +67,19 @@ export async function POST(req) {
       `,
     };
 
-    // 4. Auto-response to user
+    // 6. Auto-response to user
     const userMailOptions = {
       from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "✅ We Received Your Demo Request",
-      html: `<p>Thank you, ${firstname}! We received your request.</p>`,
+      html: `<p>Thank you, ${firstname}! We received your request and our team will review it shortly.</p>`,
     };
 
     await transporter.sendMail(adminMailOptions);
     await transporter.sendMail(userMailOptions);
 
     return new Response(
-      JSON.stringify({ success: true, message: "Emails + DB log created!" }),
+      JSON.stringify({ success: true, message: "Request submitted successfully." }),
       { status: 200 }
     );
   } catch (err) {
