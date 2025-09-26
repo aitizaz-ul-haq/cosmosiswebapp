@@ -16,7 +16,7 @@
 
 .demo-requests-heading {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--sitedark);
 }
 
@@ -41,8 +41,8 @@
 }
 
 .demo-requests-table thead tr {
-  background-color: var(--sitegreen);
-  color: #fff;
+  background-color: #d3d6de;
+  color: var(--sitedark);
 }
 
 .demo-requests-table th,
@@ -53,7 +53,7 @@
 }
 
 .demo-requests-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: #e9fbf8;
   cursor: pointer;
 }
 
@@ -134,7 +134,8 @@
   cursor: pointer;
 }
 
-.demo-requests-actions button {
+.demo-requests-actions button,
+.demo-requests-modal-actions button {
   margin-right: 6px;
   padding: 5px 10px;
   font-size: 0.8rem;
@@ -142,28 +143,70 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
+  transition: all 0.2s ease;
 }
 
+/* Details button */
 .demo-requests-actions button:nth-child(1),
 .demo-requests-modal-actions button:nth-child(1) {
-  background: #0ea5e9; /* blue for "Details" */
+  border: 2px solid #0ea5e9;
+  background: transparent;
+  color: #0ea5e9;
+}
+
+.demo-requests-actions button:nth-child(1):hover,
+.demo-requests-modal-actions button:nth-child(1):hover {
+  background: #0ea5e9;
   color: #fff;
 }
 
+/* Approve button */
 .demo-requests-actions button:nth-child(2),
 .demo-requests-modal-actions button:nth-child(2) {
+  /* background: var(--sitegreen);
+  color: #fff; */
+
+  border: 2px solid var(--sitegreen);
+  background: transparent;
+  color: var(--sitegreen);
+}
+
+.demo-requests-actions button:nth-child(2):hover,
+.demo-requests-modal-actions button:nth-child(2):hover {
   background: var(--sitegreen);
   color: #fff;
 }
 
+/* Reject button */
 .demo-requests-actions button:nth-child(3),
 .demo-requests-modal-actions button:nth-child(3) {
+  /* background: var(--sitedark);
+  color: #fff; */
+
+  border: 2px solid var(--sitedark);
+  background: transparent;
+  color: var(--sitedark);
+}
+
+.demo-requests-actions button:nth-child(3):hover,
+.demo-requests-modal-actions button:nth-child(3):hover {
   background: var(--sitedark);
   color: #fff;
 }
 
+/* Delete button */
 .demo-requests-actions button:nth-child(4),
 .demo-requests-modal-actions button:nth-child(4) {
+  /* background: red;
+  color: #fff; */
+
+  border: 2px solid red;
+  background: transparent;
+  color: red;
+}
+
+.demo-requests-actions button:nth-child(4):hover,
+.demo-requests-modal-actions button:nth-child(4):hover {
   background: red;
   color: #fff;
 }
@@ -174,8 +217,6 @@
   gap: 0.5rem;
   justify-content: flex-end;
 }
-
-
 
 /* Modal action buttons styled like table buttons */
 .demo-requests-modal-actions {
@@ -197,36 +238,47 @@
 
 /* Details button */
 .demo-requests-modal-actions button:first-child {
-  background-color: var(--sitegreen); /* blue */
-  color: white;
+  border: 2px solid #0ea5e9;
+  background: transparent;
+  color: #0ea5e9;
 }
 .demo-requests-modal-actions button:first-child:hover {
-  opacity: 0.9;
+  background: #0ea5e9;
+  color: #fff;
 }
 
 /* Approve button */
 .demo-requests-modal-actions button:nth-child(2) {
-  background-color: var(--sitedark);
-  color: white;
+  /* background-color: var(--sitedark);
+  color: white; */
+
+  border: 2px solid var(--sitegreen);
+  background: transparent;
+  color: var(--sitegreen);
 }
 .demo-requests-modal-actions button:nth-child(2):hover {
-  opacity: 0.9;
+  background: var(--sitegreen);
+  color: #fff;
 }
 
 /* Reject button */
 .demo-requests-modal-actions button:nth-child(3) {
-  background-color: var(--sitedark);
-  color: white;
+  border: 2px solid var(--sitedark);
+  background: transparent;
+  color: var(--sitedark);
 }
 .demo-requests-modal-actions button:nth-child(3):hover {
-  opacity: 0.9;
+  background: var(--sitedark);
+  color: #fff;
 }
 
 /* Delete button */
 .demo-requests-modal-actions button:last-child {
-  background-color: #dc2626;
-  color: white;
+  border: 2px solid red;
+  background: transparent;
+  color: red;
 }
 .demo-requests-modal-actions button:last-child:hover {
-  background-color: #b91c1c;
+  background: red;
+  color: #fff;
 }

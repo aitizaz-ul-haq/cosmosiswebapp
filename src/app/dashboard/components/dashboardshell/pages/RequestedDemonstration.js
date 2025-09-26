@@ -147,7 +147,7 @@ export default function DemoRequestsTable() {
     return (
       <div className="demo-requests-loader">
         <div className="demo-requests-spinner"></div>
-        <p className="demo-requests-loader-text">Loading requests…</p>
+        <p className="demo-requests-loader-text">Loading...</p>
       </div>
     );
   }

@@ -15,8 +15,8 @@ export default function DashboardSidebarMenuContainer({
         >
           <Image
             src={item.iconlink}
-            width="32"
-            height="32"
+            width="24"
+            height="24"
             title={item.label}
           />
           {item.label}
