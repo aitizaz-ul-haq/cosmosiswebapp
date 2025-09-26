@@ -22,7 +22,7 @@
 
 /* Table header */
 .demo-requests-table thead tr {
-  background-color: var(--sitegreen);
+  background-color: var(--sitedark);
   color: #fff;
 }
 

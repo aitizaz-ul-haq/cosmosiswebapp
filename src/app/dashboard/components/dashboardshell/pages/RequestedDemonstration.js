@@ -48,12 +48,7 @@ export default function DemoRequestsTable() {
               <button onClick={() => updateStatus(id, "rejected")}>
                 Reject
               </button>
-              <button
-                onClick={() => deleteRequest(id)}
-                // style={{ color: "red" }}
-              >
-                Delete
-              </button>
+              <button onClick={() => deleteRequest(id)}>Delete</button>
             </div>
           );
         },
@@ -131,15 +126,23 @@ export default function DemoRequestsTable() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {requests.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} style={{ textAlign: "center", padding: "1rem" }}>
+                No data found
+              </td>
             </tr>
-          ))}
+          ) : (
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
