@@ -45,14 +45,26 @@ export default function DemoRequestsTable() {
     { accessorKey: "email", header: "Email" },
     { accessorKey: "company", header: "Company" },
     { accessorKey: "role", header: "Role" },
-    { accessorKey: "status", header: "Status" },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ getValue }) => {
+        const status = getValue()?.toLowerCase();
+        let className = "status-badge";
+        if (status === "pending") className += " status-pending";
+        if (status === "approved" || status === "active")
+          className += " status-active";
+        if (status === "rejected" || status === "inactive")
+          className += " status-rejected";
+
+        return <span className={className}>{getValue()}</span>;
+      },
+    },
     {
       accessorKey: "createdAt",
       header: "Date Submitted",
       cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
     },
-    // { accessorKey: "actions", header: "Actions" },
-    // { accessorKey: "actions", header: "Actions" },
   ];
 
   const actions = [

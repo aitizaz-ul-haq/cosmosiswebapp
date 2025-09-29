@@ -1,4 +1,5 @@
 import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 import DemoRequest from "@/models/DemoRequest";
 
 // ✅ GET all demo requests (Super Admin only)
@@ -22,7 +23,7 @@ export async function GET() {
 // ✅ Update request status
 export async function PATCH(req) {
   try {
-    await dbConnect();
+    await connectToDatabase();
     const { id, status } = await req.json();
 
     const demoReq = await DemoRequest.findById(id);
