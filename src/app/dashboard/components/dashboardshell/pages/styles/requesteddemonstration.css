@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 4rem;
 }
 
 .demo-requests-heading {
@@ -43,12 +43,13 @@
 .demo-requests-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.90rem;
 }
 
 .demo-requests-table thead tr {
   background-color: #ecedf0;
   color: var(--sitedark);
+  /* font-weight: 300; */
   /* border: 1px solid var(--sitegreen); */
 }
 
@@ -58,6 +59,7 @@
   padding: 12px 16px;
   border-bottom: 1px solid #e5e7eb;
   color: var(--sitedark);
+  /* font-size: 12px; */
 }
 
 .demo-requests-table tbody tr:hover {
@@ -145,7 +147,7 @@
 .demo-requests-actions button,
 .demo-requests-modal-actions button {
   margin-right: 6px;
-  padding: 5px 10px;
+  padding: 2px 6px;
   font-size: 0.8rem;
   border: none;
   border-radius: 5px;
@@ -246,12 +248,12 @@
 
 /* Details button */
 .demo-requests-modal-actions button:first-child {
-  border: 2px solid #0ea5e9;
+  border: 2px solid var(--sitegreen);
   background: transparent;
-  color: #0ea5e9;
+  color: var(--sitegreen);
 }
 .demo-requests-modal-actions button:first-child:hover {
-  background: #0ea5e9;
+  background: var(--sitegreen);
   color: #fff;
 }
 
@@ -260,12 +262,12 @@
   /* background-color: var(--sitedark);
   color: white; */
 
-  border: 2px solid var(--sitegreen);
+  border: 2px solid var(--sitedark);
   background: transparent;
-  color: var(--sitegreen);
+  color: var(--sitedark);
 }
 .demo-requests-modal-actions button:nth-child(2):hover {
-  background: var(--sitegreen);
+  background: var(--sitedark);
   color: #fff;
 }
 
