@@ -47,7 +47,7 @@
 }
 
 .demo-requests-table thead tr {
-  background-color: #d3d6de;
+  background-color: #ecedf0;
   color: var(--sitedark);
   /* border: 1px solid var(--sitegreen); */
 }
@@ -61,7 +61,7 @@
 }
 
 .demo-requests-table tbody tr:hover {
-  background-color: #e9fbf8;
+  background-color: #f1faf8;
   cursor: pointer;
 }
 
