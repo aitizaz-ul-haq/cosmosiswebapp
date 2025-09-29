@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import DemoRequest from "@/models/DemoRequest";
+import nodemailer from "nodemailer";
 
 // ✅ GET all demo requests (Super Admin only)
 export async function GET() {
