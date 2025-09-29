@@ -22,7 +22,6 @@ function TableModal({ data, onClose, actions }) {
           ×
         </button>
         <h3>Details</h3>
-
         {Object.keys(data)
           .filter((key) => !hiddenKeys.includes(key)) // 🚫 filter out unwanted keys
           .map((key) => (
@@ -33,7 +32,6 @@ function TableModal({ data, onClose, actions }) {
                 : data[key]?.toString()}
             </p>
           ))}
-
         {actions && actions.length > 0 && (
           <div className="generic-table-modal-actions">
             {actions.map((act, idx) => (
@@ -51,7 +49,6 @@ function TableModal({ data, onClose, actions }) {
     </div>
   );
 }
-
 
 export default function GenericTable({
   title = "Table",
