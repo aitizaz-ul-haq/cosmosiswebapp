@@ -6,49 +6,10 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import TableModal from "./pagecomponents/tablemodal";
+import "./styles/generictable.css";
 
-import "./styles/generictable.css"; // shared table styling
 
-function TableModal({ data, onClose, actions }) {
-  if (!data) return null;
-
-  // Define keys to hide
-  const hiddenKeys = ["_id", "__v", "updatedAt"];
-
-  return (
-    <div className="generic-table-modal">
-      <div className="generic-table-modal-content">
-        <button className="generic-table-modal-close" onClick={onClose}>
-          ×
-        </button>
-        <h3>Details</h3>
-        {Object.keys(data)
-          .filter((key) => !hiddenKeys.includes(key)) // 🚫 filter out unwanted keys
-          .map((key) => (
-            <p key={key}>
-              <b>{key}:</b>{" "}
-              {key.toLowerCase().includes("date")
-                ? new Date(data[key]).toLocaleString()
-                : data[key]?.toString()}
-            </p>
-          ))}
-        {actions && actions.length > 0 && (
-          <div className="generic-table-modal-actions">
-            {actions.map((act, idx) => (
-              <button
-                key={idx}
-                className={act.className}
-                onClick={() => act.onClick(data._id)}
-              >
-                {act.label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default function GenericTable({
   title = "Table",
