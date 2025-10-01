@@ -9,6 +9,7 @@ import {
 import TableModal from "./pagecomponents/tablemodal";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
+import GenericTableThead from "./pagecomponents/generictablecomps/generictablethead";
 import "./styles/generictable.css";
 
 export default function GenericTable({
@@ -66,21 +67,7 @@ export default function GenericTable({
 
       {/* Table */}
       <table className="generic-table">
-        <thead>
-          {table.getHeaderGroups().map((hg) => (
-            <tr key={hg.id}>
-              {hg.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-              {actions.length > 0 && <th>Actions</th>} {/* ✅ Add header */}
-            </tr>
-          ))}
-        </thead>
+        <GenericTableThead table={table} actions={actions}/>
         <tbody>
           {filteredData.length === 0 ? (
             <tr>
