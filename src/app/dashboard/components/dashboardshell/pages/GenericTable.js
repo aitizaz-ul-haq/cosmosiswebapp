@@ -7,9 +7,9 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import TableModal from "./pagecomponents/tablemodal";
+import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
+import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
 import "./styles/generictable.css";
-
-
 
 export default function GenericTable({
   title = "Table",
@@ -48,48 +48,21 @@ export default function GenericTable({
   });
 
   if (loading) {
-    return (
-      <div className="generic-table-loader">
-        <div className="generic-table-spinner"></div>
-        <p className="generic-table-loader-text">Loading…</p>
-      </div>
-    );
+    return <GenericTableLoader />;
   }
 
   return (
     <div className="generic-table-container">
       {/* Header */}
-      <div className="generic-table-header">
-        <div>
-          <h2 className="generic-table-heading">{title}</h2>
-          {description && (
-            <p className="generic-table-description">{description}</p>
-          )}
-        </div>
-        <div className="generic-table-filters">
-          <select
-            value={filterField}
-            onChange={(e) => setFilterField(e.target.value)}
-          >
-            <option value="all">All Fields</option>
-            {filterableFields.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
-          <input
-            type={filterField.toLowerCase().includes("date") ? "date" : "text"}
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-            placeholder={
-              filterField.toLowerCase().includes("date")
-                ? "Select date"
-                : "Enter filter value"
-            }
-          />
-        </div>
-      </div>
+      <GenericTableHeader
+        title={title}
+        description={description}
+        filterField={filterField}
+        setFilterField={setFilterField}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        filterableFields={filterableFields}
+      />
 
       {/* Table */}
       <table className="generic-table">
