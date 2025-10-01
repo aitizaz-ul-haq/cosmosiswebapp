@@ -1,15 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
 import TableModal from "./pagecomponents/tablemodal";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
 import GenericTableThead from "./pagecomponents/generictablecomps/generictablethead";
+import GenericTableTbody from "./pagecomponents/generictablecomps/generictabletbody";
 import "./styles/generictable.css";
 
 export default function GenericTable({
@@ -67,46 +64,14 @@ export default function GenericTable({
 
       {/* Table */}
       <table className="generic-table">
-        <GenericTableThead table={table} actions={actions}/>
-        <tbody>
-          {filteredData.length === 0 ? (
-            <tr>
-              <td
-                colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
-                style={{ textAlign: "center" }}
-              >
-                No data found
-              </td>
-            </tr>
-          ) : (
-            table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-                {actions.length > 0 && (
-                  <td className="generic-table-actions">
-                    {actions.map((act, idx) => (
-                      <button
-                        key={idx}
-                        className={act.className}
-                        onClick={() =>
-                          act.type === "details"
-                            ? setSelectedRow(row.original)
-                            : act.onClick(row.original._id)
-                        }
-                      >
-                        {act.label}
-                      </button>
-                    ))}
-                  </td>
-                )}
-              </tr>
-            ))
-          )}
-        </tbody>
+        <GenericTableThead table={table} actions={actions} />
+        <GenericTableTbody
+          table={table}
+          filteredData={filteredData}
+          columns={columns}
+          actions={actions}
+          setSelectedRow={setSelectedRow}
+        />
       </table>
 
       {/* Modal */}
