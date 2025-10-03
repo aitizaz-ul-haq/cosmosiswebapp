@@ -1,9 +1,6 @@
 import MainHeroSection from "./components/sharedcomponents/mainherosection/mainherosection";
-
 import HomePageContainer from "./components/pagecomponents/homepagecomponents/homepagecontainer/homepagecontainer";
-
 import Homepagedata from "@/app/data/homepagedata/homaepagedata.json";
-
 import Header from "./components/layoutcomponens/header/header";
 import Footer from "./components/layoutcomponens/footer/footer";
 
