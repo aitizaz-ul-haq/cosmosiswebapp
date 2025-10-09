@@ -18,6 +18,8 @@ const ROLE_RULES = {
     "/api/users",
     "/api/log",
     "/api/demo-requests",
+    "/api/demo-users",
+    "/api/companies"
   ], // full access
   supervisor: ["/dashboard", "/api/users"], // can manage RMs/clients inside own company
   rm: ["/dashboard", "/api/users"], // can manage clients only

@@ -41,12 +41,12 @@ export async function GET(req) {
     await connectToDatabase();
 
     if (user.role === "superadmin") {
-      // ✅ superadmin sees all companies
-      const companies = await Company.find().select("name _id");
+      // ✅ superadmin sees all companies (all fields)
+      const companies = await Company.find();
       return NextResponse.json({ success: true, companies });
     } else if (user.companyId) {
-      // ✅ supervisor/rm/client sees only their own company
-      const company = await Company.findById(user.companyId).select("name _id");
+      // ✅ supervisor/rm/client sees only their own company (all fields)
+      const company = await Company.findById(user.companyId);
       return NextResponse.json({ success: true, companies: [company] });
     } else {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
