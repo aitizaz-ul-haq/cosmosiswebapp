@@ -2,24 +2,22 @@ import mongoose from "mongoose";
 
 const DemoRequestSchema = new mongoose.Schema(
   {
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     company: { type: String },
-    role: {
-      type: String,
-      enum: ["supervisor", "rm", "client", "other"],
-      required: true,
-    },
-    message: { type: String, required: true },
+    message: { type: String },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+    subscriptionStatus: {
+      type: String,
+      enum: ["demo", "subscribed"],
+      default: "demo",
+    },
   },
-  { timestamps: true } // ✅ no need for manual createdAt
+  { timestamps: true }
 );
 
 export default mongoose.models.DemoRequest ||
