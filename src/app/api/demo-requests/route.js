@@ -1,6 +1,10 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import DemoRequest from "@/models/DemoRequest";
+import User from "@/models/User";
+import Company from "@/models/Company";
+import { generatePassword } from "@/utils/generatePassword";
+import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 
 // ✅ GET all demo requests (Super Admin only)
@@ -32,8 +36,13 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    // Update status
+    // Update status and subscriptionStatus on DemoRequest
     demoReq.status = status;
+    if (status === "approved") {
+      demoReq.subscriptionStatus = "demo";
+    } else if (status === "rejected") {
+      demoReq.subscriptionStatus = "nouser";
+    }
     await demoReq.save();
 
     if (status === "approved") {
@@ -48,14 +57,15 @@ export async function PATCH(req) {
       const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
       // 3️⃣ Create supervisor
-      const supervisor = await User.create({
+      await User.create({
         username: demoReq.email,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         role: "supervisor",
         companyId: company._id,
         firstname: demoReq.firstname,
         lastname: demoReq.lastname,
         email: demoReq.email,
+        subscriptionStatus: "demo",
       });
 
       // 4️⃣ Send email with credentials
@@ -86,6 +96,11 @@ export async function PATCH(req) {
     }
 
     if (status === "rejected") {
+      // Set User (if exists) to nouser, or just update DemoRequest
+      await User.updateOne(
+        { username: demoReq.email },
+        { $set: { subscriptionStatus: "nouser" } }
+      );
       // Send rejection email
       const transporter = nodemailer.createTransport({
         service: "Gmail",

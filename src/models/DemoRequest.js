@@ -18,6 +18,11 @@ const DemoRequestSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+    subscriptionStatus: {
+      type: String,
+      enum: ["pending", "demo", "subscribed", "nouser"],
+      default: "pending",
+    },
   },
   { timestamps: true } // ✅ no need for manual createdAt
 );

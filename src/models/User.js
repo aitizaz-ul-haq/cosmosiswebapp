@@ -14,6 +14,11 @@ const UserSchema = new mongoose.Schema(
       ref: "Company",
       default: null,
     },
+    subscriptionStatus: {
+      type: String,
+      enum: ["pending", "demo", "subscribed", "nouser"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
