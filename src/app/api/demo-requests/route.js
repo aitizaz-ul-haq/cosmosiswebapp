@@ -1,140 +1,119 @@
-import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 import DemoRequest from "@/models/DemoRequest";
-import User from "@/models/User";
-import { generatePassword } from "@/utils/generatePassword";
+import nodemailer from "nodemailer";
 
-// ✅ GET all demo requests
+// ✅ GET all demo requests (Super Admin only)
 export async function GET() {
   try {
     await connectToDatabase();
     const requests = await DemoRequest.find().sort({ createdAt: -1 });
-    return NextResponse.json(requests, { status: 200 });
+
+    return new Response(JSON.stringify({ success: true, data: requests }), {
+      status: 200,
+    });
   } catch (err) {
     console.error("❌ Error fetching demo requests:", err);
-    return NextResponse.json({ error: "Failed to fetch demo requests" }, { status: 500 });
+    return new Response(
+      JSON.stringify({ success: false, error: err.message }),
+      { status: 500 }
+    );
   }
 }
 
-// ✅ POST new demo request
-export async function POST(req) {
-  try {
-    await connectToDatabase();
-    const body = await req.json();
-
-    // prevent duplicate email submissions
-    const exists = await DemoRequest.findOne({ email: body.email });
-    if (exists) {
-      return NextResponse.json({ error: "You have already submitted a demo request." }, { status: 400 });
-    }
-
-    const request = await DemoRequest.create(body);
-    return NextResponse.json(request, { status: 201 });
-  } catch (err) {
-    console.error("❌ Error creating demo request:", err);
-    return NextResponse.json({ error: "Failed to create demo request" }, { status: 500 });
-  }
-}
-
-// ✅ PATCH (Approve / Reject)
+// ✅ Update request status
 export async function PATCH(req) {
   try {
     await connectToDatabase();
     const { id, status } = await req.json();
 
-    if (!id || !status)
-      return NextResponse.json({ error: "ID and status required" }, { status: 400 });
-
-    // Find the demo request
     const demoReq = await DemoRequest.findById(id);
-    if (!demoReq)
-      return NextResponse.json({ error: "Demo request not found" }, { status: 404 });
+    if (!demoReq) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    }
 
+    // Update status
     demoReq.status = status;
     await demoReq.save();
 
-    // ⚙️ Setup Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    // 📩 APPROVED FLOW
     if (status === "approved") {
-      // 1️⃣ Generate credentials
-      const plainPassword = passwordGenerator();
+      // 1️⃣ Create company
+      const company = await Company.create({
+        name: demoReq.company || `${demoReq.firstname} Company`,
+        createdAt: new Date(),
+      });
+
+      // 2️⃣ Generate password + hash
+      const plainPassword = generatePassword(14);
       const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-      // 2️⃣ Create a demo user (if not already created)
-      const existingUser = await User.findOne({ email: demoReq.email });
-      if (!existingUser) {
-        await User.create({
-          username: demoReq.email,
-          email: demoReq.email,
-          password: hashedPassword,
-          role: "demoUser",
-          subscriptionStatus: "demo",
-        });
-      }
+      // 3️⃣ Create supervisor
+      const supervisor = await User.create({
+        username: demoReq.email,
+        password: hashedPassword,
+        role: "supervisor",
+        companyId: company._id,
+        firstname: demoReq.firstname,
+        lastname: demoReq.lastname,
+        email: demoReq.email,
+      });
 
-      // 3️⃣ Send approval + credentials email
+      // 4️⃣ Send email with credentials
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
       await transporter.sendMail({
-        from: `"Cosmosis" <${process.env.SMTP_USER}>`,
+        from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
         to: demoReq.email,
-        subject: "Your Cosmosis Demo Access",
+        subject: "✅ Demo Request Approved - Your Supervisor Account",
         html: `
-          <h3>Demo Access Approved</h3>
-          <p>Dear ${demoReq.name || "User"},</p>
-          <p>Your demo request has been approved. You can now log in using the credentials below:</p>
+          <h2>Hello ${demoReq.firstname},</h2>
+          <p>Your demo request has been <b>approved</b>.</p>
+          <p>You can now log in with the following credentials:</p>
           <ul>
             <li><b>Username:</b> ${demoReq.email}</li>
             <li><b>Password:</b> ${plainPassword}</li>
           </ul>
-          <p>Please <a href="${process.env.NEXT_PUBLIC_BASE_URL}/change-password">change your password</a> after logging in.</p>
-          <p>Welcome aboard!</p>
+          <p>Please change your password after logging in.</p>
+          <p>— Cosmosis Team</p>
         `,
       });
-
-      return NextResponse.json(
-        { success: true, message: "Demo approved, user created, and email sent." },
-        { status: 200 }
-      );
     }
 
-    // 📩 REJECTED FLOW
     if (status === "rejected") {
-      await transporter.sendMail({
-        from: `"Cosmosis" <${process.env.SMTP_USER}>`,
-        to: demoReq.email,
-        subject: "Your Cosmosis Demo Request Update",
-        html: `
-          <h3>Demo Request Rejected</h3>
-          <p>Dear ${demoReq.name || "User"},</p>
-          <p>We appreciate your interest in Cosmosis, but your demo request was not approved at this time.</p>
-          <p>If you believe this is a mistake, please contact our support team.</p>
-        `,
+      // Send rejection email
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
       });
 
-      return NextResponse.json(
-        { success: true, message: "Demo rejected and email sent." },
-        { status: 200 }
-      );
+      await transporter.sendMail({
+        from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
+        to: demoReq.email,
+        subject: "❌ Demo Request Rejected",
+        html: `
+          <h2>Hello ${demoReq.firstname},</h2>
+          <p>Unfortunately, your demo request has been <b>rejected</b>.</p>
+          <p>If you believe this is a mistake, feel free to contact us.</p>
+          <p>— Cosmosis Team</p>
+        `,
+      });
     }
 
-    return NextResponse.json({ success: true, message: "Status updated." }, { status: 200 });
+    return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("❌ Error updating demo request:", err);
-    return NextResponse.json({ error: "Failed to update demo request" }, { status: 500 });
+    console.error("❌ Error in PATCH /demo-requests:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-
 
 // ✅ Delete a demo request
 export async function DELETE(req) {
@@ -143,19 +122,30 @@ export async function DELETE(req) {
     const { id } = await req.json();
 
     if (!id) {
-      return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+      return new Response(
+        JSON.stringify({ success: false, error: "ID is required" }),
+        { status: 400 }
+      );
     }
 
     const deleted = await DemoRequest.findByIdAndDelete(id);
 
     if (!deleted) {
-      return NextResponse.json({ success: false, error: "Request not found" }, { status: 404 });
+      return new Response(
+        JSON.stringify({ success: false, error: "Request not found" }),
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({ success: true, message: "Request deleted" }, { status: 200 });
+    return new Response(
+      JSON.stringify({ success: true, message: "Request deleted" }),
+      { status: 200 }
+    );
   } catch (err) {
     console.error("❌ Error deleting demo request:", err);
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return new Response(
+      JSON.stringify({ success: false, error: err.message }),
+      { status: 500 }
+    );
   }
 }
-
