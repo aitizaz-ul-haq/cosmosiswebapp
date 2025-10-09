@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/mongodb";
 import DemoRequest from "@/models/DemoRequest";
 import User from "@/models/User";
-import passwordGenerator from "@/utils/passwordGenerator";
+import { generatePassword } from "@/utils/generatePassword";
 
 // ✅ GET all demo requests
 export async function GET() {
   try {
-    await dbConnect();
+    await connectToDatabase();
     const requests = await DemoRequest.find().sort({ createdAt: -1 });
     return NextResponse.json(requests, { status: 200 });
   } catch (err) {
@@ -21,7 +21,7 @@ export async function GET() {
 // ✅ POST new demo request
 export async function POST(req) {
   try {
-    await dbConnect();
+    await connectToDatabase();
     const body = await req.json();
 
     // prevent duplicate email submissions
@@ -41,7 +41,7 @@ export async function POST(req) {
 // ✅ PATCH (Approve / Reject)
 export async function PATCH(req) {
   try {
-    await dbConnect();
+    await connectToDatabase();
     const { id, status } = await req.json();
 
     if (!id || !status)
@@ -139,7 +139,7 @@ export async function PATCH(req) {
 // ✅ Delete a demo request
 export async function DELETE(req) {
   try {
-    await dbConnect();
+    await connectToDatabase();
     const { id } = await req.json();
 
     if (!id) {
