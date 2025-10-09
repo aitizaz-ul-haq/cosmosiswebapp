@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import User from "@/models/User";
 import { connectToDatabase } from "@/lib/mongodb";
 
+
 export async function POST(req) {
   try {
     const { username, password } = await req.json();
@@ -12,21 +13,15 @@ export async function POST(req) {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Invalid credentials (user not found)" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    // ✅ Match database field name
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
-      return NextResponse.json(
-        { error: "Invalid credentials (bad password)" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // ✅ Create JWT
     const token = jwt.sign(
       {
         id: user._id,
@@ -35,21 +30,16 @@ export async function POST(req) {
         companyId: user.companyId || null,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" } // 1 day instead of 1h
+      { expiresIn: "1d" }
     );
 
-    // ✅ Response with HttpOnly cookie
-    const res = NextResponse.json({
-      success: true,
-      role: user.role,
-    });
-
+    const res = NextResponse.json({ success: true, role: user.role });
     res.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
     });
 
     return res;

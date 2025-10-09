@@ -3,18 +3,11 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: {
-      type: String,
-      enum: ["superAdmin", "admin", "rm", "client", "demoUser"],
-      default: "demoUser",
-    },
-    subscriptionStatus: {
-      type: String,
-      enum: ["demo", "subscribed"],
-      default: "demo",
-    },
+    email: { type: String, unique: true, sparse: true },
+    passwordHash: { type: String, required: true },   // 👈 revert to passwordHash
+    role: { type: String, default: "demoUser" },
+    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
+    subscriptionStatus: { type: String, default: "demo" },
   },
   { timestamps: true }
 );
