@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GenericTable from "./GenericTable";
 
 export default function Companies() {
@@ -8,29 +8,39 @@ export default function Companies() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/companies")
+    fetch("/api/companies", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setCompanies(data.companies || []))
       .finally(() => setLoading(false));
   }, []);
 
-  // Dynamically generate columns from company object keys
-  const columns = companies[0]
-    ? Object.keys(companies[0]).map((key) => ({
-        accessorKey: key,
-        header: key.charAt(0).toUpperCase() + key.slice(1),
-      }))
-    : [];
+  // ✅ Define ONLY the columns you want to show for Companies
+  const columns = useMemo(
+    () => [
+      { accessorKey: "name", header: "Name" },
+      { accessorKey: "legalName", header: "Legal Name" },
+      { accessorKey: "tenantKey", header: "Tenant Key" },
+    ],
+    []
+  );
+
+  // ✅ Only allow filtering on these fields
+  const filterableFields = useMemo(
+    () => ["name", "legalName", "tenantKey"],
+    []
+  );
 
   return (
-    <GenericTable
-      title="Companies"
-      description="All companies in the system. Search, filter, and manage companies here."
-      data={companies}
-      columns={columns}
-      filterableFields={columns.map((col) => col.accessorKey)}
-      actions={[]}
-      loading={loading}
-    />
+    <div>
+      <GenericTable
+        title="Companies"
+        description="All companies in the system. Search, filter, and manage companies here."
+        data={companies}
+        columns={columns}
+        filterableFields={filterableFields}
+        actions={[]}
+        loading={loading}
+      />
+    </div>
   );
 }

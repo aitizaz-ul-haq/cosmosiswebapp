@@ -7,6 +7,12 @@ export default function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleDelete = async (id) => {
+    if (!id || !window.confirm("Delete this company?")) return;
+    await fetch(`/api/companies?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    setCompanies((prev) => prev.filter((c) => c._id !== id));
+  };
+
   useEffect(() => {
     fetch("/api/companies")
       .then((res) => res.json())
@@ -14,22 +20,51 @@ export default function CompaniesPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Dynamically generate columns from company object keys
-  const columns = companies[0]
-    ? Object.keys(companies[0])
-        .filter(key => !["_id", "createdBy", "__v"].includes(key))
-        .map((key) => ({ accessorKey: key, header: key.charAt(0).toUpperCase() + key.slice(1) }))
-    : [];
+  // Use fixed columns for the companies table
+  const columns = [
+    { accessorKey: "name", header: "Name" },
+    { accessorKey: "legalName", header: "Legal Name" },
+    { accessorKey: "tenantKey", header: "Tenant Key" },
+    { accessorKey: "primaryContact.name", header: "Primary Contact" },
+    { accessorKey: "primaryContact.email", header: "Email" },
+    { accessorKey: "primaryContact.phone", header: "Phone" },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <button
+          type="button"
+          onClick={() => handleDelete(row?.original?._id)}
+          style={{
+            padding: "0.4rem 0.75rem",
+            textAlign: "center",
+            fontWeight: 700,
+            borderRadius: "0.5rem",
+            backgroundColor: "#dc2626",
+            border: "1px solid #b91c1c",
+            color: "#fff",
+          }}
+        >
+          Delete
+        </button>
+      ),
+    },
+  ];
 
   return (
-    <GenericTable
-      title="Companies"
-      description="All companies in the system. Search, filter, and manage companies here."
-      data={companies}
-      columns={columns}
-      filterableFields={columns.map(col => col.accessorKey)}
-      actions={[]}
-      loading={loading}
-    />
+    <div>
+      {/* <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+        <button type="button">Add Companies</button>
+      </div> */}
+      <GenericTable
+        title="Companies"
+        description="All companies in the system. Search, filter, and manage companies here."
+        data={companies}
+        columns={columns}
+        filterableFields={columns.map(col => col.accessorKey)}
+        actions={[]}
+        loading={loading}
+      />
+    </div>
   );
 }

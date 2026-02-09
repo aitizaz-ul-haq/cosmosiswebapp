@@ -1,42 +1,58 @@
+"use client";
+
 import { flexRender } from "@tanstack/react-table";
 
 export default function GenericTableTbody({
   table,
-  filteredData,
-  columns,
-  actions,
+  filteredData, // kept for compatibility, but not required
+  columns,      // kept for compatibility (used for colSpan)
+  actions = [],
   setSelectedRow,
 }) {
+  const rows = table.getRowModel().rows;
+  const visibleColumnCount = table.getVisibleLeafColumns().length;
+  const totalCols = visibleColumnCount + (actions.length > 0 ? 1 : 0);
+
   return (
     <tbody>
-      {filteredData.length === 0 ? (
+      {rows.length === 0 ? (
         <tr>
-          <td
-            colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
-            style={{ textAlign: "center" }}
-          >
+          <td colSpan={totalCols} style={{ textAlign: "center" }}>
             No data found
           </td>
         </tr>
       ) : (
-        table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
+        rows.map((row) => (
+          <tr
+            key={row.id}
+            onClick={() => setSelectedRow?.(row.original)}
+            style={{ cursor: setSelectedRow ? "pointer" : "default" }}
+          >
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
+
             {actions.length > 0 && (
               <td className="generic-table-actions">
                 {actions.map((act, idx) => (
                   <button
                     key={idx}
+                    type="button"
                     className={act.className}
-                    onClick={() =>
-                      act.type === "details"
-                        ? setSelectedRow(row.original)
-                        : act.onClick(row.original._id)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation(); // ✅ prevent row click
+
+                      if (act.type === "details") {
+                        setSelectedRow?.(row.original);
+                        return;
+                      }
+
+                      // Most of your actions use id; keep that behavior.
+                      // If you later want full row, change to act.onClick(row.original)
+                      act.onClick?.(row.original?._id);
+                    }}
                   >
                     {act.label}
                   </button>
