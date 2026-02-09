@@ -72,3 +72,63 @@ export async function POST(req) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function GET(req) {
+  const tokenUser = verifyToken(req);
+  if (!tokenUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await connectToDatabase();
+
+    const query =
+      tokenUser.role === "superadmin"
+        ? {}
+        : { companyId: new mongoose.Types.ObjectId(tokenUser.companyId) };
+
+    const users = await User.find(query).select("username email role companyId");
+
+    return NextResponse.json({ success: true, users });
+  } catch (err) {
+    console.error("Fetch users error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  const tokenUser = verifyToken(req);
+  if (!tokenUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  try {
+    await connectToDatabase();
+
+    const user = await User.findById(id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (
+      tokenUser.role !== "superadmin" &&
+      String(user.companyId) !== String(tokenUser.companyId)
+    ) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Delete user error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

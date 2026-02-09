@@ -62,7 +62,7 @@ export default function CompaniesPage() {
         description={tableDescription}
         data={companies}
         columns={columns}
-        filterableFields={columns.map(col => col.accessorKey)}
+        filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}
         actions={[]}
         loading={loading}
       />

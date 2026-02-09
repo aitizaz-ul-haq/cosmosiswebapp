@@ -22,6 +22,7 @@ export default function GenericTable({
   const [filterValue, setFilterValue] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [companyForm, setCompanyForm] = useState({
     name: "",
     legalName: "",
@@ -43,6 +44,13 @@ export default function GenericTable({
     brand: { primaryColor: "", secondaryColor: "", emailFromName: "" },
     notes: "",
   });
+  const [userForm, setUserForm] = useState({
+    username: "",
+    passwordHash: "",
+    role: "client",
+    companyId: "",
+    subscriptionStatus: "pending",
+  });
 
   const setNestedValue = (obj, path, value) => {
     const keys = path.split(".");
@@ -59,6 +67,11 @@ export default function GenericTable({
   const handleCompanyChange = (path) => (e) => {
     const value = e?.target?.type === "checkbox" ? e.target.checked : e.target.value;
     setCompanyForm((prev) => setNestedValue(prev, path, value));
+  };
+
+  const handleUserChange = (key) => (e) => {
+    const value = e?.target?.value ?? "";
+    setUserForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const isEmpty = (v) =>
@@ -89,6 +102,9 @@ export default function GenericTable({
       f.notes,
     ].some(isEmpty);
 
+  const isUserFormValid = (f) =>
+    ![f.username, f.passwordHash, f.role].some(isEmpty);
+
   const handleCompanySubmit = async (e) => {
     e.preventDefault();
     if (!isCompanyFormValid(companyForm)) return;
@@ -99,6 +115,22 @@ export default function GenericTable({
       body: JSON.stringify(companyForm),
     });
     setShowAddCompanyModal(false);
+  };
+
+  const handleUserSubmit = async (e) => {
+    e.preventDefault();
+    if (!isUserFormValid(userForm)) return;
+    const payload = {
+      ...userForm,
+      companyId: userForm.companyId || null,
+    };
+    await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
+    setShowAddUserModal(false);
   };
 
   const fieldStyle = {
@@ -191,6 +223,29 @@ export default function GenericTable({
         </div>
       )}
 
+      {title === "Users" && (
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+          <button
+            type="button"
+            onClick={() => setShowAddUserModal(true)}
+            style={{
+              backgroundColor: "var(--sitegreen)",
+              color: "#fff",
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "6px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 600,
+              fontSize: "1rem",
+            }}
+          >
+            + Add User
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <table className="generic-table">
         <GenericTableThead table={table} actions={actions} />
@@ -271,6 +326,75 @@ export default function GenericTable({
               <button
                 type="button"
                 onClick={() => setShowAddCompanyModal(false)}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {showAddUserModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <form
+            onSubmit={handleUserSubmit}
+            style={{
+              background: "#fff",
+              width: "min(700px, 92vw)",
+              maxHeight: "85vh",
+              overflowY: "auto",
+              borderRadius: "12px",
+              padding: "1.25rem",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              textAlign: "left",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add User</h3>
+              <button type="button" onClick={() => setShowAddUserModal(false)} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: "grid", gap: "0.75rem" }}>
+              <input style={fieldStyle} placeholder="Username" value={userForm.username} onChange={handleUserChange("username")} required />
+              <input style={fieldStyle} type="password" placeholder="Password" value={userForm.passwordHash} onChange={handleUserChange("passwordHash")} required />
+              <select style={fieldStyle} value={userForm.role} onChange={handleUserChange("role")} required>
+                <option value="superadmin">superadmin</option>
+                <option value="supervisor">supervisor</option>
+                <option value="rm">rm</option>
+                <option value="client">client</option>
+              </select>
+              <input style={fieldStyle} placeholder="Company ID (optional)" value={userForm.companyId} onChange={handleUserChange("companyId")} />
+              <select style={fieldStyle} value={userForm.subscriptionStatus} onChange={handleUserChange("subscriptionStatus")}>
+                <option value="pending">pending</option>
+                <option value="demo">demo</option>
+                <option value="subscribed">subscribed</option>
+                <option value="nouser">nouser</option>
+              </select>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
+              <button
+                type="button"
+                onClick={() => setShowAddUserModal(false)}
                 style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
               >
                 Cancel
