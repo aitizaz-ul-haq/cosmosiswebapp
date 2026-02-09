@@ -20,12 +20,16 @@ export default function CompaniesPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const tableTitle ="Companies";
+  const tableDescription = "All companies in the system. Search, filter, and manage companies here.";
+
+
   // Use fixed columns for the companies table
   const columns = [
     { accessorKey: "name", header: "Name" },
     { accessorKey: "legalName", header: "Legal Name" },
     { accessorKey: "tenantKey", header: "Tenant Key" },
-    { accessorKey: "primaryContact.name", header: "Primary Contact" },
+    { accessorKey: "primaryContact.fullName", header: "Primary Contact" },
     { accessorKey: "primaryContact.email", header: "Email" },
     { accessorKey: "primaryContact.phone", header: "Phone" },
     {
@@ -53,12 +57,9 @@ export default function CompaniesPage() {
 
   return (
     <div>
-      {/* <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
-        <button type="button">Add Companies</button>
-      </div> */}
       <GenericTable
-        title="Companies"
-        description="All companies in the system. Search, filter, and manage companies here."
+        title={tableTitle}
+        description={tableDescription}
         data={companies}
         columns={columns}
         filterableFields={columns.map(col => col.accessorKey)}
