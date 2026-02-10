@@ -13,7 +13,7 @@ export async function POST(req) {
   }
 
   const requestBody = await req.json();
-  console.log("[POST /api/users] body", requestBody);
+  // console.log("[POST /api/users] body", requestBody);
   const { username, password, passwordHash, role, companyId, fullName, email, phone } = requestBody;
   const rawPassword = password ?? passwordHash;
   const normalizedUsername = username?.trim()?.toLowerCase() || "";
