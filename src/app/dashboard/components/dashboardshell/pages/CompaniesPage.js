@@ -65,6 +65,7 @@ export default function CompaniesPage() {
         filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}
         actions={[]}
         loading={loading}
+        onCompanyCreated={(newCompany) => setCompanies((prev) => [newCompany, ...prev])}
       />
     </div>
   );

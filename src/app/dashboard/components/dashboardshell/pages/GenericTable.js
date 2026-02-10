@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
 import TableModal from "./pagecomponents/tablemodal";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
@@ -17,12 +17,15 @@ export default function GenericTable({
   filterableFields = [],
   actions = [],
   loading = false,
+  onUserCreated,
+  onCompanyCreated,
 }) {
   const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [companies, setCompanies] = useState([]);
   const [companyForm, setCompanyForm] = useState({
     name: "",
     legalName: "",
@@ -49,8 +52,18 @@ export default function GenericTable({
     passwordHash: "",
     role: "client",
     companyId: "",
-    subscriptionStatus: "pending",
+    fullName: "",
+    email: "",
+    phone: "",
   });
+
+  useEffect(() => {
+    if (!showAddUserModal) return;
+    fetch("/api/companies", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setCompanies(Array.isArray(data.companies) ? data.companies : []))
+      .catch(() => setCompanies([]));
+  }, [showAddUserModal]);
 
   const setNestedValue = (obj, path, value) => {
     const keys = path.split(".");
@@ -103,16 +116,45 @@ export default function GenericTable({
     ].some(isEmpty);
 
   const isUserFormValid = (f) =>
-    ![f.username, f.passwordHash, f.role].some(isEmpty);
+    ![f.username, f.passwordHash, f.role, f.companyId, f.fullName, f.email, f.phone].some(isEmpty);
 
   const handleCompanySubmit = async (e) => {
     e.preventDefault();
     if (!isCompanyFormValid(companyForm)) return;
-    await fetch("/api/companies", {
+    const res = await fetch("/api/companies", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(companyForm),
+    });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      window.alert(result?.error || "Failed to create company");
+      return;
+    }
+    if (result?.company && typeof onCompanyCreated === "function") {
+      onCompanyCreated(result.company);
+    }
+    setCompanyForm({
+      name: "",
+      legalName: "",
+      tenantKey: "",
+      status: "active",
+      primaryContact: { fullName: "", email: "", phone: "" },
+      address: {
+        line1: "",
+        line2: "",
+        city: "",
+        stateOrProvince: "",
+        postalCode: "",
+        country: "",
+      },
+      registrationNumber: "",
+      taxId: "",
+      website: "",
+      logoUrl: "",
+      brand: { primaryColor: "", secondaryColor: "", emailFromName: "" },
+      notes: "",
     });
     setShowAddCompanyModal(false);
   };
@@ -124,11 +166,28 @@ export default function GenericTable({
       ...userForm,
       companyId: userForm.companyId || null,
     };
-    await fetch("/api/users", {
+    const res = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(payload),
+    });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      window.alert(result?.error || "Failed to create user");
+      return;
+    }
+    if (result?.user && typeof onUserCreated === "function") {
+      onUserCreated(result.user);
+    }
+    setUserForm({
+      username: "",
+      passwordHash: "",
+      role: "client",
+      companyId: "",
+      fullName: "",
+      email: "",
+      phone: "",
     });
     setShowAddUserModal(false);
   };
@@ -375,19 +434,22 @@ export default function GenericTable({
 
             <div style={{ display: "grid", gap: "0.75rem" }}>
               <input style={fieldStyle} placeholder="Username" value={userForm.username} onChange={handleUserChange("username")} required />
+              <input style={fieldStyle} placeholder="Full Name" value={userForm.fullName} onChange={handleUserChange("fullName")} required />
+              <input style={fieldStyle} type="email" placeholder="Email" value={userForm.email} onChange={handleUserChange("email")} required />
+              <input style={fieldStyle} placeholder="Phone" value={userForm.phone} onChange={handleUserChange("phone")} required />
               <input style={fieldStyle} type="password" placeholder="Password" value={userForm.passwordHash} onChange={handleUserChange("passwordHash")} required />
               <select style={fieldStyle} value={userForm.role} onChange={handleUserChange("role")} required>
-                <option value="superadmin">superadmin</option>
                 <option value="supervisor">supervisor</option>
                 <option value="rm">rm</option>
                 <option value="client">client</option>
               </select>
-              <input style={fieldStyle} placeholder="Company ID (optional)" value={userForm.companyId} onChange={handleUserChange("companyId")} />
-              <select style={fieldStyle} value={userForm.subscriptionStatus} onChange={handleUserChange("subscriptionStatus")}>
-                <option value="pending">pending</option>
-                <option value="demo">demo</option>
-                <option value="subscribed">subscribed</option>
-                <option value="nouser">nouser</option>
+              <select style={fieldStyle} value={userForm.companyId} onChange={handleUserChange("companyId")} required>
+                <option value="">Select company</option>
+                {companies.map((company) => (
+                  <option key={company._id} value={company._id}>
+                    {company.name}
+                  </option>
+                ))}
               </select>
             </div>
 

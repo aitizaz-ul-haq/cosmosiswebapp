@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { connectToDatabase } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
 import User from "@/models/User";
+import Company from "@/models/Company";
+import mongoose from "mongoose";
 
 export async function POST(req) {
   const tokenUser = verifyToken(req);
@@ -10,20 +12,35 @@ export async function POST(req) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { username, password, role, companyId } = await req.json();
+  const requestBody = await req.json();
+  console.log("[POST /api/users] body", requestBody);
+  const { username, password, passwordHash, role, companyId, fullName, email, phone } = requestBody;
+  const rawPassword = password ?? passwordHash;
+  const normalizedUsername = username?.trim()?.toLowerCase() || "";
+  const normalizedFullName = fullName?.trim() || "";
+  const normalizedEmail = email?.trim()?.toLowerCase() || "";
+  const normalizedPhone = phone?.trim() || "";
 
-  if (!username || !password || !role) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  const missingFields = [];
+  if (!normalizedUsername) missingFields.push("username");
+  if (!rawPassword) missingFields.push("password");
+  if (!role) missingFields.push("role");
+  if (!normalizedFullName) missingFields.push("fullName");
+  if (!normalizedEmail) missingFields.push("email");
+  if (!normalizedPhone) missingFields.push("phone");
+
+  if (missingFields.length > 0) {
+    return NextResponse.json(
+      { error: "Missing fields", missing: missingFields, apiVersion: "users-post-v3" },
+      { status: 400 }
+    );
   }
 
   // ✅ Role-based creation rules
   if (tokenUser.role === "superadmin") {
-    if (role !== "supervisor" || !companyId) {
+    if (role !== "superadmin" && !companyId) {
       return NextResponse.json(
-        {
-          error:
-            "Superadmin must assign companyId and can only create supervisors",
-        },
+        { error: "Superadmin must assign companyId for non-superadmin users" },
         { status: 403 }
       );
     }
@@ -48,23 +65,49 @@ export async function POST(req) {
   try {
     await connectToDatabase();
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(rawPassword, 10);
+
+    const resolvedCompanyId = companyId || tokenUser.companyId || null;
+    let resolvedCompanyName = null;
+
+    if (resolvedCompanyId) {
+      const company = await Company.findById(resolvedCompanyId).select("name");
+      if (!company) {
+        return NextResponse.json({ error: "Company not found" }, { status: 404 });
+      }
+      resolvedCompanyName = company.name;
+    }
+
+    if (role !== "superadmin" && !resolvedCompanyId) {
+      return NextResponse.json({ error: "companyId is required" }, { status: 400 });
+    }
 
     const newUser = new User({
-      username,
+      username: normalizedUsername,
       passwordHash: hashedPassword, // ✅ match schema
       role,
-      companyId: companyId || tokenUser.companyId,
+      companyId: resolvedCompanyId,
+      companyName: resolvedCompanyName,
+      fullName: normalizedFullName,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      createdBy: tokenUser?.id || null,
     });
 
     await newUser.save();
 
     return NextResponse.json({
       success: true,
+      apiVersion: "users-post-v3",
       user: {
+        _id: newUser._id,
         username: newUser.username,
         role: newUser.role,
         companyId: newUser.companyId,
+        companyName: newUser.companyName,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        phone: newUser.phone,
       },
     });
   } catch (err) {
@@ -87,9 +130,30 @@ export async function GET(req) {
         ? {}
         : { companyId: new mongoose.Types.ObjectId(tokenUser.companyId) };
 
-    const users = await User.find(query).select("username email role companyId");
+    const users = await User.find(query)
+      .select("username fullName email phone role companyId companyName")
+      .populate("companyId", "name")
+      .lean();
 
-    return NextResponse.json({ success: true, users });
+    const normalizedUsers = users.map((user) => {
+      const companyId = user.companyId?._id || user.companyId || null;
+      const companyName = user.companyName || user.companyId?.name || "";
+
+      return {
+        ...user,
+        companyId,
+        companyName,
+        fullName: user.fullName || user.username || "",
+        email: user.email || "",
+        phone: user.phone || "",
+      };
+    });
+
+    const filteredUsers = normalizedUsers.filter(
+      (user) => user.fullName && user.email && user.phone
+    );
+
+    return NextResponse.json({ success: true, users: filteredUsers });
   } catch (err) {
     console.error("Fetch users error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

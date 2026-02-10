@@ -6,6 +6,7 @@ import GenericTable from "./GenericTable";
 export default function UserPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this user?")) return;
@@ -14,20 +15,47 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data.users || []))
-      .finally(() => setLoading(false));
+    let isMounted = true;
+    const loadUsers = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch("/api/users", {
+          credentials: "include",
+          cache: "no-store",
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to fetch users");
+        }
+        if (isMounted) {
+          setUsers(data.users || []);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setUsers([]);
+          setError(err?.message || "Failed to fetch users");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    loadUsers();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const tableTitle = "Users";
   const tableDescription = "All users in the system. Search, filter, and manage users here.";
 
   const columns = [
-    { accessorKey: "username", header: "Username" },
-    // { accessorKey: "email", header: "Email" },
+    { accessorKey: "fullName", header: "Name" },
+    { accessorKey: "email", header: "Email" },
+    { accessorKey: "companyName", header: "Company" },
     { accessorKey: "role", header: "Role" },
-    { accessorKey: "companyId", header: "Company" },
     {
       id: "actions",
       header: "Actions",
@@ -53,6 +81,20 @@ export default function UserPage() {
 
   return (
     <div>
+      {error ? (
+        <div
+          style={{
+            marginBottom: "0.75rem",
+            padding: "0.75rem 1rem",
+            borderRadius: "8px",
+            backgroundColor: "#fee2e2",
+            color: "#7f1d1d",
+            fontWeight: 600,
+          }}
+        >
+          {error}
+        </div>
+      ) : null}
       <GenericTable
         title={tableTitle}
         description={tableDescription}
@@ -61,6 +103,7 @@ export default function UserPage() {
         filterableFields={columns.map((col) => col.accessorKey)}
         actions={[]}
         loading={loading}
+        onUserCreated={(newUser) => setUsers((prev) => [newUser, ...prev])}
       />
     </div>
   );

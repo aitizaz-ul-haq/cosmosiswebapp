@@ -24,9 +24,25 @@ export async function GET(req, { params }) {
     }
 
     const users = await User.find({ companyId: new mongoose.Types.ObjectId(id) })
-      .select("username role companyId");
+      .select("username fullName email phone role companyId companyName")
+      .populate("companyId", "name")
+      .lean();
 
-    return NextResponse.json({ success: true, users });
+    const normalizedUsers = users.map((user) => {
+      const companyId = user.companyId?._id || user.companyId || null;
+      const companyName = user.companyName || user.companyId?.name || "";
+
+      return {
+        ...user,
+        companyId,
+        companyName,
+        fullName: user.fullName || user.username || "",
+        email: user.email || "",
+        phone: user.phone || "",
+      };
+    });
+
+    return NextResponse.json({ success: true, users: normalizedUsers });
   } catch (err) {
     console.error("Fetch company users error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
