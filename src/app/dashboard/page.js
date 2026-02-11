@@ -19,6 +19,9 @@ import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
 // import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
 // import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
 import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
+import RMsPage from "./components/dashboardshell/pages/RMsPage";
+import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
+import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
 
 const pageMap = {
   dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
@@ -32,16 +35,27 @@ const pageMap = {
   "system settings": <SettingsPage />,
   profile: <ProfilePage />,
   requesteddemonstration: <RequestedDemonstration />,
+  rms: <RMsPage />,
+  clients: <ClientsPage />,
+  onboarding: <OnboardingPage />,
 };
 
 export default function Dashboard() {
   const { user, logout } = useUser();
   const router = useRouter();
-  const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [activeMenu, setActiveMenu] = useState("");
 
   useEffect(() => {
     if (!user) router.push("/login");
-  }, [user, router]);
+    else {
+      // Set default menu based on role
+      const config = dashboardConfigs[user.role] || dashboardConfigs.client;
+      const firstMenuItem = config?.sidebar?.menu?.[0]?.key || "dashboard";
+      if (!activeMenu) {
+        setActiveMenu(firstMenuItem);
+      }
+    }
+  }, [user, router, activeMenu]);
 
   if (!user) return <p>Loading...</p>;
 

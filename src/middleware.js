@@ -19,11 +19,30 @@ const ROLE_RULES = {
     "/api/log",
     "/api/demo-requests",
     "/api/demo-users",
-    "/api/companies"
+    "/api/me",
+    "/api/logout"
   ], // full access
-  supervisor: ["/dashboard", "/api/users"], // can manage RMs/clients inside own company
-  rm: ["/dashboard", "/api/users"], // can manage clients only
-  client: ["/dashboard"], // only own dashboard
+  supervisor: [
+    "/dashboard",
+    "/api/users",
+    "/api/companies",
+    "/api/me",
+    "/api/logout",
+    "/api/log"
+  ], // can manage RMs/clients inside own company
+  rm: [
+    "/dashboard",
+    "/api/users",
+    "/api/me",
+    "/api/logout",
+    "/api/log"
+  ], // can manage clients only
+  client: [
+    "/dashboard",
+    "/api/me",
+    "/api/logout",
+    "/api/log"
+  ], // only own dashboard
 };
 
 async function verifyJWT(token) {

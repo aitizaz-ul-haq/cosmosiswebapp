@@ -58,8 +58,21 @@ export const dashboardConfigs = {
     header: { logoText: "Supervisor" },
     sidebar: {
       menu: [
-        { key: "rms", label: "Manage RMs" },
-        { key: "reports", label: "Reports" },
+        {
+          key: "rms",
+          label: "RMs",
+          iconlink: "/images/building.png",
+        },
+        {
+          key: "clients",
+          label: "Clients",
+          iconlink: "/images/building.png",
+        },
+        {
+          key: "onboarding",
+          label: "Onboarding",
+          iconlink: "/images/building.png",
+        },
       ],
     },
   },

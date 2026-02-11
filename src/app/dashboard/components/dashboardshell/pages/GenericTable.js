@@ -20,6 +20,8 @@ export default function GenericTable({
   onUserCreated,
   onCompanyCreated,
   disableRowModal = false,
+  onAddRM,
+  onAddClient,
 }) {
   const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
@@ -302,6 +304,52 @@ export default function GenericTable({
             }}
           >
             + Add User
+          </button>
+        </div>
+      )}
+
+      {title === "Relationship Managers" && onAddRM && (
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+          <button
+            type="button"
+            onClick={onAddRM}
+            style={{
+              backgroundColor: "var(--sitegreen)",
+              color: "#fff",
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "6px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 600,
+              fontSize: "1rem",
+            }}
+          >
+            + Add RM
+          </button>
+        </div>
+      )}
+
+      {title === "Clients" && onAddClient && (
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+          <button
+            type="button"
+            onClick={onAddClient}
+            style={{
+              backgroundColor: "var(--sitegreen)",
+              color: "#fff",
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "6px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 600,
+              fontSize: "1rem",
+            }}
+          >
+            + add clients
           </button>
         </div>
       )}

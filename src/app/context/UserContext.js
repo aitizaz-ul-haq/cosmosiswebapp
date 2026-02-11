@@ -24,11 +24,18 @@ export function UserProvider({ children }) {
         return null;
       }
 
-      // Store all user info from backend (/api/login sets JWT in cookie)
-      setUser({
-        username,
-        role: data.role,
-      });
+      // Fetch full user data including companyId from /api/me
+      const meRes = await fetch("/api/me", { credentials: "include" });
+      const meData = await meRes.json();
+
+      if (meRes.ok && meData.success) {
+        setUser(meData.user); // { id, username, role, companyId }
+      } else {
+        setUser({
+          username,
+          role: data.role,
+        });
+      }
 
       return data;
     } catch (err) {
