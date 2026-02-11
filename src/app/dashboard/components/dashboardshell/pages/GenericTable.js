@@ -19,6 +19,7 @@ export default function GenericTable({
   loading = false,
   onUserCreated,
   onCompanyCreated,
+  disableRowModal = false,
 }) {
   const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
@@ -313,7 +314,7 @@ export default function GenericTable({
           filteredData={filteredData}
           columns={columns}
           actions={actions}
-          setSelectedRow={setSelectedRow}
+          setSelectedRow={disableRowModal ? null : setSelectedRow}
         />
       </table>
 
@@ -473,11 +474,13 @@ export default function GenericTable({
       )}
 
       {/* Modal */}
-      <TableModal
-        data={selectedRow}
-        onClose={() => setSelectedRow(null)}
-        actions={actions.filter((a) => a.type !== "details")}
-      />
+      {!disableRowModal && (
+        <TableModal
+          data={selectedRow}
+          onClose={() => setSelectedRow(null)}
+          actions={actions.filter((a) => a.type !== "details")}
+        />
+      )}
     </div>
   );
 }

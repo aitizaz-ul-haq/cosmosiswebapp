@@ -196,3 +196,127 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  const tokenUser = verifyToken(req);
+  if (!tokenUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  try {
+    const body = await req.json();
+    await connectToDatabase();
+
+    const user = await User.findById(id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (
+      tokenUser.role !== "superadmin" &&
+      String(user.companyId) !== String(tokenUser.companyId)
+    ) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const update = {};
+
+    if (typeof body.username === "string") {
+      const normalizedUsername = body.username.trim().toLowerCase();
+      if (!normalizedUsername) {
+        return NextResponse.json({ error: "username cannot be empty" }, { status: 400 });
+      }
+      update.username = normalizedUsername;
+    }
+
+    if (typeof body.fullName === "string") {
+      const normalizedFullName = body.fullName.trim();
+      if (!normalizedFullName) {
+        return NextResponse.json({ error: "fullName cannot be empty" }, { status: 400 });
+      }
+      update.fullName = normalizedFullName;
+    }
+
+    if (typeof body.email === "string") {
+      const normalizedEmail = body.email.trim().toLowerCase();
+      if (!normalizedEmail) {
+        return NextResponse.json({ error: "email cannot be empty" }, { status: 400 });
+      }
+      update.email = normalizedEmail;
+    }
+
+    if (typeof body.phone === "string") {
+      const normalizedPhone = body.phone.trim();
+      if (!normalizedPhone) {
+        return NextResponse.json({ error: "phone cannot be empty" }, { status: 400 });
+      }
+      update.phone = normalizedPhone;
+    }
+
+    const canEditRoleAndCompany = tokenUser.role === "superadmin";
+
+    if (canEditRoleAndCompany && typeof body.role === "string") {
+      update.role = body.role;
+    }
+
+    if (canEditRoleAndCompany && typeof body.companyId === "string") {
+      update.companyId = body.companyId || null;
+    }
+
+    if (typeof body.password === "string" && body.password.trim() !== "") {
+      update.passwordHash = await bcrypt.hash(body.password, 10);
+    }
+
+    const nextRole = update.role ?? user.role;
+    let nextCompanyId = update.companyId ?? user.companyId ?? null;
+    let nextCompanyName = user.companyName ?? null;
+
+    if (nextRole === "superadmin") {
+      nextCompanyId = null;
+      nextCompanyName = null;
+    } else if (nextCompanyId) {
+      const company = await Company.findById(nextCompanyId).select("name");
+      if (!company) {
+        return NextResponse.json({ error: "Company not found" }, { status: 404 });
+      }
+      nextCompanyName = company.name;
+    } else {
+      return NextResponse.json({ error: "companyId is required for non-superadmin users" }, { status: 400 });
+    }
+
+    update.role = nextRole;
+    update.companyId = nextCompanyId;
+    update.companyName = nextCompanyName;
+
+    const updatedUser = await User.findByIdAndUpdate(id, update, {
+      new: true,
+      runValidators: true,
+    }).select("username fullName email phone role companyId companyName");
+
+    const normalizedUser = updatedUser
+      ? {
+          ...updatedUser.toObject(),
+          companyId: updatedUser.companyId?._id || updatedUser.companyId || null,
+          companyName: updatedUser.companyName || "",
+        }
+      : null;
+
+    return NextResponse.json({
+      success: true,
+      user: normalizedUser,
+    });
+  } catch (err) {
+    if (err?.code === 11000) {
+      return NextResponse.json({ error: "Username already exists" }, { status: 409 });
+    }
+    console.error("Update user error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

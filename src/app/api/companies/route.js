@@ -120,3 +120,69 @@ export async function DELETE(request) {
 
   return NextResponse.json({ success: true });
 }
+
+// 📌 Update company by id (superadmin only)
+export async function PATCH(request) {
+  try {
+    const user = verifyToken(request);
+
+    if (!user || user.role !== "superadmin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    if (!body?.name?.trim() || !body?.tenantKey?.trim()) {
+      return NextResponse.json({ error: "Missing company name or tenant key" }, { status: 400 });
+    }
+
+    const normalizedTenantKey = body.tenantKey.trim().toLowerCase();
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedTenantKey)) {
+      return NextResponse.json(
+        { error: "Tenant key must contain lowercase letters, numbers, and hyphens only" },
+        { status: 400 }
+      );
+    }
+
+    const update = {
+      name: body.name.trim(),
+      legalName: body.legalName,
+      tenantKey: normalizedTenantKey,
+      status: body.status,
+      primaryContact: body.primaryContact,
+      address: body.address,
+      registrationNumber: body.registrationNumber,
+      taxId: body.taxId,
+      website: body.website,
+      logoUrl: body.logoUrl,
+      notes: body.notes,
+    };
+
+    await connectToDatabase();
+
+    const company = await Company.findByIdAndUpdate(id, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!company) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, company });
+  } catch (err) {
+    if (err?.code === 11000) {
+      return NextResponse.json({ error: "Company name or tenant key already exists" }, { status: 409 });
+    }
+    console.error("Company update error:", err);
+    return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
+  }
+}
