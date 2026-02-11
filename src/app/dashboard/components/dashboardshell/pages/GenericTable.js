@@ -349,7 +349,7 @@ export default function GenericTable({
               fontSize: "1rem",
             }}
           >
-            + add clients
+            + Add Clients
           </button>
         </div>
       )}

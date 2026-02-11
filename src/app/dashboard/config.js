@@ -70,7 +70,7 @@ export const dashboardConfigs = {
         },
         {
           key: "onboarding",
-          label: "Onboarding",
+          label: "Onboarding status",
           iconlink: "/images/building.png",
         },
       ],
