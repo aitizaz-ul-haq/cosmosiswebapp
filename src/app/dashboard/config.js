@@ -80,8 +80,16 @@ export const dashboardConfigs = {
     header: { logoText: "Relationship Manager" },
     sidebar: {
       menu: [
-        { key: "clients", label: "Manage Clients" },
-        { key: "tasks", label: "Tasks" },
+        {
+          key: "clients",
+          label: "Clients",
+          iconlink: "/images/building.png",
+        },
+        {
+          key: "onboarding",
+          label: "Onboarding status",
+          iconlink: "/images/building.png",
+        },
       ],
     },
   },

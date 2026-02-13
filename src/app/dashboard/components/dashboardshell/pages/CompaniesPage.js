@@ -29,6 +29,8 @@ export default function CompaniesPage() {
     notes: "",
   });
 
+  //keith brown Helloworld
+
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this company?")) return;
     await fetch(`/api/companies?id=${encodeURIComponent(id)}`, { method: "DELETE" });

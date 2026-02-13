@@ -109,6 +109,7 @@ export default function ClientsPage() {
     e.preventDefault();
     const payload = {
       ...addForm,
+      role: "client",
       companyId: user?.companyId || null,
     };
     const res = await fetch("/api/users", {
@@ -173,7 +174,10 @@ export default function ClientsPage() {
   };
 
   const tableTitle = "Clients";
-  const tableDescription = "This is where you can see all your registered clients";
+  const tableDescription =
+    user?.role === "rm"
+      ? "All your registered clients are displayed here."
+      : "This is where you can see all your registered clients";
 
   const fieldStyle = {
     padding: "0.5rem 0.75rem",
