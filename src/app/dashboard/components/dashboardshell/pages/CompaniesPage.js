@@ -138,8 +138,6 @@ export default function CompaniesPage() {
     fontSize: "1rem",
     color: "#fff",
   };
-
-
   // Use fixed columns for the companies table
   const columns = [
     { accessorKey: "name", header: "Name" },
