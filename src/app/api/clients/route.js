@@ -284,3 +284,93 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  const tokenUser = verifyToken(req);
+  if (!tokenUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!new Set(["supervisor", "superadmin"]).has(tokenUser.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  if (!mongoose.isValidObjectId(id)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
+
+  const body = await req.json().catch(() => ({}));
+  const assignedToUserId = body?.assignedToUserId || null;
+
+  if (!assignedToUserId) {
+    return NextResponse.json({ error: "assignedToUserId is required" }, { status: 400 });
+  }
+
+  if (!mongoose.isValidObjectId(assignedToUserId)) {
+    return NextResponse.json({ error: "assignedToUserId is invalid" }, { status: 400 });
+  }
+
+  try {
+    await connectToDatabase();
+
+    let profile = await ClientProfile.findById(id).lean();
+    if (!profile) {
+      profile = await ClientProfile.findOne({ userId: id }).lean();
+    }
+
+    if (!profile) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+
+    if (
+      tokenUser.role !== "superadmin" &&
+      String(profile.companyId) !== String(tokenUser.companyId)
+    ) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const assignedUser = await User.findOne({
+      _id: assignedToUserId,
+      role: "rm",
+      companyId: new mongoose.Types.ObjectId(profile.companyId),
+    }).select("_id fullName username");
+
+    if (!assignedUser) {
+      return NextResponse.json(
+        { error: "Assigned RM not found for this company" },
+        { status: 404 }
+      );
+    }
+
+    await ClientProfile.findByIdAndUpdate(
+      profile._id,
+      { assignedToUserId: assignedUser._id },
+      { new: true }
+    );
+
+    const refreshedProfile = await ClientProfile.findById(profile._id)
+      .populate("userId", "username fullName email phone companyId companyName")
+      .populate("assignedToUserId", "username fullName")
+      .populate("createdByUserId", "username fullName role")
+      .lean();
+
+    const client = buildClientPayload(
+      refreshedProfile,
+      refreshedProfile?.userId,
+      refreshedProfile?.assignedToUserId,
+      refreshedProfile?.createdByUserId
+    );
+
+    return NextResponse.json({ success: true, client });
+  } catch (err) {
+    console.error("Update client assignment error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

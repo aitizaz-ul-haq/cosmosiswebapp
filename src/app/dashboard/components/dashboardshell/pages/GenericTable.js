@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
 import TableModal from "./pagecomponents/tablemodal";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
@@ -23,8 +23,13 @@ export default function GenericTable({
   onAddRM,
   onAddClient,
 }) {
+  const PAGE_SIZE = 8;
   const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: PAGE_SIZE,
+  });
   const [selectedRow, setSelectedRow] = useState(null);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -238,12 +243,47 @@ export default function GenericTable({
     });
   }, [data, filterField, filterValue]);
 
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [filterField, filterValue, filteredData.length]);
+
   // Table setup
   const table = useReactTable({
     data: filteredData,
     columns,
+    state: { pagination },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const pageCount = Math.max(1, Math.ceil(filteredData.length / pagination.pageSize));
+  const visiblePageCount = 5;
+  const currentPage = pagination.pageIndex + 1;
+  const firstRow = filteredData.length === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
+  const lastRow = Math.min(filteredData.length, pagination.pageIndex * pagination.pageSize + pagination.pageSize);
+
+  const getPageNumbers = () => {
+    if (pageCount <= visiblePageCount) {
+      return Array.from({ length: pageCount }, (_, i) => i);
+    }
+
+    const half = Math.floor(visiblePageCount / 2);
+    let start = pagination.pageIndex - half;
+    let end = pagination.pageIndex + half;
+
+    if (start < 0) {
+      start = 0;
+      end = visiblePageCount - 1;
+    }
+
+    if (end >= pageCount) {
+      end = pageCount - 1;
+      start = end - (visiblePageCount - 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   if (loading) {
     return <GenericTableLoader />;
@@ -365,6 +405,65 @@ export default function GenericTable({
           setSelectedRow={disableRowModal ? null : setSelectedRow}
         />
       </table>
+
+      <div className="generic-table-pagination">
+        <div className="generic-table-pagination-info">
+          Showing {firstRow}-{lastRow} of {filteredData.length}
+        </div>
+        <div className="generic-table-pagination-controls">
+          <button
+            type="button"
+            className="generic-table-page-btn"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            First
+          </button>
+          <button
+            type="button"
+            className="generic-table-page-btn"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Prev
+          </button>
+
+          {getPageNumbers().map((pageIndex) => (
+            <button
+              key={pageIndex}
+              type="button"
+              className={
+                pageIndex === pagination.pageIndex
+                  ? "generic-table-page-btn active"
+                  : "generic-table-page-btn"
+              }
+              onClick={() => table.setPageIndex(pageIndex)}
+            >
+              {pageIndex + 1}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            className="generic-table-page-btn"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            className="generic-table-page-btn"
+            onClick={() => table.setPageIndex(pageCount - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            Last
+          </button>
+        </div>
+        <div className="generic-table-pagination-status">
+          Page {currentPage} of {pageCount}
+        </div>
+      </div>
 
       {showAddCompanyModal && (
         <div

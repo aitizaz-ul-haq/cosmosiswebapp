@@ -65,6 +65,56 @@
   cursor: pointer;
 }
 
+/* Pagination */
+.generic-table-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.generic-table-pagination-info,
+.generic-table-pagination-status {
+  font-size: 0.9rem;
+  color: var(--sitedark);
+}
+
+.generic-table-pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.generic-table-page-btn {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: var(--sitedark);
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.generic-table-page-btn:hover:not(:disabled) {
+  border-color: var(--sitegreen);
+  color: var(--sitegreen);
+}
+
+.generic-table-page-btn.active {
+  background: var(--sitegreen);
+  border-color: var(--sitegreen);
+  color: #fff;
+}
+
+.generic-table-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Loader */
 .generic-table-loader {
   display: flex;

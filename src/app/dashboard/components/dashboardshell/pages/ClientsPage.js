@@ -12,6 +12,7 @@ export default function ClientsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
+  const [editProfileId, setEditProfileId] = useState(null);
   const [rmUsers, setRmUsers] = useState([]);
   const [addForm, setAddForm] = useState({
     username: "",
@@ -31,6 +32,7 @@ export default function ClientsPage() {
     role: "client",
     companyId: "",
     password: "",
+    assignedToUserId: "",
   });
 
   const handleDelete = async (client) => {
@@ -96,7 +98,7 @@ export default function ClientsPage() {
   }, [user?.companyId, user]);
 
   useEffect(() => {
-    if (!showAddModal || !canAssignRm || !user?.companyId) {
+    if ((!showAddModal && !showEditModal) || !canAssignRm || !user?.companyId) {
       setRmUsers([]);
       return;
     }
@@ -110,7 +112,7 @@ export default function ClientsPage() {
         setRmUsers(filtered);
       })
       .catch(() => setRmUsers([]));
-  }, [showAddModal, canAssignRm, user?.companyId, user?.role]);
+  }, [showAddModal, showEditModal, canAssignRm, user?.companyId, user?.role]);
 
   const handleAddChange = (key) => (e) => {
     const value = e?.target?.value ?? "";
@@ -171,6 +173,7 @@ export default function ClientsPage() {
     const userId = client?.userId || client?._id;
     if (!userId) return;
     setEditUserId(userId);
+    setEditProfileId(client?.profileId || null);
     setEditForm({
       username: client.username || "",
       fullName: client.fullName || "",
@@ -179,6 +182,7 @@ export default function ClientsPage() {
       role: "client",
       companyId: client.companyId || "",
       password: "",
+      assignedToUserId: client?.assignedToUserId || "",
     });
     setShowEditModal(true);
   };
@@ -186,6 +190,7 @@ export default function ClientsPage() {
   const closeEditModal = () => {
     setShowEditModal(false);
     setEditUserId(null);
+    setEditProfileId(null);
   };
 
   const handleEditSubmit = async (e) => {
@@ -221,8 +226,37 @@ export default function ClientsPage() {
         })
       );
     }
+
+    if (canAssignRm && editProfileId && editForm.assignedToUserId) {
+      const assignRes = await fetch(
+        `/api/clients?id=${encodeURIComponent(editProfileId)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            assignedToUserId: editForm.assignedToUserId,
+          }),
+        }
+      );
+      const assignResult = await assignRes.json().catch(() => ({}));
+      if (!assignRes.ok) {
+        window.alert(assignResult?.error || "Failed to update assigned RM");
+        return;
+      }
+      if (assignResult?.client) {
+        setClients((prev) =>
+          prev.map((client) => {
+            const clientUserId = client.userId || client._id;
+            if (String(clientUserId) !== String(assignResult.client.userId)) return client;
+            return { ...client, ...assignResult.client };
+          })
+        );
+      }
+    }
     setShowEditModal(false);
     setEditUserId(null);
+    setEditProfileId(null);
   };
 
   const tableTitle = "Clients";
@@ -452,6 +486,21 @@ export default function ClientsPage() {
               <input style={fieldStyle} placeholder="Full Name" value={editForm.fullName} onChange={handleEditChange("fullName")} required />
               <input style={fieldStyle} type="email" placeholder="Email" value={editForm.email} onChange={handleEditChange("email")} required />
               <input style={fieldStyle} placeholder="Phone" value={editForm.phone} onChange={handleEditChange("phone")} required />
+              {canAssignRm && (
+                <select
+                  style={fieldStyle}
+                  value={editForm.assignedToUserId}
+                  onChange={handleEditChange("assignedToUserId")}
+                  required
+                >
+                  <option value="">Change assigned RM</option>
+                  {rmUsers.map((rm) => (
+                    <option key={rm._id} value={rm._id}>
+                      {rm.fullName || rm.username}
+                    </option>
+                  ))}
+                </select>
+              )}
               <input style={fieldStyle} type="password" placeholder="New Password (leave blank to keep)" value={editForm.password} onChange={handleEditChange("password")} />
             </div>
 
