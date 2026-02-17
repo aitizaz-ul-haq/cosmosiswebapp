@@ -13,6 +13,7 @@ export default function ClientsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
   const [editProfileId, setEditProfileId] = useState(null);
+  const [originalAssignedToUserId, setOriginalAssignedToUserId] = useState(null);
   const [rmUsers, setRmUsers] = useState([]);
   const [addForm, setAddForm] = useState({
     username: "",
@@ -174,6 +175,7 @@ export default function ClientsPage() {
     if (!userId) return;
     setEditUserId(userId);
     setEditProfileId(client?.profileId || null);
+    setOriginalAssignedToUserId(client?.assignedToUserId || "");
     setEditForm({
       username: client.username || "",
       fullName: client.fullName || "",
@@ -191,6 +193,7 @@ export default function ClientsPage() {
     setShowEditModal(false);
     setEditUserId(null);
     setEditProfileId(null);
+    setOriginalAssignedToUserId(null);
   };
 
   const handleEditSubmit = async (e) => {
@@ -227,7 +230,12 @@ export default function ClientsPage() {
       );
     }
 
-    if (canAssignRm && editProfileId && editForm.assignedToUserId) {
+    if (
+      canAssignRm &&
+      editProfileId &&
+      editForm.assignedToUserId &&
+      editForm.assignedToUserId !== originalAssignedToUserId
+    ) {
       const assignRes = await fetch(
         `/api/clients?id=${encodeURIComponent(editProfileId)}`,
         {
@@ -257,6 +265,7 @@ export default function ClientsPage() {
     setShowEditModal(false);
     setEditUserId(null);
     setEditProfileId(null);
+    setOriginalAssignedToUserId(null);
   };
 
   const tableTitle = "Clients";
@@ -419,7 +428,7 @@ export default function ClientsPage() {
                   onChange={handleAddChange("assignedToUserId")}
                   required
                 >
-                  <option value="">Assigned To (RM)</option>
+                  <option value="">Select RM</option>
                   {rmUsers.map((rm) => (
                     <option key={rm._id} value={rm._id}>
                       {rm.fullName || rm.username}
@@ -491,9 +500,8 @@ export default function ClientsPage() {
                   style={fieldStyle}
                   value={editForm.assignedToUserId}
                   onChange={handleEditChange("assignedToUserId")}
-                  required
                 >
-                  <option value="">Change assigned RM</option>
+                  <option value="">Reassign RM (optional)</option>
                   {rmUsers.map((rm) => (
                     <option key={rm._id} value={rm._id}>
                       {rm.fullName || rm.username}
