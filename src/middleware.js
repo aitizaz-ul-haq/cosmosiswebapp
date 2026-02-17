@@ -16,6 +16,7 @@ const ROLE_RULES = {
     "/dashboard",
     "/api/companies",
     "/api/users",
+    "/api/clients",
     "/api/log",
     "/api/demo-requests",
     "/api/demo-users",
@@ -26,6 +27,7 @@ const ROLE_RULES = {
     "/dashboard",
     "/api/users",
     "/api/companies",
+    "/api/clients",
     "/api/me",
     "/api/logout",
     "/api/log"
@@ -33,6 +35,7 @@ const ROLE_RULES = {
   rm: [
     "/dashboard",
     "/api/users",
+    "/api/clients",
     "/api/me",
     "/api/logout",
     "/api/log"

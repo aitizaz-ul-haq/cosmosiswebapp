@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
 import User from "@/models/User";
 import Company from "@/models/Company";
+import ClientProfile from "@/models/ClientProfile";
 import mongoose from "mongoose";
 
 export async function POST(req) {
@@ -14,7 +15,17 @@ export async function POST(req) {
 
   const requestBody = await req.json();
   // console.log("[POST /api/users] body", requestBody);
-  const { username, password, passwordHash, role, companyId, fullName, email, phone } = requestBody;
+  const {
+    username,
+    password,
+    passwordHash,
+    role,
+    companyId,
+    fullName,
+    email,
+    phone,
+    assignedToUserId,
+  } = requestBody;
   const rawPassword = password ?? passwordHash;
   const normalizedUsername = username?.trim()?.toLowerCase() || "";
   const normalizedFullName = fullName?.trim() || "";
@@ -36,8 +47,14 @@ export async function POST(req) {
     );
   }
 
+  const isClientCreation = role === "client";
+
   // ✅ Role-based creation rules
-  if (tokenUser.role === "superadmin") {
+  if (isClientCreation) {
+    if (!new Set(["supervisor", "rm", "superadmin"]).has(tokenUser.role)) {
+      return NextResponse.json({ error: "Not allowed" }, { status: 403 });
+    }
+  } else if (tokenUser.role === "superadmin") {
     if (role !== "superadmin" && !companyId) {
       return NextResponse.json(
         { error: "Superadmin must assign companyId for non-superadmin users" },
@@ -67,7 +84,9 @@ export async function POST(req) {
 
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
-    const resolvedCompanyId = companyId || tokenUser.companyId || null;
+    const resolvedCompanyId = isClientCreation
+      ? tokenUser.companyId || null
+      : companyId || tokenUser.companyId || null;
     let resolvedCompanyName = null;
 
     if (resolvedCompanyId) {
@@ -84,17 +103,66 @@ export async function POST(req) {
 
     const newUser = new User({
       username: normalizedUsername,
-      passwordHash: hashedPassword, // ✅ match schema
+      passwordHash: hashedPassword,
       role,
       companyId: resolvedCompanyId,
       companyName: resolvedCompanyName,
       fullName: normalizedFullName,
       email: normalizedEmail,
       phone: normalizedPhone,
+      isActive: true,
       createdBy: tokenUser?.id || null,
     });
 
     await newUser.save();
+
+    if (isClientCreation) {
+      const creatorUser = await User.findById(tokenUser.id).select("fullName username");
+      if (!creatorUser) {
+        return NextResponse.json({ error: "Creator not found" }, { status: 404 });
+      }
+
+      let resolvedAssignedToUserId = null;
+
+      if (tokenUser.role === "rm") {
+        resolvedAssignedToUserId = tokenUser.id;
+      } else {
+        if (!assignedToUserId) {
+          return NextResponse.json({ error: "assignedToUserId is required" }, { status: 400 });
+        }
+        if (!mongoose.isValidObjectId(assignedToUserId)) {
+          return NextResponse.json({ error: "assignedToUserId is invalid" }, { status: 400 });
+        }
+        const assignedUser = await User.findOne({
+          _id: assignedToUserId,
+          role: "rm",
+          companyId: new mongoose.Types.ObjectId(resolvedCompanyId),
+        }).select("_id");
+        if (!assignedUser) {
+          return NextResponse.json(
+            { error: "Assigned RM not found for this company" },
+            { status: 404 }
+          );
+        }
+        resolvedAssignedToUserId = assignedUser._id;
+      }
+
+      const newProfile = new ClientProfile({
+        userId: newUser._id,
+        companyId: resolvedCompanyId,
+        companyName: resolvedCompanyName,
+        createdByUserId: tokenUser.id,
+        assignedToUserId: resolvedAssignedToUserId,
+        createdByNameSnapshot: creatorUser.fullName || creatorUser.username || "",
+        onboarding: {
+          status: "not_started",
+          currentStep: 1,
+          completedSteps: [],
+        },
+      });
+
+      await newProfile.save();
+    }
 
     return NextResponse.json({
       success: true,

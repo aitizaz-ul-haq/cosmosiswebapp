@@ -12,6 +12,7 @@ export default function ClientsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
+  const [rmUsers, setRmUsers] = useState([]);
   const [addForm, setAddForm] = useState({
     username: "",
     fullName: "",
@@ -20,6 +21,7 @@ export default function ClientsPage() {
     password: "",
     role: "client",
     companyId: "",
+    assignedToUserId: "",
   });
   const [editForm, setEditForm] = useState({
     username: "",
@@ -31,11 +33,29 @@ export default function ClientsPage() {
     password: "",
   });
 
-  const handleDelete = async (id) => {
-    if (!id || !window.confirm("Delete this client?")) return;
-    await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
-    setClients((prev) => prev.filter((u) => u._id !== id));
+  const handleDelete = async (client) => {
+    const profileId = client?.profileId || null;
+    const userId = client?.userId || client?._id || null;
+    const deleteId = profileId || userId;
+    if (!deleteId || !window.confirm("Delete this client?")) return;
+    const res = await fetch(`/api/clients?id=${encodeURIComponent(deleteId)}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const result = await res.json().catch(() => ({}));
+      window.alert(result?.error || "Failed to delete client");
+      return;
+    }
+    setClients((prev) =>
+      prev.filter((u) => {
+        const existingUserId = u.userId || u._id;
+        return String(existingUserId) !== String(userId);
+      })
+    );
   };
+
+  const canAssignRm = user?.role === "supervisor" || user?.role === "superadmin";
 
   useEffect(() => {
     let isMounted = true;
@@ -43,7 +63,7 @@ export default function ClientsPage() {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch("/api/users", {
+        const res = await fetch("/api/clients", {
           credentials: "include",
           cache: "no-store",
         });
@@ -52,10 +72,7 @@ export default function ClientsPage() {
           throw new Error(data?.error || "Failed to fetch clients");
         }
         if (isMounted) {
-          const filteredClients = (data.users || []).filter(
-            (u) => u.role === "client" && u.companyId === user?.companyId
-          );
-          setClients(filteredClients);
+          setClients(data.clients || []);
         }
       } catch (err) {
         if (isMounted) {
@@ -78,6 +95,23 @@ export default function ClientsPage() {
     };
   }, [user?.companyId, user]);
 
+  useEffect(() => {
+    if (!showAddModal || !canAssignRm || !user?.companyId) {
+      setRmUsers([]);
+      return;
+    }
+    fetch("/api/users", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        const users = Array.isArray(data.users) ? data.users : [];
+        const filtered = users.filter(
+          (rm) => rm.role === "rm" && rm.companyId === user.companyId
+        );
+        setRmUsers(filtered);
+      })
+      .catch(() => setRmUsers([]));
+  }, [showAddModal, canAssignRm, user?.companyId, user?.role]);
+
   const handleAddChange = (key) => (e) => {
     const value = e?.target?.value ?? "";
     setAddForm((prev) => ({ ...prev, [key]: value }));
@@ -97,6 +131,7 @@ export default function ClientsPage() {
       password: "",
       role: "client",
       companyId: user?.companyId || "",
+      assignedToUserId: "",
     });
     setShowAddModal(true);
   };
@@ -108,11 +143,14 @@ export default function ClientsPage() {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      ...addForm,
-      role: "client",
-      companyId: user?.companyId || null,
+      username: addForm.username,
+      fullName: addForm.fullName,
+      email: addForm.email,
+      phone: addForm.phone,
+      password: addForm.password,
+      assignedToUserId: canAssignRm ? addForm.assignedToUserId : undefined,
     };
-    const res = await fetch("/api/users", {
+    const res = await fetch("/api/clients", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -123,21 +161,22 @@ export default function ClientsPage() {
       window.alert(result?.error || "Failed to create client");
       return;
     }
-    if (result?.user) {
-      setClients((prev) => [result.user, ...prev]);
+    if (result?.client) {
+      setClients((prev) => [result.client, ...prev]);
     }
     setShowAddModal(false);
   };
 
   const openEditModal = (client) => {
-    if (!client?._id) return;
-    setEditUserId(client._id);
+    const userId = client?.userId || client?._id;
+    if (!userId) return;
+    setEditUserId(userId);
     setEditForm({
       username: client.username || "",
       fullName: client.fullName || "",
       email: client.email || "",
       phone: client.phone || "",
-      role: client.role || "client",
+      role: "client",
       companyId: client.companyId || "",
       password: "",
     });
@@ -164,10 +203,23 @@ export default function ClientsPage() {
       return;
     }
     if (result?.user?._id) {
-      setClients((prev) => {
-        const updated = prev.map((u) => (u._id === result.user._id ? result.user : u));
-        return updated.filter((u) => u.role === "client" && u.companyId === user?.companyId);
-      });
+      setClients((prev) =>
+        prev.map((client) => {
+          const clientUserId = client.userId || client._id;
+          if (String(clientUserId) !== String(result.user._id)) return client;
+          return {
+            ...client,
+            _id: result.user._id,
+            userId: result.user._id,
+            username: result.user.username || client.username,
+            fullName: result.user.fullName || result.user.username || "",
+            email: result.user.email || "",
+            phone: result.user.phone || "",
+            companyId: result.user.companyId || client.companyId,
+            companyName: result.user.companyName || client.companyName,
+          };
+        })
+      );
     }
     setShowEditModal(false);
     setEditUserId(null);
@@ -203,6 +255,8 @@ export default function ClientsPage() {
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "email", header: "Email" },
     { accessorKey: "phone", header: "Phone" },
+    ...(canAssignRm ? [{ accessorKey: "assignedToName", header: "Assigned To" }] : []),
+    { accessorKey: "assignedByName", header: "Assigned By" },
     { accessorKey: "companyName", header: "Company" },
     {
       id: "actions",
@@ -226,7 +280,7 @@ export default function ClientsPage() {
           </button>
           <button
             type="button"
-            onClick={() => handleDelete(row?.original?._id)}
+            onClick={() => handleDelete(row?.original)}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -324,6 +378,21 @@ export default function ClientsPage() {
               <input style={fieldStyle} placeholder="Full Name" value={addForm.fullName} onChange={handleAddChange("fullName")} required />
               <input style={fieldStyle} type="email" placeholder="Email" value={addForm.email} onChange={handleAddChange("email")} required />
               <input style={fieldStyle} placeholder="Phone" value={addForm.phone} onChange={handleAddChange("phone")} required />
+              {canAssignRm && (
+                <select
+                  style={fieldStyle}
+                  value={addForm.assignedToUserId}
+                  onChange={handleAddChange("assignedToUserId")}
+                  required
+                >
+                  <option value="">Assigned To (RM)</option>
+                  {rmUsers.map((rm) => (
+                    <option key={rm._id} value={rm._id}>
+                      {rm.fullName || rm.username}
+                    </option>
+                  ))}
+                </select>
+              )}
               <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
             </div>
 
