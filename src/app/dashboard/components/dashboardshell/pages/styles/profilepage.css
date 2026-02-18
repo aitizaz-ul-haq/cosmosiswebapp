@@ -1,0 +1,347 @@
+/* Profile Page Container */
+.profile-page-container {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  margin: 0;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Section Headers */
+.profile-section-header {
+  margin-bottom: 1rem;
+}
+
+.profile-section-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--sitedark);
+  margin-bottom: 0.5rem;
+}
+
+.profile-section-description {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sitedark);
+  opacity: 0.7;
+}
+
+/* Personal Information Grid */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 30%);
+  gap: 1.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.profile-info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-info-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sitedark);
+  min-width: 120px;
+}
+
+.profile-info-value {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--sitedark);
+  flex: 1;
+}
+
+/* Edit Info Button */
+.profile-edit-button {
+  padding: 8px 16px;
+  background-color: var(--sitegreen);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.profile-edit-button:hover {
+  opacity: 0.9;
+}
+
+/* Divider Line */
+.profile-divider {
+  height: 3px;
+  background-color: var(--sitegreen);
+  border: none;
+  margin: 2.5rem 0;
+}
+
+/* Profile Settings Form */
+.profile-settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 360px;
+}
+
+.profile-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sitedark);
+}
+
+.profile-password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-form-input {
+  padding: 10px 14px;
+  padding-right: 45px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--sitedark);
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.profile-form-input:focus {
+  outline: none;
+  border-color: var(--sitegreen);
+}
+
+.profile-form-input.error {
+  border-color: #ef4444;
+}
+
+.profile-field-error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.profile-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sitedark);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.profile-password-toggle:hover {
+  opacity: 1;
+}
+
+.profile-form-button {
+  padding: 10px 20px;
+  background-color: var(--sitegreen);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  align-self: flex-start;
+}
+
+.profile-form-button:hover {
+  opacity: 0.9;
+}
+
+.profile-form-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.profile-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  color: var(--sitedark);
+}
+
+.profile-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid var(--sitegreen);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success/Error Messages */
+.profile-message {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.profile-message.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.profile-message.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .profile-section-title {
+    font-size: 2rem;
+  }
+
+  .profile-info-label {
+    min-width: 100px;
+  }
+}
+
+/* Modal Styles */
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.profile-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.profile-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.profile-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--sitedark);
+  margin: 0;
+}
+
+.profile-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--sitedark);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-modal-close:hover {
+  opacity: 0.7;
+}
+
+.profile-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.profile-modal-cancel {
+  padding: 10px 20px;
+  background-color: #e5e7eb;
+  color: var(--sitedark);
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.profile-modal-cancel:hover {
+  opacity: 0.8;
+}
+
+.profile-modal-submit {
+  padding: 10px 20px;
+  background-color: var(--sitegreen);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.profile-modal-submit:hover {
+  opacity: 0.9;
+}
+
+.profile-modal-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -12,29 +12,29 @@ import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
-import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
-import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
+// import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
+// import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
-import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
+// import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
 // import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
 // import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
-import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
+// import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
 import RMsPage from "./components/dashboardshell/pages/RMsPage";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
 
 const pageMap = {
   dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
-  "demo users": <DemoUsers />,
+  // "demo users": <DemoUsers />,
   companies: <CompaniesPage />,
   supervisors: <SupervisorsPage />,
   users: <UserPage />,
   logs: <LogsPage />,
   reports: <ReportsPage />,
-  notifications: <NotificationsPage />,
-  "system settings": <SettingsPage />,
+  // notifications: <NotificationsPage />,
+  // "system settings": <SettingsPage />,
   profile: <ProfilePage />,
-  requesteddemonstration: <RequestedDemonstration />,
+  // requesteddemonstration: <RequestedDemonstration />,
   rms: <RMsPage />,
   clients: <ClientsPage />,
   onboarding: <OnboardingPage />,

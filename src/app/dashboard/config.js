@@ -9,16 +9,16 @@ export const dashboardConfigs = {
           label: "Dashboard",
           iconlink: "/images/dashboard.png",
         },
-        {
-          key: "requesteddemonstration",
-          label: "Demo Requests",
-          iconlink: "/images/request.png",
-        },
-        {
-          key: "demo users",
-          label: "Demo Users",
-          iconlink: "/images/demo.png",
-        },
+        // {
+        //   key: "requesteddemonstration",
+        //   label: "Demo Requests",
+        //   iconlink: "/images/request.png",
+        // },
+        // {
+        //   key: "demo users",
+        //   label: "Demo Users",
+        //   iconlink: "/images/demo.png",
+        // },
         {
           key: "companies",
           label: "Companies",
@@ -36,16 +36,16 @@ export const dashboardConfigs = {
         },
         { key: "logs", label: "Logs", iconlink: "/images/file.png" },
         { key: "reports", label: "Reports", iconlink: "/images/report.png" },
-        {
-          key: "notifications",
-          label: "Notifications",
-          iconlink: "/images/bell.png",
-        },
-        {
-          key: "system settings",
-          label: "System Settings",
-          iconlink: "/images/settings.png",
-        },
+        // {
+        //   key: "notifications",
+        //   label: "Notifications",
+        //   iconlink: "/images/bell.png",
+        // },
+        // {
+        //   key: "system settings",
+        //   label: "System Settings",
+        //   iconlink: "/images/settings.png",
+        // },
         {
           key: "profile",
           label: "Profile",
@@ -73,6 +73,11 @@ export const dashboardConfigs = {
           label: "Onboarding status",
           iconlink: "/images/building.png",
         },
+        {
+          key: "profile",
+          label: "Profile",
+          iconlink: "/images/profile-user.png",
+        },
       ],
     },
   },
@@ -90,6 +95,11 @@ export const dashboardConfigs = {
           label: "Onboarding status",
           iconlink: "/images/building.png",
         },
+        {
+          key: "profile",
+          label: "Profile",
+          iconlink: "/images/profile-user.png",
+        },
       ],
     },
   },
@@ -97,8 +107,16 @@ export const dashboardConfigs = {
     header: { logoText: "Client" },
     sidebar: {
       menu: [
-        { key: "profile", label: "Profile" },
-        { key: "onboarding", label: "Onboarding" },
+        { 
+          key: "profile", 
+          label: "Profile",
+          iconlink: "/images/profile-user.png",
+        },
+        { 
+          key: "onboarding", 
+          label: "Onboarding",
+          iconlink: "/images/building.png",
+        },
       ],
     },
   },

@@ -74,7 +74,7 @@ export async function POST(req) {
   }
 }
 
-// 📌 List companies
+// 📌 List companies or fetch single company by id
 export async function GET(req) {
   try {
     const user = verifyToken(req);
@@ -83,8 +83,25 @@ export async function GET(req) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
     await connectToDatabase();
 
+    // If specific id is requested
+    if (id) {
+      const company = await Company.findById(id);
+      if (!company) {
+        return NextResponse.json({ error: "Company not found" }, { status: 404 });
+      }
+      // Allow superadmin or the user's own company
+      if (user.role !== "superadmin" && company._id.toString() !== user.companyId?.toString()) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      return NextResponse.json({ success: true, company });
+    }
+
+    // Otherwise fetch all companies
     if (user.role === "superadmin") {
       const companies = await Company.find().sort({ createdAt: -1 });
       return NextResponse.json({ success: true, companies });
@@ -121,13 +138,13 @@ export async function DELETE(request) {
   return NextResponse.json({ success: true });
 }
 
-// 📌 Update company by id (superadmin only)
+// 📌 Update company by id (superadmin or company owner)
 export async function PATCH(request) {
   try {
     const user = verifyToken(request);
 
-    if (!user || user.role !== "superadmin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -139,23 +156,26 @@ export async function PATCH(request) {
 
     const body = await request.json();
 
-    if (!body?.name?.trim() || !body?.tenantKey?.trim()) {
-      return NextResponse.json({ error: "Missing company name or tenant key" }, { status: 400 });
+    // Only name is required for updates
+    if (!body?.name?.trim()) {
+      return NextResponse.json({ error: "Missing company name" }, { status: 400 });
     }
 
-    const normalizedTenantKey = body.tenantKey.trim().toLowerCase();
+    await connectToDatabase();
 
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedTenantKey)) {
-      return NextResponse.json(
-        { error: "Tenant key must contain lowercase letters, numbers, and hyphens only" },
-        { status: 400 }
-      );
+    const company = await Company.findById(id);
+    if (!company) {
+      return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    }
+
+    // Allow superadmin or the user's own company
+    if (user.role !== "superadmin" && company._id.toString() !== user.companyId?.toString()) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     const update = {
       name: body.name.trim(),
       legalName: body.legalName,
-      tenantKey: normalizedTenantKey,
       status: body.status,
       primaryContact: body.primaryContact,
       address: body.address,
@@ -166,18 +186,26 @@ export async function PATCH(request) {
       notes: body.notes,
     };
 
-    await connectToDatabase();
+    // Only update tenantKey if provided and if user is superadmin
+    if (body.tenantKey && user.role === "superadmin") {
+      const normalizedTenantKey = body.tenantKey.trim().toLowerCase();
 
-    const company = await Company.findByIdAndUpdate(id, update, {
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedTenantKey)) {
+        return NextResponse.json(
+          { error: "Tenant key must contain lowercase letters, numbers, and hyphens only" },
+          { status: 400 }
+        );
+      }
+
+      update.tenantKey = normalizedTenantKey;
+    }
+
+    const updatedCompany = await Company.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
     });
 
-    if (!company) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, company });
+    return NextResponse.json({ success: true, company: updatedCompany });
   } catch (err) {
     if (err?.code === 11000) {
       return NextResponse.json({ error: "Company name or tenant key already exists" }, { status: 409 });
