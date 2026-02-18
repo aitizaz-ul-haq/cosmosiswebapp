@@ -193,10 +193,34 @@ export async function GET(req) {
   try {
     await connectToDatabase();
 
-    const query =
+    const { searchParams } = new URL(req.url);
+    const roleFilter = searchParams.get("role");
+    const companyIdFilter = searchParams.get("companyId");
+    const countOnly = searchParams.get("count");
+
+    let query =
       tokenUser.role === "superadmin"
         ? {}
         : { companyId: new mongoose.Types.ObjectId(tokenUser.companyId) };
+
+    // Apply role filter if provided
+    if (roleFilter) {
+      query.role = roleFilter;
+    }
+
+    // Apply companyId filter if provided (and user is superadmin or owns the company)
+    if (companyIdFilter) {
+      if (tokenUser.role !== "superadmin" && tokenUser.companyId !== companyIdFilter) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      query.companyId = new mongoose.Types.ObjectId(companyIdFilter);
+    }
+
+    // If only count is requested, return the count
+    if (countOnly === "true") {
+      const count = await User.countDocuments(query);
+      return NextResponse.json({ success: true, count });
+    }
 
     const users = await User.find(query)
       .select("username fullName email phone role companyId companyName")

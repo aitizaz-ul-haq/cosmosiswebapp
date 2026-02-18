@@ -85,8 +85,19 @@ export async function GET(req) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const countOnly = searchParams.get("count");
 
     await connectToDatabase();
+
+    // Return company count for superadmin
+    if (countOnly === "true") {
+      if (user.role !== "superadmin") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      const count = await Company.countDocuments();
+      return NextResponse.json({ success: true, count });
+    }
 
     // If specific id is requested
     if (id) {

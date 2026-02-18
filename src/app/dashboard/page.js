@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "../context/UserContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
@@ -22,40 +22,83 @@ import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
 import RMsPage from "./components/dashboardshell/pages/RMsPage";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
+import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
+import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
+import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDashboard";
 
-const pageMap = {
-  dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
-  // "demo users": <DemoUsers />,
-  companies: <CompaniesPage />,
-  supervisors: <SupervisorsPage />,
-  users: <UserPage />,
-  logs: <LogsPage />,
-  reports: <ReportsPage />,
-  // notifications: <NotificationsPage />,
-  // "system settings": <SettingsPage />,
-  profile: <ProfilePage />,
-  // requesteddemonstration: <RequestedDemonstration />,
-  rms: <RMsPage />,
-  clients: <ClientsPage />,
-  onboarding: <OnboardingPage />,
+const getPageMap = (userRole) => {
+  const baseMap = {
+    // "demo users": <DemoUsers />,
+    companies: <CompaniesPage />,
+    supervisors: <SupervisorsPage />,
+    users: <UserPage />,
+    logs: <LogsPage />,
+    reports: <ReportsPage />,
+    // notifications: <NotificationsPage />,
+    // "system settings": <SettingsPage />,
+    profile: <ProfilePage />,
+    // requesteddemonstration: <RequestedDemonstration />,
+    rms: <RMsPage />,
+    clients: <ClientsPage />,
+    onboarding: <OnboardingPage />,
+  };
+
+  // Role-based dashboard override
+  if (userRole === "superadmin") {
+    return {
+      ...baseMap,
+      dashboard: <SuperAdminDashboard />,
+    };
+  }
+
+  if (userRole === "supervisor") {
+    return {
+      ...baseMap,
+      dashboard: <SupervisorDashboard />,
+    };
+  }
+
+  if (userRole === "rm") {
+    return {
+      ...baseMap,
+      dashboard: <RMDashboard />,
+    };
+  }
+
+  return {
+    ...baseMap,
+    dashboard: <div>🏠 Super Admin Dashboard Overview</div>,
+  };
 };
 
 export default function Dashboard() {
   const { user, logout } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeMenu, setActiveMenu] = useState("");
 
   useEffect(() => {
-    if (!user) router.push("/login");
-    else {
-      // Set default menu based on role
-      const config = dashboardConfigs[user.role] || dashboardConfigs.client;
-      const firstMenuItem = config?.sidebar?.menu?.[0]?.key || "dashboard";
-      if (!activeMenu) {
-        setActiveMenu(firstMenuItem);
-      }
+    if (!user) {
+      router.push("/login");
+      return;
     }
-  }, [user, router, activeMenu]);
+
+    const config = dashboardConfigs[user.role] || dashboardConfigs.client;
+    const menuParam = searchParams?.get("menu");
+    const menuKeys = config?.sidebar?.menu?.map((item) => item.key) || [];
+
+    if (menuParam && menuKeys.includes(menuParam)) {
+      setActiveMenu(menuParam);
+      router.replace("/dashboard");
+      return;
+    }
+
+    // Set default menu based on role
+    const firstMenuItem = config?.sidebar?.menu?.[0]?.key || "dashboard";
+    if (!activeMenu) {
+      setActiveMenu(firstMenuItem);
+    }
+  }, [user, router, activeMenu, searchParams]);
 
   if (!user) return <p>Loading...</p>;
 
@@ -84,7 +127,7 @@ export default function Dashboard() {
       activeMenu={activeMenu}
       setActiveMenu={setActiveMenu}
     >
-      {pageMap[activeMenu] || <div>Welcome {user.role}!</div>}
+      {getPageMap(user.role)[activeMenu] || <div>Welcome {user.role}!</div>}
     </DashboardShell>
   );
 }

@@ -59,6 +59,11 @@ export const dashboardConfigs = {
     sidebar: {
       menu: [
         {
+          key: "dashboard",
+          label: "Dashboard",
+          iconlink: "/images/dashboard.png",
+        },
+        {
           key: "rms",
           label: "RMs",
           iconlink: "/images/building.png",
@@ -85,6 +90,11 @@ export const dashboardConfigs = {
     header: { logoText: "Relationship Manager" },
     sidebar: {
       menu: [
+        {
+          key: "dashboard",
+          label: "Dashboard",
+          iconlink: "/images/dashboard.png",
+        },
         {
           key: "clients",
           label: "Clients",
