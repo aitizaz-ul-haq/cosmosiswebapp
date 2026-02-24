@@ -1,10 +1,9 @@
-import DashboardHeaderTextContainer from "./microcomps/dashboardheadertxtcontainer";
 import DashboardLogoutButton from "./microcomps/dashboardlogoutbutton";
 
-export default function DashboardHeaderSection({ onLogout, user }) {
+export default function DashboardHeaderSection({ onLogout }) {
   return (
     <div className="dasboard-header-section">
-      <DashboardHeaderTextContainer user={user} />
+      <div />
       <DashboardLogoutButton onLogout={onLogout} />
     </div>
   );

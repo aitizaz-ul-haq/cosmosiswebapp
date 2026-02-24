@@ -15,37 +15,44 @@ export default function RMDashboard() {
 
   useEffect(() => {
     const fetchCounts = async () => {
-      if (!user?.id) {
+      if (!user) {
         setLoading(false);
         return;
       }
 
       try {
-        // Fetch clients assigned to this RM
-        const clientRes = await fetch(
-          `/api/users?role=client&count=true`,
-          { credentials: "include" }
-        );
+        // Fetch clients assigned to this RM (same as ClientsPage does)
+        const clientRes = await fetch("/api/clients", {
+          credentials: "include",
+          cache: "no-store",
+        });
 
-        if (clientRes.ok) {
-          const clientData = await clientRes.json();
-          setClientCount(clientData.count || 0);
+        const clientData = await clientRes.json().catch(() => ({}));
+        
+        if (!clientRes.ok) {
+          console.error("Failed to fetch clients:", clientData?.error);
+          setClientCount(0);
+        } else {
+          const clients = clientData.clients || [];
+          console.log("RM Dashboard: Fetched clients:", clients.length, clients);
+          setClientCount(clients.length);
         }
 
-        // Set placeholder values for onboarding and submissions (will update later)
-        setOngoingOnboarding(0);
-        setCompletedOnboarding(0);
-        setSubmissions(0);
+        // Set placeholder random values for other cards (to be implemented later)
+        setOngoingOnboarding(Math.floor(Math.random() * 10) + 1);
+        setCompletedOnboarding(Math.floor(Math.random() * 15) + 5);
+        setSubmissions(Math.floor(Math.random() * 20) + 10);
       } catch (err) {
         console.error("Error fetching counts:", err);
         setError("Failed to load dashboard data");
+        setClientCount(0);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCounts();
-  }, [user?.id]);
+  }, [user]);
 
   const onboardingSteps = [
     { client: "John Anderson", label: "Personal Details", percentage: 20 },

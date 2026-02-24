@@ -3,12 +3,13 @@ import DashboardSidebarMenuContainer from "./microcomps/dashboardsidebarmenucont
 
 export default function DashboardSideBarSection({
   config,
+  user,
   activeMenu,
   setActiveMenu,
 }) {
   return (
     <div className="dashboard-sidebar-section">
-      <DashboardSidebarLogoContainer />
+      <DashboardSidebarLogoContainer user={user} />
       <DashboardSidebarMenuContainer
         config={config}
         activeMenu={activeMenu}

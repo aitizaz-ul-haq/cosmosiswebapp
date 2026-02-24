@@ -18,15 +18,12 @@ export default function DashboardShell({
       {/* Sidebar Section */}
       <DashboardSideBarSection
         config={config}
+        user={user}
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
       />
       {/* Main Section */}
-      <DashboardDetailsSection
-        onLogout={onLogout}
-        user={user}
-        children={children}
-      />
+      <DashboardDetailsSection onLogout={onLogout} children={children} />
     </div>
   );
 }

@@ -68,18 +68,33 @@ export async function GET(req) {
   try {
     await connectToDatabase();
 
+    const { searchParams } = new URL(req.url);
+    const countOnly = searchParams.get("count");
+
     const companyId = tokenUser.companyId || null;
     let query = {};
 
     if (tokenUser.role === "rm") {
+      // For RMs, filter by assignedToUserId (primary filter)
       query = {
-        companyId,
         assignedToUserId: new mongoose.Types.ObjectId(tokenUser.id),
       };
+      // Add companyId filter only if it exists
+      if (companyId) {
+        query.companyId = companyId;
+      }
+      console.log("[API /clients GET] RM query:", JSON.stringify(query), "tokenUser.id:", tokenUser.id);
     } else if (tokenUser.role === "supervisor") {
       query = { companyId };
     } else if (tokenUser.role === "superadmin" && companyId) {
       query = { companyId };
+    }
+
+    // If only count is requested, return the count
+    if (countOnly === "true") {
+      const count = await ClientProfile.countDocuments(query);
+      console.log("[API /clients GET] Count query result:", count);
+      return NextResponse.json({ success: true, count });
     }
 
     const profiles = await ClientProfile.find(query)
@@ -87,6 +102,8 @@ export async function GET(req) {
       .populate("assignedToUserId", "username fullName")
       .populate("createdByUserId", "username fullName role")
       .lean();
+
+    console.log("[API /clients GET] Found profiles:", profiles.length);
 
     const clients = profiles.map((profile) =>
       buildClientPayload(
