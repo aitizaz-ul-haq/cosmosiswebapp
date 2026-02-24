@@ -37,6 +37,12 @@ export default function CompaniesPage() {
     setCompanies((prev) => prev.filter((c) => c._id !== id));
   };
 
+  const handleEmail = (email) => {
+    if (email) {
+      window.location.href = `mailto:${email}`;
+    }
+  };
+
   const setNestedValue = (obj, path, value) => {
     const keys = path.split(".");
     const next = { ...obj };
@@ -180,6 +186,21 @@ export default function CompaniesPage() {
             }}
           >
             Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => handleEmail(row?.original?.primaryContact?.email)}
+            style={{
+              padding: "0.4rem 0.75rem",
+              textAlign: "center",
+              fontWeight: 700,
+              borderRadius: "0.5rem",
+              backgroundColor: "#6D7692",
+              border: "1px solid #6D7692",
+              color: "#fff",
+            }}
+          >
+            Email
           </button>
         </div>
       ),

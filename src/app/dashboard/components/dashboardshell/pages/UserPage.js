@@ -26,6 +26,12 @@ export default function UserPage() {
     setUsers((prev) => prev.filter((u) => u._id !== id));
   };
 
+  const handleEmail = (email) => {
+    if (email) {
+      window.location.href = `mailto:${email}`;
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     const loadUsers = async () => {
@@ -176,6 +182,21 @@ export default function UserPage() {
             }}
           >
             Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => handleEmail(row?.original?.email)}
+            style={{
+              padding: "0.4rem 0.75rem",
+              textAlign: "center",
+              fontWeight: 700,
+              borderRadius: "0.5rem",
+              backgroundColor: "#6D7692",
+              border: "1px solid #6D7692",
+              color: "#fff",
+            }}
+          >
+            Email
           </button>
         </div>
       ),
