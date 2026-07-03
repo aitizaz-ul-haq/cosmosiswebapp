@@ -63,7 +63,7 @@ export default function ProfilePage() {
           email: data.user.email || "",
           phone: data.user.phone || "",
         });
-        
+
         // Fetch company details if user has companyId (supervisor/rm)
         if (data.user.companyId && (data.user.role === "supervisor" || data.user.role === "rm")) {
           fetchCompanyDetails(data.user.companyId);
@@ -302,206 +302,238 @@ export default function ProfilePage() {
     });
   };
 
+  const isSupervisorOrRm =
+    userDetails.role === "supervisor" || userDetails.role === "rm";
+
   return (
     <div className="profile-page-container">
-      {/* Company Information Section - Only for Supervisors and RMs */}
-      {(userDetails.role === "supervisor" || userDetails.role === "rm") && companyDetails && (
-        <>
-          <div className="profile-section-header">
-            <h2 className="profile-section-title">Company Information</h2>
-            <p className="profile-section-description">View and edit your company information</p>
+      {/* Header */}
+      <div className="profile-overview-header">
+        <h1 className="profile-overview-title">Profile Overview</h1>
+        <p className="profile-overview-subtitle">
+          Review and manage your personal details, account information, and
+          security settings from one place.
+        </p>
+      </div>
+
+      {/* Stat cards */}
+      <div className="profile-stats">
+        <div className="profile-stat-card">
+          <div className="profile-stat-icon">
+            <ShieldIcon />
+          </div>
+          <div className="profile-stat-body">
+            <span className="profile-stat-label">Account Status</span>
+            <span className="profile-stat-value">
+              {userDetails.isActive ? "Active" : "Inactive"}
+            </span>
+          </div>
+        </div>
+
+        <div className="profile-stat-card">
+          <div className="profile-stat-icon">
+            <UserIcon />
+          </div>
+          <div className="profile-stat-body">
+            <span className="profile-stat-label">Role</span>
+            <span className="profile-stat-value">{formatRole(userDetails.role)}</span>
+          </div>
+        </div>
+
+        <div className="profile-stat-card">
+          <div className="profile-stat-icon">
+            <BuildingIcon />
+          </div>
+          <div className="profile-stat-body">
+            <span className="profile-stat-label">Company</span>
+            <span className="profile-stat-value">
+              {userDetails.companyName || "—"}
+            </span>
+          </div>
+        </div>
+
+        <div className="profile-stat-card">
+          <div className="profile-stat-icon">
+            <CalendarIcon />
+          </div>
+          <div className="profile-stat-body">
+            <span className="profile-stat-label">Member Since</span>
+            <span className="profile-stat-value">
+              {formatDate(userDetails.createdAt) || "—"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Company Information card - Only for Supervisors and RMs */}
+      {isSupervisorOrRm && companyDetails && (
+        <div className="profile-card">
+          <div className="profile-card-header">
+            <span className="profile-card-icon">
+              <BuildingIcon />
+            </span>
+            <h2 className="profile-card-title">Company Information</h2>
           </div>
 
-          <div className="profile-info-grid">
-            <div className="profile-info-item">
-              <span className="profile-info-label">Company Name:</span>
-              <span className="profile-info-value">{companyDetails.name}</span>
+          <div className="profile-card-grid">
+            <div className="profile-card-col">
+              <InfoRow label="Company Name" value={companyDetails.name} />
+              <InfoRow label="Legal Name" value={companyDetails.legalName} />
+              <InfoRow label="Website" value={companyDetails.website} />
+              <InfoRow label="Registration No." value={companyDetails.registrationNumber} />
             </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Legal Name:</span>
-              <span className="profile-info-value">{companyDetails.legalName}</span>
+            <div className="profile-card-col">
+              <InfoRow label="Tax ID" value={companyDetails.taxId} />
+              <InfoRow label="Status" value={companyDetails.status} />
+              {companyDetails.primaryContact?.fullName && (
+                <InfoRow label="Contact Name" value={companyDetails.primaryContact.fullName} />
+              )}
+              {companyDetails.primaryContact?.email && (
+                <InfoRow label="Contact Email" value={companyDetails.primaryContact.email} />
+              )}
             </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Website:</span>
-              <span className="profile-info-value">{companyDetails.website}</span>
-            </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Registration Number:</span>
-              <span className="profile-info-value">{companyDetails.registrationNumber}</span>
-            </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Tax ID:</span>
-              <span className="profile-info-value">{companyDetails.taxId}</span>
-            </div>
-            <div className="profile-info-item">
-              <span className="profile-info-label">Status:</span>
-              <span className="profile-info-value">{companyDetails.status}</span>
-            </div>
-            {companyDetails.primaryContact?.fullName && (
-              <>
-                <div className="profile-info-item">
-                  <span className="profile-info-label">Contact Name:</span>
-                  <span className="profile-info-value">{companyDetails.primaryContact.fullName}</span>
-                </div>
-                <div className="profile-info-item">
-                  <span className="profile-info-label">Contact Email:</span>
-                  <span className="profile-info-value">{companyDetails.primaryContact.email}</span>
-                </div>
-              </>
-            )}
           </div>
 
-          <button className="profile-edit-button" onClick={() => setShowCompanyEditModal(true)}>
-            Edit Info
-          </button>
-
-          {/* Divider */}
-          <hr className="profile-divider" />
-        </>
+          <div className="profile-card-footer">
+            <button
+              className="profile-primary-btn profile-primary-btn-wide"
+              onClick={() => setShowCompanyEditModal(true)}
+            >
+              <EditIcon />
+              Edit Info
+            </button>
+          </div>
+        </div>
       )}
 
-      {/* Personal Information Section */}
-      <div className="profile-section-header">
-        <h2 className="profile-section-title">Personal Information</h2>
-        <p className="profile-section-description">View and edit your profile information</p>
-      </div>
+      {/* Personal Information card */}
+      <div className="profile-card">
+        <div className="profile-card-header">
+          <span className="profile-card-icon">
+            <UserIcon />
+          </span>
+          <h2 className="profile-card-title">Personal Information</h2>
+        </div>
 
-      <div className="profile-info-grid">
-        <div className="profile-info-item">
-          <span className="profile-info-label">Username:</span>
-          <span className="profile-info-value">{userDetails.username}</span>
-        </div>
-        <div className="profile-info-item">
-          <span className="profile-info-label">Role:</span>
-          <span className="profile-info-value">{formatRole(userDetails.role)}</span>
-        </div>
-        <div className="profile-info-item">
-          <span className="profile-info-label">Full Name:</span>
-          <span className="profile-info-value">{userDetails.fullName}</span>
-        </div>
-        <div className="profile-info-item">
-          <span className="profile-info-label">Email:</span>
-          <span className="profile-info-value">{userDetails.email}</span>
-        </div>
-        <div className="profile-info-item">
-          <span className="profile-info-label">Phone:</span>
-          <span className="profile-info-value">{userDetails.phone}</span>
-        </div>
-        <div className="profile-info-item">
-          <span className="profile-info-label">Status:</span>
-          <span className="profile-info-value">{userDetails.isActive ? "Active" : "Inactive"}</span>
-        </div>
-        {userDetails.companyName && (
-          <div className="profile-info-item">
-            <span className="profile-info-label">Company:</span>
-            <span className="profile-info-value">{userDetails.companyName}</span>
+        <div className="profile-card-grid">
+          <div className="profile-card-col">
+            <InfoRow label="Username" value={userDetails.username} />
+            <InfoRow label="Full Name" value={userDetails.fullName} />
+            <InfoRow label="Phone" value={userDetails.phone} />
+            <InfoRow label="Company" value={userDetails.companyName || "—"} />
           </div>
-        )}
-        {userDetails.createdAt && (
-          <div className="profile-info-item">
-            <span className="profile-info-label">Account Created:</span>
-            <span className="profile-info-value">{formatDate(userDetails.createdAt)}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Edit Info Button */}
-      <button className="profile-edit-button" onClick={() => setShowEditModal(true)}>
-        Edit Info
-      </button>
-
-      {/* Divider */}
-      <hr className="profile-divider" />
-
-      {/* Profile Settings Section */}
-      <div className="profile-section-header">
-        <h2 className="profile-section-title">Profile Settings</h2>
-        <p className="profile-section-description">Modify your profile settings</p>
-      </div>
-
-      <form className="profile-settings-form" onSubmit={handlePasswordSubmit}>
-        <div className="profile-form-group">
-          <label htmlFor="currentPassword" className="profile-form-label">
-            Current Password
-          </label>
-          <div className="profile-password-input-wrapper">
-            <input
-              type={showCurrentPassword ? "text" : "password"}
-              id="currentPassword"
-              name="currentPassword"
-              value={passwordForm.currentPassword}
-              onChange={handlePasswordChange}
-              className={`profile-form-input ${passwordErrors.currentPassword ? 'error' : ''}`}
-              placeholder="Enter your current password"
+          <div className="profile-card-col">
+            <InfoRow label="Role" value={formatRole(userDetails.role)} />
+            <InfoRow label="Email" value={userDetails.email} />
+            <InfoRow
+              label="Status"
+              value={userDetails.isActive ? "Active" : "Inactive"}
             />
-            <button
-              type="button"
-              className="profile-password-toggle"
-              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-            >
-              {showCurrentPassword ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                  <line x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              )}
-            </button>
-          </div>
-          {passwordErrors.currentPassword && (
-            <span className="profile-field-error">{passwordErrors.currentPassword}</span>
-          )}
-        </div>
-
-        <div className="profile-form-group">
-          <label htmlFor="newPassword" className="profile-form-label">
-            New Password
-          </label>
-          <div className="profile-password-input-wrapper">
-            <input
-              type={showNewPassword ? "text" : "password"}
-              id="newPassword"
-              name="newPassword"
-              value={passwordForm.newPassword}
-              onChange={handlePasswordChange}
-              className={`profile-form-input ${passwordErrors.newPassword ? 'error' : ''}`}
-              placeholder="Enter your new password"
+            <InfoRow
+              label="Account Created"
+              value={formatDate(userDetails.createdAt) || "—"}
             />
-            <button
-              type="button"
-              className="profile-password-toggle"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-            >
-              {showNewPassword ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                  <line x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              )}
-            </button>
           </div>
-          {passwordErrors.newPassword && (
-            <span className="profile-field-error">{passwordErrors.newPassword}</span>
-          )}
         </div>
 
-        <button type="submit" className="profile-form-button" disabled={submitting}>
-          {submitting ? "Changing Password..." : "Change Password"}
-        </button>
+        <div className="profile-card-footer">
+          <button
+            className="profile-primary-btn profile-primary-btn-wide"
+            onClick={() => setShowEditModal(true)}
+          >
+            <EditIcon />
+            Edit Profile
+          </button>
+        </div>
+      </div>
 
-        {message.text && (
-          <div className={`profile-message ${message.type}`}>{message.text}</div>
-        )}
-      </form>
+      {/* Security Settings card */}
+      <div className="profile-card">
+        <div className="profile-card-header">
+          <span className="profile-card-icon">
+            <LockIcon />
+          </span>
+          <div>
+            <h2 className="profile-card-title">Security Settings</h2>
+            <p className="profile-card-subtitle">
+              Update your password to help keep your account secure.
+            </p>
+          </div>
+        </div>
+
+        <form className="profile-security-form" onSubmit={handlePasswordSubmit}>
+          <div className="profile-security-grid">
+            <div className="profile-form-group">
+              <label htmlFor="currentPassword" className="profile-form-label">
+                Current Password
+              </label>
+              <div className="profile-password-input-wrapper">
+                <input
+                  type={showCurrentPassword ? "text" : "password"}
+                  id="currentPassword"
+                  name="currentPassword"
+                  value={passwordForm.currentPassword}
+                  onChange={handlePasswordChange}
+                  className={`profile-form-input ${passwordErrors.currentPassword ? "error" : ""}`}
+                  placeholder="Enter your current password"
+                />
+                <button
+                  type="button"
+                  className="profile-password-toggle"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
+              {passwordErrors.currentPassword && (
+                <span className="profile-field-error">{passwordErrors.currentPassword}</span>
+              )}
+            </div>
+
+            <div className="profile-form-group">
+              <label htmlFor="newPassword" className="profile-form-label">
+                New Password
+              </label>
+              <div className="profile-password-input-wrapper">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  id="newPassword"
+                  name="newPassword"
+                  value={passwordForm.newPassword}
+                  onChange={handlePasswordChange}
+                  className={`profile-form-input ${passwordErrors.newPassword ? "error" : ""}`}
+                  placeholder="Enter your new password"
+                />
+                <button
+                  type="button"
+                  className="profile-password-toggle"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
+              {passwordErrors.newPassword && (
+                <span className="profile-field-error">{passwordErrors.newPassword}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="profile-security-footer">
+            <button type="submit" className="profile-primary-btn" disabled={submitting}>
+              <LockIcon />
+              {submitting ? "Changing Password..." : "Change Password"}
+            </button>
+            <div className="profile-security-info">
+              <InfoBadgeIcon />
+              <span>Use a strong password and keep your login credentials secure.</span>
+            </div>
+          </div>
+
+          {message.text && (
+            <div className={`profile-message ${message.type}`}>{message.text}</div>
+          )}
+        </form>
+      </div>
 
       {/* Edit Info Modal */}
       {showEditModal && (
@@ -703,5 +735,98 @@ export default function ProfilePage() {
         </div>
       )}
     </div>
+  );
+}
+
+/* ---------- Small presentational helpers ---------- */
+
+function InfoRow({ label, value }) {
+  return (
+    <div className="profile-info-item">
+      <span className="profile-info-label">{label}:</span>
+      <span className="profile-info-value">{value || "—"}</span>
+    </div>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" />
+    </svg>
+  );
+}
+
+function BuildingIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="3" width="16" height="18" rx="2" />
+      <path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01" />
+      <path d="M10 21v-3h4v3" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  );
+}
+
+function InfoBadgeIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4M12 8h.01" />
+    </svg>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
   );
 }

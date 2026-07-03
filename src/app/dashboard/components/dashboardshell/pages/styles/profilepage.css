@@ -1,45 +1,150 @@
 /* Profile Page Container */
 .profile-page-container {
-  padding: 1.5rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2.25rem 2.5rem;
+  background: transparent;
   width: 100%;
   margin: 0;
-  max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
-/* Section Headers */
-.profile-section-header {
-  margin-bottom: 1rem;
+/* ---------- Overview header ---------- */
+.profile-overview-header {
+  margin-bottom: 1.75rem;
 }
 
-.profile-section-title {
-  font-size: 1.5rem;
+.profile-overview-title {
+  font-size: 1.9rem;
   font-weight: 500;
   color: var(--sitedark);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.4rem;
 }
 
-.profile-section-description {
-  font-size: 1rem;
-  font-weight: 500;
+.profile-overview-subtitle {
+  font-size: 0.98rem;
+  font-weight: 400;
   color: var(--sitedark);
-  opacity: 0.7;
+  opacity: 0.75;
+  margin: 0;
 }
 
-/* Personal Information Grid */
-.profile-info-grid {
+/* ---------- Stat cards ---------- */
+.profile-stats {
   display: grid;
-  grid-template-columns: repeat(2, 30%);
-  gap: 1.5rem 0;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
 }
 
-.profile-info-item {
+.profile-stat-card {
   display: flex;
   align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem;
+  background: #fff;
+  border: 1px solid #eef0f5;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(20, 24, 40, 0.04);
+}
+
+.profile-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e3f8f2;
+  color: var(--sitegreen);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.profile-stat-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #9aa0b2;
+}
+
+.profile-stat-value {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--sitegreen);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* ---------- Cards ---------- */
+.profile-card {
+  background: #fff;
+  border: 1px solid #eef0f5;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(20, 24, 40, 0.04);
+  padding: 1.75rem 2rem 2rem;
+  margin-bottom: 1.75rem;
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.profile-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--sitegreen);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-card-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--sitedark);
+  margin: 0;
+}
+
+.profile-card-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--sitedark);
+  opacity: 0.7;
+  margin: 0.25rem 0 0;
+}
+
+/* Two-column info grid inside cards */
+.profile-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 3rem;
+}
+
+.profile-card-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.profile-card-col:first-child {
+  padding-right: 3rem;
+  border-right: 1px solid #eef0f5;
+}
+
+/* Info rows */
+.profile-info-item {
+  display: flex;
+  align-items: flex-start;
   gap: 1rem;
 }
 
@@ -47,48 +152,90 @@
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--sitedark);
-  min-width: 120px;
+  min-width: 130px;
 }
 
 .profile-info-value {
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--sitedark);
+  opacity: 0.85;
   flex: 1;
+  word-break: break-word;
 }
 
-/* Edit Info Button */
-.profile-edit-button {
-  padding: 8px 16px;
+/* Card footer + primary button */
+.profile-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.profile-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1.4rem;
   background-color: var(--sitegreen);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s ease;
-  margin-bottom: 1rem;
 }
 
-.profile-edit-button:hover {
+.profile-primary-btn:hover {
   opacity: 0.9;
 }
 
-/* Divider Line */
-.profile-divider {
-  height: 3px;
-  background-color: var(--sitegreen);
-  border: none;
-  margin: 2.5rem 0;
+.profile-primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Profile Settings Form */
-.profile-settings-form {
+.profile-primary-btn-wide {
+  min-width: 45%;
+}
+
+/* ---------- Security settings ---------- */
+.profile-security-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 360px;
+  max-width: none;
+}
+
+.profile-security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 3rem;
+}
+
+.profile-security-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 3rem;
+  align-items: center;
+}
+
+.profile-security-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.1rem;
+  background: #eafaf6;
+  border: 1px solid #d3f0e9;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: #5a7069;
+}
+
+.profile-security-info svg {
+  color: var(--sitegreen);
+  flex-shrink: 0;
 }
 
 .profile-form-group {
@@ -223,18 +370,45 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1100px) {
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
-  .profile-info-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .profile-page-container {
+    padding: 1.5rem;
   }
 
-  .profile-section-title {
-    font-size: 2rem;
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card-grid,
+  .profile-security-grid,
+  .profile-security-footer {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .profile-card-col:first-child {
+    padding-right: 0;
+    border-right: none;
+    padding-bottom: 1.35rem;
+    border-bottom: 1px solid #eef0f5;
+  }
+
+  .profile-overview-title {
+    font-size: 1.6rem;
   }
 
   .profile-info-label {
-    min-width: 100px;
+    min-width: 110px;
+  }
+
+  .profile-primary-btn-wide {
+    width: 100%;
   }
 }
 
@@ -272,7 +446,7 @@
 
 .profile-modal-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--sitedark);
   margin: 0;
 }

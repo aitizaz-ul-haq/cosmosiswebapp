@@ -9,6 +9,20 @@ import ClientProfile from "@/models/ClientProfile";
 
 const ALLOWED_CREATOR_ROLES = new Set(["supervisor", "rm", "superadmin"]);
 
+// Phase-to-progress mapping per onboarding type.
+// Individual form has 6 phases with these completion percentages.
+const PHASE_PROGRESS = {
+  individual: [20, 35, 50, 65, 80, 100],
+};
+
+// Compute the completion percentage for a given onboarding type + step (1-based).
+const computeProgress = (onboardingType, currentStep) => {
+  const map = PHASE_PROGRESS[onboardingType] || PHASE_PROGRESS.individual;
+  const step = Number(currentStep) || 1;
+  const clamped = Math.min(Math.max(step, 1), map.length);
+  return map[clamped - 1];
+};
+
 const normalizeString = (value) => (typeof value === "string" ? value.trim() : "");
 
 const normalizeEmail = (value) => normalizeString(value).toLowerCase();
@@ -37,6 +51,35 @@ const buildClientPayload = (profile, user, assignedToUser, createdByUser) => {
       "";
   }
 
+  // Shared RMs (populated docs when available, otherwise raw ids)
+  const sharedList = Array.isArray(profile?.sharedWithUserIds)
+    ? profile.sharedWithUserIds
+    : [];
+  const sharedWithUserIds = sharedList.map((rm) =>
+    rm && typeof rm === "object" && rm._id ? String(rm._id) : String(rm)
+  );
+  const sharedWithNames = sharedList
+    .map((rm) =>
+      rm && typeof rm === "object" ? rm.fullName || rm.username || "" : ""
+    )
+    .filter(Boolean);
+
+  const resolvedOnboardingType = profile?.onboardingType || "individual";
+  // Ensure progress is always present (backfill legacy records from currentStep)
+  const onboardingData = profile?.onboarding
+    ? {
+        ...(profile.onboarding.toObject
+          ? profile.onboarding.toObject()
+          : profile.onboarding),
+      }
+    : null;
+  if (onboardingData) {
+    onboardingData.progress =
+      typeof onboardingData.progress === "number" && onboardingData.progress > 0
+        ? onboardingData.progress
+        : computeProgress(resolvedOnboardingType, onboardingData.currentStep);
+  }
+
   return {
     _id: resolvedUserId,
     userId: resolvedUserId,
@@ -50,7 +93,12 @@ const buildClientPayload = (profile, user, assignedToUser, createdByUser) => {
     assignedToUserId: profile?.assignedToUserId || null,
     assignedToName,
     assignedByName,
-    onboarding: profile?.onboarding || null,
+    isShared: Boolean(profile?.isShared),
+    sharedWithUserIds,
+    sharedWithNames,
+    status: profile?.status || "ongoing",
+    onboardingType: resolvedOnboardingType,
+    onboarding: onboardingData,
     createdAt: profile?.createdAt || null,
   };
 };
@@ -75,9 +123,10 @@ export async function GET(req) {
     let query = {};
 
     if (tokenUser.role === "rm") {
-      // For RMs, filter by assignedToUserId (primary filter)
+      // For RMs, show clients they own (assignedToUserId) OR that are shared with them
+      const rmObjectId = new mongoose.Types.ObjectId(tokenUser.id);
       query = {
-        assignedToUserId: new mongoose.Types.ObjectId(tokenUser.id),
+        $or: [{ assignedToUserId: rmObjectId }, { sharedWithUserIds: rmObjectId }],
       };
       // Add companyId filter only if it exists
       if (companyId) {
@@ -101,6 +150,7 @@ export async function GET(req) {
       .populate("userId", "username fullName email phone companyId companyName")
       .populate("assignedToUserId", "username fullName")
       .populate("createdByUserId", "username fullName role")
+      .populate("sharedWithUserIds", "username fullName")
       .lean();
 
     console.log("[API /clients GET] Found profiles:", profiles.length);
@@ -159,6 +209,18 @@ export async function POST(req) {
 
   const assignedToUserId = body.assignedToUserId || null;
 
+  // New client attributes (with safe defaults / validation)
+  const ALLOWED_STATUS = new Set(["ongoing", "on_hold", "cancelled"]);
+  const ALLOWED_ONBOARDING_TYPE = new Set(["individual", "joint", "corporate", "trust"]);
+  const status = ALLOWED_STATUS.has(body.status) ? body.status : "ongoing";
+  const onboardingType = ALLOWED_ONBOARDING_TYPE.has(body.onboardingType)
+    ? body.onboardingType
+    : "individual";
+  const isSharedRequested = Boolean(body.isShared);
+  const requestedSharedIds = Array.isArray(body.sharedWithUserIds)
+    ? body.sharedWithUserIds.filter((v) => mongoose.isValidObjectId(v)).map(String)
+    : [];
+
   try {
     await connectToDatabase();
 
@@ -198,6 +260,24 @@ export async function POST(req) {
       resolvedAssignedToUserId = assignedToUserSnapshot._id;
     }
 
+    // Resolve shared RMs (supervisor/superadmin only). Exclude the primary RM
+    // and de-duplicate; every id must be a real RM in this company.
+    let resolvedSharedIds = [];
+    if (tokenUser.role !== "rm" && isSharedRequested && requestedSharedIds.length > 0) {
+      const uniqueRequested = [...new Set(requestedSharedIds)].filter(
+        (rmId) => String(rmId) !== String(resolvedAssignedToUserId)
+      );
+      if (uniqueRequested.length > 0) {
+        const validSharedRms = await User.find({
+          _id: { $in: uniqueRequested },
+          role: "rm",
+          companyId: new mongoose.Types.ObjectId(companyId),
+        }).select("_id");
+        resolvedSharedIds = validSharedRms.map((rm) => rm._id);
+      }
+    }
+    const isShared = resolvedSharedIds.length > 0;
+
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
     const newUser = new User({
@@ -222,10 +302,15 @@ export async function POST(req) {
       createdByUserId: tokenUser.id,
       assignedToUserId: resolvedAssignedToUserId,
       createdByNameSnapshot: creatorUser.fullName || creatorUser.username || "",
+      isShared,
+      sharedWithUserIds: resolvedSharedIds,
+      status,
+      onboardingType,
       onboarding: {
         status: "not_started",
         currentStep: 1,
         completedSteps: [],
+        progress: computeProgress(onboardingType, 1),
       },
     });
 
@@ -235,6 +320,14 @@ export async function POST(req) {
       assignedToUserSnapshot = await User.findById(resolvedAssignedToUserId).select(
         "fullName username"
       );
+    }
+
+    // Populate shared RM names for the response payload
+    if (resolvedSharedIds.length > 0) {
+      const sharedDocs = await User.find({ _id: { $in: resolvedSharedIds } }).select(
+        "fullName username"
+      );
+      newProfile.sharedWithUserIds = sharedDocs;
     }
 
     return NextResponse.json({
@@ -326,11 +419,20 @@ export async function PATCH(req) {
   const body = await req.json().catch(() => ({}));
   const assignedToUserId = body?.assignedToUserId || null;
 
-  if (!assignedToUserId) {
-    return NextResponse.json({ error: "assignedToUserId is required" }, { status: 400 });
+  const ALLOWED_STATUS = new Set(["ongoing", "on_hold", "cancelled"]);
+  const ALLOWED_ONBOARDING_TYPE = new Set(["individual", "joint", "corporate", "trust"]);
+  const hasStatus = typeof body.status === "string" && ALLOWED_STATUS.has(body.status);
+  const hasOnboardingType =
+    typeof body.onboardingType === "string" &&
+    ALLOWED_ONBOARDING_TYPE.has(body.onboardingType);
+  const hasShared = Array.isArray(body.sharedWithUserIds);
+
+  // At least one updatable field must be present
+  if (!assignedToUserId && !hasStatus && !hasOnboardingType && !hasShared) {
+    return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
   }
 
-  if (!mongoose.isValidObjectId(assignedToUserId)) {
+  if (assignedToUserId && !mongoose.isValidObjectId(assignedToUserId)) {
     return NextResponse.json({ error: "assignedToUserId is invalid" }, { status: 400 });
   }
 
@@ -353,29 +455,54 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const assignedUser = await User.findOne({
-      _id: assignedToUserId,
-      role: "rm",
-      companyId: new mongoose.Types.ObjectId(profile.companyId),
-    }).select("_id fullName username");
+    const update = {};
 
-    if (!assignedUser) {
-      return NextResponse.json(
-        { error: "Assigned RM not found for this company" },
-        { status: 404 }
-      );
+    if (assignedToUserId) {
+      const assignedUser = await User.findOne({
+        _id: assignedToUserId,
+        role: "rm",
+        companyId: new mongoose.Types.ObjectId(profile.companyId),
+      }).select("_id fullName username");
+
+      if (!assignedUser) {
+        return NextResponse.json(
+          { error: "Assigned RM not found for this company" },
+          { status: 404 }
+        );
+      }
+      update.assignedToUserId = assignedUser._id;
     }
 
-    await ClientProfile.findByIdAndUpdate(
-      profile._id,
-      { assignedToUserId: assignedUser._id },
-      { new: true }
-    );
+    if (hasStatus) update.status = body.status;
+    if (hasOnboardingType) update.onboardingType = body.onboardingType;
+
+    if (hasShared) {
+      const primaryRm = String(update.assignedToUserId || profile.assignedToUserId);
+      const requested = body.sharedWithUserIds
+        .filter((v) => mongoose.isValidObjectId(v))
+        .map(String)
+        .filter((rmId) => rmId !== primaryRm);
+      const uniqueRequested = [...new Set(requested)];
+      let resolvedSharedIds = [];
+      if (uniqueRequested.length > 0) {
+        const validSharedRms = await User.find({
+          _id: { $in: uniqueRequested },
+          role: "rm",
+          companyId: new mongoose.Types.ObjectId(profile.companyId),
+        }).select("_id");
+        resolvedSharedIds = validSharedRms.map((rm) => rm._id);
+      }
+      update.sharedWithUserIds = resolvedSharedIds;
+      update.isShared = resolvedSharedIds.length > 0;
+    }
+
+    await ClientProfile.findByIdAndUpdate(profile._id, update, { new: true });
 
     const refreshedProfile = await ClientProfile.findById(profile._id)
       .populate("userId", "username fullName email phone companyId companyName")
       .populate("assignedToUserId", "username fullName")
       .populate("createdByUserId", "username fullName role")
+      .populate("sharedWithUserIds", "username fullName")
       .lean();
 
     const client = buildClientPayload(

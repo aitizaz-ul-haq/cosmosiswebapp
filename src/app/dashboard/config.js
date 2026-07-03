@@ -66,17 +66,27 @@ export const dashboardConfigs = {
         {
           key: "rms",
           label: "RMs",
-          iconlink: "/images/building.png",
+          iconlink: "/images/Relationshipmanager.png",
         },
         {
           key: "clients",
           label: "Clients",
-          iconlink: "/images/building.png",
+          iconlink: "/images/clients.png",
         },
         {
           key: "onboarding",
-          label: "Onboarding status",
-          iconlink: "/images/building.png",
+          label: "Progress",
+          iconlink: "/images/OnboardingStatus.png",
+        },
+        {
+          key: "reports",
+          label: "Reports",
+          iconlink: "/images/report.png",
+        },
+        {
+          key: "submissions",
+          label: "Submissions",
+          iconlink: "/images/file.png",
         },
         {
           key: "profile",
@@ -98,12 +108,12 @@ export const dashboardConfigs = {
         {
           key: "clients",
           label: "Clients",
-          iconlink: "/images/building.png",
+          iconlink: "/images/clients.png",
         },
         {
           key: "onboarding",
           label: "Onboarding status",
-          iconlink: "/images/building.png",
+          iconlink: "/images/OnboardingStatus.png",
         },
         {
           key: "profile",
@@ -118,14 +128,14 @@ export const dashboardConfigs = {
     sidebar: {
       menu: [
         { 
-          key: "profile", 
-          label: "Profile",
-          iconlink: "/images/profile-user.png",
-        },
-        { 
           key: "onboarding", 
           label: "Onboarding",
           iconlink: "/images/building.png",
+        },
+        { 
+          key: "profile", 
+          label: "Profile",
+          iconlink: "/images/profile-user.png",
         },
       ],
     },

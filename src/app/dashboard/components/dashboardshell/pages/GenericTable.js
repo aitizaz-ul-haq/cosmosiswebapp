@@ -340,11 +340,9 @@ export default function GenericTable({
             type="button"
             onClick={() => setShowAddCompanyModal(true)}
             data-log-title="New Company button clicked"
+            className="dash-action-btn dash-btn-green"
             style={{
-              backgroundColor: "var(--sitegreen)",
-              color: "#fff",
               padding: "0.5rem 1rem",
-              border: "none",
               borderRadius: "6px",
               display: "inline-flex",
               alignItems: "center",
@@ -364,11 +362,9 @@ export default function GenericTable({
             type="button"
             onClick={() => setShowAddUserModal(true)}
             data-log-title="New User button clicked"
+            className="dash-action-btn dash-btn-green"
             style={{
-              backgroundColor: "var(--sitegreen)",
-              color: "#fff",
               padding: "0.5rem 1rem",
-              border: "none",
               borderRadius: "6px",
               display: "inline-flex",
               alignItems: "center",
@@ -388,11 +384,9 @@ export default function GenericTable({
             type="button"
             onClick={onAddRM}
             data-log-title="New RM button clicked"
+            className="dash-action-btn dash-btn-green"
             style={{
-              backgroundColor: "var(--sitegreen)",
-              color: "#fff",
               padding: "0.5rem 1rem",
-              border: "none",
               borderRadius: "6px",
               display: "inline-flex",
               alignItems: "center",
@@ -412,11 +406,9 @@ export default function GenericTable({
             type="button"
             onClick={onAddClient}
             data-log-title="New Client button clicked"
+            className="dash-action-btn dash-btn-green"
             style={{
-              backgroundColor: "var(--sitegreen)",
-              color: "#fff",
               padding: "0.5rem 1rem",
-              border: "none",
               borderRadius: "6px",
               display: "inline-flex",
               alignItems: "center",
@@ -569,13 +561,13 @@ export default function GenericTable({
               <button
                 type="button"
                 onClick={() => setShowAddCompanyModal(false)}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save
               </button>
@@ -641,13 +633,13 @@ export default function GenericTable({
               <button
                 type="button"
                 onClick={() => setShowAddUserModal(false)}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save
               </button>

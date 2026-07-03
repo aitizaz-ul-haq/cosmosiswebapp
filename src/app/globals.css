@@ -63,7 +63,74 @@ footer {
   --sitegreen:#21CFB2;
   --sitedark:#6D7692;
   --sitewhite:#FFFFFF;
+
+  /* Lighter action-button palette (same hues, softer tones) */
+  --btn-green-light:#5FDBC8;
+  --btn-danger-light:#F28B8B;
+  --btn-danger-light-border:#EF9A9A;
+  --btn-neutral-light:#9AA0B2;
+  --btn-info-light:#6EA8F5;
+  --btn-info-light-border:#8FBEF8;
 }
+
+/* Dashboard action buttons: light base color that brightens to the
+   original bright shade on hover, with a smooth animated transition. */
+.dash-action-btn {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.28s ease, border-color 0.28s ease,
+    transform 0.14s ease, box-shadow 0.22s ease;
+}
+.dash-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+.dash-action-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.dash-action-btn:disabled {
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.dash-btn-green {
+  background-color: var(--btn-green-light);
+  border: 1px solid var(--btn-green-light);
+}
+.dash-btn-green:hover {
+  background-color: var(--sitegreen);
+  border-color: var(--sitegreen);
+}
+
+.dash-btn-danger {
+  background-color: var(--btn-danger-light);
+  border: 1px solid var(--btn-danger-light-border);
+}
+.dash-btn-danger:hover {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+}
+
+.dash-btn-neutral {
+  background-color: var(--btn-neutral-light);
+  border: 1px solid var(--btn-neutral-light);
+}
+.dash-btn-neutral:hover {
+  background-color: #6d7692;
+  border-color: #6d7692;
+}
+
+.dash-btn-info {
+  background-color: var(--btn-info-light);
+  border: 1px solid var(--btn-info-light-border);
+}
+.dash-btn-info:hover {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
+}
+
 
 /* .site-main {
   background-color: #0a0a0a;

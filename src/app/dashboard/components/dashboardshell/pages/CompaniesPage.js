@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
 
 export default function CompaniesPage() {
@@ -9,6 +10,7 @@ export default function CompaniesPage() {
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editCompanyId, setEditCompanyId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [editForm, setEditForm] = useState({
     name: "",
     legalName: "",
@@ -32,9 +34,15 @@ export default function CompaniesPage() {
 
   //keith brown Helloworld
 
-  const handleDelete = async (id) => {
-    if (!id || !window.confirm("Delete this company?")) return;
+  const handleDelete = (id) => {
+    if (!id) return;
     const target = companies.find((c) => c._id === id) || null;
+    setDeleteTarget(target || { _id: id });
+  };
+
+  const performDelete = async (target) => {
+    const id = target?._id;
+    if (!id) return;
     await fetch(`/api/companies?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setCompanies((prev) => prev.filter((c) => c._id !== id));
     // 🔒 Audit log: company deleted (store the removed entry)
@@ -184,48 +192,30 @@ export default function CompaniesPage() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             type="button"
+            onClick={() => handleEmail(row?.original?.primaryContact?.email)}
+            title="Send email now"
+            className="dash-action-btn dash-btn-neutral"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+          >
+            Email
+          </button>
+          <button
+            type="button"
             onClick={() => openEditModal(row?.original)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "var(--sitegreen)",
-              border: "1px solid var(--sitegreen)",
-              color: "#fff",
-            }}
+            title="Edit company details"
+            className="dash-action-btn dash-btn-green"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Edit
           </button>
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#dc2626",
-              border: "1px solid #b91c1c",
-              color: "#fff",
-            }}
+            title="Delete company"
+            className="dash-action-btn dash-btn-danger"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Delete
-          </button>
-          <button
-            type="button"
-            onClick={() => handleEmail(row?.original?.primaryContact?.email)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#6D7692",
-              border: "1px solid #6D7692",
-              color: "#fff",
-            }}
-          >
-            Email
           </button>
         </div>
       ),
@@ -310,13 +300,13 @@ export default function CompaniesPage() {
               <button
                 type="button"
                 onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save Changes
               </button>
@@ -324,6 +314,16 @@ export default function CompaniesPage() {
           </form>
         </div>
       )}
+
+      <DeleteConfirmModal
+        open={!!deleteTarget}
+        itemLabel={deleteTarget ? `company "${deleteTarget.name || ""}"` : "this company"}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await performDelete(deleteTarget);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

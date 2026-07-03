@@ -310,7 +310,7 @@ export default function LogsPage() {
                 type="button"
                 onClick={() => fetchLogs()}
                 disabled={loading}
-                style={{ ...btnStyle, backgroundColor: "#2563EB", opacity: loading ? 0.7 : 1 }}
+                style={{ ...btnStyle, backgroundColor: "var(--btn-info-light)", opacity: loading ? 0.7 : 1 }}
                 data-log-title="Logs: Get latest logs"
               >
                 {loading ? "Refreshing…" : "Get latest logs"}
@@ -318,7 +318,7 @@ export default function LogsPage() {
               <button
                 type="button"
                 onClick={clearFilters}
-                style={{ ...btnStyle, backgroundColor: "#6B7280" }}
+                style={{ ...btnStyle, backgroundColor: "var(--btn-neutral-light)" }}
                 data-log-title="Logs: Clear filters"
               >
                 Clear
@@ -326,7 +326,7 @@ export default function LogsPage() {
               <button
                 type="button"
                 onClick={() => fetchLogs()}
-                style={{ ...btnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...btnStyle, backgroundColor: "var(--btn-green-light)" }}
                 data-log-title="Logs: Apply filters"
               >
                 Apply filters

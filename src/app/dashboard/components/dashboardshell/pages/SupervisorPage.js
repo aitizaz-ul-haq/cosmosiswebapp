@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
 
 export default function SupervisorsPage() {
@@ -11,6 +12,7 @@ export default function SupervisorsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
   const [companies, setCompanies] = useState([]);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [editForm, setEditForm] = useState({
     username: "",
     fullName: "",
@@ -21,9 +23,15 @@ export default function SupervisorsPage() {
     password: "",
   });
 
-  const handleDelete = async (id) => {
-    if (!id || !window.confirm("Delete this user?")) return;
+  const handleDelete = (id) => {
+    if (!id) return;
     const target = users.find((u) => u._id === id) || null;
+    setDeleteTarget(target || { _id: id });
+  };
+
+  const performDelete = async (target) => {
+    const id = target?._id;
+    if (!id) return;
     await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setUsers((prev) => prev.filter((u) => u._id !== id));
     // 🔒 Audit log: supervisor deleted (store the removed entry)
@@ -185,48 +193,30 @@ export default function SupervisorsPage() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             type="button"
+            onClick={() => handleEmail(row?.original?.email)}
+            title="Send email now"
+            className="dash-action-btn dash-btn-neutral"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+          >
+            Email
+          </button>
+          <button
+            type="button"
             onClick={() => openEditModal(row?.original)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "var(--sitegreen)",
-              border: "1px solid var(--sitegreen)",
-              color: "#fff",
-            }}
+            title="Edit supervisor details"
+            className="dash-action-btn dash-btn-green"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Edit
           </button>
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#dc2626",
-              border: "1px solid #b91c1c",
-              color: "#fff",
-            }}
+            title="Delete supervisor"
+            className="dash-action-btn dash-btn-danger"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Delete
-          </button>
-          <button
-            type="button"
-            onClick={() => handleEmail(row?.original?.email)}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#6D7692",
-              border: "1px solid #6D7692",
-              color: "#fff",
-            }}
-          >
-            Email
           </button>
         </div>
       ),
@@ -322,13 +312,13 @@ export default function SupervisorsPage() {
               <button
                 type="button"
                 onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save Changes
               </button>
@@ -336,6 +326,20 @@ export default function SupervisorsPage() {
           </form>
         </div>
       )}
+
+      <DeleteConfirmModal
+        open={!!deleteTarget}
+        itemLabel={
+          deleteTarget
+            ? `supervisor "${deleteTarget.fullName || deleteTarget.username || ""}"`
+            : "this supervisor"
+        }
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await performDelete(deleteTarget);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

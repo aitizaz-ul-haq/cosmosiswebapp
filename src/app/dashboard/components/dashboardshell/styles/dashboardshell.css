@@ -66,6 +66,10 @@
 
 .dashboard-details-section {
   width: 85%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .dasboard-header-section {
@@ -77,6 +81,7 @@
   padding: 0.8rem;
   width: 100%;
   height: 80px;
+  flex-shrink: 0;
   background-color: var(--sitegreen);
   color: #fdfbf9;
   font-weight: 600;
@@ -105,6 +110,22 @@
 /* .dashboard-menus-section {
   padding-top: 6rem;
 } */
+
+/* Content area fills the remaining height and scrolls internally so the
+   page's white container always extends to the bottom edge. */
+.dashboard-menus-section {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-menus-section > * {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
 
 .menu-options {
   cursor: pointer;

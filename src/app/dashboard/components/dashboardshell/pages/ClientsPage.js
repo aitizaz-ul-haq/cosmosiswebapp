@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
 
 export default function ClientsPage() {
@@ -14,6 +15,9 @@ export default function ClientsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
   const [editProfileId, setEditProfileId] = useState(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [infoClient, setInfoClient] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [originalAssignedToUserId, setOriginalAssignedToUserId] = useState(null);
   const [rmUsers, setRmUsers] = useState([]);
   const [addForm, setAddForm] = useState({
@@ -25,6 +29,10 @@ export default function ClientsPage() {
     role: "client",
     companyId: "",
     assignedToUserId: "",
+    status: "ongoing",
+    onboardingType: "individual",
+    isShared: false,
+    sharedWithUserIds: [],
   });
   const [editForm, setEditForm] = useState({
     username: "",
@@ -35,13 +43,26 @@ export default function ClientsPage() {
     companyId: "",
     password: "",
     assignedToUserId: "",
+    status: "ongoing",
+    onboardingType: "individual",
+    isShared: false,
+    sharedWithUserIds: [],
   });
 
-  const handleDelete = async (client) => {
+  const handleDelete = (client) => {
     const profileId = client?.profileId || null;
     const userId = client?.userId || client?._id || null;
     const deleteId = profileId || userId;
-    if (!deleteId || !window.confirm("Delete this client?")) return;
+    if (!deleteId) return;
+    // Open the password-verified delete confirmation modal
+    setDeleteTarget(client);
+  };
+
+  const performDelete = async (client) => {
+    const profileId = client?.profileId || null;
+    const userId = client?.userId || client?._id || null;
+    const deleteId = profileId || userId;
+    if (!deleteId) return;
     const res = await fetch(`/api/clients?id=${encodeURIComponent(deleteId)}`, {
       method: "DELETE",
       credentials: "include",
@@ -77,7 +98,138 @@ export default function ClientsPage() {
     }
   };
 
+  const openInfoModal = (client) => {
+    if (!client) return;
+    setInfoClient(client);
+    setShowInfoModal(true);
+    // 🔒 Audit log: client info viewed
+    logUIAction("view_client_info", {
+      title: `Viewed client info: ${client?.fullName || client?.username || client?._id}`,
+      entityType: "client",
+      entity: {
+        id: client?._id || client?.userId || null,
+        username: client?.username || null,
+        fullName: client?.fullName || null,
+        email: client?.email || null,
+        companyName: client?.companyName || null,
+      },
+    });
+  };
+
+  const closeInfoModal = () => {
+    setShowInfoModal(false);
+    setInfoClient(null);
+  };
+
   const canAssignRm = user?.role === "supervisor" || user?.role === "superadmin";
+
+  // Shared layout style for table action buttons (colors come from CSS classes)
+  const actionBtnStyle = {
+    padding: "0.4rem 0.75rem",
+    textAlign: "center",
+    fontWeight: 700,
+    borderRadius: "0.5rem",
+  };
+
+  const STATUS_OPTIONS = [
+    { value: "ongoing", label: "Ongoing" },
+    { value: "on_hold", label: "On hold" },
+    { value: "cancelled", label: "Cancelled" },
+  ];
+  // Status colors: ongoing green, on_hold yellow, cancelled red
+  const STATUS_COLORS = {
+    ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
+    on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
+    cancelled: { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5" },
+  };
+  const ONBOARDING_TYPE_OPTIONS = [
+    { value: "individual", label: "Individual" },
+    { value: "joint", label: "Joint" },
+    { value: "corporate", label: "Corporate" },
+    { value: "trust", label: "Trust" },
+  ];
+  const labelFor = (options, value) =>
+    options.find((o) => o.value === value)?.label || value || "—";
+
+  // Human-readable descriptions for status hover tooltips
+  const STATUS_DESCRIPTIONS = {
+    ongoing: "Current onboarding status is Ongoing",
+    on_hold: "Current onboarding status is On hold",
+    cancelled: "Current onboarding status is Cancelled",
+  };
+
+  // 6 phases mapped to the individual onboarding form's 6 sections.
+  // Progress is shown as a percentage in a neutral, light-bordered oval.
+  const PHASE_CONFIG = [
+    { phase: 1, pct: 20, name: "Personal Details" },
+    { phase: 2, pct: 35, name: "Source of Wealth" },
+    { phase: 3, pct: 50, name: "Financial Profile" },
+    { phase: 4, pct: 65, name: "Risk Profile" },
+    { phase: 5, pct: 80, name: "Signature" },
+    { phase: 6, pct: 100, name: "Documentation Checklist" },
+  ];
+
+  // Resolve the phase config for a client (individual onboarding only)
+  const getPhaseConfig = (client) => {
+    const step = Number(client?.onboarding?.currentStep) || 1;
+    const clamped = Math.min(Math.max(step, 1), 6);
+    return PHASE_CONFIG[clamped - 1];
+  };
+
+  // Status badge: colored pill (ongoing/on_hold/cancelled) with hover description
+  const StatusBadge = ({ client }) => {
+    const value = client?.status || "ongoing";
+    const c = STATUS_COLORS[value] || STATUS_COLORS.ongoing;
+    return (
+      <span
+        title={STATUS_DESCRIPTIONS[value] || STATUS_DESCRIPTIONS.ongoing}
+        style={{
+          display: "inline-block",
+          textAlign: "center",
+          padding: "0.2rem 0.7rem",
+          borderRadius: "999px",
+          fontWeight: 600,
+          fontSize: "0.8rem",
+          lineHeight: 1.3,
+          backgroundColor: c.bg,
+          color: c.text,
+          border: `1px solid ${c.border}`,
+          cursor: "help",
+        }}
+      >
+        {labelFor(STATUS_OPTIONS, value)}
+      </span>
+    );
+  };
+
+  // Progress oval: neutral, light-bordered pill showing percentage + phase
+  const ProgressOval = ({ client }) => {
+    // Progress oval only applies to individual onboarding type
+    if ((client?.onboardingType || "individual") !== "individual") {
+      return <span>—</span>;
+    }
+    const cfg = getPhaseConfig(client);
+    return (
+      <span
+        title={`Progress is ${cfg.pct}% — the client is at Phase ${cfg.phase} of 6: ${cfg.name}`}
+        style={{
+          display: "inline-block",
+          textAlign: "center",
+          padding: "0.25rem 0.75rem",
+          borderRadius: "999px",
+          fontWeight: 600,
+          fontSize: "0.82rem",
+          lineHeight: 1.3,
+          backgroundColor: "transparent",
+          color: "#21CFB2",
+          border: "1px solid #21CFB2",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {cfg.pct}% · Phase {cfg.phase}
+      </span>
+    );
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -144,6 +296,18 @@ export default function ClientsPage() {
     setEditForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  // Toggle an RM in the shared list for the Add or Edit form
+  const toggleSharedRm = (setForm) => (rmId) => {
+    setForm((prev) => {
+      const current = Array.isArray(prev.sharedWithUserIds) ? prev.sharedWithUserIds : [];
+      const exists = current.some((id) => String(id) === String(rmId));
+      const next = exists
+        ? current.filter((id) => String(id) !== String(rmId))
+        : [...current, rmId];
+      return { ...prev, sharedWithUserIds: next };
+    });
+  };
+
   const openAddModal = () => {
     setAddForm({
       username: "",
@@ -154,6 +318,10 @@ export default function ClientsPage() {
       role: "client",
       companyId: user?.companyId || "",
       assignedToUserId: "",
+      status: "ongoing",
+      onboardingType: "individual",
+      isShared: false,
+      sharedWithUserIds: [],
     });
     setShowAddModal(true);
   };
@@ -171,6 +339,11 @@ export default function ClientsPage() {
       phone: addForm.phone,
       password: addForm.password,
       assignedToUserId: canAssignRm ? addForm.assignedToUserId : undefined,
+      status: addForm.status,
+      onboardingType: addForm.onboardingType,
+      isShared: canAssignRm ? addForm.isShared : false,
+      sharedWithUserIds:
+        canAssignRm && addForm.isShared ? addForm.sharedWithUserIds : [],
     };
     const res = await fetch("/api/clients", {
       method: "POST",
@@ -216,6 +389,12 @@ export default function ClientsPage() {
       companyId: client.companyId || "",
       password: "",
       assignedToUserId: client?.assignedToUserId || "",
+      status: client?.status || "ongoing",
+      onboardingType: client?.onboardingType || "individual",
+      isShared: Boolean(client?.isShared),
+      sharedWithUserIds: Array.isArray(client?.sharedWithUserIds)
+        ? client.sharedWithUserIds.map(String)
+        : [],
     });
     setShowEditModal(true);
   };
@@ -261,26 +440,30 @@ export default function ClientsPage() {
       );
     }
 
-    if (
-      canAssignRm &&
-      editProfileId &&
-      editForm.assignedToUserId &&
-      editForm.assignedToUserId !== originalAssignedToUserId
-    ) {
+    if (canAssignRm && editProfileId) {
+      const patchBody = {
+        status: editForm.status,
+        onboardingType: editForm.onboardingType,
+        sharedWithUserIds: editForm.isShared ? editForm.sharedWithUserIds : [],
+      };
+      if (
+        editForm.assignedToUserId &&
+        editForm.assignedToUserId !== originalAssignedToUserId
+      ) {
+        patchBody.assignedToUserId = editForm.assignedToUserId;
+      }
       const assignRes = await fetch(
         `/api/clients?id=${encodeURIComponent(editProfileId)}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({
-            assignedToUserId: editForm.assignedToUserId,
-          }),
+          body: JSON.stringify(patchBody),
         }
       );
       const assignResult = await assignRes.json().catch(() => ({}));
       if (!assignRes.ok) {
-        window.alert(assignResult?.error || "Failed to update assigned RM");
+        window.alert(assignResult?.error || "Failed to update client details");
         return;
       }
       if (assignResult?.client) {
@@ -340,11 +523,48 @@ export default function ClientsPage() {
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
-    { accessorKey: "email", header: "Email" },
     { accessorKey: "phone", header: "Phone" },
-    ...(canAssignRm ? [{ accessorKey: "assignedToName", header: "Assigned To" }] : []),
+    {
+      id: "status",
+      header: "Status",
+      accessorFn: (row) => labelFor(STATUS_OPTIONS, row.status),
+      cell: ({ row }) => <StatusBadge client={row.original} />,
+    },
+    {
+      id: "progress",
+      header: "Progress",
+      accessorFn: (row) =>
+        (row.onboardingType || "individual") === "individual"
+          ? `${getPhaseConfig(row).pct}%`
+          : "—",
+      cell: ({ row }) => <ProgressOval client={row.original} />,
+    },
+    {
+      id: "onboardingType",
+      header: "Onboarding Type",
+      accessorFn: (row) => labelFor(ONBOARDING_TYPE_OPTIONS, row.onboardingType),
+      cell: ({ row }) => labelFor(ONBOARDING_TYPE_OPTIONS, row.original.onboardingType),
+    },
+    ...(canAssignRm
+      ? [
+          { accessorKey: "assignedToName", header: "Assigned To" },
+          {
+            id: "sharedWith",
+            header: "Shared With",
+            accessorFn: (row) =>
+              row.isShared && Array.isArray(row.sharedWithNames)
+                ? row.sharedWithNames.join(", ")
+                : "",
+            cell: ({ row }) =>
+              row.original.isShared &&
+              Array.isArray(row.original.sharedWithNames) &&
+              row.original.sharedWithNames.length > 0
+                ? row.original.sharedWithNames.join(", ")
+                : "—",
+          },
+        ]
+      : []),
     { accessorKey: "assignedByName", header: "Assigned By" },
-    { accessorKey: "companyName", header: "Company" },
     {
       id: "actions",
       header: "Actions",
@@ -352,51 +572,43 @@ export default function ClientsPage() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             type="button"
+            onClick={() => handleEmail(row?.original?.email)}
+            title="Send email now"
+            data-log-title={`Email Client button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
+            className="dash-action-btn dash-btn-neutral"
+            style={actionBtnStyle}
+          >
+            Email
+          </button>
+          <button
+            type="button"
             onClick={() => openEditModal(row?.original)}
+            title="Edit client details"
             data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "var(--sitegreen)",
-              border: "1px solid var(--sitegreen)",
-              color: "#fff",
-            }}
+            className="dash-action-btn dash-btn-green"
+            style={actionBtnStyle}
           >
             Edit
           </button>
           <button
             type="button"
-            onClick={() => handleDelete(row?.original)}
-            data-log-title={`Delete Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#dc2626",
-              border: "1px solid #b91c1c",
-              color: "#fff",
-            }}
+            onClick={() => openInfoModal(row?.original)}
+            title="Show client info"
+            data-log-title={`Info Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
+            className="dash-action-btn dash-btn-info"
+            style={actionBtnStyle}
           >
-            Delete
+            Info
           </button>
           <button
             type="button"
-            onClick={() => handleEmail(row?.original?.email)}
-            data-log-title={`Email Client button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#6D7692",
-              border: "1px solid #6D7692",
-              color: "#fff",
-            }}
+            onClick={() => handleDelete(row?.original)}
+            title="Delete client"
+            data-log-title={`Delete Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
+            className="dash-action-btn dash-btn-danger"
+            style={actionBtnStyle}
           >
-            Email
+            Delete
           </button>
         </div>
       ),
@@ -483,6 +695,22 @@ export default function ClientsPage() {
               <input style={fieldStyle} placeholder="Full Name" value={addForm.fullName} onChange={handleAddChange("fullName")} required />
               <input style={fieldStyle} type="email" placeholder="Email" value={addForm.email} onChange={handleAddChange("email")} required />
               <input style={fieldStyle} placeholder="Phone" value={addForm.phone} onChange={handleAddChange("phone")} required />
+              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
+                Status
+                <select style={fieldStyle} value={addForm.status} onChange={handleAddChange("status")}>
+                  {STATUS_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
+                Onboarding Type
+                <select style={fieldStyle} value={addForm.onboardingType} onChange={handleAddChange("onboardingType")}>
+                  {ONBOARDING_TYPE_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </label>
               {canAssignRm && (
                 <select
                   style={fieldStyle}
@@ -498,6 +726,38 @@ export default function ClientsPage() {
                   ))}
                 </select>
               )}
+              {canAssignRm && (
+                <div style={{ border: "1px solid #eee", borderRadius: "8px", padding: "0.75rem" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 600, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={addForm.isShared}
+                      onChange={(e) => setAddForm((prev) => ({ ...prev, isShared: e.target.checked }))}
+                    />
+                    Shared client (assign to additional RMs)
+                  </label>
+                  {addForm.isShared && (
+                    <div style={{ marginTop: "0.6rem", display: "grid", gap: "0.4rem", maxHeight: "160px", overflowY: "auto" }}>
+                      {rmUsers.filter((rm) => String(rm._id) !== String(addForm.assignedToUserId)).length === 0 ? (
+                        <span style={{ fontSize: "0.85rem", color: "#6b7280" }}>No other RMs available to share with.</span>
+                      ) : (
+                        rmUsers
+                          .filter((rm) => String(rm._id) !== String(addForm.assignedToUserId))
+                          .map((rm) => (
+                            <label key={rm._id} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", cursor: "pointer" }}>
+                              <input
+                                type="checkbox"
+                                checked={addForm.sharedWithUserIds.some((id) => String(id) === String(rm._id))}
+                                onChange={() => toggleSharedRm(setAddForm)(rm._id)}
+                              />
+                              {rm.fullName || rm.username}
+                            </label>
+                          ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
               <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
             </div>
 
@@ -505,13 +765,13 @@ export default function ClientsPage() {
               <button
                 type="button"
                 onClick={closeAddModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save
               </button>
@@ -558,6 +818,26 @@ export default function ClientsPage() {
               <input style={fieldStyle} type="email" placeholder="Email" value={editForm.email} onChange={handleEditChange("email")} required />
               <input style={fieldStyle} placeholder="Phone" value={editForm.phone} onChange={handleEditChange("phone")} required />
               {canAssignRm && (
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
+                  Status
+                  <select style={fieldStyle} value={editForm.status} onChange={handleEditChange("status")}>
+                    {STATUS_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              {canAssignRm && (
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
+                  Onboarding Type
+                  <select style={fieldStyle} value={editForm.onboardingType} onChange={handleEditChange("onboardingType")}>
+                    {ONBOARDING_TYPE_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              {canAssignRm && (
                 <select
                   style={fieldStyle}
                   value={editForm.assignedToUserId}
@@ -571,6 +851,38 @@ export default function ClientsPage() {
                   ))}
                 </select>
               )}
+              {canAssignRm && (
+                <div style={{ border: "1px solid #eee", borderRadius: "8px", padding: "0.75rem" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 600, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={editForm.isShared}
+                      onChange={(e) => setEditForm((prev) => ({ ...prev, isShared: e.target.checked }))}
+                    />
+                    Shared client (assign to additional RMs)
+                  </label>
+                  {editForm.isShared && (
+                    <div style={{ marginTop: "0.6rem", display: "grid", gap: "0.4rem", maxHeight: "160px", overflowY: "auto" }}>
+                      {rmUsers.filter((rm) => String(rm._id) !== String(editForm.assignedToUserId)).length === 0 ? (
+                        <span style={{ fontSize: "0.85rem", color: "#6b7280" }}>No other RMs available to share with.</span>
+                      ) : (
+                        rmUsers
+                          .filter((rm) => String(rm._id) !== String(editForm.assignedToUserId))
+                          .map((rm) => (
+                            <label key={rm._id} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", cursor: "pointer" }}>
+                              <input
+                                type="checkbox"
+                                checked={editForm.sharedWithUserIds.some((id) => String(id) === String(rm._id))}
+                                onChange={() => toggleSharedRm(setEditForm)(rm._id)}
+                              />
+                              {rm.fullName || rm.username}
+                            </label>
+                          ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
               <input style={fieldStyle} type="password" placeholder="New Password (leave blank to keep)" value={editForm.password} onChange={handleEditChange("password")} />
             </div>
 
@@ -578,13 +890,13 @@ export default function ClientsPage() {
               <button
                 type="button"
                 onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save Changes
               </button>
@@ -592,6 +904,177 @@ export default function ClientsPage() {
           </form>
         </div>
       )}
+
+      {showInfoModal && infoClient && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeInfoModal}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff",
+              width: "min(640px, 92vw)",
+              maxHeight: "85vh",
+              overflowY: "auto",
+              borderRadius: "12px",
+              padding: "1.5rem",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "1rem",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700 }}>
+                {infoClient?.fullName || infoClient?.username || "Client details"}
+              </h3>
+              <button
+                type="button"
+                onClick={closeInfoModal}
+                data-log-title="Close Client Info modal"
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  fontSize: "1.5rem",
+                  lineHeight: 1,
+                  cursor: "pointer",
+                  color: "#6D7692",
+                }}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ display: "grid", gap: "0.35rem" }}>
+              {[
+                { label: "Full name", value: infoClient?.fullName },
+                { label: "Username", value: infoClient?.username },
+                { label: "Email", value: infoClient?.email },
+                { label: "Phone", value: infoClient?.phone },
+                { label: "Company", value: infoClient?.companyName },
+                {
+                  label: "Status",
+                  value: labelFor(STATUS_OPTIONS, infoClient?.status),
+                },
+                {
+                  label: "Onboarding type",
+                  value: labelFor(ONBOARDING_TYPE_OPTIONS, infoClient?.onboardingType),
+                },
+                {
+                  label: "Progress",
+                  value:
+                    (infoClient?.onboardingType || "individual") === "individual"
+                      ? `${getPhaseConfig(infoClient).pct}% · Phase ${getPhaseConfig(infoClient).phase} of 6 — ${getPhaseConfig(infoClient).name}`
+                      : "—",
+                },
+                { label: "Assigned to", value: infoClient?.assignedToName },
+                { label: "Assigned by", value: infoClient?.assignedByName },
+                {
+                  label: "Shared with",
+                  value:
+                    infoClient?.isShared &&
+                    Array.isArray(infoClient?.sharedWithNames) &&
+                    infoClient.sharedWithNames.length > 0
+                      ? infoClient.sharedWithNames.join(", ")
+                      : "—",
+                },
+                {
+                  label: "Created",
+                  value: infoClient?.createdAt
+                    ? new Date(infoClient.createdAt).toLocaleString()
+                    : "—",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "160px 1fr",
+                    gap: "0.5rem",
+                    padding: "0.5rem 0",
+                    borderBottom: "1px solid #f0f0f0",
+                  }}
+                >
+                  <span style={{ fontWeight: 600, color: "#6D7692" }}>
+                    {item.label}
+                  </span>
+                  <span style={{ color: "#1a1a1a", wordBreak: "break-word" }}>
+                    {item.value || "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "0.75rem",
+                marginTop: "1.25rem",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => handleEmail(infoClient?.email)}
+                data-log-title={`Email Client button clicked (info modal): ${infoClient?.fullName || infoClient?.email}`}
+                style={{
+                  padding: "0.5rem 1rem",
+                  fontWeight: 700,
+                  borderRadius: "0.5rem",
+                  backgroundColor: "var(--btn-neutral-light)",
+                  border: "1px solid var(--btn-neutral-light)",
+                  color: "#fff",
+                }}
+              >
+                Email
+              </button>
+              <button
+                type="button"
+                onClick={closeInfoModal}
+                data-log-title="Close Client Info modal"
+                style={{
+                  padding: "0.5rem 1rem",
+                  fontWeight: 700,
+                  borderRadius: "0.5rem",
+                  backgroundColor: "var(--btn-green-light)",
+                  border: "1px solid var(--btn-green-light)",
+                  color: "#fff",
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <DeleteConfirmModal
+        open={!!deleteTarget}
+        itemLabel={
+          deleteTarget
+            ? `client "${deleteTarget.fullName || deleteTarget.username || ""}"`
+            : "this client"
+        }
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await performDelete(deleteTarget);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

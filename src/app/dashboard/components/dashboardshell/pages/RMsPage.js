@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
 
 export default function RMsPage() {
@@ -13,6 +14,7 @@ export default function RMsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUserId, setEditUserId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [addForm, setAddForm] = useState({
     username: "",
     fullName: "",
@@ -32,9 +34,15 @@ export default function RMsPage() {
     password: "",
   });
 
-  const handleDelete = async (id) => {
-    if (!id || !window.confirm("Delete this RM?")) return;
+  const handleDelete = (id) => {
+    if (!id) return;
     const target = rms.find((u) => u._id === id) || null;
+    setDeleteTarget(target || { _id: id });
+  };
+
+  const performDelete = async (target) => {
+    const id = target?._id;
+    if (!id) return;
     await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setRms((prev) => prev.filter((u) => u._id !== id));
     // 🔒 Audit log: RM deleted (store the removed entry)
@@ -251,51 +259,33 @@ export default function RMsPage() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             type="button"
+            onClick={() => handleEmail(row?.original?.email)}
+            title="Send email now"
+            data-log-title={`Email RM button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
+            className="dash-action-btn dash-btn-neutral"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+          >
+            Email
+          </button>
+          <button
+            type="button"
             onClick={() => openEditModal(row?.original)}
+            title="Edit RM details"
             data-log-title={`Edit RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "var(--sitegreen)",
-              border: "1px solid var(--sitegreen)",
-              color: "#fff",
-            }}
+            className="dash-action-btn dash-btn-green"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Edit
           </button>
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
+            title="Delete RM"
             data-log-title={`Delete RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#dc2626",
-              border: "1px solid #b91c1c",
-              color: "#fff",
-            }}
+            className="dash-action-btn dash-btn-danger"
+            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Delete
-          </button>
-          <button
-            type="button"
-            onClick={() => handleEmail(row?.original?.email)}
-            data-log-title={`Email RM button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
-            style={{
-              padding: "0.4rem 0.75rem",
-              textAlign: "center",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "#6D7692",
-              border: "1px solid #6D7692",
-              color: "#fff",
-            }}
-          >
-            Email
           </button>
         </div>
       ),
@@ -389,13 +379,13 @@ export default function RMsPage() {
               <button
                 type="button"
                 onClick={closeAddModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save
               </button>
@@ -448,13 +438,13 @@ export default function RMsPage() {
               <button
                 type="button"
                 onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#d32f2f" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--sitegreen)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
               >
                 Save Changes
               </button>
@@ -462,6 +452,20 @@ export default function RMsPage() {
           </form>
         </div>
       )}
+
+      <DeleteConfirmModal
+        open={!!deleteTarget}
+        itemLabel={
+          deleteTarget
+            ? `RM "${deleteTarget.fullName || deleteTarget.username || ""}"`
+            : "this RM"
+        }
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await performDelete(deleteTarget);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

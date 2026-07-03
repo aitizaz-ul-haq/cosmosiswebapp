@@ -13,6 +13,7 @@ import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
+import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
 // import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
 // import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
@@ -35,6 +36,7 @@ const getPageMap = (userRole) => {
     users: <UserPage />,
     logs: <LogsPage />,
     reports: <ReportsPage />,
+    submissions: <SubmissionsPage />,
     // notifications: <NotificationsPage />,
     // "system settings": <SettingsPage />,
     profile: <ProfilePage />,

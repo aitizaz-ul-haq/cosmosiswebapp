@@ -150,6 +150,37 @@ const ClientProfileSchema = new mongoose.Schema(
     createdByNameSnapshot: { type: String, trim: true, default: "" },
 
     /**
+     * ✅ Shared assignment
+     * - isShared: true when the client is assigned to more than one RM
+     * - sharedWithUserIds: additional RMs (besides assignedToUserId) who can
+     *   view this client's onboarding data
+     */
+    isShared: { type: Boolean, default: false, index: true },
+    sharedWithUserIds: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+      index: true,
+    },
+
+    /**
+     * ✅ Client status + onboarding type
+     * - status: high level lifecycle state of the client record
+     * - onboardingType: the kind of onboarding workflow (individual for now)
+     */
+    status: {
+      type: String,
+      enum: ["ongoing", "on_hold", "cancelled"],
+      default: "ongoing",
+      index: true,
+    },
+    onboardingType: {
+      type: String,
+      enum: ["individual", "joint", "corporate", "trust"],
+      default: "individual",
+      index: true,
+    },
+
+    /**
      * ✅ Onboarding workflow
      */
     onboarding: {
@@ -161,6 +192,8 @@ const ClientProfileSchema = new mongoose.Schema(
       },
       currentStep: { type: Number, default: 1 },
       completedSteps: { type: [Number], default: [] },
+      // Completion percentage derived from the current phase (0-100)
+      progress: { type: Number, default: 0, min: 0, max: 100 },
       submittedAt: { type: Date, default: null },
       approvedAt: { type: Date, default: null },
       rejectedAt: { type: Date, default: null },
