@@ -77,12 +77,15 @@ const getPageMap = (userRole) => {
 };
 
 export default function Dashboard() {
-  const { user, logout } = useUser();
+  const { user, logout, loading } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeMenu, setActiveMenu] = useState("");
 
   useEffect(() => {
+    // Wait for the auto-login check to finish before deciding to redirect.
+    if (loading) return;
+
     if (!user) {
       router.push("/login");
       return;
@@ -103,9 +106,9 @@ export default function Dashboard() {
     if (!activeMenu) {
       setActiveMenu(firstMenuItem);
     }
-  }, [user, router, activeMenu, searchParams]);
+  }, [user, router, activeMenu, searchParams, loading]);
 
-  if (!user) return <p>Loading...</p>;
+  if (loading || !user) return <p>Loading...</p>;
 
   const handleLogout = async () => {
     await logUIAction("logout", { username: user.username });
