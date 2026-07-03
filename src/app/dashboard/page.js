@@ -7,6 +7,7 @@ import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
 
 import DashboardShell from "./components/dashboardshell/dashboardshell";
+import ActionLogger from "./components/ActionLogger";
 import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
 import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
@@ -103,15 +104,6 @@ export default function Dashboard() {
   if (!user) return <p>Loading...</p>;
 
   const handleLogout = async () => {
-    await fetch("/api/log", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "logout",
-        metadata: { username: user.username },
-      }),
-      credentials: "include",
-    });
     await logUIAction("logout", { username: user.username });
     logout();
     router.push("/login");
@@ -127,6 +119,8 @@ export default function Dashboard() {
       activeMenu={activeMenu}
       setActiveMenu={setActiveMenu}
     >
+      {/* 🔒 Tracks every button/menu interaction in the dashboard for the audit log */}
+      <ActionLogger context="dashboard" />
       {getPageMap(user.role)[activeMenu] || <div>Welcome {user.role}!</div>}
     </DashboardShell>
   );

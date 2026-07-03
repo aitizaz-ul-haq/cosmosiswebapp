@@ -43,15 +43,6 @@ export default function MidSectionLoginFormSection({
 
     if (loggedInUser) {
       await logUIAction("login_success", { username });
-      await fetch("/api/log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "login_success",
-          metadata: { username },
-        }),
-        credentials: "include",
-      });
 
       setShowSuccessToast(true);
 
@@ -61,15 +52,6 @@ export default function MidSectionLoginFormSection({
       }, Math.max(0, minDuration - elapsed));
     } else {
       await logUIAction("login_failed", { username });
-      await fetch("/api/log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "login_failed",
-          metadata: { username },
-        }),
-        credentials: "include",
-      });
 
       setShowFailureToast(true);
       setShowInfoToast(true);

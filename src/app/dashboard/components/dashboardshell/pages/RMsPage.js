@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function RMsPage() {
   const { user } = useUser();
@@ -33,8 +34,21 @@ export default function RMsPage() {
 
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this RM?")) return;
+    const target = rms.find((u) => u._id === id) || null;
     await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setRms((prev) => prev.filter((u) => u._id !== id));
+    // 🔒 Audit log: RM deleted (store the removed entry)
+    logUIAction("record_deleted", {
+      title: `Deleted RM: ${target?.fullName || target?.username || id}`,
+      entityType: "rm",
+      entity: {
+        id,
+        username: target?.username || null,
+        fullName: target?.fullName || null,
+        email: target?.email || null,
+        companyName: target?.companyName || null,
+      },
+    });
   };
 
   const handleEmail = (email) => {
@@ -131,6 +145,18 @@ export default function RMsPage() {
     if (result?.user) {
       setRms((prev) => [result.user, ...prev]);
     }
+    // 🔒 Audit log: RM created (store the created entry, never the password)
+    logUIAction("record_created", {
+      title: `Created RM: ${result?.user?.fullName || addForm.fullName}`,
+      entityType: "rm",
+      entity: {
+        id: result?.user?._id || null,
+        username: addForm.username,
+        fullName: addForm.fullName,
+        email: addForm.email,
+        companyId: user?.companyId || null,
+      },
+    });
     setShowAddModal(false);
   };
 
@@ -174,6 +200,18 @@ export default function RMsPage() {
         return updated.filter((u) => u.role === "rm" && u.companyId === user?.companyId);
       });
     }
+    // 🔒 Audit log: RM edited (store the updated entry)
+    logUIAction("record_updated", {
+      title: `Edited RM: ${result?.user?.fullName || editForm.fullName}`,
+      entityType: "rm",
+      entity: {
+        id: editUserId,
+        username: editForm.username,
+        fullName: editForm.fullName,
+        email: editForm.email,
+        companyId: editForm.companyId || null,
+      },
+    });
     setShowEditModal(false);
     setEditUserId(null);
   };
@@ -214,6 +252,7 @@ export default function RMsPage() {
           <button
             type="button"
             onClick={() => openEditModal(row?.original)}
+            data-log-title={`Edit RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -229,6 +268,7 @@ export default function RMsPage() {
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
+            data-log-title={`Delete RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -244,6 +284,7 @@ export default function RMsPage() {
           <button
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
+            data-log-title={`Email RM button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -331,7 +372,7 @@ export default function RMsPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add RM</h3>
-              <button type="button" onClick={closeAddModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeAddModal} data-log-title="Closed Add RM form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>
@@ -390,7 +431,7 @@ export default function RMsPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit RM</h3>
-              <button type="button" onClick={closeEditModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit RM form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>

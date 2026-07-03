@@ -18,6 +18,7 @@ const ROLE_RULES = {
     "/api/users",
     "/api/clients",
     "/api/log",
+    "/api/logs",
     "/api/demo-requests",
     "/api/demo-users",
     "/api/me",

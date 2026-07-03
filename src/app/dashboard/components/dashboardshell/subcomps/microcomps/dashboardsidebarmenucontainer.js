@@ -12,6 +12,7 @@ export default function DashboardSidebarMenuContainer({
           className={`menu-options ${activeMenu === item.key ? "active" : ""}`}
           key={item.key}
           onClick={() => setActiveMenu(item.key)}
+          data-log-title={`Menu: ${item.label}`}
         >
           <Image
             src={item.iconlink}

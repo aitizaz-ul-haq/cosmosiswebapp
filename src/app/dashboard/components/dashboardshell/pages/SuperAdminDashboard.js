@@ -4,6 +4,38 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "../styles/superadmindashboard.css";
 
+// Human readable label for a log row's action (kept in sync with LogsPage)
+function actionLabel(row) {
+  const a = row?.action || "";
+  switch (a) {
+    case "login_success":
+      return "Logged in";
+    case "login_failed":
+      return "Failed login attempt";
+    case "logout":
+      return "Logged out";
+    default:
+      break;
+  }
+  if (a === "button_click") {
+    return row?.actionTitle ? `Clicked: ${row.actionTitle}` : "Clicked a control";
+  }
+  if (row?.actionTitle) return row.actionTitle;
+  return a || "—";
+}
+
+function formatTime(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? "—" : d.toLocaleTimeString();
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+}
+
 export default function SuperAdminDashboard() {
   const router = useRouter();
   const [companyCount, setCompanyCount] = useState(0);
@@ -12,6 +44,7 @@ export default function SuperAdminDashboard() {
   const [ongoingOnboarding] = useState(12);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [logs, setLogs] = useState([]);
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -47,6 +80,23 @@ export default function SuperAdminDashboard() {
     fetchCounts();
   }, []);
 
+  // 🔒 Load the latest audit logs to show in the overview card
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const res = await fetch("/api/logs", { credentials: "include" });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && Array.isArray(data.logs)) {
+          setLogs(data.logs);
+        }
+      } catch (err) {
+        console.error("Error fetching latest logs:", err);
+      }
+    };
+
+    fetchLogs();
+  }, []);
+
   const reports = [
     { action: "Client created", name: "RM John Smith" },
     { action: "RM created", name: "Client Amina Khan" },
@@ -54,15 +104,6 @@ export default function SuperAdminDashboard() {
     { action: "RM removed", name: "Supervisor Maya Patel" },
     { action: "Client updated", name: "RM Olivia Brooks" },
     { action: "Supervisor updated", name: "Sofia Reed" },
-  ];
-
-  const logs = [
-    { date: "2026-02-18", time: "09:12", company: "Zenith Corp", activity: "RM logged in" },
-    { date: "2026-02-18", time: "09:38", company: "Northbridge Ltd", activity: "RM logged out" },
-    { date: "2026-02-18", time: "10:05", company: "BluePeak", activity: "RM edited client Nora Ali" },
-    { date: "2026-02-18", time: "10:42", company: "Apex Group", activity: "Supervisor opened reports" },
-    { date: "2026-02-18", time: "11:10", company: "Oakline", activity: "RM updated profile" },
-    { date: "2026-02-18", time: "11:44", company: "SummitCo", activity: "RM viewed onboarding" },
   ];
 
   return (
@@ -198,21 +239,27 @@ export default function SuperAdminDashboard() {
               <span>Company</span>
               <span>Activity</span>
             </div>
-            {logs.map((item, index) => (
-              <div key={index} className="log-row">
-                <span data-label="Date">{item.date}</span>
-                <span data-label="Time">{item.time}</span>
-                <span data-label="Company">{item.company}</span>
-                <span data-label="Activity">{item.activity}</span>
-                <button
-                  type="button"
-                  className="log-button"
-                  onClick={() => router.push("/dashboard?menu=logs")}
-                >
-                  Check activity
-                </button>
+            {logs.length === 0 ? (
+              <div className="log-row">
+                <span data-label="Activity">No activity logged yet</span>
               </div>
-            ))}
+            ) : (
+              logs.map((item, index) => (
+                <div key={item._id || index} className="log-row">
+                  <span data-label="Date">{formatDate(item.createdAt)}</span>
+                  <span data-label="Time">{formatTime(item.createdAt)}</span>
+                  <span data-label="Company">{item.companyName || "—"}</span>
+                  <span data-label="Activity">{actionLabel(item)}</span>
+                  <button
+                    type="button"
+                    className="log-button"
+                    onClick={() => router.push("/dashboard?menu=logs")}
+                  >
+                    Check activity
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ export default function GenericTableHeader({
   filterValue,
   setFilterValue,
   filterableFields,
+  hideDefaultFilter = false,
 }) {
   return (
     <div className="generic-table-header">
@@ -16,13 +17,15 @@ export default function GenericTableHeader({
         title={title}
         description={description}
       />
-      <GenericTableFilter
-        filterField={filterField}
-        setFilterField={setFilterField}
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        filterableFields={filterableFields}
-      />
+      {!hideDefaultFilter && (
+        <GenericTableFilter
+          filterField={filterField}
+          setFilterField={setFilterField}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+          filterableFields={filterableFields}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -22,8 +23,22 @@ export default function UserPage() {
 
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this user?")) return;
+    const target = users.find((u) => u._id === id) || null;
     await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setUsers((prev) => prev.filter((u) => u._id !== id));
+    // 🔒 Audit log: user deleted (store the removed entry)
+    logUIAction("record_deleted", {
+      title: `Deleted user: ${target?.fullName || target?.username || id}`,
+      entityType: "user",
+      entity: {
+        id,
+        username: target?.username || null,
+        fullName: target?.fullName || null,
+        email: target?.email || null,
+        role: target?.role || null,
+        companyName: target?.companyName || null,
+      },
+    });
   };
 
   const handleEmail = (email) => {
@@ -116,6 +131,19 @@ export default function UserPage() {
     if (result?.user?._id) {
       setUsers((prev) => prev.map((u) => (u._id === result.user._id ? result.user : u)));
     }
+    // 🔒 Audit log: user edited (store the updated entry, never the password)
+    logUIAction("record_updated", {
+      title: `Edited user: ${result?.user?.fullName || editForm.fullName} (${editForm.role})`,
+      entityType: "user",
+      entity: {
+        id: editUserId,
+        username: editForm.username,
+        fullName: editForm.fullName,
+        email: editForm.email,
+        role: editForm.role,
+        companyId: editForm.companyId || null,
+      },
+    });
     setShowEditModal(false);
     setEditUserId(null);
   };
@@ -258,7 +286,7 @@ export default function UserPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit User</h3>
-              <button type="button" onClick={closeEditModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit User form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function ClientsPage() {
   const { user } = useUser();
@@ -56,6 +57,18 @@ export default function ClientsPage() {
         return String(existingUserId) !== String(userId);
       })
     );
+    // 🔒 Audit log: client deleted (store the removed entry)
+    logUIAction("record_deleted", {
+      title: `Deleted client: ${client?.fullName || client?.username || userId}`,
+      entityType: "client",
+      entity: {
+        id: userId,
+        username: client?.username || null,
+        fullName: client?.fullName || null,
+        email: client?.email || null,
+        companyName: client?.companyName || null,
+      },
+    });
   };
 
   const handleEmail = (email) => {
@@ -173,6 +186,18 @@ export default function ClientsPage() {
     if (result?.client) {
       setClients((prev) => [result.client, ...prev]);
     }
+    // 🔒 Audit log: client created (store the created entry, never the password)
+    logUIAction("record_created", {
+      title: `Created client: ${result?.client?.fullName || addForm.fullName}`,
+      entityType: "client",
+      entity: {
+        id: result?.client?.userId || result?.client?._id || null,
+        username: addForm.username,
+        fullName: addForm.fullName,
+        email: addForm.email,
+        companyId: user?.companyId || null,
+      },
+    });
     setShowAddModal(false);
   };
 
@@ -272,6 +297,19 @@ export default function ClientsPage() {
     setEditUserId(null);
     setEditProfileId(null);
     setOriginalAssignedToUserId(null);
+    // 🔒 Audit log: client edited (store the updated entry)
+    logUIAction("record_updated", {
+      title: `Edited client: ${result?.user?.fullName || editForm.fullName}`,
+      entityType: "client",
+      entity: {
+        id: editUserId,
+        username: editForm.username,
+        fullName: editForm.fullName,
+        email: editForm.email,
+        companyId: editForm.companyId || null,
+        assignedToUserId: editForm.assignedToUserId || null,
+      },
+    });
   };
 
   const tableTitle = "Clients";
@@ -315,6 +353,7 @@ export default function ClientsPage() {
           <button
             type="button"
             onClick={() => openEditModal(row?.original)}
+            data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -330,6 +369,7 @@ export default function ClientsPage() {
           <button
             type="button"
             onClick={() => handleDelete(row?.original)}
+            data-log-title={`Delete Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -345,6 +385,7 @@ export default function ClientsPage() {
           <button
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
+            data-log-title={`Email Client button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
             style={{
               padding: "0.4rem 0.75rem",
               textAlign: "center",
@@ -432,7 +473,7 @@ export default function ClientsPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add Client</h3>
-              <button type="button" onClick={closeAddModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeAddModal} data-log-title="Closed Add Client form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>
@@ -506,7 +547,7 @@ export default function ClientsPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit Client</h3>
-              <button type="button" onClick={closeEditModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit Client form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>

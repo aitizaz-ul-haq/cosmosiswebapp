@@ -3,19 +3,26 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Log from "@/models/Log";
 import { verifyToken } from "@/lib/auth";
+import { resolveLogIdentity } from "@/lib/enrichLog";
 
 export async function POST(req) {
   try {
     await connectToDatabase();
 
-    const { action, metadata } = await req.json();
+    const { action, metadata = {} } = await req.json();
 
     const tokenUser = verifyToken(req); // may be null
+    const identity = await resolveLogIdentity(tokenUser, metadata);
 
     const log = new Log({
       userId: tokenUser?.id || null,
-      role: tokenUser?.role || "guest",
+      role: identity.role,
+      name: identity.name,
+      username: identity.username,
+      companyId: identity.companyId,
+      companyName: identity.companyName,
       action,
+      actionTitle: metadata?.title || null,
       metadata,
       ip: req.headers.get("x-forwarded-for") || "unknown",
       userAgent: req.headers.get("user-agent") || "unknown",

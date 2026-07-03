@@ -34,7 +34,7 @@ async function flushLogs() {
 // 🔹 Send logs to backend
 async function sendLogs(logs) {
   try {
-    await fetch("/api/log", {
+    await fetch("/api/log/batch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ logs }),
@@ -58,5 +58,19 @@ function scheduleFlush() {
 
 // 🔹 Before page unload → flush
 if (typeof window !== "undefined") {
-  window.addEventListener("beforeunload", flushLogs);
+  window.addEventListener("beforeunload", () => {
+    if (logBuffer.length === 0) return;
+    const logsToSend = [...logBuffer];
+    logBuffer = [];
+    // Use sendBeacon so the request survives the page unload
+    try {
+      const blob = new Blob([JSON.stringify({ logs: logsToSend })], {
+        type: "application/json",
+      });
+      const ok = navigator.sendBeacon?.("/api/log/batch", blob);
+      if (!ok) sendLogs(logsToSend);
+    } catch {
+      sendLogs(logsToSend);
+    }
+  });
 }

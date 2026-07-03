@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function SupervisorsPage() {
   const [users, setUsers] = useState([]);
@@ -22,8 +23,21 @@ export default function SupervisorsPage() {
 
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this user?")) return;
+    const target = users.find((u) => u._id === id) || null;
     await fetch(`/api/users?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setUsers((prev) => prev.filter((u) => u._id !== id));
+    // 🔒 Audit log: supervisor deleted (store the removed entry)
+    logUIAction("record_deleted", {
+      title: `Deleted supervisor: ${target?.fullName || target?.username || id}`,
+      entityType: "supervisor",
+      entity: {
+        id,
+        username: target?.username || null,
+        fullName: target?.fullName || null,
+        email: target?.email || null,
+        companyName: target?.companyName || null,
+      },
+    });
   };
 
   const handleEmail = (email) => {
@@ -122,6 +136,18 @@ export default function SupervisorsPage() {
     }
     setShowEditModal(false);
     setEditUserId(null);
+    // 🔒 Audit log: supervisor edited (store the updated entry)
+    logUIAction("record_updated", {
+      title: `Edited supervisor: ${result?.user?.fullName || editForm.fullName}`,
+      entityType: "supervisor",
+      entity: {
+        id: editUserId,
+        username: editForm.username,
+        fullName: editForm.fullName,
+        email: editForm.email,
+        companyId: editForm.companyId || null,
+      },
+    });
   };
 
   const tableTitle = "Supervisors";
@@ -261,7 +287,7 @@ export default function SupervisorsPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit Supervisor</h3>
-              <button type="button" onClick={closeEditModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit Supervisor form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>

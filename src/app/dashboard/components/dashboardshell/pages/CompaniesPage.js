@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import { logUIAction } from "@/lib/logUIAction";
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
@@ -33,8 +34,20 @@ export default function CompaniesPage() {
 
   const handleDelete = async (id) => {
     if (!id || !window.confirm("Delete this company?")) return;
+    const target = companies.find((c) => c._id === id) || null;
     await fetch(`/api/companies?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     setCompanies((prev) => prev.filter((c) => c._id !== id));
+    // 🔒 Audit log: company deleted (store the removed entry)
+    logUIAction("record_deleted", {
+      title: `Deleted company: ${target?.name || id}`,
+      entityType: "company",
+      entity: {
+        id,
+        name: target?.name || null,
+        tenantKey: target?.tenantKey || null,
+        email: target?.primaryContact?.email || null,
+      },
+    });
   };
 
   const handleEmail = (email) => {
@@ -106,6 +119,18 @@ export default function CompaniesPage() {
     if (result?.company?._id) {
       setCompanies((prev) => prev.map((c) => (c._id === result.company._id ? result.company : c)));
     }
+    // 🔒 Audit log: company edited (store the updated entry)
+    logUIAction("record_updated", {
+      title: `Edited company: ${result?.company?.name || editForm.name}`,
+      entityType: "company",
+      entity: {
+        id: editCompanyId,
+        name: result?.company?.name || editForm.name,
+        tenantKey: editForm.tenantKey,
+        email: editForm.primaryContact?.email,
+        status: editForm.status,
+      },
+    });
     setShowEditModal(false);
     setEditCompanyId(null);
   };
@@ -248,7 +273,7 @@ export default function CompaniesPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit Company</h3>
-              <button type="button" onClick={closeEditModal} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit Company form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>

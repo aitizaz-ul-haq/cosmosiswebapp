@@ -7,6 +7,7 @@ import GenericTableLoader from "./pagecomponents/generictablecomps/generictablel
 import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
 import GenericTableThead from "./pagecomponents/generictablecomps/generictablethead";
 import GenericTableTbody from "./pagecomponents/generictablecomps/generictabletbody";
+import { logUIAction } from "@/lib/logUIAction";
 import "./styles/generictable.css";
 
 export default function GenericTable({
@@ -22,6 +23,8 @@ export default function GenericTable({
   disableRowModal = false,
   onAddRM,
   onAddClient,
+  hideDefaultFilter = false,
+  filtersSlot = null,
 }) {
   const PAGE_SIZE = 8;
   const [filterField, setFilterField] = useState("all");
@@ -143,6 +146,18 @@ export default function GenericTable({
     if (result?.company && typeof onCompanyCreated === "function") {
       onCompanyCreated(result.company);
     }
+    // 🔒 Audit log: company created (store the created entry)
+    logUIAction("record_created", {
+      title: `Created company: ${result?.company?.name || companyForm.name}`,
+      entityType: "company",
+      entity: {
+        id: result?.company?._id || null,
+        name: result?.company?.name || companyForm.name,
+        legalName: companyForm.legalName,
+        tenantKey: companyForm.tenantKey,
+        email: companyForm.primaryContact?.email,
+      },
+    });
     setCompanyForm({
       name: "",
       legalName: "",
@@ -188,6 +203,19 @@ export default function GenericTable({
     if (result?.user && typeof onUserCreated === "function") {
       onUserCreated(result.user);
     }
+    // 🔒 Audit log: user created (store the created entry, never the password)
+    logUIAction("record_created", {
+      title: `Created user: ${result?.user?.fullName || userForm.fullName} (${userForm.role})`,
+      entityType: "user",
+      entity: {
+        id: result?.user?._id || null,
+        username: userForm.username,
+        fullName: userForm.fullName,
+        email: userForm.email,
+        role: userForm.role,
+        companyId: userForm.companyId || null,
+      },
+    });
     setUserForm({
       username: "",
       passwordHash: "",
@@ -300,13 +328,18 @@ export default function GenericTable({
         filterValue={filterValue}
         setFilterValue={setFilterValue}
         filterableFields={filterableFields}
+        hideDefaultFilter={hideDefaultFilter}
       />
+
+      {/* Custom filters slot (rendered directly under the description) */}
+      {filtersSlot}
 
       {title === "Companies" && (
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
           <button
             type="button"
             onClick={() => setShowAddCompanyModal(true)}
+            data-log-title="New Company button clicked"
             style={{
               backgroundColor: "var(--sitegreen)",
               color: "#fff",
@@ -330,6 +363,7 @@ export default function GenericTable({
           <button
             type="button"
             onClick={() => setShowAddUserModal(true)}
+            data-log-title="New User button clicked"
             style={{
               backgroundColor: "var(--sitegreen)",
               color: "#fff",
@@ -353,6 +387,7 @@ export default function GenericTable({
           <button
             type="button"
             onClick={onAddRM}
+            data-log-title="New RM button clicked"
             style={{
               backgroundColor: "var(--sitegreen)",
               color: "#fff",
@@ -376,6 +411,7 @@ export default function GenericTable({
           <button
             type="button"
             onClick={onAddClient}
+            data-log-title="New Client button clicked"
             style={{
               backgroundColor: "var(--sitegreen)",
               color: "#fff",
@@ -492,7 +528,7 @@ export default function GenericTable({
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add Company</h3>
-              <button type="button" onClick={() => setShowAddCompanyModal(false)} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={() => setShowAddCompanyModal(false)} data-log-title="Closed Add Company form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>
@@ -575,7 +611,7 @@ export default function GenericTable({
           >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
               <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add User</h3>
-              <button type="button" onClick={() => setShowAddUserModal(false)} style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
+              <button type="button" onClick={() => setShowAddUserModal(false)} data-log-title="Closed Add User form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
                 ✕
               </button>
             </div>
