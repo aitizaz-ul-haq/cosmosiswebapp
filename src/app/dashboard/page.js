@@ -44,6 +44,8 @@ const getPageMap = (userRole) => {
     rms: <RMsPage />,
     clients: <ClientsPage />,
     onboarding: <OnboardingPage />,
+    progress: <div className="dashboard-empty-page"></div>,
+    onboardingstatus: <div className="dashboard-empty-page"></div>,
   };
 
   // Role-based dashboard override
