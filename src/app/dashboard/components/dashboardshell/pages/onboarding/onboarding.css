@@ -2,11 +2,24 @@
 
 /* Full white page container matching the rest of the app */
 .onb-container {
+  position: relative;
   padding: 2.5rem 2.75rem;
-  background: #fff;
+  background: #fff url("/images/background.png") center / cover no-repeat;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   flex: 1 0 auto;
+}
+
+/* Small brand logo pinned to the bottom-right corner, behind the cards */
+.onb-brand-logo {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  width: 120px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .onb-wrap {

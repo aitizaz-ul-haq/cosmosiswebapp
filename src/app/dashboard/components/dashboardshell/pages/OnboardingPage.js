@@ -123,6 +123,13 @@ export default function OnboardingPage() {
   return (
     <div className="onb-wrap">
       <div className="onb-container">
+        {/* Brand logo in the bottom-right corner */}
+        <img
+          className="onb-brand-logo"
+          src="/images/cosmosis_logo_dark_dashboard.png"
+          alt="Cosmosis"
+          aria-hidden="true"
+        />
         {/* Header: heading + description + illustration */}
         <div className="onb-header">
           <div className="onb-header-text">

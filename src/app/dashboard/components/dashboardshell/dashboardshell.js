@@ -23,7 +23,13 @@ export default function DashboardShell({
         setActiveMenu={setActiveMenu}
       />
       {/* Main Section */}
-      <DashboardDetailsSection onLogout={onLogout} children={children} />
+      <DashboardDetailsSection
+        onLogout={onLogout}
+        config={config}
+        activeMenu={activeMenu}
+        setActiveMenu={setActiveMenu}
+        children={children}
+      />
     </div>
   );
 }

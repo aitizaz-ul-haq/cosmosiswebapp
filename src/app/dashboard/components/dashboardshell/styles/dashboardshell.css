@@ -76,15 +76,143 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* align-items: left; */
-  /* text-align: center; */
-  padding: 0.8rem;
+  align-items: center;
+  padding: 0 1rem;
   width: 100%;
-  height: 80px;
+  height: 58px;
   flex-shrink: 0;
   background-color: var(--sitegreen);
   color: #fdfbf9;
   font-weight: 600;
+}
+
+/* Left: Search bar */
+.dashboard-header-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-header-search-input {
+  height: 36px;
+  width: 260px;
+  max-width: 40vw;
+  padding: 0 0.9rem;
+  border: none;
+  border-radius: 18px;
+  background-color: #ffffff;
+  color: #6d7692;
+  font-size: 14px;
+  outline: none;
+}
+
+.dashboard-header-search-input::placeholder {
+  color: #6d7692;
+}
+
+.dashboard-header-search-input:focus {
+  background-color: #ffffff;
+}
+
+/* Search results dropdown */
+.dashboard-header-search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 260px;
+  max-width: 40vw;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  z-index: 30;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.dashboard-header-search-result-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  color: #6d7692;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dashboard-header-search-result-item:hover {
+  background-color: var(--sitegreen);
+  color: #fdfbf9;
+}
+
+.dashboard-header-search-no-result {
+  padding: 0.6rem 0.7rem;
+  color: #6d7692;
+  font-size: 14px;
+}
+
+/* Right: Action icons */
+.dashboard-header-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dashboard-header-icon-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dashboard-header-icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.dashboard-header-icon-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Tooltip */
+.dashboard-header-icon-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: var(--sitedark);
+  color: #fdfbf9;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+}
+
+.dashboard-header-icon-button:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .dashboard-header-text-conatiner {
@@ -125,6 +253,46 @@
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+/* Branded background + bottom-right logo shown on every page except the
+   profile page (and client onboarding, which supplies its own treatment).
+   The image layers over each page container's existing white background,
+   sitting behind all cards/content. */
+.dashboard-menus-section.dashboard-menus-bg > * {
+  position: relative;
+  background-image: url("/images/background.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Some pages (demo requests) wrap their opaque white container in a
+   plain <div>, so the wrapper's background is hidden behind that white box.
+   Draw the image on those inner containers too (over their white color),
+   exactly like the client onboarding treatment. Table containers get a
+   frosted-glass treatment instead (see generictable.css). */
+.dashboard-menus-section.dashboard-menus-bg .demo-requests-container {
+  background-image: url("/images/background.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.dashboard-menus-section.dashboard-menus-bg > *::after {
+  content: "";
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  width: 120px;
+  height: 60px;
+  background-image: url("/images/cosmosis_logo_dark_dashboard.png");
+  background-position: bottom right;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .menu-options {

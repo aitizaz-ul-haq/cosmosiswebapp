@@ -1,11 +1,16 @@
 /* Container */
 .generic-table-container {
   padding: 1.5rem;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 24px rgba(20, 24, 40, 0.1);
   overflow-x: auto;
-  flex: 1 0 auto;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  width: 100%;
 }
 
 /* Header + Filters */
