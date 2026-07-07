@@ -8,6 +8,7 @@ import {
   ChoiceGroup,
   CheckRow,
   YesNo,
+  CountrySelect,
 } from "../fields";
 
 const CIVIL_STATUS = [
@@ -22,29 +23,124 @@ function HolderPersonalDetails({ prefix, title }) {
   return (
     <div className="onb-holder-col">
       <h4 className="onb-holder-title">{title}</h4>
-      <Field label="Title" name={`${prefix}.title`} />
-      <Field label="Forename(s)" name={`${prefix}.forenames`} />
-      <Field label="Surname(s)" name={`${prefix}.surname`} />
-      <TextArea label="Residential Address" name={`${prefix}.address`} rows={2} />
-      <Field label="Postcode" name={`${prefix}.postcode`} />
-      <Field label="Date of Birth" name={`${prefix}.dob`} type="date" />
-      <Field label="Nationality" name={`${prefix}.nationality`} />
-      <Field label="Country" name={`${prefix}.country`} />
-      <Field label="Home Telephone" name={`${prefix}.homeTel`} type="tel" />
-      <Field label="Mobile" name={`${prefix}.mobile`} type="tel" />
-      <Field label="Email Address" name={`${prefix}.email`} type="email" />
+      <Field
+        label="Title"
+        name={`${prefix}.title`}
+        icon="badge"
+        placeholder="e.g. Mr, Mrs, Ms, Dr"
+        help="Your personal title or salutation (Mr, Mrs, Ms, Miss, Dr, etc.)."
+      />
+      <Field
+        label="Forename(s)"
+        name={`${prefix}.forenames`}
+        icon="user"
+        placeholder="e.g. John Michael"
+        help="Your first name(s) exactly as they appear on your passport or ID."
+      />
+      <Field
+        label="Surname(s)"
+        name={`${prefix}.surname`}
+        icon="user"
+        placeholder="e.g. Smith"
+        help="Your family name / last name as shown on official documents."
+      />
+      <TextArea
+        label="Residential Address"
+        name={`${prefix}.address`}
+        rows={2}
+        icon="home"
+        placeholder="House number, street, town/city"
+        help="Your current full home address. Do not use a PO box."
+      />
+      <Field
+        label="Postcode"
+        name={`${prefix}.postcode`}
+        icon="pin"
+        placeholder="e.g. SW1A 1AA"
+        help="The postal / ZIP code for your residential address."
+      />
+      <Field
+        label="Date of Birth"
+        name={`${prefix}.dob`}
+        type="date"
+        icon="calendar"
+        help="Your date of birth as shown on your passport or ID."
+      />
+      <CountrySelect
+        label="Nationality"
+        name={`${prefix}.nationality`}
+        icon="globe"
+        placeholder="Search your nationality…"
+        help="Select the country of your nationality. Start typing to search."
+      />
+      <CountrySelect
+        label="Country"
+        name={`${prefix}.country`}
+        icon="globe"
+        placeholder="Search your country of residence…"
+        help="Select the country where you currently reside."
+      />
+      <Field
+        label="Home Telephone"
+        name={`${prefix}.homeTel`}
+        type="tel"
+        icon="phone"
+        placeholder="e.g. +44 20 7946 0958"
+        help="Your landline number. Only digits and a leading + are allowed."
+      />
+      <Field
+        label="Mobile"
+        name={`${prefix}.mobile`}
+        type="tel"
+        icon="phone"
+        placeholder="e.g. +44 7700 900123"
+        help="Your mobile number. Only digits and a leading + are allowed."
+      />
+      <Field
+        label="Email Address"
+        name={`${prefix}.email`}
+        type="email"
+        icon="mail"
+        placeholder="e.g. name@example.com"
+        help="A valid email address we can use to contact you."
+      />
       <Field
         label="National Insurance Number"
         name={`${prefix}.nino`}
+        icon="id"
+        placeholder="e.g. QQ 12 34 56 C"
+        help="Your National Insurance / tax reference number."
       />
-      <Field label="Where are you domiciled" name={`${prefix}.domicile`} />
+      <Field
+        label="Where are you domiciled"
+        name={`${prefix}.domicile`}
+        icon="home"
+        placeholder="e.g. United Kingdom"
+        help="The country you regard as your permanent home for tax purposes."
+      />
       <ChoiceGroup
         label="Civil Status"
         name={`${prefix}.civilStatus`}
         options={CIVIL_STATUS}
+        size="lg"
+        icon="heart"
+        help="Your current marital or civil partnership status."
       />
-      <Field label="If married, name of spouse" name={`${prefix}.spouseName`} />
-      <Field label="Spouse's tel no" name={`${prefix}.spouseTel`} type="tel" />
+      <Field
+        label="If married, name of spouse"
+        name={`${prefix}.spouseName`}
+        icon="user"
+        placeholder="e.g. Jane Smith"
+        help="Full name of your spouse or civil partner, if applicable."
+      />
+      <Field
+        label="Spouse's tel no"
+        name={`${prefix}.spouseTel`}
+        type="tel"
+        icon="phone"
+        placeholder="e.g. +44 7700 900456"
+        help="Contact number for your spouse. Only digits and a leading + are allowed."
+      />
     </div>
   );
 }
@@ -73,20 +169,20 @@ function NonUsRow({ label, name }) {
       <td className="center">
         <div className="onb-yesno" style={{ justifyContent: "center" }}>
           <label className="onb-choice">
-            <input type="radio" name={`${name}.h1`} value="yes" /> <span>Yes</span>
+            <input type="checkbox" name={`${name}.h1`} value="yes" /> <span>Yes</span>
           </label>
           <label className="onb-choice">
-            <input type="radio" name={`${name}.h1`} value="no" /> <span>No</span>
+            <input type="checkbox" name={`${name}.h1`} value="no" /> <span>No</span>
           </label>
         </div>
       </td>
       <td className="center">
         <div className="onb-yesno" style={{ justifyContent: "center" }}>
           <label className="onb-choice">
-            <input type="radio" name={`${name}.h2`} value="yes" /> <span>Yes</span>
+            <input type="checkbox" name={`${name}.h2`} value="yes" /> <span>Yes</span>
           </label>
           <label className="onb-choice">
-            <input type="radio" name={`${name}.h2`} value="no" /> <span>No</span>
+            <input type="checkbox" name={`${name}.h2`} value="no" /> <span>No</span>
           </label>
         </div>
       </td>
@@ -98,11 +194,44 @@ function AdviserBlock({ prefix, title }) {
   return (
     <div className="onb-holder-col">
       <h4 className="onb-holder-title">{title}</h4>
-      <Field label="Full Name" name={`${prefix}.fullName`} />
-      <Field label="Company" name={`${prefix}.company`} />
-      <TextArea label="Address" name={`${prefix}.address`} rows={2} />
-      <Field label="Telephone" name={`${prefix}.telephone`} type="tel" />
-      <Field label="Email Address" name={`${prefix}.email`} type="email" />
+      <Field
+        label="Full Name"
+        name={`${prefix}.fullName`}
+        icon="user"
+        placeholder="e.g. Jane Doe"
+        help="Full name of your external adviser."
+      />
+      <Field
+        label="Company"
+        name={`${prefix}.company`}
+        icon="building"
+        placeholder="e.g. Doe Financial Advisers Ltd"
+        help="The firm or company your adviser works for."
+      />
+      <TextArea
+        label="Address"
+        name={`${prefix}.address`}
+        rows={2}
+        icon="home"
+        placeholder="Company address"
+        help="The business address of your adviser."
+      />
+      <Field
+        label="Telephone"
+        name={`${prefix}.telephone`}
+        type="tel"
+        icon="phone"
+        placeholder="e.g. +44 20 7946 0000"
+        help="Adviser's contact number. Only digits and a leading + are allowed."
+      />
+      <Field
+        label="Email Address"
+        name={`${prefix}.email`}
+        type="email"
+        icon="mail"
+        placeholder="e.g. adviser@example.com"
+        help="A valid email address for your adviser."
+      />
       <YesNo
         label="Discuss your account with Calyx?"
         name={`${prefix}.canDiscuss`}
@@ -111,7 +240,12 @@ function AdviserBlock({ prefix, title }) {
         label="Receive information or reports relating to your account?"
         name={`${prefix}.canReceiveReports`}
       />
-      <TextArea label="If Yes, please specify" name={`${prefix}.reportsNotes`} rows={2} />
+      <TextArea
+        label="If Yes, please specify"
+        name={`${prefix}.reportsNotes`}
+        rows={2}
+        placeholder="Describe what information or reports may be shared"
+      />
     </div>
   );
 }
@@ -124,6 +258,13 @@ export default function Phase1PersonalDetails() {
         <HolderPersonalDetails prefix="holder1" title="Account Holder 1" />
         <HolderPersonalDetails prefix="holder2" title="Account Holder 2" />
       </div>
+      <p className="onb-agreement">
+        Each named applicant will be authorised to access information relating to
+        all other applicants under this agreement, including portfolio
+        valuations, transaction history, and Calyx and Custodian reporting,
+        unless any applicant notifies Calyx in writing that they do not wish such
+        access to be granted.
+      </p>
 
       <SectionTitle>National Client Identifier (NCI)</SectionTitle>
       <Note>
@@ -230,15 +371,20 @@ export default function Phase1PersonalDetails() {
       <TextArea
         label="Additional sub-accounts (please provide relevant information)"
         name="investmentService.subAccounts"
-        rows={2}
+        rows={5}
+        half
+        placeholder="List any additional sub-accounts and relevant details"
       />
       <YesNo
         label="Do you have any specific income requirements?"
         name="investmentService.hasIncome"
       />
-      <Field
+      <TextArea
         label="If yes, what frequency would you like your withdrawal?"
         name="investmentService.withdrawalFrequency"
+        rows={5}
+        half
+        placeholder="e.g. Monthly, Quarterly, Annually and the amount"
       />
 
       <SectionTitle>External Advisers</SectionTitle>
@@ -255,6 +401,7 @@ export default function Phase1PersonalDetails() {
       <CheckRow
         label="Please tick if you wish to be added to our email distribution list to receive our Daily News Wrap-Up. You can unsubscribe at any time via the link at the bottom of the email."
         name="dailyNewsWrapUp"
+        big
       />
     </div>
   );

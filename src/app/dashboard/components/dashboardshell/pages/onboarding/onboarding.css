@@ -413,19 +413,19 @@
 
 /* ------------ Form primitives ------------ */
 .onb-section-title {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--sitedark, #6d7692);
-  margin: 2.5rem 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #eef0f5;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--sitegreen, #21cfb2);
+  margin: 5rem 0 1.5rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid rgba(33, 207, 178, 0.25);
 }
 .onb-section-title:first-child {
   margin-top: 0.5rem;
 }
 
 .onb-note {
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   color: #7a8090;
   line-height: 1.6;
   margin: 0.5rem 0 1.5rem;
@@ -438,11 +438,83 @@
   margin-bottom: 1.4rem;
 }
 
-.onb-field > label,
+/* Label row: icon + text on the left, help icon on the right */
+.onb-field-labelrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.onb-field-label,
 .onb-label {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #4a5060;
+}
+
+.onb-field-icon {
+  flex-shrink: 0;
+  color: var(--sitegreen, #21cfb2);
+}
+
+/* Help icon + hover/focus tooltip */
+.onb-help {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #eef0f5;
+  color: #6d7692;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: help;
+  outline: none;
+}
+
+.onb-help:hover,
+.onb-help:focus {
+  background: var(--sitegreen, #21cfb2);
+  color: #fff;
+}
+
+.onb-help::after {
+  content: attr(data-help);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: 260px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: #2b3040;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: normal;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 40;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.onb-help:hover::after,
+.onb-help:focus::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .onb-field input[type="text"],
@@ -473,6 +545,78 @@
   box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.12);
 }
 
+/* Field validation error */
+.onb-input-error,
+.onb-field input.onb-input-error {
+  border-color: #e5484d;
+  box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.12);
+}
+
+.onb-field-error {
+  font-size: 0.78rem;
+  color: #e5484d;
+  font-weight: 500;
+}
+
+/* Half-width text area (e.g. sub-accounts, withdrawal frequency) */
+.onb-field-half textarea {
+  width: 50%;
+}
+@media (max-width: 820px) {
+  .onb-field-half textarea {
+    width: 100%;
+  }
+}
+
+/* Country combobox */
+.onb-combo {
+  position: relative;
+}
+
+.onb-combo-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #e4e7ee;
+  border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(20, 24, 40, 0.15);
+  z-index: 50;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.onb-combo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  color: #3f4552;
+  cursor: pointer;
+}
+
+.onb-combo-item:hover {
+  background: var(--sitegreen, #21cfb2);
+  color: #fff;
+}
+
+.onb-flag {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.onb-combo-empty {
+  padding: 0.55rem 0.65rem;
+  font-size: 0.85rem;
+  color: #9aa0b2;
+}
+
 .onb-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -481,14 +625,14 @@
 }
 
 .onb-holder-col {
-  border: 1px solid #eef0f5;
+  border: 1px solid #e2e6ee;
   border-radius: 10px;
   padding: 1.5rem 1.4rem;
-  background: #fcfdff;
+  background: #eef1f6;
 }
 
 .onb-holder-title {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--sitedark, #6d7692);
   margin: 0 0 1.25rem;
@@ -513,19 +657,86 @@
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  font-size: 0.88rem;
+  font-size: 1.1rem;
   color: #3f4552;
   cursor: pointer;
   line-height: 1.35;
 }
 
 .onb-choice input {
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
   accent-color: var(--sitegreen, #21cfb2);
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+/* Custom checkbox: white box that fills application green with a black tick
+   when checked. Radios keep the native (accent-colored) look. */
+.onb-choice input[type="checkbox"],
+.onb-table td input[type="checkbox"],
+.onb-table td input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #cfd4e0;
+  border-radius: 5px;
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.onb-choice input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+}
+
+/* Enlarged tick box (e.g. Daily News Wrap-Up) to match table checkboxes */
+.onb-choice-big input[type="checkbox"] {
+  width: 36px;
+  height: 36px;
+}
+
+/* Table checkboxes match the input-field height */
+.onb-table td input[type="checkbox"],
+.onb-table td input[type="radio"] {
+  width: 36px;
+  height: 36px;
+}
+
+.onb-choice input[type="checkbox"]:checked,
+.onb-table td input[type="checkbox"]:checked,
+.onb-table td input[type="radio"]:checked {
+  background: var(--sitegreen, #21cfb2);
+  border-color: var(--sitegreen, #21cfb2);
+}
+
+.onb-choice input[type="checkbox"]:checked::after,
+.onb-table td input[type="checkbox"]:checked::after,
+.onb-table td input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 28%;
+  height: 55%;
+  border: solid #000;
+  border-width: 0 3px 3px 0;
+  transform: translate(-50%, -55%) rotate(45deg);
+}
+
+/* Larger radio group (e.g. Civil Status) */
+.onb-choice-group-lg .onb-choice {
+  font-size: 1.1rem;
+  align-items: center;
+}
+
+.onb-choice-group-lg .onb-choice input {
+  width: 20px;
+  height: 20px;
+  margin-top: 0;
 }
 
 .onb-yesno {
@@ -551,8 +762,9 @@
 .onb-table td {
   border: 1px solid #e4e7ee;
   padding: 0.7rem 0.8rem;
-  text-align: left;
+  text-align: center;
   vertical-align: middle;
+  font-size: 1.1rem;
 }
 
 .onb-table th {
@@ -574,7 +786,8 @@
   border: 1px solid #d8dce6;
   border-radius: 6px;
   padding: 0.4rem 0.5rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  text-align: center;
   font-family: inherit;
   outline: none;
 }
@@ -588,13 +801,20 @@
   text-align: center;
 }
 
+/* Non-US matrix: the Question column reads better left-aligned and wrapped */
+.onb-matrix td.onb-row-label,
+.onb-matrix th:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
 .onb-agreement {
-  background: #f6f8fb;
-  border: 1px solid #eef0f5;
+  background: #eafaf6;
+  border: 1px solid #d3f0e9;
   border-radius: 8px;
   padding: 1.25rem 1.4rem;
-  font-size: 0.85rem;
-  color: #5a6070;
+  font-size: 1rem;
+  color: #5a7069;
   line-height: 1.6;
   margin: 0.75rem 0 1.75rem;
 }
