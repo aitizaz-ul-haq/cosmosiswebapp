@@ -54,57 +54,59 @@ export default function Phase4RiskProfile() {
         individual circumstances of all account holders.
       </Note>
 
-      <ChoiceGroup
-        label="1. How many years of investment experience do you have?"
-        name="risk.q1"
-        stacked
-        options={["Less than 3 years", "3 – 5 years", "6 – 10 years", "More than 10 years"]}
-      />
-      <ChoiceGroup
-        label="2. What is your investment time horizon?"
-        name="risk.q2"
-        stacked
-        options={["Less than 3 years", "3 – 5 years", "6 – 10 years", "More than 10 years"]}
-      />
-      <ChoiceGroup
-        label="3. Which range of annual returns would you find most acceptable for your portfolio?"
-        name="risk.q3"
-        stacked
-        options={["0% to +5%", "–5% to +8%", "–10% to +15%", "-25% to +30%"]}
-      />
-      <ChoiceGroup
-        label="4. If the value of your portfolio was to fall by 20% in a 12-month period, how would you react?"
-        name="risk.q4"
-        stacked
-        options={[
-          "I would want to liquidate my investments and hold the proceeds in cash.",
-          "I would consider reducing the risk profile of the portfolio.",
-          "I would sit tight, expecting the portfolio to recover over time.",
-          "I would see this as a long-term buying opportunity.",
-        ]}
-      />
-      <ChoiceGroup
-        label="5. If the portfolio was to fall in value by the end of your time horizon, would this have a material impact on your standard of living or ability to meet commitments?"
-        name="risk.q5"
-        stacked
-        options={[
-          "Significant impact – I rely on the portfolio entirely for income and/or capital.",
-          "Moderate impact – Income and/or capital from the portfolio support my current position and a fluctuation would have an impact.",
-          "Low impact – Income and/or capital from the portfolio is supplementary and other sources exist to meet regular commitments.",
-          "No impact – I have surplus capital and income, and can tolerate significant fluctuations in the portfolio value.",
-        ]}
-      />
-      <ChoiceGroup
-        label="6. What is your view on how readily the investment portfolio can be converted to cash?"
-        name="risk.q6"
-        stacked
-        options={[
-          "I would expect the entire portfolio to be convertible to cash on a daily basis.",
-          "I would be comfortable with 15%–20% of the portfolio being less accessible.",
-          "I would be comfortable with 30%–40% of the portfolio being less accessible.",
-          "I am a long-term investor and have other assets to meet current and future commitments; liquidity is not a concern for me.",
-        ]}
-      />
+      <div className="onb-risk-questions">
+        <ChoiceGroup
+          label="1. How many years of investment experience do you have?"
+          name="risk.q1"
+          stacked
+          options={["Less than 3 years", "3 – 5 years", "6 – 10 years", "More than 10 years"]}
+        />
+        <ChoiceGroup
+          label="2. What is your investment time horizon?"
+          name="risk.q2"
+          stacked
+          options={["Less than 3 years", "3 – 5 years", "6 – 10 years", "More than 10 years"]}
+        />
+        <ChoiceGroup
+          label="3. Which range of annual returns would you find most acceptable for your portfolio?"
+          name="risk.q3"
+          stacked
+          options={["0% to +5%", "–5% to +8%", "–10% to +15%", "-25% to +30%"]}
+        />
+        <ChoiceGroup
+          label="4. If the value of your portfolio was to fall by 20% in a 12-month period, how would you react?"
+          name="risk.q4"
+          stacked
+          options={[
+            "I would want to liquidate my investments and hold the proceeds in cash.",
+            "I would consider reducing the risk profile of the portfolio.",
+            "I would sit tight, expecting the portfolio to recover over time.",
+            "I would see this as a long-term buying opportunity.",
+          ]}
+        />
+        <ChoiceGroup
+          label="5. If the portfolio was to fall in value by the end of your time horizon, would this have a material impact on your standard of living or ability to meet commitments?"
+          name="risk.q5"
+          stacked
+          options={[
+            "Significant impact – I rely on the portfolio entirely for income and/or capital.",
+            "Moderate impact – Income and/or capital from the portfolio support my current position and a fluctuation would have an impact.",
+            "Low impact – Income and/or capital from the portfolio is supplementary and other sources exist to meet regular commitments.",
+            "No impact – I have surplus capital and income, and can tolerate significant fluctuations in the portfolio value.",
+          ]}
+        />
+        <ChoiceGroup
+          label="6. What is your view on how readily the investment portfolio can be converted to cash?"
+          name="risk.q6"
+          stacked
+          options={[
+            "I would expect the entire portfolio to be convertible to cash on a daily basis.",
+            "I would be comfortable with 15%–20% of the portfolio being less accessible.",
+            "I would be comfortable with 30%–40% of the portfolio being less accessible.",
+            "I am a long-term investor and have other assets to meet current and future commitments; liquidity is not a concern for me.",
+          ]}
+        />
+      </div>
 
       <SectionTitle>Investment Strategy</SectionTitle>
       <Note>
@@ -112,15 +114,17 @@ export default function Phase4RiskProfile() {
         strategy has been suggested. Risk profiles: Conservative (6–10), Balanced
         (11–15), Steady Growth (16–20), Equity (21–24).
       </Note>
-      <YesNo
-        label="Do you wish to proceed with the recommended strategy?"
-        name="risk.proceedRecommended"
-      />
-      <ChoiceGroup
-        label="If you would prefer Calyx to classify your risk profile differently, please select your preferred profile:"
-        name="risk.overrideProfile"
-        options={["Conservative", "Balanced", "Steady Growth", "Equity"]}
-      />
+      <div className="onb-risk-questions">
+        <YesNo
+          label="Do you wish to proceed with the recommended strategy?"
+          name="risk.proceedRecommended"
+        />
+        <ChoiceGroup
+          label="If you would prefer Calyx to classify your risk profile differently, please select your preferred profile:"
+          name="risk.overrideProfile"
+          options={["Conservative", "Balanced", "Steady Growth", "Equity"]}
+        />
+      </div>
 
       <SectionTitle>Non-Standard Investments</SectionTitle>
       <Note>
@@ -128,7 +132,7 @@ export default function Phase4RiskProfile() {
         non-standard investments, and confirm that Calyx may discuss these
         products with you and that you have read the corresponding risk warnings.
       </Note>
-      <div className="onb-grid-2">
+      <div className="onb-grid-2 onb-risk-openness">
         <YesNo
           label="Account Holder 1 – I am open to using non-standard investments."
           name="risk.nonStandardOpen.h1"
@@ -152,8 +156,8 @@ export default function Phase4RiskProfile() {
             {NON_STANDARD_PRODUCTS.map((p) => (
               <tr key={p.key}>
                 <td className="onb-row-label" style={{ whiteSpace: "normal" }}>
-                  <strong>{p.name}</strong>
-                  <div style={{ fontWeight: 400, fontSize: "0.78rem", color: "#7a8090", marginTop: "0.25rem" }}>
+                  <span style={{ fontWeight: 600 }}>{p.name}</span>
+                  <div style={{ fontWeight: 400, fontSize: "1.1rem", color: "#7a8090", marginTop: "0.25rem" }}>
                     {p.desc}
                   </div>
                 </td>

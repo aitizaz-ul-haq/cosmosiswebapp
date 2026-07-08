@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 // Modal that hosts a single phase's form. Body scrolls independently.
 export default function PhaseModal({
@@ -11,6 +11,8 @@ export default function PhaseModal({
   onNext,
   children,
 }) {
+  const bodyRef = useRef(null);
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
@@ -18,6 +20,11 @@ export default function PhaseModal({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // Always show each phase from the top when navigating between phases.
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [id]);
 
   const isLast = id >= totalPhases;
 
@@ -44,7 +51,7 @@ export default function PhaseModal({
           </button>
         </div>
 
-        <div className="onb-modal-body">{children}</div>
+        <div className="onb-modal-body" ref={bodyRef}>{children}</div>
 
         <div className="onb-modal-footer">
           <button type="button" className="onb-modal-btn neutral" onClick={onClose}>

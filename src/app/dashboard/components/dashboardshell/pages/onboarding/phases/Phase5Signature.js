@@ -8,7 +8,9 @@ function SignatureBlock({ prefix, title }) {
       <h4 className="onb-holder-title">{title}</h4>
       <Field label="Signature(s)" name={`${prefix}.signature`} />
       <Field label="Name(s)" name={`${prefix}.name`} />
-      <Field label="Date" name={`${prefix}.date`} type="date" />
+      <div className="onb-sig-date">
+        <Field label="Date" name={`${prefix}.date`} type="date" />
+      </div>
     </div>
   );
 }
@@ -33,8 +35,10 @@ export default function Phase5Signature() {
         account(s).
       </Note>
 
-      <SignatureBlock prefix="signature.holder1" title="Account Holder 1" />
-      <SignatureBlock prefix="signature.holder2" title="Account Holder 2" />
+      <div className="onb-sig-grid">
+        <SignatureBlock prefix="signature.holder1" title="Account Holder 1" />
+        <SignatureBlock prefix="signature.holder2" title="Account Holder 2" />
+      </div>
     </div>
   );
 }

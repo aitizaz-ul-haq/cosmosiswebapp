@@ -4,6 +4,7 @@ export default function DashboardSidebarMenuContainer({
   config,
   activeMenu,
   setActiveMenu,
+  collapsed,
 }) {
   return (
     <div className="dashboard-sidebar-menu-container">
@@ -13,14 +14,16 @@ export default function DashboardSidebarMenuContainer({
           key={item.key}
           onClick={() => setActiveMenu(item.key)}
           data-log-title={`Menu: ${item.label}`}
+          data-tooltip={item.label}
         >
           <Image
             src={item.iconlink}
             width="24"
             height="24"
+            alt={item.label}
             title={item.label}
           />
-          {item.label}
+          <span className="menu-options-label">{item.label}</span>
         </div>
       ))}
     </div>

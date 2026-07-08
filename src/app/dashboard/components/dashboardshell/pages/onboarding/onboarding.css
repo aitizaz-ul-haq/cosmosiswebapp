@@ -435,7 +435,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  margin-bottom: 1.4rem;
 }
 
 /* Label row: icon + text on the left, help icon on the right */
@@ -568,6 +567,62 @@
   }
 }
 
+/* 70%-width text area variant */
+.onb-textarea-70 {
+  margin-top: 2rem;
+}
+.onb-textarea-70 .onb-field textarea {
+  width: 55%;
+}
+@media (max-width: 820px) {
+  .onb-textarea-70 .onb-field textarea {
+    width: 100%;
+  }
+}
+
+/* Documentation checklist notes text area */
+.onb-notes-field {
+  margin-top: 2rem;
+}
+.onb-notes-field .onb-field textarea {
+  width: 50%;
+}
+@media (max-width: 820px) {
+  .onb-notes-field .onb-field textarea {
+    width: 100%;
+  }
+}
+
+/* Net Worth & Proposed Investment: space out every field and constrain the
+   two value inputs and the restrictions text area to 55% width. */
+.onb-networth-fields > .onb-field,
+.onb-networth-fields > .onb-field-55,
+.onb-networth-fields > .onb-textarea-55 {
+  margin-bottom: 2.6rem;
+}
+
+.onb-networth-fields > *:last-child {
+  margin-bottom: 0;
+}
+
+.onb-field-55 .onb-field input[type="text"],
+.onb-field-55 .onb-field input[type="number"],
+.onb-field-55 .onb-field input[type="date"],
+.onb-textarea-55 .onb-field textarea {
+  width: 55%;
+}
+
+.onb-field-40 .onb-field input[type="date"] {
+  width: 15%;
+}
+
+@media (max-width: 820px) {
+  .onb-field-55 .onb-field input,
+  .onb-textarea-55 .onb-field textarea {
+    width: 100%;
+  }
+}
+
 /* Country combobox */
 .onb-combo {
   position: relative;
@@ -624,6 +679,13 @@
   margin-bottom: 0.5rem;
 }
 
+/* Compact variant: columns only as wide as their content instead of an even
+   50/50 split, avoiding large empty space to the right. */
+.onb-grid-2-compact {
+  grid-template-columns: repeat(2, max-content);
+  justify-content: start;
+}
+
 .onb-holder-col {
   border: 1px solid #e2e6ee;
   border-radius: 10px;
@@ -638,6 +700,48 @@
   margin: 0 0 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+/* Remove the trailing choice-group margin inside boxed columns so there is
+   no dead space under the last option (e.g. "Other" in Employment Status). */
+.onb-holder-col .onb-choice-group {
+  margin-bottom: 0;
+}
+
+/* Purpose of the Portfolio: boxed radio group matching the holder columns.
+   The gray box only spans as wide as its longest option text. */
+.onb-purpose-col {
+  display: inline-block;
+  width: auto;
+}
+
+/* Licensing / directorship block: give each field more breathing room and
+   constrain inputs + text areas to half width. */
+.onb-half-fields {
+  margin-top: 3rem;
+}
+
+.onb-half-fields > .onb-field {
+  margin-bottom: 2.6rem;
+}
+
+.onb-half-fields > .onb-field:last-child {
+  margin-bottom: 0;
+}
+
+.onb-half-fields .onb-field input[type="text"],
+.onb-half-fields .onb-field input[type="email"],
+.onb-half-fields .onb-field input[type="tel"],
+.onb-half-fields .onb-field input[type="number"],
+.onb-half-fields .onb-field textarea {
+  width: 50%;
+}
+
+@media (max-width: 820px) {
+  .onb-half-fields .onb-field input,
+  .onb-half-fields .onb-field textarea {
+    width: 100%;
+  }
 }
 
 /* Radio / checkbox groups */
@@ -670,6 +774,35 @@
   height: 20px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+/* Short inline text input beside an "Other" radio option */
+.onb-choice input.onb-choice-other-input {
+  width: 160px;
+  height: auto;
+  margin: 0 0 0 0.6rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #d8dce6;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #1f2430;
+  background: #fff;
+  outline: none;
+}
+
+.onb-choice input.onb-choice-other-input:focus {
+  border-color: var(--sitegreen, #21cfb2);
+  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.12);
+}
+
+/* Keep the radio, label text and the inline input vertically centered. */
+.onb-choice:has(.onb-choice-other-input) {
+  align-items: center;
+}
+
+.onb-choice:has(.onb-choice-other-input) input[type="radio"] {
+  margin-top: 0;
 }
 
 /* Custom checkbox: white box that fills application green with a black tick
@@ -751,6 +884,26 @@
   margin: 0.75rem 0 1.75rem;
 }
 
+/* Extra gap between the two Knowledge & Experience matrices */
+.onb-matrix-wrap {
+  margin-bottom: 3rem;
+}
+
+/* Space out each question in the Risk Questionnaire */
+.onb-risk-questions > .onb-field {
+  margin-bottom: 2.5rem;
+}
+
+.onb-risk-questions > .onb-field:last-child {
+  margin-bottom: 0;
+}
+
+/* Space above/below the non-standard investment openness Yes/No rows */
+.onb-risk-openness {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+}
+
 .onb-table {
   width: 100%;
   border-collapse: collapse;
@@ -778,6 +931,30 @@
   color: #4a5060;
   background: #fcfdff;
   white-space: nowrap;
+}
+
+/* Equal-width columns variant: every column gets the same share of the
+   table width, giving the value columns more room. */
+.onb-table-equal {
+  table-layout: fixed;
+}
+
+.onb-table-equal th,
+.onb-table-equal td {
+  width: 25%;
+}
+
+.onb-table-equal td.onb-row-label {
+  white-space: normal;
+}
+
+.onb-row-sublabel {
+  display: block;
+  margin-top: 0.25rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: #7a8090;
+  white-space: normal;
 }
 
 .onb-table input[type="text"],
@@ -825,6 +1002,41 @@
   padding: 1.5rem 1.4rem;
   margin-bottom: 1.5rem;
   background: #fcfdff;
+}
+
+/* Signature blocks side by side */
+.onb-sig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.onb-sig-grid .onb-sig-block {
+  margin-bottom: 0;
+}
+
+/* Space out the fields inside each signature block */
+.onb-sig-block .onb-field {
+  margin-bottom: 1.75rem;
+}
+
+.onb-sig-block > .onb-field:last-child,
+.onb-sig-block > .onb-sig-date:last-child .onb-field {
+  margin-bottom: 0;
+}
+
+/* Narrow date field in signature blocks */
+.onb-sig-date .onb-field input[type="date"] {
+  width: 25%;
+}
+
+@media (max-width: 820px) {
+  .onb-sig-grid {
+    grid-template-columns: 1fr;
+  }
+  .onb-sig-date .onb-field input[type="date"] {
+    width: 100%;
+  }
 }
 
 @media (max-width: 1100px) {

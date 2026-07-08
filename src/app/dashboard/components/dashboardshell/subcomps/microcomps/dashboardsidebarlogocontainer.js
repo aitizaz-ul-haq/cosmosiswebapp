@@ -13,16 +13,18 @@ function getDisplayRole(role = "") {
   return role;
 }
 
-export default function DashboardSidebarLogoContainer({ user }) {
+export default function DashboardSidebarLogoContainer({ user, collapsed }) {
   const displayName = toTitleCase(user?.fullName || user?.username || "");
   const displayRole = getDisplayRole(user?.role || "");
+
+  if (collapsed) return null;
 
   return (
     <div className="dashboard-sidebar-logo-container">
       <Image
         src="/images/sidebarlogo.png"
-        width="209"
-        height="108"
+        width={209}
+        height={108}
         alt="cosmosis logo"
         title="cosmosis logo"
       />

@@ -267,6 +267,7 @@ export function ChoiceGroup({
   size,
   icon,
   help,
+  otherInput = false,
 }) {
   return (
     <div className="onb-field">
@@ -279,10 +280,20 @@ export function ChoiceGroup({
         {options.map((opt) => {
           const value = typeof opt === "string" ? opt : opt.value;
           const text = typeof opt === "string" ? opt : opt.label;
+          const isOther = otherInput && String(value).toLowerCase() === "other";
           return (
             <label className="onb-choice" key={value}>
               <input type={type} name={name} value={value} />
               <span>{text}</span>
+              {isOther && (
+                <input
+                  type="text"
+                  className="onb-choice-other-input"
+                  name={`${name}.otherText`}
+                  placeholder="Please specify"
+                  onClick={(e) => e.preventDefault()}
+                />
+              )}
             </label>
           );
         })}

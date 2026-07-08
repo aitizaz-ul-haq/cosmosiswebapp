@@ -103,7 +103,7 @@ function KnowledgeMatrix({ prefix, title }) {
   return (
     <>
       <span className="onb-label">{title}</span>
-      <div className="onb-table-wrap">
+      <div className="onb-table-wrap onb-matrix-wrap">
         <table className="onb-table onb-matrix">
           <thead>
             <tr>
@@ -141,45 +141,58 @@ export default function Phase3FinancialProfile() {
     <div>
       <Note>
         This section enables us to determine whether the service we provide is
-        suitable for you. Please ensure all information is complete, accurate and
-        up to date, and notify us promptly if your circumstances change.
+        suitable for you. The assessment of suitability is carried out to ensure
+        that we act in your best interests.
+      </Note>
+      <Note>
+        Please ensure that all information provided is complete, accurate, and up
+        to date. Failure to do so may result in investments being made that are
+        not appropriate for your needs or objectives.
+      </Note>
+      <Note>
+        You must notify us promptly if your circumstances change in a way that
+        affects the information supplied below.
       </Note>
 
       <SectionTitle>Purpose of the Portfolio</SectionTitle>
-      <ChoiceGroup
-        name="fp.purpose"
-        type="checkbox"
-        stacked
-        options={[
-          "To preserve capital",
-          "To grow capital",
-          "To grow capital to meet future commitments",
-          "To generate income to meet current requirements",
-        ]}
-      />
+      <div className="onb-holder-col onb-purpose-col">
+        <ChoiceGroup
+          name="fp.purpose"
+          type="radio"
+          stacked
+          options={[
+            "To preserve capital",
+            "To grow capital",
+            "To grow capital to meet future commitments",
+            "To generate income to meet current requirements",
+          ]}
+        />
+      </div>
 
       <SectionTitle>Employment Status</SectionTitle>
-      <div className="onb-grid-2">
+      <div className="onb-grid-2 onb-grid-2-compact">
         <div className="onb-holder-col">
           <h4 className="onb-holder-title">First Account Holder</h4>
-          <ChoiceGroup name="fp.employment.h1" stacked options={EMPLOYMENT_STATUS} />
+          <ChoiceGroup name="fp.employment.h1" stacked otherInput options={EMPLOYMENT_STATUS} />
         </div>
         <div className="onb-holder-col">
           <h4 className="onb-holder-title">Second Account Holder</h4>
-          <ChoiceGroup name="fp.employment.h2" stacked options={EMPLOYMENT_STATUS} />
+          <ChoiceGroup name="fp.employment.h2" stacked otherInput options={EMPLOYMENT_STATUS} />
         </div>
       </div>
 
-      <YesNo
-        label="Are you licensed, authorised or otherwise regulated by any governmental regulatory authority, or employed by an entity which is licensed, authorised or regulated?"
-        name="fp.regulated"
-      />
-      <TextArea label="Please provide details." name="fp.regulatedDetails" rows={2} />
-      <Field
-        label="If you work in the financial services sector, please specify the name of the entity you are employed by."
-        name="fp.financialEntity"
-      />
-      <TextArea label="Please list any company directorships." name="fp.directorships" rows={2} />
+      <div className="onb-half-fields">
+        <YesNo
+          label="Are you licensed, authorised or otherwise regulated by any governmental regulatory authority, or employed by an entity which is licensed, authorised or regulated?"
+          name="fp.regulated"
+        />
+        <TextArea label="Please provide details." name="fp.regulatedDetails" rows={5} />
+        <Field
+          label="If you work in the financial services sector, please specify the name of the entity you are employed by."
+          name="fp.financialEntity"
+        />
+        <TextArea label="Please list any company directorships." name="fp.directorships" rows={5} />
+      </div>
 
       <SectionTitle>Assets</SectionTitle>
       <Note>Tell us about your assets. Please specify the currency of each entry.</Note>
@@ -187,33 +200,43 @@ export default function Phase3FinancialProfile() {
 
       <SectionTitle>Liabilities</SectionTitle>
       <MoneyTable prefix="fp.liabilities" rows={LIABILITY_ROWS} />
-      <TextArea
-        label="Please provide further detail on any mortgages here (i.e. redemption date, type, interest rate)."
-        name="fp.mortgageDetails"
-        rows={2}
-      />
+      <div className="onb-textarea-70">
+        <TextArea
+          label="Please provide further detail on any mortgages here (i.e. redemption date, type, interest rate)."
+          name="fp.mortgageDetails"
+          rows={6}
+        />
+      </div>
 
       <SectionTitle>Net Worth & Proposed Investment</SectionTitle>
-      <Field label="What is your total net worth?" name="fp.netWorth" />
-      <Field
-        label="What value are you proposing to invest with Calyx?"
-        name="fp.proposedValue"
-      />
-      <ChoiceGroup
-        label="What percentage of your total net worth does this make up?"
-        name="fp.proposedPercent"
-        options={[
-          { value: "<25", label: "Less than 25%" },
-          { value: "25-50", label: "Between 25% and 50%" },
-          { value: "50-75", label: "Between 50% and 75%" },
-          { value: ">75", label: "More than 75%" },
-        ]}
-      />
-      <TextArea
-        label="If you wish to impose any investment restrictions to your account(s), please specify them below."
-        name="fp.restrictions"
-        rows={3}
-      />
+      <div className="onb-networth-fields">
+        <div className="onb-field-55">
+          <Field label="What is your total net worth?" name="fp.netWorth" />
+        </div>
+        <div className="onb-field-55">
+          <Field
+            label="What value are you proposing to invest with Calyx?"
+            name="fp.proposedValue"
+          />
+        </div>
+        <ChoiceGroup
+          label="What percentage of your total net worth does this make up?"
+          name="fp.proposedPercent"
+          options={[
+            { value: "<25", label: "Less than 25%" },
+            { value: "25-50", label: "Between 25% and 50%" },
+            { value: "50-75", label: "Between 50% and 75%" },
+            { value: ">75", label: "More than 75%" },
+          ]}
+        />
+        <div className="onb-textarea-55">
+          <TextArea
+            label="If you wish to impose any investment restrictions to your account(s), please specify them below."
+            name="fp.restrictions"
+            rows={6}
+          />
+        </div>
+      </div>
 
       <SectionTitle>Annual Income</SectionTitle>
       <Note>Tell us about your annual income. Please specify the currency of each entry.</Note>
@@ -223,14 +246,22 @@ export default function Phase3FinancialProfile() {
       <MoneyTable prefix="fp.expenditure" rows={EXPENDITURE_ROWS} />
 
       <SectionTitle>Financial Dependents</SectionTitle>
-      <YesNo label="Do you have any financial dependents?" name="fp.hasDependents" />
-      <Field label="Name(s)" name="fp.dependentNames" />
-      <TextArea label="Reason for dependency" name="fp.dependentReason" rows={2} />
-      <Field
-        label="Anticipated date of independence"
-        name="fp.dependentIndependenceDate"
-        type="date"
-      />
+      <div className="onb-networth-fields">
+        <YesNo label="Do you have any financial dependents?" name="fp.hasDependents" />
+        <div className="onb-field-55">
+          <Field label="Name(s)" name="fp.dependentNames" />
+        </div>
+        <div className="onb-textarea-55">
+          <TextArea label="Reason for dependency" name="fp.dependentReason" rows={6} />
+        </div>
+        <div className="onb-field-55 onb-field-40">
+          <Field
+            label="Anticipated date of independence"
+            name="fp.dependentIndependenceDate"
+            type="date"
+          />
+        </div>
+      </div>
 
       <SectionTitle>Knowledge & Experience</SectionTitle>
       <Note>

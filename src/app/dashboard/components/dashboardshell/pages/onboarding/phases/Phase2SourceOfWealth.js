@@ -9,7 +9,8 @@ const ROWS = [
   { key: "saleOfProperty", label: "Sale of Property" },
   {
     key: "other",
-    label: "Other (Distribution from Trust, Life Insurance, Divorce, Lottery win)",
+    label: "Other",
+    sublabel: "(Distribution from Trust, Life Insurance, Divorce, Lottery win)",
   },
 ];
 
@@ -22,10 +23,10 @@ export default function Phase2SourceOfWealth() {
         been generated jointly. Please specify the currency of each entry.
       </Note>
       <div className="onb-table-wrap">
-        <table className="onb-table">
+        <table className="onb-table onb-table-equal">
           <thead>
             <tr>
-              <th style={{ minWidth: "180px" }}>Source</th>
+              <th>Source</th>
               <th>First Account Holder</th>
               <th>Second Account Holder</th>
               <th>Joint</th>
@@ -34,7 +35,12 @@ export default function Phase2SourceOfWealth() {
           <tbody>
             {ROWS.map((row) => (
               <tr key={row.key}>
-                <td className="onb-row-label">{row.label}</td>
+                <td className="onb-row-label">
+                  {row.label}
+                  {row.sublabel && (
+                    <span className="onb-row-sublabel">{row.sublabel}</span>
+                  )}
+                </td>
                 <td>
                   <input type="text" name={`sow.${row.key}.h1`} placeholder="Amount + currency" />
                 </td>

@@ -29,11 +29,13 @@ export default function Phase6DocumentationChecklist() {
         />
       </div>
 
-      <TextArea
-        label="Notes (any additional documentation)"
-        name="docs.notes"
-        rows={3}
-      />
+      <div className="onb-notes-field">
+        <TextArea
+          label="Notes (any additional documentation)"
+          name="docs.notes"
+          rows={6}
+        />
+      </div>
     </div>
   );
 }
