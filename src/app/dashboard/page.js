@@ -14,13 +14,7 @@ import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
 import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
-// import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
-// import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
-// import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
-// import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
-// import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
-// import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
 import RMsPage from "./components/dashboardshell/pages/RMsPage";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
@@ -28,19 +22,26 @@ import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDas
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
 import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDashboard";
 
+// import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
+// import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
+// import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
+// import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
+// import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
+// import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
+
 const getPageMap = (userRole) => {
   const baseMap = {
     // "demo users": <DemoUsers />,
+    // notifications: <NotificationsPage />,
+    // "system settings": <SettingsPage />,
+    // requesteddemonstration: <RequestedDemonstration />,
     companies: <CompaniesPage />,
     supervisors: <SupervisorsPage />,
     users: <UserPage />,
     logs: <LogsPage />,
     reports: <ReportsPage />,
     submissions: <SubmissionsPage />,
-    // notifications: <NotificationsPage />,
-    // "system settings": <SettingsPage />,
     profile: <ProfilePage />,
-    // requesteddemonstration: <RequestedDemonstration />,
     rms: <RMsPage />,
     clients: <ClientsPage />,
     onboarding: <OnboardingPage />,
