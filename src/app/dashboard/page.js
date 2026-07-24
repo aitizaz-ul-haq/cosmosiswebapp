@@ -1,25 +1,25 @@
 "use client";
 
-import { useUser } from "../context/UserContext";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
+import { useUser } from "../context/UserContext";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ActionLogger from "./components/ActionLogger";
-import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
-import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
+import RMsPage from "./components/dashboardshell/pages/RMsPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
-import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
-import RMsPage from "./components/dashboardshell/pages/RMsPage";
+import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
-import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
-import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
+import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
+import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
+import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
+import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
+import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
 import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDashboard";
 
 // import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
@@ -35,16 +35,17 @@ const getPageMap = (userRole) => {
     // notifications: <NotificationsPage />,
     // "system settings": <SettingsPage />,
     // requesteddemonstration: <RequestedDemonstration />,
-    companies: <CompaniesPage />,
-    supervisors: <SupervisorsPage />,
-    users: <UserPage />,
-    logs: <LogsPage />,
-    reports: <ReportsPage />,
-    submissions: <SubmissionsPage />,
-    profile: <ProfilePage />,
+
     rms: <RMsPage />,
+    logs: <LogsPage />,
+    users: <UserPage />,
     clients: <ClientsPage />,
+    reports: <ReportsPage />,
+    profile: <ProfilePage />,
+    companies: <CompaniesPage />,
     onboarding: <OnboardingPage />,
+    supervisors: <SupervisorsPage />,
+    submissions: <SubmissionsPage />,
     progress: <div className="dashboard-empty-page"></div>,
     onboardingstatus: <div className="dashboard-empty-page"></div>,
   };
