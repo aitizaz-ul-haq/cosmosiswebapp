@@ -74,6 +74,11 @@ export const dashboardConfigs = {
           iconlink: "/images/clients.png",
         },
         {
+          key: "approvals",
+          label: "Approvals",
+          iconlink: "/images/tick.png",
+        },
+        {
           key: "progress",
           label: "Progress",
           iconlink: "/images/OnboardingStatus.png",
@@ -109,6 +114,11 @@ export const dashboardConfigs = {
           key: "clients",
           label: "Clients",
           iconlink: "/images/clients.png",
+        },
+        {
+          key: "registry",
+          label: "Registry",
+          iconlink: "/images/file.png",
         },
         {
           key: "onboardingstatus",

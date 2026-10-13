@@ -169,10 +169,19 @@ const ClientProfileSchema = new mongoose.Schema(
      */
     status: {
       type: String,
-      enum: ["ongoing", "on_hold", "cancelled"],
+      enum: ["approval_pending", "register", "ongoing", "on_hold", "cancelled"],
       default: "ongoing",
       index: true,
     },
+
+    /**
+     * ✅ Approval / registry workflow
+     * approval_pending -> (supervisor approves) -> register -> (RM registers) -> ongoing
+     */
+    rmRemarks: { type: String, trim: true, default: "" },
+    approvedAt: { type: Date, default: null },
+    approvedByUserId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    registeredAt: { type: Date, default: null },
     onboardingType: {
       type: String,
       enum: ["individual", "joint", "corporate", "trust"],
@@ -332,6 +341,11 @@ const ClientProfileSchema = new mongoose.Schema(
 ClientProfileSchema.index({ companyId: 1, assignedToUserId: 1 });
 ClientProfileSchema.index({ companyId: 1, "onboarding.status": 1 });
 ClientProfileSchema.index({ companyId: 1, createdByUserId: 1 });
+
+// Drop the cached model in dev so schema edits apply without restarting
+if (process.env.NODE_ENV !== "production" && mongoose.models.ClientProfile) {
+  delete mongoose.models.ClientProfile;
+}
 
 export default mongoose.models.ClientProfile ||
   mongoose.model("ClientProfile", ClientProfileSchema);

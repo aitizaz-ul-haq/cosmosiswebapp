@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
@@ -8,6 +9,14 @@ import Company from "@/models/Company";
 import ClientProfile from "@/models/ClientProfile";
 
 const ALLOWED_CREATOR_ROLES = new Set(["supervisor", "rm", "superadmin"]);
+const LIST_STATUS_FILTERS = new Set([
+  "approval_pending",
+  "register",
+  "ongoing",
+  "on_hold",
+  "cancelled",
+]);
+const ALLOWED_ONBOARDING_TYPES = new Set(["individual", "joint", "corporate", "trust"]);
 
 // Phase-to-progress mapping per onboarding type.
 // Individual form has 6 phases with these completion percentages.
@@ -97,6 +106,7 @@ const buildClientPayload = (profile, user, assignedToUser, createdByUser) => {
     sharedWithUserIds,
     sharedWithNames,
     status: profile?.status || "ongoing",
+    rmRemarks: profile?.rmRemarks || "",
     onboardingType: resolvedOnboardingType,
     onboarding: onboardingData,
     createdAt: profile?.createdAt || null,
@@ -139,6 +149,11 @@ export async function GET(req) {
       query = { companyId };
     }
 
+    const statusFilter = searchParams.get("status");
+    if (statusFilter && LIST_STATUS_FILTERS.has(statusFilter)) {
+      query.status = statusFilter;
+    }
+
     // If only count is requested, return the count
     if (countOnly === "true") {
       const count = await ClientProfile.countDocuments(query);
@@ -171,6 +186,98 @@ export async function GET(req) {
   }
 }
 
+async function createPendingClient(tokenUser, body) {
+  const fullName = normalizeString(body.fullName);
+  const email = normalizeEmail(body.email);
+  const phone = normalizeString(body.phone);
+  const rmRemarks = normalizeString(body.rmRemarks);
+  const onboardingType = ALLOWED_ONBOARDING_TYPES.has(body.onboardingType)
+    ? body.onboardingType
+    : "individual";
+
+  const missing = [];
+  if (!fullName) missing.push("fullName");
+  if (!email) missing.push("email");
+  if (!phone) missing.push("phone");
+  if (missing.length > 0) {
+    return NextResponse.json({ error: "Missing fields", missing }, { status: 400 });
+  }
+
+  const companyId = tokenUser.companyId || null;
+  if (!companyId) {
+    return NextResponse.json({ error: "companyId missing from token" }, { status: 400 });
+  }
+
+  try {
+    await connectToDatabase();
+
+    const creatorUser = await User.findById(tokenUser.id).select("fullName username role");
+    if (!creatorUser) {
+      return NextResponse.json({ error: "Creator not found" }, { status: 404 });
+    }
+    const company = await Company.findById(companyId).select("name");
+    if (!company) {
+      return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    }
+
+    // users.email has a unique index in the database
+    if (await User.exists({ email })) {
+      return NextResponse.json(
+        { error: "A user with this email already exists" },
+        { status: 409 }
+      );
+    }
+
+    // Placeholder credentials; the RM assigns the real ones at registration
+    const placeholderPassword = crypto.randomBytes(32).toString("hex");
+    const newUser = new User({
+      username: `pending-${crypto.randomBytes(8).toString("hex")}`,
+      passwordHash: await bcrypt.hash(placeholderPassword, 10),
+      role: "client",
+      companyId,
+      companyName: company.name,
+      fullName,
+      email,
+      phone,
+      isActive: false,
+      createdBy: tokenUser.id,
+    });
+    await newUser.save();
+
+    const newProfile = new ClientProfile({
+      userId: newUser._id,
+      companyId,
+      companyName: company.name,
+      createdByUserId: tokenUser.id,
+      assignedToUserId: tokenUser.id,
+      createdByNameSnapshot: creatorUser.fullName || creatorUser.username || "",
+      status: "approval_pending",
+      rmRemarks,
+      onboardingType,
+      onboarding: {
+        status: "not_started",
+        currentStep: 1,
+        completedSteps: [],
+        progress: computeProgress(onboardingType, 1),
+      },
+    });
+    try {
+      await newProfile.save();
+    } catch (profileErr) {
+      await User.findByIdAndDelete(newUser._id);
+      throw profileErr;
+    }
+
+    return NextResponse.json({
+      success: true,
+      client: buildClientPayload(newProfile, newUser, creatorUser, creatorUser),
+    });
+  } catch (err) {
+    console.error("Create pending client error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
 export async function POST(req) {
   const tokenUser = verifyToken(req);
   if (!tokenUser) {
@@ -182,6 +289,12 @@ export async function POST(req) {
   }
 
   const body = await req.json().catch(() => ({}));
+
+  // RMs only submit basic details; the client awaits supervisor approval
+  if (tokenUser.role === "rm") {
+    return createPendingClient(tokenUser, body);
+  }
+
   const normalizedUsername = normalizeUsername(body.username);
   const rawPassword = normalizeString(body.password || body.passwordHash);
   const normalizedFullName = normalizeString(body.fullName);
@@ -395,6 +508,57 @@ export async function DELETE(req) {
   }
 }
 
+async function approveClient(tokenUser, id) {
+  try {
+    await connectToDatabase();
+
+    let profile = await ClientProfile.findById(id);
+    if (!profile) {
+      profile = await ClientProfile.findOne({ userId: id });
+    }
+    if (!profile) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+    if (
+      tokenUser.role !== "superadmin" &&
+      String(profile.companyId) !== String(tokenUser.companyId)
+    ) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    if (profile.status !== "approval_pending") {
+      return NextResponse.json(
+        { error: "Client is not pending approval" },
+        { status: 409 }
+      );
+    }
+
+    profile.status = "register";
+    profile.approvedAt = new Date();
+    profile.approvedByUserId = tokenUser.id;
+    await profile.save();
+
+    const refreshed = await ClientProfile.findById(profile._id)
+      .populate("userId", "username fullName email phone companyId companyName")
+      .populate("assignedToUserId", "username fullName")
+      .populate("createdByUserId", "username fullName role")
+      .populate("sharedWithUserIds", "username fullName")
+      .lean();
+
+    return NextResponse.json({
+      success: true,
+      client: buildClientPayload(
+        refreshed,
+        refreshed.userId,
+        refreshed.assignedToUserId,
+        refreshed.createdByUserId
+      ),
+    });
+  } catch (err) {
+    console.error("Approve client error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
 export async function PATCH(req) {
   const tokenUser = verifyToken(req);
   if (!tokenUser) {
@@ -417,6 +581,9 @@ export async function PATCH(req) {
   }
 
   const body = await req.json().catch(() => ({}));
+  if (body?.action === "approve") {
+    return approveClient(tokenUser, id);
+  }
   const assignedToUserId = body?.assignedToUserId || null;
 
   const ALLOWED_STATUS = new Set(["ongoing", "on_hold", "cancelled"]);

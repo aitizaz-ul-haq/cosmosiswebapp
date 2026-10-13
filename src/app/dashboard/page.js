@@ -14,6 +14,8 @@ import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
 import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
+import RegistryPage from "./components/dashboardshell/pages/RegistryPage";
+import ApprovalsPage from "./components/dashboardshell/pages/ApprovalsPage";
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
 import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
@@ -40,6 +42,8 @@ const getPageMap = (userRole) => {
     logs: <LogsPage />,
     users: <UserPage />,
     clients: <ClientsPage />,
+    registry: <RegistryPage />,
+    approvals: <ApprovalsPage />,
     reports: <ReportsPage />,
     profile: <ProfilePage />,
     companies: <CompaniesPage />,

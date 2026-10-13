@@ -31,6 +31,7 @@ export default function ClientsPage() {
     assignedToUserId: "",
     status: "ongoing",
     onboardingType: "individual",
+    rmRemarks: "",
     isShared: false,
     sharedWithUserIds: [],
   });
@@ -122,6 +123,7 @@ export default function ClientsPage() {
   };
 
   const canAssignRm = user?.role === "supervisor" || user?.role === "superadmin";
+  const isRm = user?.role === "rm";
 
   // Shared layout style for table action buttons (colors come from CSS classes)
   const actionBtnStyle = {
@@ -136,8 +138,17 @@ export default function ClientsPage() {
     { value: "on_hold", label: "On hold" },
     { value: "cancelled", label: "Cancelled" },
   ];
+  // Workflow statuses are set by the approval flow, so they are not selectable
+  const STATUS_LABEL_OPTIONS = [
+    { value: "approval_pending", label: "Approval pending" },
+    { value: "register", label: "Register" },
+    ...STATUS_OPTIONS,
+  ];
+  const isWorkflowStatus = (value) => value === "approval_pending" || value === "register";
   // Status colors: ongoing green, on_hold yellow, cancelled red
   const STATUS_COLORS = {
+    approval_pending: { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC" },
+    register: { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4" },
     ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
     on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
     cancelled: { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5" },
@@ -153,6 +164,8 @@ export default function ClientsPage() {
 
   // Human-readable descriptions for status hover tooltips
   const STATUS_DESCRIPTIONS = {
+    approval_pending: "Waiting for supervisor approval",
+    register: "Approved - ready to be registered by the RM",
     ongoing: "Current onboarding status is Ongoing",
     on_hold: "Current onboarding status is On hold",
     cancelled: "Current onboarding status is Cancelled",
@@ -197,7 +210,7 @@ export default function ClientsPage() {
           cursor: "help",
         }}
       >
-        {labelFor(STATUS_OPTIONS, value)}
+        {labelFor(STATUS_LABEL_OPTIONS, value)}
       </span>
     );
   };
@@ -320,6 +333,7 @@ export default function ClientsPage() {
       assignedToUserId: "",
       status: "ongoing",
       onboardingType: "individual",
+      rmRemarks: "",
       isShared: false,
       sharedWithUserIds: [],
     });
@@ -332,19 +346,27 @@ export default function ClientsPage() {
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      username: addForm.username,
-      fullName: addForm.fullName,
-      email: addForm.email,
-      phone: addForm.phone,
-      password: addForm.password,
-      assignedToUserId: canAssignRm ? addForm.assignedToUserId : undefined,
-      status: addForm.status,
-      onboardingType: addForm.onboardingType,
-      isShared: canAssignRm ? addForm.isShared : false,
-      sharedWithUserIds:
-        canAssignRm && addForm.isShared ? addForm.sharedWithUserIds : [],
-    };
+    const payload = isRm
+      ? {
+          fullName: addForm.fullName,
+          email: addForm.email,
+          phone: addForm.phone,
+          rmRemarks: addForm.rmRemarks,
+          onboardingType: addForm.onboardingType,
+        }
+      : {
+          username: addForm.username,
+          fullName: addForm.fullName,
+          email: addForm.email,
+          phone: addForm.phone,
+          password: addForm.password,
+          assignedToUserId: canAssignRm ? addForm.assignedToUserId : undefined,
+          status: addForm.status,
+          onboardingType: addForm.onboardingType,
+          isShared: canAssignRm ? addForm.isShared : false,
+          sharedWithUserIds:
+            canAssignRm && addForm.isShared ? addForm.sharedWithUserIds : [],
+        };
     const res = await fetch("/api/clients", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -361,7 +383,7 @@ export default function ClientsPage() {
     }
     // 🔒 Audit log: client created (store the created entry, never the password)
     logUIAction("record_created", {
-      title: `Created client: ${result?.client?.fullName || addForm.fullName}`,
+      title: `${isRm ? "Submitted client for approval" : "Created client"}: ${result?.client?.fullName || addForm.fullName}`,
       entityType: "client",
       entity: {
         id: result?.client?.userId || result?.client?._id || null,
@@ -527,7 +549,7 @@ export default function ClientsPage() {
     {
       id: "status",
       header: "Status",
-      accessorFn: (row) => labelFor(STATUS_OPTIONS, row.status),
+      accessorFn: (row) => labelFor(STATUS_LABEL_OPTIONS, row.status),
       cell: ({ row }) => <StatusBadge client={row.original} />,
     },
     {
@@ -580,16 +602,18 @@ export default function ClientsPage() {
           >
             Email
           </button>
-          <button
-            type="button"
-            onClick={() => openEditModal(row?.original)}
-            title="Edit client details"
-            data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-green"
-            style={actionBtnStyle}
-          >
-            Edit
-          </button>
+          {!isWorkflowStatus(row?.original?.status) && (
+            <button
+              type="button"
+              onClick={() => openEditModal(row?.original)}
+              title="Edit client details"
+              data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
+              className="dash-action-btn dash-btn-green"
+              style={actionBtnStyle}
+            >
+              Edit
+            </button>
+          )}
           <button
             type="button"
             onClick={() => openInfoModal(row?.original)}
@@ -691,10 +715,23 @@ export default function ClientsPage() {
             </div>
 
             <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={addForm.username} onChange={handleAddChange("username")} required />
+              {!isRm && (
+                <input style={fieldStyle} placeholder="Username" value={addForm.username} onChange={handleAddChange("username")} required />
+              )}
               <input style={fieldStyle} placeholder="Full Name" value={addForm.fullName} onChange={handleAddChange("fullName")} required />
               <input style={fieldStyle} type="email" placeholder="Email" value={addForm.email} onChange={handleAddChange("email")} required />
               <input style={fieldStyle} placeholder="Phone" value={addForm.phone} onChange={handleAddChange("phone")} required />
+              {isRm && (
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
+                  RM Remarks
+                  <textarea
+                    style={{ ...fieldStyle, minHeight: "90px", resize: "vertical" }}
+                    value={addForm.rmRemarks}
+                    onChange={handleAddChange("rmRemarks")}
+                  />
+                </label>
+              )}
+              {!isRm && (
               <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
                 Status
                 <select style={fieldStyle} value={addForm.status} onChange={handleAddChange("status")}>
@@ -703,6 +740,7 @@ export default function ClientsPage() {
                   ))}
                 </select>
               </label>
+              )}
               <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
                 Onboarding Type
                 <select style={fieldStyle} value={addForm.onboardingType} onChange={handleAddChange("onboardingType")}>
@@ -758,7 +796,9 @@ export default function ClientsPage() {
                   )}
                 </div>
               )}
-              <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
+              {!isRm && (
+                <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
+              )}
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
@@ -968,7 +1008,7 @@ export default function ClientsPage() {
                 { label: "Company", value: infoClient?.companyName },
                 {
                   label: "Status",
-                  value: labelFor(STATUS_OPTIONS, infoClient?.status),
+                  value: labelFor(STATUS_LABEL_OPTIONS, infoClient?.status),
                 },
                 {
                   label: "Onboarding type",
@@ -983,6 +1023,7 @@ export default function ClientsPage() {
                 },
                 { label: "Assigned to", value: infoClient?.assignedToName },
                 { label: "Assigned by", value: infoClient?.assignedByName },
+                { label: "RM remarks", value: infoClient?.rmRemarks },
                 {
                   label: "Shared with",
                   value:
