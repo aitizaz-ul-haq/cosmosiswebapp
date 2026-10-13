@@ -6,20 +6,12 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
 import User from "@/models/User";
 import ClientProfile from "@/models/ClientProfile";
+import { buildClientRegistrationEmail } from "@/lib/emails/clientRegistrationEmail";
 
 const ALLOWED_ONBOARDING_TYPES = new Set(["individual", "joint", "corporate", "trust"]);
 const MIN_PASSWORD_LENGTH = 8;
 
 const normalizeString = (value) => (typeof value === "string" ? value.trim() : "");
-
-const escapeHtml = (value) =>
-  String(value).replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  })[c]);
 
 // Resolves the profile and checks the RM may act on it; returns { profile } or { error }.
 async function loadRegistryProfile(req) {
@@ -66,28 +58,20 @@ async function loadRegistryProfile(req) {
   return { profile, tokenUser };
 }
 
-async function sendCredentialsEmail({ to, fullName, username, password, loginUrl, companyName }) {
+async function sendCredentialsEmail({ to, ...details }) {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   });
 
+  const { html, text } = buildClientRegistrationEmail(details);
+
   await transporter.sendMail({
     from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
     to,
-    subject: "Your Cosmosis account has been created",
-    html: `
-      <h2>Hello ${escapeHtml(fullName || "")},</h2>
-      <p>Your account${companyName ? ` with <b>${escapeHtml(companyName)}</b>` : ""} has been approved and registered.</p>
-      <p>You can log in with the following credentials:</p>
-      <ul>
-        <li><b>Username:</b> ${escapeHtml(username)}</li>
-        <li><b>Password:</b> ${escapeHtml(password)}</li>
-      </ul>
-      <p><a href="${escapeHtml(loginUrl)}">Log in to Cosmosis</a></p>
-      <p>Please change your password after logging in.</p>
-      <p>— Cosmosis Team</p>
-    `,
+    subject: `Your ${details.companyName || "Cosmosis"} client account has been registered`,
+    html,
+    text,
   });
 }
 
@@ -137,14 +121,22 @@ export async function POST(req) {
     await profile.save();
 
     let emailSent = true;
+    // Public URL for the login link and logo; set APP_URL in production
+    const baseUrl = (process.env.APP_URL || new URL(req.url).origin).replace(/\/+$/, "");
     try {
+      const designatedRm = await User.findById(profile.assignedToUserId).select(
+        "fullName username email"
+      );
       await sendCredentialsEmail({
         to: clientUser.email,
         fullName: clientUser.fullName,
         username,
         password,
-        loginUrl: `${new URL(req.url).origin}/login`,
+        baseUrl,
+        loginUrl: `${baseUrl}/login`,
         companyName: profile.companyName,
+        rmName: designatedRm?.fullName || designatedRm?.username,
+        rmEmail: designatedRm?.email,
       });
     } catch (mailErr) {
       emailSent = false;
