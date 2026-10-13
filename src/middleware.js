@@ -22,7 +22,8 @@ const ROLE_RULES = {
     "/api/demo-requests",
     "/api/demo-users",
     "/api/me",
-    "/api/logout"
+    "/api/logout",
+    "/api/verify-password"
   ], // full access
   supervisor: [
     "/dashboard",
@@ -31,6 +32,7 @@ const ROLE_RULES = {
     "/api/clients",
     "/api/me",
     "/api/logout",
+    "/api/verify-password",
     "/api/log"
   ], // can manage RMs/clients inside own company
   rm: [
@@ -39,6 +41,7 @@ const ROLE_RULES = {
     "/api/clients",
     "/api/me",
     "/api/logout",
+    "/api/verify-password",
     "/api/log"
   ], // can manage clients only
   client: [
