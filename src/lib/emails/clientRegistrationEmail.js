@@ -30,13 +30,14 @@ export function buildClientRegistrationEmail({
   password,
   loginUrl,
   baseUrl,
+  logoSrc,
   companyName,
   rmName,
   rmEmail,
 }) {
   const company = companyName || "your company";
   // Same dark logo the dashboard uses on light backgrounds
-  const logoUrl = `${baseUrl}/images/cosmosis_logo_dark_dashboard.png`;
+  const logoUrl = logoSrc || `${baseUrl}/images/cosmosis_logo_dark_dashboard.png`;
   const p = `margin:0 0 16px;font-family:${FONT};font-size:16px;line-height:1.7;font-weight:400;color:${C.body};`;
 
   const credRow = (name, value, withTopBorder) => `

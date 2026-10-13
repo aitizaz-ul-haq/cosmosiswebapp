@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import fs from "fs/promises";
+import path from "path";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import nodemailer from "nodemailer";
@@ -66,12 +68,25 @@ async function sendCredentialsEmail({ to, ...details }) {
 
   const { html, text } = buildClientRegistrationEmail(details);
 
+  // Inline attachment works even when the app URL isn't publicly reachable (e.g. localhost)
+  const attachments = [];
+  let logoHtml = html;
+  try {
+    const logoPath = path.join(process.cwd(), "public", "images", "cosmosis_logo_dark_dashboard.png");
+    const content = await fs.readFile(logoPath);
+    attachments.push({ filename: "cosmosis-logo.png", content, cid: "cosmosis-logo" });
+    logoHtml = buildClientRegistrationEmail({ ...details, logoSrc: "cid:cosmosis-logo" }).html;
+  } catch (logoErr) {
+    console.error("Email logo embed failed, using URL:", logoErr.message);
+  }
+
   await transporter.sendMail({
     from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
     to,
     subject: `Your ${details.companyName || "Cosmosis"} client account has been registered`,
-    html,
+    html: logoHtml,
     text,
+    attachments,
   });
 }
 
