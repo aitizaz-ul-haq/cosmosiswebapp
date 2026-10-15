@@ -76,12 +76,17 @@ export const dashboardConfigs = {
         {
           key: "approvals",
           label: "Approvals",
-          iconlink: "/images/tick.png",
+          iconlink: "/images/tick-filled-white.svg",
         },
         {
-          key: "progress",
-          label: "Progress",
+          key: "onboardingstatus",
+          label: "Onboarding status",
           iconlink: "/images/OnboardingStatus.png",
+        },
+        {
+          key: "underreview",
+          label: "Under review",
+          iconlink: "/images/under-review-white.svg",
         },
         {
           key: "reports",

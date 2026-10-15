@@ -254,37 +254,53 @@ function StatusMenu({ current, busy, clientName, onSelect }) {
   );
 }
 
-function TimelineDetail({ row, closing }) {
+function TimelineDetail({ row, closing, isSupervisor }) {
   return (
     <div className={closing ? "onbs-detail-wrap closing" : "onbs-detail-wrap"}>
       <div className="onbs-detail">
         <div className="onbs-detail-body">
           <div className="onbs-detail-actions">
-            <button
-              type="button"
-              className="dash-action-btn dash-btn-neutral onbs-email-btn"
-              style={actionBtnStyle}
-              disabled={!row.client.email}
-              title={row.client.email ? `Email ${row.client.email}` : "No email on file"}
-              onClick={() => {
-                if (row.client.email) window.location.href = `mailto:${row.client.email}`;
-              }}
-              data-log-title={`Email Client button clicked (timeline): ${row.fullName}`}
-            >
-              Email {row.fullName}
-            </button>
-            <button
-              type="button"
-              className="dash-action-btn dash-btn-danger"
-              style={actionBtnStyle}
-              data-log-title={`Report Supervisor button clicked: ${row.fullName}`}
-            >
-              Report Supervisor
-            </button>
+            {isSupervisor ? (
+              <button
+                type="button"
+                className="dash-action-btn dash-btn-green"
+                style={actionBtnStyle}
+                data-log-title={`Notify RM button clicked: ${row.fullName}`}
+              >
+                Notify RM
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="dash-action-btn dash-btn-neutral onbs-email-btn"
+                  style={actionBtnStyle}
+                  disabled={!row.client.email}
+                  title={row.client.email ? `Email ${row.client.email}` : "No email on file"}
+                  onClick={() => {
+                    if (row.client.email) window.location.href = `mailto:${row.client.email}`;
+                  }}
+                  data-log-title={`Email Client button clicked (timeline): ${row.fullName}`}
+                >
+                  Email {row.fullName}
+                </button>
+                <button
+                  type="button"
+                  className="dash-action-btn dash-btn-danger"
+                  style={actionBtnStyle}
+                  data-log-title={`Report Supervisor button clicked: ${row.fullName}`}
+                >
+                  Report Supervisor
+                </button>
+              </>
+            )}
           </div>
           <h3 className="onbs-detail-title">Onboarding Timeline</h3>
           <h4 className="onbs-detail-client">{row.fullName}</h4>
           <div className="onbs-detail-date">Date added: {row.created}</div>
+          {isSupervisor && row.client.assignedToName && (
+            <span className="onbs-rm-tag">Assigned RM: {row.client.assignedToName}</span>
+          )}
           <div className="onbs-detail-remarks">
             <Remarks text={row.rmRemarks} />
           </div>
@@ -499,12 +515,14 @@ export default function OnboardingStatusPage() {
               </div>
 
               <div className="onbs-actions">
-                <StatusMenu
-                  current={row.statusKey}
-                  busy={updatingId === id}
-                  clientName={row.fullName}
-                  onSelect={(status) => changeStatus(row, status)}
-                />
+                {user?.role !== "supervisor" && (
+                  <StatusMenu
+                    current={row.statusKey}
+                    busy={updatingId === id}
+                    clientName={row.fullName}
+                    onSelect={(status) => changeStatus(row, status)}
+                  />
+                )}
                 <button
                   type="button"
                   className="dash-action-btn dash-btn-green"
@@ -519,7 +537,13 @@ export default function OnboardingStatusPage() {
                 </button>
               </div>
             </div>
-            {isOpen && <TimelineDetail row={row} closing={closing} />}
+            {isOpen && (
+              <TimelineDetail
+                row={row}
+                closing={closing}
+                isSupervisor={user?.role === "supervisor"}
+              />
+            )}
             </div>
             );
           })}
