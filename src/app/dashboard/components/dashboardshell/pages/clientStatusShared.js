@@ -3,7 +3,7 @@
 export const STATUS_LABELS = {
   approval_pending: "Approval pending",
   register: "Register",
-  ongoing: "Ongoing",
+  ongoing: "In progress",
   on_hold: "On hold",
   cancelled: "Cancelled",
 };
@@ -25,6 +25,49 @@ export const ONBOARDING_TYPE_OPTIONS = [
 
 export const onboardingTypeLabel = (value) =>
   ONBOARDING_TYPE_OPTIONS.find((o) => o.value === value)?.label || value || "—";
+
+// The individual onboarding form's 6 phases and the progress % reached at each.
+export const PHASE_CONFIG = [
+  { phase: 1, pct: 20, name: "Personal Details" },
+  { phase: 2, pct: 35, name: "Source of Wealth" },
+  { phase: 3, pct: 50, name: "Financial Profile" },
+  { phase: 4, pct: 65, name: "Risk Profile" },
+  { phase: 5, pct: 80, name: "Signature" },
+  { phase: 6, pct: 100, name: "Documentation Checklist" },
+];
+
+export const getPhaseConfig = (client) => {
+  const step = Number(client?.onboarding?.currentStep) || 1;
+  return PHASE_CONFIG[Math.min(Math.max(step, 1), PHASE_CONFIG.length) - 1];
+};
+
+// Section headings inside each phase of the onboarding form, keyed by phase number.
+export const PHASE_SECTIONS = {
+  0: ["Charges & Regulatory Information", "Terms & Conditions"],
+  1: [
+    "Account Holders",
+    "National Client Identifier (NCI)",
+    "Non-US Person Status Declaration",
+    "Investment Services",
+    "External Advisers",
+    "Daily News Wrap-Up",
+  ],
+  2: ["Source of Wealth"],
+  3: [
+    "Purpose of the Portfolio",
+    "Employment Status",
+    "Assets",
+    "Liabilities",
+    "Net Worth & Proposed Investment",
+    "Annual Income",
+    "Annual Expenditure",
+    "Financial Dependents",
+    "Knowledge & Experience",
+  ],
+  4: ["Risk Questionnaire", "Investment Strategy", "Non-Standard Investments"],
+  5: ["Signatures"],
+  6: ["Documentation Checklist"],
+};
 
 export const actionBtnStyle = {
   padding: "0.4rem 0.75rem",

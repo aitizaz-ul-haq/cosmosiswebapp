@@ -19,6 +19,7 @@ import ApprovalsPage from "./components/dashboardshell/pages/ApprovalsPage";
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
 import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
+import OnboardingStatusPage from "./components/dashboardshell/pages/OnboardingStatusPage";
 import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
 import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
@@ -51,7 +52,7 @@ const getPageMap = (userRole) => {
     supervisors: <SupervisorsPage />,
     submissions: <SubmissionsPage />,
     progress: <div className="dashboard-empty-page"></div>,
-    onboardingstatus: <div className="dashboard-empty-page"></div>,
+    onboardingstatus: <OnboardingStatusPage />,
   };
 
   // Role-based dashboard override

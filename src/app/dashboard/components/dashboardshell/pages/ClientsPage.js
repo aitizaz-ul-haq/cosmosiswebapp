@@ -134,7 +134,7 @@ export default function ClientsPage() {
   };
 
   const STATUS_OPTIONS = [
-    { value: "ongoing", label: "Ongoing" },
+    { value: "ongoing", label: "In progress" },
     { value: "on_hold", label: "On hold" },
     { value: "cancelled", label: "Cancelled" },
   ];
@@ -166,7 +166,7 @@ export default function ClientsPage() {
   const STATUS_DESCRIPTIONS = {
     approval_pending: "Waiting for supervisor approval",
     register: "Approved - ready to be registered by the RM",
-    ongoing: "Current onboarding status is Ongoing",
+    ongoing: "Current onboarding status is In progress",
     on_hold: "Current onboarding status is On hold",
     cancelled: "Current onboarding status is Cancelled",
   };

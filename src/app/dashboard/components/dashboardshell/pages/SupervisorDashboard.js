@@ -134,14 +134,14 @@ export default function SupervisorDashboard() {
               <circle cx="19" cy="12" r="1"></circle>
               <circle cx="5" cy="12" r="1"></circle>
             </svg>
-            <h2 className="stat-card-label">Ongoing Onboarding</h2>
+            <h2 className="stat-card-label">In Progress Onboarding</h2>
           </div>
           <div className="stat-card-value">{ongoingOnboarding}</div>
         </div>
       </div>
 
       <div className="onboarding-section">
-        <h2 className="onboarding-title">Ongoing Onboarding Progress</h2>
+        <h2 className="onboarding-title">Onboarding Progress</h2>
         <div className="progress-bars-container">
           {onboardingSteps.map((step, index) => (
             <div key={index} className="progress-bar-item">

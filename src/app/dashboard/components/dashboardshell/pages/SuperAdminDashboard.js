@@ -179,7 +179,7 @@ export default function SuperAdminDashboard() {
               <circle cx="19" cy="12" r="1"></circle>
               <circle cx="5" cy="12" r="1"></circle>
             </svg>
-            <h2 className="stat-card-label">Ongoing Onboardings</h2>
+            <h2 className="stat-card-label">In Progress Onboardings</h2>
           </div>
           <div className="stat-card-value">{ongoingOnboarding}</div>
         </div>

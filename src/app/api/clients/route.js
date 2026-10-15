@@ -565,9 +565,10 @@ export async function PATCH(req) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!new Set(["supervisor", "superadmin"]).has(tokenUser.role)) {
+  if (!new Set(["supervisor", "superadmin", "rm"]).has(tokenUser.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
+  const isRm = tokenUser.role === "rm";
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -582,6 +583,9 @@ export async function PATCH(req) {
 
   const body = await req.json().catch(() => ({}));
   if (body?.action === "approve") {
+    if (isRm) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     return approveClient(tokenUser, id);
   }
   const assignedToUserId = body?.assignedToUserId || null;
@@ -594,6 +598,10 @@ export async function PATCH(req) {
     ALLOWED_ONBOARDING_TYPE.has(body.onboardingType);
   const hasShared = Array.isArray(body.sharedWithUserIds);
 
+  // RMs may only change the status of their own onboarding clients
+  if (isRm && (!hasStatus || assignedToUserId || hasOnboardingType || hasShared)) {
+    return NextResponse.json({ error: "RMs can only change client status" }, { status: 403 });
+  }
   // At least one updatable field must be present
   if (!assignedToUserId && !hasStatus && !hasOnboardingType && !hasShared) {
     return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
@@ -620,6 +628,17 @@ export async function PATCH(req) {
       String(profile.companyId) !== String(tokenUser.companyId)
     ) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    if (isRm) {
+      const me = String(tokenUser.id);
+      const isOwner =
+        String(profile.assignedToUserId) === me ||
+        (profile.sharedWithUserIds || []).some((rmId) => String(rmId) === me);
+      // approval_pending / register are controlled by the approval flow
+      if (!isOwner || ["approval_pending", "register"].includes(profile.status)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     const update = {};
