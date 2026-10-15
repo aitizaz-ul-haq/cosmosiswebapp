@@ -131,8 +131,18 @@ export const dashboardConfigs = {
           iconlink: "/images/OnboardingStatus.png",
         },
         {
+          key: "notifications",
+          label: "Notifications",
+          iconlink: "/images/bell-filled-white.svg",
+        },
+        {
+          key: "submissions",
+          label: "Submissions",
+          iconlink: "/images/file.png",
+        },
+        {
           key: "profile",
-          label: "Profile",
+          label: "Profile settings",
           iconlink: "/images/profile-user.png",
         },
       ],

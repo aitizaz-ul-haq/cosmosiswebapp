@@ -54,6 +54,7 @@ const getPageMap = (userRole, setActiveMenu) => {
     submissions: <SubmissionsPage />,
     onboardingstatus: <OnboardingStatusPage onNavigate={setActiveMenu} />,
     underreview: <UnderReviewPage />,
+    notifications: <div className="dashboard-empty-page"></div>,
   };
 
   // Role-based dashboard override
