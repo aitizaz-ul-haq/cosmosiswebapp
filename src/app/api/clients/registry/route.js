@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import nodemailer from "nodemailer";
 import { connectToDatabase } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
 import User from "@/models/User";
 import ClientProfile from "@/models/ClientProfile";
-import { buildClientRegistrationEmail } from "@/lib/emails/clientRegistrationEmail";
+import { sendCredentialsEmail } from "@/lib/sendCredentialsEmail";
+import { encryptSecret } from "@/lib/credentialCrypto";
+import { parseSchedule } from "@/lib/parseSchedule";
 
 const ALLOWED_ONBOARDING_TYPES = new Set(["individual", "joint", "corporate", "trust"]);
 const MIN_PASSWORD_LENGTH = 8;
@@ -60,43 +59,23 @@ async function loadRegistryProfile(req) {
   return { profile, tokenUser };
 }
 
-async function sendCredentialsEmail({ to, ...details }) {
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
-
-  const { html, text } = buildClientRegistrationEmail(details);
-
-  // Inline attachment works even when the app URL isn't publicly reachable (e.g. localhost)
-  const attachments = [];
-  let logoHtml = html;
-  try {
-    const logoPath = path.join(process.cwd(), "public", "images", "cosmosis_logo_dark_dashboard.png");
-    const content = await fs.readFile(logoPath);
-    attachments.push({ filename: "cosmosis-logo.png", content, cid: "cosmosis-logo" });
-    logoHtml = buildClientRegistrationEmail({ ...details, logoSrc: "cid:cosmosis-logo" }).html;
-  } catch (logoErr) {
-    console.error("Email logo embed failed, using URL:", logoErr.message);
-  }
-
-  await transporter.sendMail({
-    from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
-    to,
-    subject: `Your ${details.companyName || "Cosmosis"} client account has been registered`,
-    html: logoHtml,
-    text,
-    attachments,
-  });
-}
-
-// Register: set username/password on an approved client and email the credentials.
+// Register now, or (action "schedule") set credentials now and email them at the scheduled time.
 export async function POST(req) {
   try {
     const { profile, error } = await loadRegistryProfile(req);
     if (error) return error;
 
     const body = await req.json().catch(() => ({}));
+    const isSchedule = body.action === "schedule";
+
+    let schedule = null;
+    if (isSchedule) {
+      schedule = parseSchedule(body);
+      if (schedule.error) {
+        return NextResponse.json({ error: schedule.error }, { status: 400 });
+      }
+    }
+
     const username = normalizeString(body.username).toLowerCase();
     const password = typeof body.password === "string" ? body.password : "";
 
@@ -128,11 +107,39 @@ export async function POST(req) {
 
     clientUser.username = username;
     clientUser.passwordHash = await bcrypt.hash(password, 10);
-    clientUser.isActive = true;
+    // Scheduled clients stay inactive (cannot log in) until the email is sent
+    clientUser.isActive = !isSchedule;
     await clientUser.save();
+
+    if (isSchedule) {
+      profile.status = "scheduled";
+      profile.scheduledRegistrationAt = schedule.scheduledAt;
+      profile.scheduledCountry = schedule.country;
+      profile.scheduledCity = schedule.city;
+      profile.scheduledTimeZone = schedule.timeZone;
+      profile.scheduledCredentialsEnc = encryptSecret(password);
+      await profile.save();
+      return NextResponse.json({
+        success: true,
+        client: {
+          userId: clientUser._id,
+          profileId: profile._id,
+          username,
+          status: "scheduled",
+          scheduledRegistrationAt: schedule.scheduledAt,
+          scheduledCountry: schedule.country,
+          scheduledCity: schedule.city,
+          scheduledTimeZone: schedule.timeZone,
+        },
+      });
+    }
 
     profile.status = "ongoing";
     profile.registeredAt = new Date();
+    profile.scheduledRegistrationAt = null;
+    profile.scheduledCountry = "";
+    profile.scheduledCity = "";
+    profile.scheduledTimeZone = "";
     await profile.save();
 
     let emailSent = true;

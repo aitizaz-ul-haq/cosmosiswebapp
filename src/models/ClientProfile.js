@@ -169,7 +169,15 @@ const ClientProfileSchema = new mongoose.Schema(
      */
     status: {
       type: String,
-      enum: ["approval_pending", "under_review", "register", "ongoing", "on_hold", "cancelled"],
+      enum: [
+        "approval_pending",
+        "under_review",
+        "register",
+        "scheduled",
+        "ongoing",
+        "on_hold",
+        "cancelled",
+      ],
       default: "ongoing",
       index: true,
     },
@@ -182,6 +190,12 @@ const ClientProfileSchema = new mongoose.Schema(
     approvedAt: { type: Date, default: null },
     approvedByUserId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     registeredAt: { type: Date, default: null },
+    scheduledRegistrationAt: { type: Date, default: null },
+    scheduledCountry: { type: String, trim: true, default: "" },
+    scheduledCity: { type: String, trim: true, default: "" },
+    scheduledTimeZone: { type: String, trim: true, default: "" },
+    // AES-GCM encrypted password, kept only until the scheduled email is sent
+    scheduledCredentialsEnc: { type: String, default: "", select: false },
     onboardingType: {
       type: String,
       enum: ["individual", "joint", "corporate", "trust"],

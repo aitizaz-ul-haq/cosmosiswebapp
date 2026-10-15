@@ -16,6 +16,7 @@ import {
   modalOverlayStyle,
 } from "./clientStatusShared";
 import { logUIAction } from "@/lib/logUIAction";
+import ScheduleOnboardingModal from "./scheduling/ScheduleOnboardingModal";
 
 const formCardStyle = {
   background: "#fff",
@@ -38,6 +39,8 @@ export default function RegistryPage() {
   const [infoClient, setInfoClient] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [registerTarget, setRegisterTarget] = useState(null);
+  const [choiceTarget, setChoiceTarget] = useState(null);
+  const [scheduleTarget, setScheduleTarget] = useState(null);
   const [registerForm, setRegisterForm] = useState({ username: "", password: "" });
   const [editTarget, setEditTarget] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -113,8 +116,20 @@ export default function RegistryPage() {
   };
 
   const openRegister = (client) => {
+    setChoiceTarget(null);
     setRegisterForm({ username: "", password: "" });
     setRegisterTarget(client);
+  };
+
+  const openSchedule = (client) => {
+    setChoiceTarget(null);
+    setScheduleTarget(client);
+  };
+
+  // Scheduled clients move to the Scheduled page
+  const handleScheduled = () => {
+    removeFromList(scheduleTarget);
+    setScheduleTarget(null);
   };
 
   const handleRegisterSubmit = async (e) => {
@@ -258,8 +273,8 @@ export default function RegistryPage() {
             </button>
             <button
               type="button"
-              onClick={() => openRegister(client)}
-              title="Assign a username and password"
+              onClick={() => setChoiceTarget(client)}
+              title="Register now or schedule the onboarding"
               data-log-title={`Register Client button clicked: ${label}`}
               className="dash-action-btn dash-btn-green"
               style={actionBtnStyle}
@@ -300,7 +315,7 @@ export default function RegistryPage() {
       ) : null}
 
       <GenericTable
-        title="Registry"
+        title="Awaiting Registry"
         description="Clients approved by your supervisor and ready to be registered are displayed here."
         data={clients}
         columns={columns}
@@ -311,6 +326,66 @@ export default function RegistryPage() {
       />
 
       <ClientInfoModal client={infoClient} onClose={() => setInfoClient(null)} />
+
+      {choiceTarget && (
+        <div style={modalOverlayStyle} onClick={() => setChoiceTarget(null)}>
+          <div
+            style={formCardStyle}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-label="Register client"
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+              <h3 style={{ margin: 0, width: "100%", textAlign: "center", fontSize: "1.2rem" }}>
+                Register {choiceTarget.fullName}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setChoiceTarget(null)}
+                aria-label="Close"
+                data-log-title={`Closed Register choice: ${choiceTarget.fullName}`}
+                style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}
+              >
+                ✕
+              </button>
+            </div>
+            <p style={{ margin: "0 0 0.6rem", fontSize: "0.95rem", color: "#374151" }}>
+              Would you like to register the client right now? If you do, the credentials will be
+              sent to the client right now in an email.
+            </p>
+            <p style={{ margin: "0 0 1rem", fontSize: "0.95rem", color: "#374151" }}>
+              Or schedule the onboarding. You create the credentials now and they are emailed to
+              the client on the date and time you choose.
+            </p>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
+              <button
+                type="button"
+                onClick={() => openRegister(choiceTarget)}
+                data-log-title={`Register Now clicked: ${choiceTarget.fullName}`}
+                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
+              >
+                Register now
+              </button>
+              <button
+                type="button"
+                onClick={() => openSchedule(choiceTarget)}
+                data-log-title={`Schedule Onboarding clicked: ${choiceTarget.fullName}`}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#a78bfa" }}
+              >
+                Schedule onboarding
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {scheduleTarget && (
+        <ScheduleOnboardingModal
+          client={scheduleTarget}
+          onClose={() => setScheduleTarget(null)}
+          onScheduled={handleScheduled}
+        />
+      )}
 
       {registerTarget && (
         <div style={modalOverlayStyle}>

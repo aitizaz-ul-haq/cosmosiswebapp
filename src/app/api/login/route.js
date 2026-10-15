@@ -26,6 +26,14 @@ export async function POST(req) {
       );
     }
 
+    // Scheduled clients get their credentials set up front but may not log in before activation
+    if (user.role === "client" && user.isActive === false) {
+      return NextResponse.json(
+        { error: "This account is not active yet" },
+        { status: 403 }
+      );
+    }
+
     // ✅ Create JWT
     const token = jwt.sign(
       {

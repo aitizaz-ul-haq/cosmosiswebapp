@@ -8,6 +8,7 @@ const PUBLIC_PATHS = [
   "/api/login",
   "/api/register",
   "/api/requestdemo",
+  "/api/cron",
 ];
 
 // ✅ Role-based route mapping

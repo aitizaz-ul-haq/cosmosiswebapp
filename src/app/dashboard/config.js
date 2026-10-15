@@ -122,7 +122,12 @@ export const dashboardConfigs = {
         },
         {
           key: "registry",
-          label: "Registry",
+          label: "Awaiting registry",
+          iconlink: "/images/file.png",
+        },
+        {
+          key: "scheduled",
+          label: "Scheduled",
           iconlink: "/images/file.png",
         },
         {

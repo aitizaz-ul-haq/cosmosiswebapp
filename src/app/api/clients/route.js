@@ -7,12 +7,14 @@ import { verifyToken } from "@/lib/auth";
 import User from "@/models/User";
 import Company from "@/models/Company";
 import ClientProfile from "@/models/ClientProfile";
+import { dispatchScheduledOnboardings } from "@/lib/dispatchScheduledOnboardings";
 
 const ALLOWED_CREATOR_ROLES = new Set(["supervisor", "rm", "superadmin"]);
 const LIST_STATUS_FILTERS = new Set([
   "approval_pending",
   "under_review",
   "register",
+  "scheduled",
   "ongoing",
   "on_hold",
   "cancelled",
@@ -107,6 +109,10 @@ const buildClientPayload = (profile, user, assignedToUser, createdByUser) => {
     sharedWithUserIds,
     sharedWithNames,
     status: profile?.status || "ongoing",
+    scheduledRegistrationAt: profile?.scheduledRegistrationAt || null,
+    scheduledCountry: profile?.scheduledCountry || "",
+    scheduledCity: profile?.scheduledCity || "",
+    scheduledTimeZone: profile?.scheduledTimeZone || "",
     rmRemarks: profile?.rmRemarks || "",
     onboardingType: resolvedOnboardingType,
     onboarding: onboardingData,
@@ -126,6 +132,11 @@ export async function GET(req) {
 
   try {
     await connectToDatabase();
+
+    // Backup for the cron job: send any scheduled credentials that are now due
+    await dispatchScheduledOnboardings(new URL(req.url).origin).catch((err) =>
+      console.error("Dispatch scheduled onboardings error:", err)
+    );
 
     const { searchParams } = new URL(req.url);
     const countOnly = searchParams.get("count");
@@ -676,8 +687,11 @@ export async function PATCH(req) {
       const isOwner =
         String(profile.assignedToUserId) === me ||
         (profile.sharedWithUserIds || []).some((rmId) => String(rmId) === me);
-      // approval_pending / under_review / register are controlled by the approval flow
-      if (!isOwner || ["approval_pending", "under_review", "register"].includes(profile.status)) {
+      // approval_pending / under_review / register / scheduled are controlled by their own flows
+      if (
+        !isOwner ||
+        ["approval_pending", "under_review", "register", "scheduled"].includes(profile.status)
+      ) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
     }

@@ -3,7 +3,8 @@
 export const STATUS_LABELS = {
   approval_pending: "Approval pending",
   under_review: "Under review",
-  register: "Register",
+  register: "Awaiting registry",
+  scheduled: "Scheduled",
   ongoing: "In progress",
   on_hold: "On hold",
   cancelled: "Cancelled",
@@ -13,6 +14,7 @@ export const STATUS_COLORS = {
   approval_pending: { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC" },
   under_review: { bg: "#F3E8FF", text: "#6B21A8", border: "#D8B4FE" },
   register: { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4" },
+  scheduled: { bg: "#E0F2FE", text: "#075985", border: "#7DD3FC" },
   ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
   on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
   cancelled: { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5" },

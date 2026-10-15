@@ -15,6 +15,7 @@ import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
 import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import RegistryPage from "./components/dashboardshell/pages/RegistryPage";
+import ScheduledPage from "./components/dashboardshell/pages/ScheduledPage";
 import ApprovalsPage from "./components/dashboardshell/pages/ApprovalsPage";
 import UnderReviewPage from "./components/dashboardshell/pages/UnderReviewPage";
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
@@ -45,6 +46,7 @@ const getPageMap = (userRole, setActiveMenu) => {
     users: <UserPage />,
     clients: <ClientsPage />,
     registry: <RegistryPage />,
+    scheduled: <ScheduledPage />,
     approvals: <ApprovalsPage />,
     reports: <ReportsPage />,
     profile: <ProfilePage />,

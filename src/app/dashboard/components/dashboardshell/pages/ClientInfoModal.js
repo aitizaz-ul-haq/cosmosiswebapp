@@ -7,7 +7,7 @@ import {
   modalCardStyle,
 } from "./clientStatusShared";
 
-export default function ClientInfoModal({ client, onClose, footerActions }) {
+export default function ClientInfoModal({ client, onClose, footerActions, extraRows = [] }) {
   if (!client) return null;
 
   const rows = [
@@ -24,6 +24,7 @@ export default function ClientInfoModal({ client, onClose, footerActions }) {
       label: "Created",
       value: client.createdAt ? new Date(client.createdAt).toLocaleString() : "",
     },
+    ...extraRows,
   ];
 
   return (
