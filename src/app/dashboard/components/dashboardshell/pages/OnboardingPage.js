@@ -5,12 +5,16 @@ import { useUser } from "@/app/context/UserContext";
 import "./onboarding/onboarding.css";
 import OnboardingTimeline from "./onboarding/OnboardingTimeline";
 import PhaseModal from "./onboarding/PhaseModal";
+import PrerequisitesModal from "./onboarding/PrerequisitesModal";
 import Phase1PersonalDetails from "./onboarding/phases/Phase1PersonalDetails";
 import Phase2SourceOfWealth from "./onboarding/phases/Phase2SourceOfWealth";
 import Phase3FinancialProfile from "./onboarding/phases/Phase3FinancialProfile";
 import Phase4RiskProfile from "./onboarding/phases/Phase4RiskProfile";
 import Phase5Signature from "./onboarding/phases/Phase5Signature";
 import Phase6DocumentationChecklist from "./onboarding/phases/Phase6DocumentationChecklist";
+
+// Phase 0 (prerequisites) is read-only and has its own modal, so it has no form Component.
+const PREREQUISITES_PHASE = { id: 0, name: "Prerequisites" };
 
 const PHASES = [
   { id: 1, name: "Personal Details", Component: Phase1PersonalDetails },
@@ -91,6 +95,8 @@ export default function OnboardingPage() {
     );
   }
 
+  const TIMELINE_PHASES = [PREREQUISITES_PHASE, ...PHASES];
+  const companyName = profile?.companyName || user?.companyName;
   const activePhaseObj = PHASES.find((p) => p.id === openPhase);
   const ActiveComponent = activePhaseObj?.Component;
 
@@ -183,7 +189,7 @@ export default function OnboardingPage() {
             Select a phase below to review or complete the required information.
           </p>
           <OnboardingTimeline
-            phases={PHASES}
+            phases={TIMELINE_PHASES}
             activePhase={currentStep}
             onSelect={openPhaseModal}
           />
@@ -204,6 +210,13 @@ export default function OnboardingPage() {
         </div>
       </div>
 
+      {openPhase === PREREQUISITES_PHASE.id && (
+        <PrerequisitesModal
+          companyName={companyName}
+          onClose={() => setOpenPhase(null)}
+        />
+      )}
+
       {activePhaseObj && ActiveComponent && (
         <PhaseModal
           id={activePhaseObj.id}
@@ -212,7 +225,7 @@ export default function OnboardingPage() {
           onClose={() => setOpenPhase(null)}
           onNext={goToPhase}
         >
-          <ActiveComponent />
+          <ActiveComponent companyName={companyName} />
         </PhaseModal>
       )}
     </div>

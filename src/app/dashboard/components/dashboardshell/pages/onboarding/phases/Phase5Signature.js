@@ -15,7 +15,8 @@ function SignatureBlock({ prefix, title }) {
   );
 }
 
-export default function Phase5Signature() {
+export default function Phase5Signature({ companyName }) {
+  const firm = companyName || "the Firm";
   return (
     <div>
       <SectionTitle>Signatures</SectionTitle>
@@ -24,9 +25,9 @@ export default function Phase5Signature() {
         Engagement Letter and any other ancillary documents. You have been
         classified by us as a retail customer for all transactions, unless we have
         agreed in writing that you are a professional investor for specific
-        investments. You agree that Calyx will rely on the information given in
-        this form, and you appoint Calyx to manage your account(s) in accordance
-        with the instructions you have given. You agree to notify Calyx of any
+        investments. You agree that {firm} will rely on the information given in
+        this form, and you appoint {firm} to manage your account(s) in accordance
+        with the instructions you have given. You agree to notify {firm} of any
         significant changes to your circumstances which may affect the management
         of your account(s).
       </p>

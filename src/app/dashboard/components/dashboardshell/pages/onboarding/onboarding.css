@@ -411,6 +411,262 @@
   background: #6d7692;
 }
 
+.onb-modal-btn:disabled,
+.onb-modal-btn:disabled:hover {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Hint shown above a locked button on hover (disabled buttons swallow hover). */
+.onb-gate-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.onb-gate-tip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: max-content;
+  max-width: 280px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  background: #2b3250;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: 0 6px 18px rgba(20, 24, 40, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 2;
+}
+
+.onb-gate-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 1.4rem;
+  border: 6px solid transparent;
+  border-top-color: #2b3250;
+}
+
+.onb-gate-wrap:hover .onb-gate-tip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ------------ Legal documents (Phase 0) ------------ */
+/* Typography mirrors the other phases: green headings, #4a5060 labels, #7a8090 body, Poppins. */
+.onb-legal {
+  max-width: 960px;
+  margin: 0 auto;
+  font-family: var(--font-poppins), serif;
+  color: #7a8090;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.onb-legal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--sitegreen, #21cfb2);
+  margin: 0 0 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid rgba(33, 207, 178, 0.25);
+  line-height: 1.25;
+}
+
+.onb-legal-subtitle {
+  font-size: 1.1rem;
+  color: #7a8090;
+  margin: 0 0 1.75rem;
+}
+
+.onb-legal-h {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--sitegreen, #21cfb2);
+  margin: 2.5rem 0 0.75rem;
+}
+
+.onb-legal-sched {
+  margin: 4rem 0 1.5rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid rgba(33, 207, 178, 0.25);
+}
+
+.onb-legal-sched-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5060;
+}
+
+.onb-legal-sched-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--sitegreen, #21cfb2);
+  margin: 0.2rem 0 0;
+}
+
+.onb-legal-sh {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5060;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.onb-legal-p {
+  margin: 0 0 0.85rem;
+}
+
+.onb-legal-p.lvl1 { margin-left: 3rem; }
+.onb-legal-p.lvl2 { margin-left: 6rem; }
+.onb-legal-p.lvl3 { margin-left: 9rem; }
+.onb-legal-p.lvl4 { margin-left: 12rem; }
+
+.onb-legal-c {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.onb-legal-n {
+  flex: 0 0 auto;
+  min-width: 2.75rem;
+  font-weight: 600;
+  color: #4a5060;
+}
+
+.onb-legal-ct {
+  flex: 1;
+  min-width: 0;
+}
+
+.onb-legal-c.lvl2 { margin-left: 3rem; }
+.onb-legal-c.lvl3 { margin-left: 6rem; }
+
+.onb-legal-ul {
+  margin: 0 0 0.85rem 1.5rem;
+  padding-left: 1.25rem;
+}
+
+.onb-legal-ul li {
+  margin-bottom: 0.4rem;
+}
+
+.onb-legal-contents {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  columns: 2;
+  column-gap: 2.5rem;
+}
+
+.onb-legal-contents li {
+  display: flex;
+  gap: 0.75rem;
+  break-inside: avoid;
+  margin-bottom: 0.3rem;
+}
+
+.onb-legal-rule {
+  border: none;
+  border-top: 1px dotted rgba(33, 207, 178, 0.5);
+  margin: 1.5rem 0;
+}
+
+.onb-legal-tablewrap {
+  overflow-x: auto;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.onb-legal-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgba(33, 207, 178, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.onb-legal-table th {
+  background: var(--sitegreen, #21cfb2);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+}
+
+.onb-legal-table td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  border-top: 1px solid #eef0f5;
+  border-left: 1px solid #eef0f5;
+}
+
+.onb-legal-table td:first-child {
+  border-left: none;
+}
+
+.onb-legal-table td p {
+  margin: 0 0 0.6rem;
+}
+
+.onb-legal-table td p:last-child {
+  margin-bottom: 0;
+}
+
+.onb-legal-cellnote {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.onb-legal-total td {
+  font-weight: 700;
+  color: #4a5060;
+}
+
+.onb-legal-table.conflicts td {
+  vertical-align: top;
+}
+
+.onb-legal-table.conflicts td:first-child {
+  background: #eafaf6;
+  color: #4a5060;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.onb-legal-foot {
+  margin: 2rem 0 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eef0f5;
+  font-size: 0.9rem;
+  color: #9aa0b2;
+}
+
+.onb-legal-foot p {
+  margin: 0 0 0.4rem;
+}
+
+@media (max-width: 820px) {
+  .onb-legal-p.lvl1 { margin-left: 1rem; }
+  .onb-legal-p.lvl2 { margin-left: 2rem; }
+  .onb-legal-p.lvl3 { margin-left: 3rem; }
+  .onb-legal-p.lvl4 { margin-left: 4rem; }
+  .onb-legal-c.lvl2 { margin-left: 1rem; }
+  .onb-legal-c.lvl3 { margin-left: 2rem; }
+  .onb-legal-contents { columns: 1; }
+}
+
 /* ------------ Form primitives ------------ */
 .onb-section-title {
   font-size: 2rem;

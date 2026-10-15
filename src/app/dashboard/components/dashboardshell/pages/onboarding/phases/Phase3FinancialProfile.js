@@ -136,7 +136,8 @@ function KnowledgeMatrix({ prefix, title }) {
   );
 }
 
-export default function Phase3FinancialProfile() {
+export default function Phase3FinancialProfile({ companyName }) {
+  const firm = companyName || "the Firm";
   return (
     <div>
       <Note>
@@ -215,7 +216,7 @@ export default function Phase3FinancialProfile() {
         </div>
         <div className="onb-field-55">
           <Field
-            label="What value are you proposing to invest with Calyx?"
+            label={`What value are you proposing to invest with ${firm}?`}
             name="fp.proposedValue"
           />
         </div>

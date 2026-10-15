@@ -19,7 +19,7 @@ const CIVIL_STATUS = [
   "Civil Partnership",
 ];
 
-function HolderPersonalDetails({ prefix, title }) {
+function HolderPersonalDetails({ prefix, title, companyName }) {
   return (
     <div className="onb-holder-col">
       <h4 className="onb-holder-title">{title}</h4>
@@ -233,7 +233,7 @@ function AdviserBlock({ prefix, title }) {
         help="A valid email address for your adviser."
       />
       <YesNo
-        label="Discuss your account with Calyx?"
+        label={`Discuss your account with ${companyName}?`}
         name={`${prefix}.canDiscuss`}
       />
       <YesNo
@@ -250,19 +250,20 @@ function AdviserBlock({ prefix, title }) {
   );
 }
 
-export default function Phase1PersonalDetails() {
+export default function Phase1PersonalDetails({ companyName }) {
+  const firm = companyName || "the Firm";
   return (
     <div>
       <SectionTitle>Account Holders</SectionTitle>
       <div className="onb-grid-2">
-        <HolderPersonalDetails prefix="holder1" title="Account Holder 1" />
-        <HolderPersonalDetails prefix="holder2" title="Account Holder 2" />
+        <HolderPersonalDetails prefix="holder1" title="Account Holder 1" companyName={firm} />
+        <HolderPersonalDetails prefix="holder2" title="Account Holder 2" companyName={firm} />
       </div>
       <p className="onb-agreement">
         Each named applicant will be authorised to access information relating to
         all other applicants under this agreement, including portfolio
-        valuations, transaction history, and Calyx and Custodian reporting,
-        unless any applicant notifies Calyx in writing that they do not wish such
+        valuations, transaction history, and {firm} and Custodian reporting,
+        unless any applicant notifies {firm} in writing that they do not wish such
         access to be granted.
       </p>
 
@@ -341,7 +342,7 @@ export default function Phase1PersonalDetails() {
       </div>
       <p className="onb-agreement">
         <strong>Change of Status as Non-US Person.</strong> You agree to promptly
-        inform Calyx if your status as a Non-US Person in accordance with the
+        inform {firm} if your status as a Non-US Person in accordance with the
         above definitions were to change and you were to become a US Person.
       </p>
 

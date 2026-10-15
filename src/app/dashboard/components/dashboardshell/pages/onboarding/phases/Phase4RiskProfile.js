@@ -45,7 +45,8 @@ const NON_STANDARD_PRODUCTS = [
   },
 ];
 
-export default function Phase4RiskProfile() {
+export default function Phase4RiskProfile({ companyName }) {
+  const firm = companyName || "the Firm";
   return (
     <div>
       <SectionTitle>Risk Questionnaire</SectionTitle>
@@ -120,7 +121,7 @@ export default function Phase4RiskProfile() {
           name="risk.proceedRecommended"
         />
         <ChoiceGroup
-          label="If you would prefer Calyx to classify your risk profile differently, please select your preferred profile:"
+          label={`If you would prefer ${firm} to classify your risk profile differently, please select your preferred profile:`}
           name="risk.overrideProfile"
           options={["Conservative", "Balanced", "Steady Growth", "Equity"]}
         />
@@ -129,7 +130,7 @@ export default function Phase4RiskProfile() {
       <SectionTitle>Non-Standard Investments</SectionTitle>
       <Note>
         Each authorised signatory must indicate whether they are open to using
-        non-standard investments, and confirm that Calyx may discuss these
+        non-standard investments, and confirm that {firm} may discuss these
         products with you and that you have read the corresponding risk warnings.
       </Note>
       <div className="onb-grid-2 onb-risk-openness">
