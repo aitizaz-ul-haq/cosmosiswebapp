@@ -11,6 +11,7 @@ import ClientProfile from "@/models/ClientProfile";
 const ALLOWED_CREATOR_ROLES = new Set(["supervisor", "rm", "superadmin"]);
 const LIST_STATUS_FILTERS = new Set([
   "approval_pending",
+  "under_review",
   "register",
   "ongoing",
   "on_hold",
@@ -525,7 +526,7 @@ async function approveClient(tokenUser, id) {
     ) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-    if (profile.status !== "approval_pending") {
+    if (!["approval_pending", "under_review"].includes(profile.status)) {
       return NextResponse.json(
         { error: "Client is not pending approval" },
         { status: 409 }
@@ -559,6 +560,40 @@ async function approveClient(tokenUser, id) {
   }
 }
 
+async function reviewClient(tokenUser, id) {
+  try {
+    await connectToDatabase();
+
+    let profile = await ClientProfile.findById(id);
+    if (!profile) {
+      profile = await ClientProfile.findOne({ userId: id });
+    }
+    if (!profile) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+    if (
+      tokenUser.role !== "superadmin" &&
+      String(profile.companyId) !== String(tokenUser.companyId)
+    ) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    if (profile.status !== "approval_pending") {
+      return NextResponse.json(
+        { error: "Client is not pending approval" },
+        { status: 409 }
+      );
+    }
+
+    profile.status = "under_review";
+    await profile.save();
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Review client error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
 export async function PATCH(req) {
   const tokenUser = verifyToken(req);
   if (!tokenUser) {
@@ -587,6 +622,12 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
     return approveClient(tokenUser, id);
+  }
+  if (body?.action === "review") {
+    if (isRm) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    return reviewClient(tokenUser, id);
   }
   const assignedToUserId = body?.assignedToUserId || null;
 
@@ -635,8 +676,8 @@ export async function PATCH(req) {
       const isOwner =
         String(profile.assignedToUserId) === me ||
         (profile.sharedWithUserIds || []).some((rmId) => String(rmId) === me);
-      // approval_pending / register are controlled by the approval flow
-      if (!isOwner || ["approval_pending", "register"].includes(profile.status)) {
+      // approval_pending / under_review / register are controlled by the approval flow
+      if (!isOwner || ["approval_pending", "under_review", "register"].includes(profile.status)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
     }

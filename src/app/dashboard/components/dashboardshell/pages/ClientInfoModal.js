@@ -7,7 +7,7 @@ import {
   modalCardStyle,
 } from "./clientStatusShared";
 
-export default function ClientInfoModal({ client, onClose }) {
+export default function ClientInfoModal({ client, onClose, footerActions }) {
   if (!client) return null;
 
   const rows = [
@@ -17,6 +17,8 @@ export default function ClientInfoModal({ client, onClose }) {
     { label: "Status", value: STATUS_LABELS[client.status] || client.status },
     { label: "Onboarding type", value: onboardingTypeLabel(client.onboardingType) },
     { label: "RM name", value: client.assignedToName },
+    { label: "Shared with", value: (client.sharedWithNames || []).join(", ") },
+    { label: "Assigned by", value: client.assignedByName },
     { label: "RM remarks", value: client.rmRemarks },
     {
       label: "Created",
@@ -76,22 +78,24 @@ export default function ClientInfoModal({ client, onClose }) {
           ))}
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.25rem" }}>
-          <button
-            type="button"
-            onClick={onClose}
-            data-log-title={`Close Client Info modal: ${client.fullName || client.email}`}
-            style={{
-              padding: "0.5rem 1rem",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              backgroundColor: "var(--btn-green-light)",
-              border: "1px solid var(--btn-green-light)",
-              color: "#fff",
-            }}
-          >
-            Close
-          </button>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1.25rem" }}>
+          {footerActions || (
+            <button
+              type="button"
+              onClick={onClose}
+              data-log-title={`Close Client Info modal: ${client.fullName || client.email}`}
+              style={{
+                padding: "0.5rem 1rem",
+                fontWeight: 700,
+                borderRadius: "0.5rem",
+                backgroundColor: "var(--btn-green-light)",
+                border: "1px solid var(--btn-green-light)",
+                color: "#fff",
+              }}
+            >
+              Close
+            </button>
+          )}
         </div>
       </div>
     </div>

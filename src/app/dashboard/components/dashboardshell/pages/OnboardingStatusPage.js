@@ -10,6 +10,7 @@ import {
   STATUS_COLORS,
   actionBtnStyle,
   getPhaseConfig,
+  onboardingTypeLabel,
 } from "./clientStatusShared";
 import "./styles/generictable.css";
 import "./styles/onboardingstatus.css";
@@ -254,21 +255,32 @@ function StatusMenu({ current, busy, clientName, onSelect }) {
   );
 }
 
-function TimelineDetail({ row, closing, isSupervisor }) {
+function TimelineDetail({ row, closing, isSupervisor, onNavigate }) {
   return (
     <div className={closing ? "onbs-detail-wrap closing" : "onbs-detail-wrap"}>
       <div className="onbs-detail">
         <div className="onbs-detail-body">
           <div className="onbs-detail-actions">
             {isSupervisor ? (
-              <button
-                type="button"
-                className="dash-action-btn dash-btn-green"
-                style={actionBtnStyle}
-                data-log-title={`Notify RM button clicked: ${row.fullName}`}
-              >
-                Notify RM
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="dash-action-btn dash-btn-green"
+                  style={actionBtnStyle}
+                  data-log-title={`Notify RM button clicked: ${row.fullName}`}
+                >
+                  Notify RM
+                </button>
+                <button
+                  type="button"
+                  className="dash-action-btn dash-btn-green"
+                  style={actionBtnStyle}
+                  onClick={() => onNavigate?.("submissions")}
+                  data-log-title={`Submissions button clicked (timeline): ${row.fullName}`}
+                >
+                  Submissions
+                </button>
+              </>
             ) : (
               <>
                 <button
@@ -298,9 +310,49 @@ function TimelineDetail({ row, closing, isSupervisor }) {
           <h3 className="onbs-detail-title">Onboarding Timeline</h3>
           <h4 className="onbs-detail-client">{row.fullName}</h4>
           <div className="onbs-detail-date">Date added: {row.created}</div>
-          {isSupervisor && row.client.assignedToName && (
-            <span className="onbs-rm-tag">Assigned RM: {row.client.assignedToName}</span>
-          )}
+          <div className="onbs-capsules onbs-detail-capsules">
+            {isSupervisor && row.client.assignedToName && (
+              <span
+                className="onbs-rm-tag"
+                title="The relationship manager this client is assigned to"
+              >
+                Assigned RM: {row.client.assignedToName}
+              </span>
+            )}
+            {isSupervisor && (row.client.sharedWithNames || []).length > 0 && (
+              <span
+                className="onbs-shared-tag"
+                title="Other relationship managers this client is shared with"
+              >
+                Shared with: {row.client.sharedWithNames.join(", ")}
+              </span>
+            )}
+            <span
+              className="onbs-status-capsule"
+              title="Current onboarding status of this client"
+              style={{
+                backgroundColor: (STATUS_COLORS[row.statusKey] || STATUS_COLORS.ongoing).bg,
+                color: (STATUS_COLORS[row.statusKey] || STATUS_COLORS.ongoing).text,
+                borderColor: (STATUS_COLORS[row.statusKey] || STATUS_COLORS.ongoing).border,
+              }}
+            >
+              {row.status}
+            </span>
+            {row.cfg && (
+              <span
+                className="onbs-phase-capsule"
+                title={`The onboarding phase the client is currently on (Phase ${row.cfg.phase} of 6)`}
+              >
+                Phase {row.cfg.phase} · {row.cfg.name}
+              </span>
+            )}
+            <span
+              className="onbs-type-capsule"
+              title="The type of client being onboarded"
+            >
+              {onboardingTypeLabel(row.client.onboardingType || "individual")}
+            </span>
+          </div>
           <div className="onbs-detail-remarks">
             <Remarks text={row.rmRemarks} />
           </div>
@@ -318,7 +370,7 @@ function TimelineDetail({ row, closing, isSupervisor }) {
   );
 }
 
-export default function OnboardingStatusPage() {
+export default function OnboardingStatusPage({ onNavigate }) {
   const { user } = useUser();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -470,7 +522,6 @@ export default function OnboardingStatusPage() {
               <div className="onbs-main">
                 <div className="onbs-date">{row.created}</div>
                 <div className="onbs-name">{row.fullName}</div>
-                <Remarks text={row.rmRemarks} />
 
                 <div className="onbs-progress">
                   <div className="onbs-progress-head">
@@ -542,6 +593,7 @@ export default function OnboardingStatusPage() {
                 row={row}
                 closing={closing}
                 isSupervisor={user?.role === "supervisor"}
+                onNavigate={onNavigate}
               />
             )}
             </div>

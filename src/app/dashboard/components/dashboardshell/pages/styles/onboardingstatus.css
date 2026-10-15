@@ -225,6 +225,19 @@
   white-space: nowrap;
 }
 
+.onbs-type-capsule {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid #d6dae6;
+  background: #f1f3f9;
+  color: var(--sitedark);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
 .onbs-empty {
   padding: 2.5rem 1rem;
   text-align: center;
@@ -338,15 +351,33 @@
   color: #9aa0b2;
 }
 
+.onbs-detail-capsules {
+  margin-top: 0.6rem;
+}
+
+.onbs-shared-tag {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--sitedark);
+  background: var(--sitedark);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
 .onbs-rm-tag {
   display: inline-block;
-  margin-top: 0.6rem;
-  padding: 0.25rem 0.8rem;
+  padding: 0.2rem 0.7rem;
   border-radius: 999px;
   background: var(--sitegreen, #21cfb2);
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .onbs-detail-remarks {

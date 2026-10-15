@@ -131,6 +131,15 @@ footer {
   border-color: #1d4ed8;
 }
 
+.dash-btn-purple {
+  background-color: #a78bfa;
+  border: 1px solid #a78bfa;
+}
+.dash-btn-purple:hover {
+  background-color: #7c3aed;
+  border-color: #6d28d9;
+}
+
 
 /* .site-main {
   background-color: #0a0a0a;

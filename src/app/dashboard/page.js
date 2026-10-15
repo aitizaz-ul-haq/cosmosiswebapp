@@ -16,6 +16,7 @@ import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import RegistryPage from "./components/dashboardshell/pages/RegistryPage";
 import ApprovalsPage from "./components/dashboardshell/pages/ApprovalsPage";
+import UnderReviewPage from "./components/dashboardshell/pages/UnderReviewPage";
 import RMDashboard from "./components/dashboardshell/pages/RMDashboard";
 import CompaniesPage from "./components/dashboardshell/pages/CompaniesPage";
 import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
@@ -32,7 +33,7 @@ import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDas
 // import DemoRequests from "./components/dashboardshell/pages/RequestedDemonstration";
 // import RequestedDemonstration from "./components/dashboardshell/pages/RequestedDemonstration";
 
-const getPageMap = (userRole) => {
+const getPageMap = (userRole, setActiveMenu) => {
   const baseMap = {
     // "demo users": <DemoUsers />,
     // notifications: <NotificationsPage />,
@@ -51,8 +52,8 @@ const getPageMap = (userRole) => {
     onboarding: <OnboardingPage />,
     supervisors: <SupervisorsPage />,
     submissions: <SubmissionsPage />,
-    onboardingstatus: <OnboardingStatusPage />,
-    underreview: <div className="dashboard-empty-page"></div>,
+    onboardingstatus: <OnboardingStatusPage onNavigate={setActiveMenu} />,
+    underreview: <UnderReviewPage />,
   };
 
   // Role-based dashboard override
@@ -135,7 +136,7 @@ export default function Dashboard() {
     >
       {/* 🔒 Tracks every button/menu interaction in the dashboard for the audit log */}
       <ActionLogger context="dashboard" />
-      {getPageMap(user.role)[activeMenu] || <div>Welcome {user.role}!</div>}
+      {getPageMap(user.role, setActiveMenu)[activeMenu] || <div>Welcome {user.role}!</div>}
     </DashboardShell>
   );
 }

@@ -169,7 +169,7 @@ const ClientProfileSchema = new mongoose.Schema(
      */
     status: {
       type: String,
-      enum: ["approval_pending", "register", "ongoing", "on_hold", "cancelled"],
+      enum: ["approval_pending", "under_review", "register", "ongoing", "on_hold", "cancelled"],
       default: "ongoing",
       index: true,
     },

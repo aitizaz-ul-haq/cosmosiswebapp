@@ -141,13 +141,16 @@ export default function ClientsPage() {
   // Workflow statuses are set by the approval flow, so they are not selectable
   const STATUS_LABEL_OPTIONS = [
     { value: "approval_pending", label: "Approval pending" },
+    { value: "under_review", label: "Under review" },
     { value: "register", label: "Register" },
     ...STATUS_OPTIONS,
   ];
-  const isWorkflowStatus = (value) => value === "approval_pending" || value === "register";
+  const isWorkflowStatus = (value) =>
+    value === "approval_pending" || value === "under_review" || value === "register";
   // Status colors: ongoing green, on_hold yellow, cancelled red
   const STATUS_COLORS = {
     approval_pending: { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC" },
+    under_review: { bg: "#F3E8FF", text: "#6B21A8", border: "#D8B4FE" },
     register: { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4" },
     ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
     on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
@@ -165,6 +168,7 @@ export default function ClientsPage() {
   // Human-readable descriptions for status hover tooltips
   const STATUS_DESCRIPTIONS = {
     approval_pending: "Waiting for supervisor approval",
+    under_review: "Being reviewed by the supervisor",
     register: "Approved - ready to be registered by the RM",
     ongoing: "Current onboarding status is In progress",
     on_hold: "Current onboarding status is On hold",

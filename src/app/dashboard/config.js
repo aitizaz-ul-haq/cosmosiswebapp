@@ -74,14 +74,14 @@ export const dashboardConfigs = {
           iconlink: "/images/clients.png",
         },
         {
-          key: "approvals",
-          label: "Approvals",
-          iconlink: "/images/tick-filled-white.svg",
-        },
-        {
           key: "onboardingstatus",
           label: "Onboarding status",
           iconlink: "/images/OnboardingStatus.png",
+        },
+        {
+          key: "approvals",
+          label: "Pending approvals",
+          iconlink: "/images/tick-filled-white.svg",
         },
         {
           key: "underreview",

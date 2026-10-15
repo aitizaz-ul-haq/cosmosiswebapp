@@ -17,6 +17,7 @@ export default function ApprovalsPage() {
   const [error, setError] = useState("");
   const [infoClient, setInfoClient] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [reviewingId, setReviewingId] = useState(null);
   const [approvingId, setApprovingId] = useState(null);
 
   useEffect(() => {
@@ -71,6 +72,38 @@ export default function ApprovalsPage() {
     });
   };
 
+  const handleEmail = (client) => {
+    if (client.email) window.location.href = `mailto:${client.email}`;
+  };
+
+  const handleReview = async (client) => {
+    const id = getId(client);
+    if (!id || reviewingId) return;
+    setReviewingId(id);
+    try {
+      const res = await fetch(`/api/clients?id=${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ action: "review" }),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        window.alert(result?.error || "Failed to move client to review");
+        return;
+      }
+      removeFromList(client);
+      setInfoClient(null);
+      logUIAction("record_updated", {
+        title: `Moved client to under review: ${client.fullName || client.email}`,
+        entityType: "client",
+        entity: { id: client.userId || null, fullName: client.fullName, email: client.email },
+      });
+    } finally {
+      setReviewingId(null);
+    }
+  };
+
   const handleApprove = async (client) => {
     const id = getId(client);
     if (!id || approvingId) return;
@@ -88,6 +121,7 @@ export default function ApprovalsPage() {
         return;
       }
       removeFromList(client);
+      setInfoClient(null);
       logUIAction("record_updated", {
         title: `Approved client: ${client.fullName || client.email}`,
         entityType: "client",
@@ -144,23 +178,13 @@ export default function ApprovalsPage() {
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               type="button"
-              onClick={() => handleVerify(client)}
-              title="Verify on Nemesis"
-              data-log-title={`Verify Client button clicked: ${label}`}
-              className="dash-action-btn dash-btn-neutral"
-              style={actionBtnStyle}
-            >
-              Verify
-            </button>
-            <button
-              type="button"
               onClick={() => openInfo(client)}
-              title="Show client info"
-              data-log-title={`Info Approval button clicked: ${label}`}
-              className="dash-action-btn dash-btn-info"
+              title="Show client details"
+              data-log-title={`Details Approval button clicked: ${label}`}
+              className="dash-action-btn dash-btn-green"
               style={actionBtnStyle}
             >
-              Info
+              Details
             </button>
             <button
               type="button"
@@ -171,17 +195,6 @@ export default function ApprovalsPage() {
               style={actionBtnStyle}
             >
               Delete
-            </button>
-            <button
-              type="button"
-              onClick={() => handleApprove(client)}
-              disabled={approvingId === getId(client)}
-              title="Approve client for onboarding"
-              data-log-title={`Approve Client button clicked: ${label}`}
-              className="dash-action-btn dash-btn-green"
-              style={actionBtnStyle}
-            >
-              Approve
             </button>
           </div>
         );
@@ -217,7 +230,59 @@ export default function ApprovalsPage() {
         disableRowModal
       />
 
-      <ClientInfoModal client={infoClient} onClose={() => setInfoClient(null)} />
+      <ClientInfoModal
+        client={infoClient}
+        onClose={() => setInfoClient(null)}
+        footerActions={
+          infoClient ? (
+            <>
+              <button
+                type="button"
+                onClick={() => handleEmail(infoClient)}
+                disabled={!infoClient.email}
+                title={infoClient.email ? `Email ${infoClient.email}` : "No email on file"}
+                data-log-title={`Email Client button clicked (approvals modal): ${infoClient.fullName || infoClient.email}`}
+                className="dash-action-btn dash-btn-neutral"
+                style={actionBtnStyle}
+              >
+                Email
+              </button>
+              <button
+                type="button"
+                onClick={() => handleVerify(infoClient)}
+                title="Verify on Nemesis"
+                data-log-title={`Verify Client button clicked (approvals modal): ${infoClient.fullName || infoClient.email}`}
+                className="dash-action-btn dash-btn-info"
+                style={actionBtnStyle}
+              >
+                Verify
+              </button>
+              <button
+                type="button"
+                onClick={() => handleReview(infoClient)}
+                disabled={reviewingId === getId(infoClient)}
+                title="Move this client to Under review"
+                data-log-title={`Review Client button clicked: ${infoClient.fullName || infoClient.email}`}
+                className="dash-action-btn dash-btn-purple"
+                style={actionBtnStyle}
+              >
+                Review
+              </button>
+              <button
+                type="button"
+                onClick={() => handleApprove(infoClient)}
+                disabled={approvingId === getId(infoClient)}
+                title="Approve client for onboarding"
+                data-log-title={`Approve Client button clicked (approvals modal): ${infoClient.fullName || infoClient.email}`}
+                className="dash-action-btn dash-btn-green"
+                style={actionBtnStyle}
+              >
+                Approve
+              </button>
+            </>
+          ) : null
+        }
+      />
 
       <DeleteConfirmModal
         open={!!deleteTarget}
