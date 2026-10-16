@@ -190,7 +190,7 @@ function NonUsRow({ label, name }) {
   );
 }
 
-function AdviserBlock({ prefix, title }) {
+function AdviserBlock({ prefix, title, companyName }) {
   return (
     <div className="onb-holder-col">
       <h4 className="onb-holder-title">{title}</h4>
@@ -254,7 +254,7 @@ export default function Phase1PersonalDetails({ companyName }) {
   const firm = companyName || "the Firm";
   return (
     <div>
-      <SectionTitle>Account Holders</SectionTitle>
+      <SectionTitle icon="user">Account Holders</SectionTitle>
       <div className="onb-grid-2">
         <HolderPersonalDetails prefix="holder1" title="Account Holder 1" companyName={firm} />
         <HolderPersonalDetails prefix="holder2" title="Account Holder 2" companyName={firm} />
@@ -267,7 +267,7 @@ export default function Phase1PersonalDetails({ companyName }) {
         access to be granted.
       </p>
 
-      <SectionTitle>National Client Identifier (NCI)</SectionTitle>
+      <SectionTitle icon="id">National Client Identifier (NCI)</SectionTitle>
       <Note>
         We need to record your national client identifier. If more than one
         nationality, please record the relevant national identifier for each
@@ -310,7 +310,7 @@ export default function Phase1PersonalDetails({ companyName }) {
         </table>
       </div>
 
-      <SectionTitle>Non-US Person Status Declaration</SectionTitle>
+      <SectionTitle icon="globe">Non-US Person Status Declaration</SectionTitle>
       <div className="onb-table-wrap">
         <table className="onb-table onb-matrix">
           <thead>
@@ -346,7 +346,7 @@ export default function Phase1PersonalDetails({ companyName }) {
         above definitions were to change and you were to become a US Person.
       </p>
 
-      <SectionTitle>Investment Services</SectionTitle>
+      <SectionTitle icon="briefcase">Investment Services</SectionTitle>
       <Note>Please indicate the investment service you want for your account(s).</Note>
       <ChoiceGroup
         name="investmentService.type"
@@ -388,17 +388,17 @@ export default function Phase1PersonalDetails({ companyName }) {
         placeholder="e.g. Monthly, Quarterly, Annually and the amount"
       />
 
-      <SectionTitle>External Advisers</SectionTitle>
+      <SectionTitle icon="users">External Advisers</SectionTitle>
       <Note>
         If you have any external advisers (financial advisers, accountants, or
         solicitors) involved in your affairs, please provide their details below.
       </Note>
       <div className="onb-grid-2">
-        <AdviserBlock prefix="adviser1" title="Adviser 1" />
-        <AdviserBlock prefix="adviser2" title="Adviser 2" />
+        <AdviserBlock prefix="adviser1" title="Adviser 1" companyName={firm} />
+        <AdviserBlock prefix="adviser2" title="Adviser 2" companyName={firm} />
       </div>
 
-      <SectionTitle>Daily News Wrap-Up</SectionTitle>
+      <SectionTitle icon="newspaper">Daily News Wrap-Up</SectionTitle>
       <CheckRow
         label="Please tick if you wish to be added to our email distribution list to receive our Daily News Wrap-Up. You can unsubscribe at any time via the link at the bottom of the email."
         name="dailyNewsWrapUp"

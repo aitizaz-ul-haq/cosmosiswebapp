@@ -155,7 +155,7 @@ export default function Phase3FinancialProfile({ companyName }) {
         affects the information supplied below.
       </Note>
 
-      <SectionTitle>Purpose of the Portfolio</SectionTitle>
+      <SectionTitle icon="target">Purpose of the Portfolio</SectionTitle>
       <div className="onb-holder-col onb-purpose-col">
         <ChoiceGroup
           name="fp.purpose"
@@ -170,7 +170,7 @@ export default function Phase3FinancialProfile({ companyName }) {
         />
       </div>
 
-      <SectionTitle>Employment Status</SectionTitle>
+      <SectionTitle icon="briefcase">Employment Status</SectionTitle>
       <div className="onb-grid-2 onb-grid-2-compact">
         <div className="onb-holder-col">
           <h4 className="onb-holder-title">First Account Holder</h4>
@@ -195,11 +195,11 @@ export default function Phase3FinancialProfile({ companyName }) {
         <TextArea label="Please list any company directorships." name="fp.directorships" rows={5} />
       </div>
 
-      <SectionTitle>Assets</SectionTitle>
+      <SectionTitle icon="home">Assets</SectionTitle>
       <Note>Tell us about your assets. Please specify the currency of each entry.</Note>
       <MoneyTable prefix="fp.assets" rows={ASSET_ROWS} />
 
-      <SectionTitle>Liabilities</SectionTitle>
+      <SectionTitle icon="scale">Liabilities</SectionTitle>
       <MoneyTable prefix="fp.liabilities" rows={LIABILITY_ROWS} />
       <div className="onb-textarea-70">
         <TextArea
@@ -209,7 +209,7 @@ export default function Phase3FinancialProfile({ companyName }) {
         />
       </div>
 
-      <SectionTitle>Net Worth & Proposed Investment</SectionTitle>
+      <SectionTitle icon="trendUp">Net Worth & Proposed Investment</SectionTitle>
       <div className="onb-networth-fields">
         <div className="onb-field-55">
           <Field label="What is your total net worth?" name="fp.netWorth" />
@@ -239,14 +239,14 @@ export default function Phase3FinancialProfile({ companyName }) {
         </div>
       </div>
 
-      <SectionTitle>Annual Income</SectionTitle>
+      <SectionTitle icon="wallet">Annual Income</SectionTitle>
       <Note>Tell us about your annual income. Please specify the currency of each entry.</Note>
       <MoneyTable prefix="fp.income" rows={INCOME_ROWS} />
 
-      <SectionTitle>Annual Expenditure</SectionTitle>
+      <SectionTitle icon="chart">Annual Expenditure</SectionTitle>
       <MoneyTable prefix="fp.expenditure" rows={EXPENDITURE_ROWS} />
 
-      <SectionTitle>Financial Dependents</SectionTitle>
+      <SectionTitle icon="users">Financial Dependents</SectionTitle>
       <div className="onb-networth-fields">
         <YesNo label="Do you have any financial dependents?" name="fp.hasDependents" />
         <div className="onb-field-55">
@@ -264,7 +264,7 @@ export default function Phase3FinancialProfile({ companyName }) {
         </div>
       </div>
 
-      <SectionTitle>Knowledge & Experience</SectionTitle>
+      <SectionTitle icon="listCheck">Knowledge & Experience</SectionTitle>
       <Note>
         Please indicate the extent of your knowledge and experience of the
         following types of investments.

@@ -17,7 +17,7 @@ const ROWS = [
 export default function Phase2SourceOfWealth() {
   return (
     <div>
-      <SectionTitle>Source of Wealth</SectionTitle>
+      <SectionTitle icon="wallet">Source of Wealth</SectionTitle>
       <Note>
         Please provide information for each individual, and for wealth that has
         been generated jointly. Please specify the currency of each entry.

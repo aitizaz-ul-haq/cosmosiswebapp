@@ -5,7 +5,7 @@ import { SectionTitle, Note, CheckRow, TextArea } from "../fields";
 export default function Phase6DocumentationChecklist() {
   return (
     <div>
-      <SectionTitle>Documentation Checklist</SectionTitle>
+      <SectionTitle icon="listCheck">Documentation Checklist</SectionTitle>
       <Note>
         To fulfil our regulatory requirements please provide us with the following
         documents. All documentation and certification must be in English. All

@@ -237,28 +237,30 @@
   justify-content: center;
   font-weight: 800;
   font-size: 1rem;
-  background: #fff;
-  color: #9aa0b2;
-  border: 3px solid #e4e7ee;
+  background: #e3f8f2;
+  color: #17b89b;
+  border: 3px solid #e3f8f2;
   transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease,
     transform 0.2s ease;
 }
 
 .onb-tl-step:hover .onb-tl-node {
   transform: translateY(-2px);
-  border-color: var(--btn-green-light, #5fdbc8);
+  background: #d3f3ea;
+  border-color: #d3f3ea;
 }
 
+/* Current phase keeps the light fill and gets a dark green ring */
 .onb-tl-step.active .onb-tl-node {
-  background: var(--sitegreen, #21cfb2);
-  border-color: var(--sitegreen, #21cfb2);
-  color: #fff;
+  background: #e3f8f2;
+  border-color: #17b89b;
+  color: #17b89b;
 }
 
 .onb-tl-step.completed .onb-tl-node {
-  background: #fff;
-  border-color: var(--sitegreen, #21cfb2);
-  color: var(--sitegreen, #21cfb2);
+  background: #e3f8f2;
+  border-color: #e3f8f2;
+  color: #17b89b;
 }
 
 .onb-tl-label {
@@ -279,7 +281,7 @@
 
 .onb-tl-step.active .onb-tl-label,
 .onb-tl-step.active .onb-tl-name {
-  color: var(--sitegreen, #21cfb2);
+  color: #17b89b;
 }
 
 /* ------------ Phase modal ------------ */
@@ -362,6 +364,59 @@
 .onb-modal-close:hover {
   background: #eef0f5;
   color: #4a5060;
+}
+
+/* ------------ Phases 1-6 modal chrome (PhaseModal adds .onb-v2; Phase 0 is unchanged) ------------
+   Same look as the other modals. Width, max-height and every box height stay as they were. */
+.onb-v2.onb-modal-backdrop {
+  background: rgba(26, 30, 48, 0.38);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.onb-v2 .onb-modal {
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(20, 24, 40, 0.28);
+  font-family: var(--font-poppins), Arial, sans-serif;
+}
+
+.onb-v2 .onb-modal-header {
+  background: #fff;
+}
+
+/* 44px tile still fits inside the title block, so the header height is unchanged */
+.onb-v2 .onb-modal-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #e3f8f2;
+  color: #17b89b;
+}
+
+.onb-v2 .onb-modal-title {
+  color: #1a1a1a;
+}
+
+.onb-v2 .onb-modal-sub {
+  color: #6d7692;
+}
+
+.onb-v2 .onb-modal-close {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+  background: #f6f7fb;
+  color: #6d7692;
+}
+
+.onb-v2 .onb-modal-close:hover {
+  background: #e9ecf4;
+  color: #1a1a1a;
 }
 
 .onb-modal-body {
@@ -672,12 +727,26 @@
 
 /* ------------ Form primitives ------------ */
 .onb-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--sitegreen, #21cfb2);
+  color: #1a1a1a;
   margin: 5rem 0 1.5rem;
   padding-bottom: 0.65rem;
-  border-bottom: 2px solid rgba(33, 207, 178, 0.25);
+  border-bottom: 2px solid #e3f8f2;
+}
+
+.onb-section-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 .onb-section-title:first-child {
   margin-top: 0.5rem;
@@ -685,7 +754,7 @@
 
 .onb-note {
   font-size: 1.1rem;
-  color: #7a8090;
+  color: #6d7692;
   line-height: 1.6;
   margin: 0.5rem 0 1.5rem;
 }
@@ -711,12 +780,18 @@
   gap: 0.45rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #4a5060;
+  color: #1a1a1a;
 }
 
 .onb-field-icon {
   flex-shrink: 0;
-  color: var(--sitegreen, #21cfb2);
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-radius: 8px;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 
 /* Help icon + hover/focus tooltip */
@@ -729,18 +804,19 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #eef0f5;
+  background: #eceff7;
   color: #6d7692;
   font-size: 0.78rem;
   font-weight: 700;
   cursor: help;
   outline: none;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .onb-help:hover,
 .onb-help:focus {
-  background: var(--sitegreen, #21cfb2);
-  color: #fff;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 
 .onb-help::after {
@@ -785,14 +861,20 @@
 .onb-input {
   width: 100%;
   padding: 0.55rem 0.7rem;
-  border: 1px solid #d8dce6;
-  border-radius: 8px;
+  border: 1px solid #dfe3ee;
+  border-radius: 10px;
   font-size: 0.9rem;
-  color: #1f2430;
+  color: #1a1a1a;
   background: #fff;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: inherit;
+}
+
+.onb-field input::placeholder,
+.onb-field textarea::placeholder,
+.onb-table input::placeholder {
+  color: #9aa0b2;
 }
 
 .onb-field input:focus,
@@ -800,7 +882,7 @@
 .onb-field textarea:focus,
 .onb-input:focus {
   border-color: var(--sitegreen, #21cfb2);
-  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.12);
+  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.18);
 }
 
 /* Field validation error */
@@ -896,9 +978,9 @@
   padding: 0.3rem;
   list-style: none;
   background: #fff;
-  border: 1px solid #e4e7ee;
-  border-radius: 10px;
-  box-shadow: 0 10px 26px rgba(20, 24, 40, 0.15);
+  border: 1px solid #e6e9f1;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(20, 24, 40, 0.16);
   z-index: 50;
   max-height: 260px;
   overflow-y: auto;
@@ -916,8 +998,8 @@
 }
 
 .onb-combo-item:hover {
-  background: var(--sitegreen, #21cfb2);
-  color: #fff;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 
 .onb-flag {
@@ -946,19 +1028,27 @@
 }
 
 .onb-holder-col {
-  border: 1px solid #e2e6ee;
-  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  border: 1px solid #e6e9f1;
+  border-radius: 14px;
   padding: 1.5rem 1.4rem;
-  background: #eef1f6;
+  background: #fbfcfe;
 }
 
 .onb-holder-title {
   font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--sitedark, #6d7692);
+  font-weight: 700;
+  color: #1a1a1a;
   margin: 0 0 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+/* Inside the flex cards the 1.1rem gap already supplies most of the space below the title */
+.onb-holder-col > .onb-holder-title {
+  margin-bottom: 0.15rem;
 }
 
 /* Remove the trailing choice-group margin inside boxed columns so there is
@@ -1021,7 +1111,7 @@
   align-items: flex-start;
   gap: 0.5rem;
   font-size: 1.1rem;
-  color: #3f4552;
+  color: #1a1a1a;
   cursor: pointer;
   line-height: 1.35;
 }
@@ -1041,18 +1131,47 @@
   height: auto;
   margin: 0 0 0 0.6rem;
   padding: 0.35rem 0.55rem;
-  border: 1px solid #d8dce6;
-  border-radius: 8px;
+  border: 1px solid #dfe3ee;
+  border-radius: 10px;
   font-size: 0.9rem;
   font-family: inherit;
-  color: #1f2430;
+  color: #1a1a1a;
   background: #fff;
   outline: none;
 }
 
 .onb-choice input.onb-choice-other-input:focus {
   border-color: var(--sitegreen, #21cfb2);
-  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.12);
+  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.18);
+}
+
+/* Custom radio: white ring that fills light green with a dark green dot when selected */
+.onb-choice input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  position: relative;
+  border: 2px solid #cfd4e0;
+  border-radius: 50%;
+  background: #fff;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.onb-choice input[type="radio"]:hover {
+  border-color: #17b89b;
+}
+
+.onb-choice input[type="radio"]:checked {
+  border-color: #17b89b;
+  background: #e3f8f2;
+}
+
+.onb-choice input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #17b89b;
 }
 
 /* Keep the radio, label text and the inline input vertically centered. */
@@ -1064,15 +1183,15 @@
   margin-top: 0;
 }
 
-/* Custom checkbox: white box that fills application green with a black tick
-   when checked. Radios keep the native (accent-colored) look. */
+/* Custom checkbox: white box that fills light green with a dark green tick when checked.
+   Table radios use the same square look. */
 .onb-choice input[type="checkbox"],
 .onb-table td input[type="checkbox"],
 .onb-table td input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
   border: 1px solid #cfd4e0;
-  border-radius: 5px;
+  border-radius: 6px;
   background: #fff;
   position: relative;
   cursor: pointer;
@@ -1101,8 +1220,8 @@
 .onb-choice input[type="checkbox"]:checked,
 .onb-table td input[type="checkbox"]:checked,
 .onb-table td input[type="radio"]:checked {
-  background: var(--sitegreen, #21cfb2);
-  border-color: var(--sitegreen, #21cfb2);
+  background: #e3f8f2;
+  border-color: #17b89b;
 }
 
 .onb-choice input[type="checkbox"]:checked::after,
@@ -1114,7 +1233,7 @@
   top: 47%;
   width: 28%;
   height: 55%;
-  border: solid #000;
+  border: solid #17b89b;
   border-width: 0 3px 3px 0;
   transform: translate(-50%, -55%) rotate(45deg);
 }
@@ -1141,6 +1260,8 @@
 .onb-table-wrap {
   overflow-x: auto;
   margin: 0.75rem 0 1.75rem;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px #e6e9f1;
 }
 
 /* Extra gap between the two Knowledge & Experience matrices */
@@ -1172,7 +1293,7 @@
 
 .onb-table th,
 .onb-table td {
-  border: 1px solid #e4e7ee;
+  border: 1px solid #eef0f5;
   padding: 0.7rem 0.8rem;
   text-align: center;
   vertical-align: middle;
@@ -1180,16 +1301,31 @@
 }
 
 .onb-table th {
-  background: #f6f8fb;
+  background: #f3f5fc;
   font-weight: 700;
-  color: #4a5060;
+  color: #1a1a1a;
 }
 
 .onb-table td.onb-row-label {
   font-weight: 600;
-  color: #4a5060;
-  background: #fcfdff;
+  color: #1a1a1a;
+  background: #fbfcfe;
   white-space: nowrap;
+}
+
+/* The wrapper draws the outer border, so the outermost cell borders are hidden
+   (kept transparent so the table keeps exactly the same size) */
+.onb-table > :first-child > tr:first-child > * {
+  border-top-color: transparent;
+}
+.onb-table > :last-child > tr:last-child > * {
+  border-bottom-color: transparent;
+}
+.onb-table tr > :first-child {
+  border-left-color: transparent;
+}
+.onb-table tr > :last-child {
+  border-right-color: transparent;
 }
 
 /* Equal-width columns variant: every column gets the same share of the
@@ -1212,15 +1348,15 @@
   margin-top: 0.25rem;
   font-weight: 400;
   font-size: 0.95rem;
-  color: #7a8090;
+  color: #6d7692;
   white-space: normal;
 }
 
 .onb-table input[type="text"],
 .onb-table input[type="number"] {
   width: 100%;
-  border: 1px solid #d8dce6;
-  border-radius: 6px;
+  border: 1px solid #dfe3ee;
+  border-radius: 8px;
   padding: 0.4rem 0.5rem;
   font-size: 1rem;
   text-align: center;
@@ -1230,6 +1366,7 @@
 
 .onb-table input:focus {
   border-color: var(--sitegreen, #21cfb2);
+  box-shadow: 0 0 0 3px rgba(33, 207, 178, 0.18);
 }
 
 .onb-matrix td.center,
@@ -1245,22 +1382,22 @@
 }
 
 .onb-agreement {
-  background: #eafaf6;
-  border: 1px solid #d3f0e9;
-  border-radius: 8px;
+  background: #f3f5fc;
+  border: 1px solid #f3f5fc;
+  border-radius: 12px;
   padding: 1.25rem 1.4rem;
   font-size: 1rem;
-  color: #5a7069;
+  color: #6d7692;
   line-height: 1.6;
   margin: 0.75rem 0 1.75rem;
 }
 
 .onb-sig-block {
-  border: 1px solid #eef0f5;
-  border-radius: 10px;
+  border: 1px solid #e6e9f1;
+  border-radius: 14px;
   padding: 1.5rem 1.4rem;
   margin-bottom: 1.5rem;
-  background: #fcfdff;
+  background: #fbfcfe;
 }
 
 /* Signature blocks side by side */

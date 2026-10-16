@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { COUNTRIES } from "./countries";
+import Icon from "../modalkit/Icon";
 
 // Reusable form primitives for the individual onboarding form.
 // Inputs are uncontrolled (use `name` for future serialization) to keep the
@@ -87,8 +88,17 @@ function LabelRow({ label, name, icon, help }) {
   );
 }
 
-export function SectionTitle({ children }) {
-  return <h3 className="onb-section-title">{children}</h3>;
+export function SectionTitle({ children, icon }) {
+  return (
+    <h3 className="onb-section-title">
+      {icon ? (
+        <span className="onb-section-icon" aria-hidden="true">
+          <Icon name={icon} size={22} />
+        </span>
+      ) : null}
+      <span>{children}</span>
+    </h3>
+  );
 }
 
 export function Note({ children }) {

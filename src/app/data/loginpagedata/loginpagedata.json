@@ -1,8 +1,8 @@
 {
-  "loginpagetile": "Welcome To Cosmosis",
-  "loginpagedescription": "Securely access your Cosmosis dashboard to manage client onboarding, track progress, and stay fully compliant — all in one place.",
-  "loginformtitle": "Log In to your account",
-  "forgotpasswordformtitle": "Reset Your Password",
+  "loginpagetile": "Welcome to Cosmosis",
+  "loginpagedescription": "Securely access your Cosmosis dashboard to manage\nclient onboarding, track progress, and stay\nfully compliant — all in one place.",
+  "loginformtitle": "Log in to your account",
+  "loginformsubtitle": "Enter your credentials to continue to Cosmosis.",
   "logoleftsideimage": {
     "src": "/images/login_logo.png",
     "width": "432",
@@ -10,6 +10,11 @@
     "title": "cosmosis client onboarding system",
     "alt": "cosmosis logo"
   },
-
-  "termsofusepolicy": "Terms of use - Privacy policy"
+  "features": [
+    { "id": "onboarding", "line1": "Client", "line2": "Onboarding" },
+    { "id": "progress", "line1": "Track", "line2": "Progress" },
+    { "id": "compliant", "line1": "Stay", "line2": "Compliant" }
+  ],
+  "termsofuse": "Terms of use",
+  "privacypolicy": "Privacy policy"
 }

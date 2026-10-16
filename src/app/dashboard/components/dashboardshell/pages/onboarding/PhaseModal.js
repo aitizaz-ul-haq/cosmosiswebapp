@@ -29,7 +29,7 @@ export default function PhaseModal({
   const isLast = id >= totalPhases;
 
   return (
-    <div className="onb-modal-backdrop" onClick={onClose}>
+    <div className="onb-modal-backdrop onb-v2" onClick={onClose}>
       <div className="onb-modal" onClick={(e) => e.stopPropagation()}>
         <div className="onb-modal-header">
           <span className="onb-modal-badge">{id}</span>

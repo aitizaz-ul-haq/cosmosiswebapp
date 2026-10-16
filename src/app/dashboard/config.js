@@ -157,6 +157,11 @@ export const dashboardConfigs = {
     header: { logoText: "Client" },
     sidebar: {
       menu: [
+        {
+          key: "dashboard",
+          label: "Dashboard",
+          iconlink: "/images/dashboard.png",
+        },
         { 
           key: "onboarding", 
           label: "Onboarding",

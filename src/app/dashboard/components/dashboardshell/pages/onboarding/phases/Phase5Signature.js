@@ -19,7 +19,7 @@ export default function Phase5Signature({ companyName }) {
   const firm = companyName || "the Firm";
   return (
     <div>
-      <SectionTitle>Signatures</SectionTitle>
+      <SectionTitle icon="pen">Signatures</SectionTitle>
       <p className="onb-agreement">
         Our agreement with you comprises this document, the Terms of Business,
         Engagement Letter and any other ancillary documents. You have been

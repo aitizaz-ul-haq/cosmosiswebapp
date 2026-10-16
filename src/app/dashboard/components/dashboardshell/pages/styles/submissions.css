@@ -91,14 +91,19 @@
   font-weight: 600;
 }
 
-/* White plus inside a green circle; turns into a cross when open */
+/* Dark green plus inside a light green circle (same scheme as the Edit button);
+   turns into a cross when open */
 .sub-acc-plus {
   position: relative;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--sitegreen, #21cfb2);
-  transition: transform 0.4s ease;
+  background: #e3f8f2;
+  transition: transform 0.4s ease, background-color 0.2s ease;
+}
+
+.sub-acc-head:hover .sub-acc-plus {
+  background: #d3f3ea;
 }
 
 .sub-acc-plus::before,
@@ -110,7 +115,7 @@
   width: 12px;
   height: 2px;
   border-radius: 1px;
-  background: #fff;
+  background: #17b89b;
   transform: translate(-50%, -50%);
 }
 

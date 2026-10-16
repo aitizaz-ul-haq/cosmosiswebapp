@@ -49,7 +49,7 @@ export default function Phase4RiskProfile({ companyName }) {
   const firm = companyName || "the Firm";
   return (
     <div>
-      <SectionTitle>Risk Questionnaire</SectionTitle>
+      <SectionTitle icon="shield">Risk Questionnaire</SectionTitle>
       <Note>
         In case of joint accounts, please provide answers considering the
         individual circumstances of all account holders.
@@ -109,7 +109,7 @@ export default function Phase4RiskProfile({ companyName }) {
         />
       </div>
 
-      <SectionTitle>Investment Strategy</SectionTitle>
+      <SectionTitle icon="target">Investment Strategy</SectionTitle>
       <Note>
         Based on your answers to the Risk Questionnaire an appropriate investment
         strategy has been suggested. Risk profiles: Conservative (6–10), Balanced
@@ -127,7 +127,7 @@ export default function Phase4RiskProfile({ companyName }) {
         />
       </div>
 
-      <SectionTitle>Non-Standard Investments</SectionTitle>
+      <SectionTitle icon="chart">Non-Standard Investments</SectionTitle>
       <Note>
         Each authorised signatory must indicate whether they are open to using
         non-standard investments, and confirm that {firm} may discuss these

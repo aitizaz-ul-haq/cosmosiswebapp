@@ -8,6 +8,7 @@ import { logUIAction } from "@/lib/logUIAction";
 import SuccessLoginNotifs from "../notifs/successloginnotif";
 import FailureLoginNotifs from "../notifs/failureloginnotifs";
 import InfoLoginNotifs from "../notifs/infologinnotifs";
+import LoginIcon from "./loginicon";
 
 import "../../styles/loginform.css";
 
@@ -25,6 +26,7 @@ export default function MidSectionLoginFormSection({
 
   const [error, setError] = useState("");
   const [pendingError, setPendingError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,22 +81,46 @@ export default function MidSectionLoginFormSection({
 
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <input
-            type="text"
-            name="username"
-            className="form-input"
-            placeholder="Username"
-          />
+          <label className="form-label" htmlFor="login-username">
+            Username
+          </label>
+          <div className="input-shell">
+            <LoginIcon name="user" size={22} className="input-icon" />
+            <input
+              id="login-username"
+              type="text"
+              name="username"
+              className="form-input"
+              placeholder="Enter your username"
+              autoComplete="username"
+            />
+          </div>
           <span className="error-message"></span>
         </div>
 
         <div className="form-group">
-          <input
-            type="password"
-            name="password"
-            className="form-input"
-            placeholder="Password"
-          />
+          <label className="form-label" htmlFor="login-password">
+            Password
+          </label>
+          <div className="input-shell">
+            <LoginIcon name="lock" size={22} className="input-icon" />
+            <input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              className="form-input"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className="input-toggle"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              <LoginIcon name={showPassword ? "eye" : "eyeOff"} size={22} />
+            </button>
+          </div>
           <span className="error-message"></span>
         </div>
 
@@ -102,6 +128,7 @@ export default function MidSectionLoginFormSection({
 
         <button type="submit" className="login-btn">
           Log In
+          <LoginIcon name="arrowRight" size={22} strokeWidth={2.2} />
         </button>
       </form>
     </div>

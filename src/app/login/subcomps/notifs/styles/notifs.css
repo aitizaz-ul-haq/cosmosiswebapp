@@ -1,126 +1,97 @@
-.failurenotif-container {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  background-color: rgb(238, 232, 232);
-  border-radius: 11px;
-  padding: 0.5rem;
-  border: 1px solid red;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+/* Login toasts: tinted card with a dark outline, square icon tile (same look as the modals) */
+.login-toasts {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 28%;
-  height: 96px;
-}
-
-.failurenotif-text-conatiner {
+  z-index: 2000;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: left;
-  text-align: left;
+  gap: 10px;
+  width: min(360px, calc(100vw - 32px));
+  pointer-events: none;
 }
 
-.failure-icon-container {
+.login-toast {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 1rem;
+  gap: 12px;
+  padding: 10px 14px 10px 10px;
+  border: 1.5px solid var(--toast-border);
+  border-radius: 14px;
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  font-family: var(--font-poppins), Arial, sans-serif;
+  box-shadow: 0 8px 22px rgba(20, 24, 40, 0.12);
+  animation: login-toast-in 0.28s ease both;
 }
 
-.failurenotif-description {
-  font-size: 12px;
-  color: var(--sitedark);
+@keyframes login-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.notif-icon {
-  padding-top: 0.1rem;
+.login-toast-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--toast-tile);
+  color: var(--toast-icon);
 }
 
-.successnotif-container {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center; */
-  gap: 1rem;
-  /* width: 85%; */
-  background-color: rgb(229, 241, 229);
-  border-radius: 11px;
-  padding: 0.5rem;
-  border: 1px solid green;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 28%;
-  height: 96px;
+.login-toast-text {
+  min-width: 0;
 }
 
-.successnotif-text-conatiner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: left;
-  text-align: left;
+.login-toast-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--toast-text);
 }
 
-.success-icon-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+.login-toast-desc {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--toast-text);
 }
 
-.successnotif-description {
-  font-size: 12px;
-  color: var(--sitedark);
+.toast-success {
+  --toast-border: #17b89b;
+  --toast-bg: #e3f8f2;
+  --toast-tile: #c8efe5;
+  --toast-icon: #17b89b;
+  --toast-text: #0f7d6a;
 }
 
-.notif-icon {
-  padding-top: 0.1rem;
+.toast-warning {
+  --toast-border: #d9a21b;
+  --toast-bg: #fff6d6;
+  --toast-tile: #fde9a2;
+  --toast-icon: #b57f00;
+  --toast-text: #7a5600;
 }
 
-.infonotif-container {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center; */
-  gap: 1rem;
-  /* width: 85%; */
-  background-color: rgb(237, 237, 247);
-  border-radius: 11px;
-  padding: 0.5rem;
-  border: 1px solid blue;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  position: fixed;
-  top: 140px;
-  right: 20px;
-  width: 28%;
-  height: 96px;
+.toast-info {
+  --toast-border: #3a6fd8;
+  --toast-bg: #e6effd;
+  --toast-tile: #cfdffa;
+  --toast-icon: #3a6fd8;
+  --toast-text: #2b56ad;
 }
 
-.infonotif-text-conatiner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: left;
-  text-align: left;
-}
-
-.info-icon-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-
-.infonotif-description {
-  font-size: 12px;
-  color: var(--sitedark);
-}
-
-.notif-icon {
-  padding-top: 0.1rem;
+@media (prefers-reduced-motion: reduce) {
+  .login-toast {
+    animation: none;
+  }
 }

@@ -1,9 +1,9 @@
-export default function LoginBottomSection({ termsogpolicy }) {
+export default function LoginBottomSection({ termsofuse, privacypolicy }) {
   return (
-    <div className="login-bottomsection">
-      <div className="bottomsection-text-container">
-        <p className="bottomsection-description">{termsogpolicy}</p>
-      </div>
-    </div>
+    <footer className="login-bottomsection">
+      <span className="login-footer-link">{termsofuse}</span>
+      <span className="login-footer-divider" aria-hidden="true" />
+      <span className="login-footer-link">{privacypolicy}</span>
+    </footer>
   );
 }
