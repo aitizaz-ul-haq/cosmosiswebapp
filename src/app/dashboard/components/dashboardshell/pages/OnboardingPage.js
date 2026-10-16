@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import "./onboarding/onboarding.css";
+import { PHASE_CONFIG } from "./clientStatusShared";
 import OnboardingTimeline from "./onboarding/OnboardingTimeline";
+import PhaseDetails from "./onboarding/PhaseDetails";
 import PhaseModal from "./onboarding/PhaseModal";
 import PrerequisitesModal from "./onboarding/PrerequisitesModal";
 import Phase1PersonalDetails from "./onboarding/phases/Phase1PersonalDetails";
@@ -13,17 +15,22 @@ import Phase4RiskProfile from "./onboarding/phases/Phase4RiskProfile";
 import Phase5Signature from "./onboarding/phases/Phase5Signature";
 import Phase6DocumentationChecklist from "./onboarding/phases/Phase6DocumentationChecklist";
 
-// Phase 0 (prerequisites) is read-only and has its own modal, so it has no form Component.
+// Phase 0 keeps its existing read-only document reader.
 const PREREQUISITES_PHASE = { id: 0, name: "Prerequisites" };
-
-const PHASES = [
-  { id: 1, name: "Personal Details", Component: Phase1PersonalDetails },
-  { id: 2, name: "Source of Wealth", Component: Phase2SourceOfWealth },
-  { id: 3, name: "Financial Profile", Component: Phase3FinancialProfile },
-  { id: 4, name: "Risk Profile", Component: Phase4RiskProfile },
-  { id: 5, name: "Signature", Component: Phase5Signature },
-  { id: 6, name: "Documentation Checklist", Component: Phase6DocumentationChecklist },
-];
+const PHASE_COMPONENTS = {
+  1: Phase1PersonalDetails,
+  2: Phase2SourceOfWealth,
+  3: Phase3FinancialProfile,
+  4: Phase4RiskProfile,
+  5: Phase5Signature,
+  6: Phase6DocumentationChecklist,
+};
+const PHASES = PHASE_CONFIG.map(({ phase, name }) => ({
+  id: phase,
+  name,
+  Component: PHASE_COMPONENTS[phase],
+}));
+const TIMELINE_PHASES = [PREREQUISITES_PHASE, ...PHASES];
 
 export default function OnboardingPage() {
   const { user } = useUser();
@@ -31,8 +38,10 @@ export default function OnboardingPage() {
   const [onboardingType, setOnboardingType] = useState("individual");
   const [onboarding, setOnboarding] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [activePhase, setActivePhase] = useState(1);
+  const [assignedRm, setAssignedRm] = useState(null);
+  const [expandedPhase, setExpandedPhase] = useState(null);
   const [openPhase, setOpenPhase] = useState(null);
+  const [prerequisitesOpen, setPrerequisitesOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,6 +56,7 @@ export default function OnboardingPage() {
           setOnboardingType(data.onboardingType);
           setOnboarding(data.onboarding || null);
           setProfile(data.profile || null);
+          setAssignedRm(data.assignedRm || null);
         } else {
           setOnboardingType("individual");
         }
@@ -61,19 +71,27 @@ export default function OnboardingPage() {
     };
   }, []);
 
-  const openPhaseModal = (id) => {
-    setActivePhase(id);
+  const selectPhase = (id) => {
+    if (id === PREREQUISITES_PHASE.id) {
+      setPrerequisitesOpen(true);
+      return;
+    }
+    setExpandedPhase((current) => (current === id ? null : id));
+  };
+
+  const startPhase = (id) => {
+    setExpandedPhase(id);
     setOpenPhase(id);
   };
 
-  const goToPhase = (id) => {
-    setActivePhase(id);
-    setOpenPhase(id);
+  const closePhase = () => {
+    setOpenPhase(null);
+    requestAnimationFrame(() => document.getElementById(`onb-start-phase-${openPhase}`)?.focus());
   };
 
   if (loading) {
     return (
-      <div className="onb-wrap">
+      <div className="onb-wrap onb-client-onboarding">
         <div className="onb-container">
           <div className="onb-loading">Loading your onboarding…</div>
         </div>
@@ -83,7 +101,7 @@ export default function OnboardingPage() {
 
   if (onboardingType !== "individual") {
     return (
-      <div className="onb-wrap">
+      <div className="onb-wrap onb-client-onboarding">
         <div className="onb-container">
           <h1 className="onb-heading">Client Onboarding</h1>
           <div className="onb-message">
@@ -95,15 +113,19 @@ export default function OnboardingPage() {
     );
   }
 
-  const TIMELINE_PHASES = [PREREQUISITES_PHASE, ...PHASES];
   const companyName = profile?.companyName || user?.companyName;
-  const activePhaseObj = PHASES.find((p) => p.id === openPhase);
-  const ActiveComponent = activePhaseObj?.Component;
-
   const currentStep = onboarding?.currentStep || 1;
+  const completedPhases = new Set((onboarding?.completedSteps || []).map(Number));
+  const formSubmitted = ["submitted", "approved"].includes(onboarding?.status);
+  // Viewing/starting a phase does not count as submitting it. Prerequisites
+  // have no saved read state, so completed form phases are evidence they were read.
+  const isPhaseSubmitted = (id) => formSubmitted || completedPhases.has(id)
+    || (id === 0 && completedPhases.size > 0);
+  const activePhase = PHASES.find((phase) => phase.id === openPhase);
+  const ActiveComponent = activePhase?.Component;
 
   return (
-    <div className="onb-wrap">
+    <div className="onb-wrap onb-client-onboarding">
       <div className="onb-container">
         {/* Brand logo in the bottom-right corner */}
         <img
@@ -116,30 +138,43 @@ export default function OnboardingPage() {
         <div className="onb-progress-card">
           <h2 className="onb-card-heading">Onboarding Progress</h2>
           <p className="onb-card-sub">
-            Select a phase below to review or complete the required information.
+            Select a phase below to view its sections.
           </p>
           <OnboardingTimeline
             phases={TIMELINE_PHASES}
             activePhase={currentStep}
-            onSelect={openPhaseModal}
+            expandedPhase={expandedPhase}
+            onSelect={selectPhase}
+            isPhaseSubmitted={isPhaseSubmitted}
           />
         </div>
+
+        {PHASES.map((phase) => (
+          <PhaseDetails
+            key={phase.id}
+            phase={phase}
+            expanded={expandedPhase === phase.id}
+            submitted={isPhaseSubmitted(phase.id)}
+            assignedRm={assignedRm}
+            onStart={startPhase}
+          />
+        ))}
       </div>
 
-      {openPhase === PREREQUISITES_PHASE.id && (
+      {prerequisitesOpen && (
         <PrerequisitesModal
           companyName={companyName}
-          onClose={() => setOpenPhase(null)}
+          onClose={() => setPrerequisitesOpen(false)}
         />
       )}
 
-      {activePhaseObj && ActiveComponent && (
+      {activePhase && ActiveComponent && (
         <PhaseModal
-          id={activePhaseObj.id}
-          name={activePhaseObj.name}
+          id={activePhase.id}
+          name={activePhase.name}
           totalPhases={PHASES.length}
-          onClose={() => setOpenPhase(null)}
-          onNext={goToPhase}
+          onClose={closePhase}
+          onNext={startPhase}
         >
           <ActiveComponent companyName={companyName} />
         </PhaseModal>

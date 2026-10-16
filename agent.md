@@ -126,7 +126,7 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 | `clients` | GET POST PATCH DELETE | Core client list + lifecycle. PATCH `action: "approve"` → `register`; `action: "review"` → `under_review`; `{status}` for ongoing/on_hold/cancelled; RMs may only change status of their own engaged clients. GET also runs `dispatchScheduledOnboardings()` as a backup trigger |
 | `clients/registry` | POST PATCH | RM only. POST registers a client now, or `action:"schedule"` (stores encrypted password + schedule, `isActive=false`); PATCH edits basic details before registration |
 | `clients/scheduled` | GET PATCH | RM only. GET decrypts credentials for the details modal; PATCH re-schedules |
-| `clients/me` | GET | **client only**: own profile + onboarding |
+| `clients/me` | GET | **client only**: own profile + onboarding + `assignedRm: { name, email } \| null` from the assigned RM in the same tenant (safe contact projection only) |
 | `cron/dispatch-scheduled` | GET | Needs `Authorization: Bearer <CRON_SECRET>`; sends all due scheduled onboardings |
 | `log`, `log/batch`, `logs` | POST / POST / GET | Write audit entries; `logs` GET is superadmin only |
 | `demo-requests`, `demo-users`, `requestdemo`, `contact` | | Public-site/demo machinery *(not reviewed in detail)*. `demo-users` returns password hashes (superadmin only via middleware). `contact` is not in `PUBLIC_PATHS`, so anonymous calls are redirected — nothing in the UI calls it |
@@ -170,9 +170,12 @@ dispatcher activates → `ongoing`. From `ongoing` the RM can set `on_hold` / `c
 5. Deployment plan: **Vercel Hobby** (cron limited to daily) ⇒ use **cron-job.org** (free, every minute, header `Authorization: Bearer <CRON_SECRET>`). The app has **not been deployed yet**; set the env vars in §2 first. Local test: loop `curl` against `localhost:3000/api/cron/dispatch-scheduled`.
 
 ### Client onboarding form (individual only)
-Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6. Clicking a phase opens a modal.
+Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6. Clicking phases 1–6 toggles an inline accordion; clicking the open phase closes it, and selecting another shows that phase's own sections.
 - **Phase 0** (Prerequisites, `PrerequisitesModal` + `onboarding/legal/*`): read-only legal documents. **Do not restyle without being asked.**
-- **Phases 1–6** (`PhaseModal` + `phases/Phase1..6*.js`): Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature, Documentation Checklist. Built from primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
+- **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`. It follows the RM timeline accordion's 800 ms height/fade animation, with a horizontal line, dotted vertical guides and staggered gradient bars inspired by `public/images/onboarding_detail_timeline.jpg`. Panels stay mounted for reversible transitions; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus.
+- **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal. Next phase updates both the modal and the expanded timeline panel; closing returns keyboard focus to that phase's Start button. Opening/viewing a form does not change submission status.
+- **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Submitted timeline nodes/tracks and subsection bars are green with the RM-style green tick; pending phases are red with dotted red tracks and subsection red crosses. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
+- **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
 - `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
 
 ### Submissions (UI-only for now)
@@ -235,6 +238,18 @@ Production-build fixes: lint errors in `dashboardshell.js`, `dashboarddetailssec
 
 **Uncommitted right now: ~42 files (client dashboard, phase restyle, login, button scheme, etc.). Commit them.**
 
+### 16 Oct — client onboarding phase accordion
+- Client phases 1–6 now expand inline to show only their own subheadings, replacing the full-phase modal entry point. Layout follows `onboarding_detail_timeline.jpg` using the dashboard's green palette, and expands/collapses with the RM timeline's animation timing.
+- Phase 0 keeps its existing legal reader. Existing phase form components and modal dimensions are unchanged.
+- Phase controls now provide explicit audit titles and accessible accordion state. The current onboarding step remains separate from the phase being viewed.
+- Verified with ESLint (0 errors, 4 existing warnings), an isolated production build, and a fixture-based browser preview at 1440×900, 1104×792 and 375×812. Checked all phase headings, open/close animation, rapid toggles, keyboard controls, reduced motion and the unchanged prerequisite reader.
+
+### 16 Oct — phase actions and submission status colours
+- Added Contact RM and Start Phase N before each panel's pale phase number; Start reopens the matching existing full phase form, preserving the modal size constraints.
+- Client timeline and subsection bars now show pending phases in red (dotted tracks, cross icons) and submitted phases in green (solid tracks, tick icons). Status follows recorded phase submission, not viewing/starting a form.
+- `/api/clients/me` now includes safe contact details for the assigned RM, with role and tenant checks. Missing contact disables the compose action.
+- Verified ESLint (0 errors, 4 existing warnings), isolated production build, 10 mocked API checks and browser checks at 1440×900, 1104×792 and 375×812. All six Start actions, mailto addressing, Next/close/focus, submission states and collapsed-panel focus exclusion passed. Original modal width/height limits and header/footer dimensions were preserved.
+
 ---
 
 ## 11. Known issues, risks and TODO (read before shipping)
@@ -248,12 +263,19 @@ Production-build fixes: lint errors in `dashboardshell.js`, `dashboarddetailssec
 
 **Functional gaps**
 - Client onboarding forms (phases 1–6) are **not persisted** — no save/submit API, `onboarding.currentStep/completedSteps` never advance, so Submissions shows dummy data.
+- Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
 - Submissions client buttons **Notify RM** and **Edit** are placeholders (planned: email/in-app notification to the RM; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
 - Remaining superadmin modals and the generic row-details modal still use the old look (§9a). The Notifications page is empty.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.
 - `OnboardingStatusPage`: "In progress" and phase capsules are both green-ish on some rows; Awaiting-registry and Scheduled share blue (user was told, no decision yet).
 - Sidebar label typo "Suprevisors"; JSON file name typo `homaepagedata.json`. `lint` has 4 warnings (img tags / hook deps), 0 errors.
+
+**User-requested upcoming work (recorded 16 Oct; implement when directed)**
+- Complete onboarding persistence and the remaining finalization changes.
+- Internal notifications, external email generation and toast triggers.
+- Complete the superadmin audit trail for user clicks, including user name, date/time and clicked button title; build on the existing logger.
+- Redesign all four role dashboards using design images the user will provide.
 
 ## 12. How to verify changes (what has worked here)
 

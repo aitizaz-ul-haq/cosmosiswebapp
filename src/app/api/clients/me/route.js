@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { verifyToken } from "@/lib/auth";
 import ClientProfile from "@/models/ClientProfile";
+import User from "@/models/User";
 
 // Returns the logged-in client's own onboarding profile (type + progress + data).
 export async function GET(req) {
@@ -26,10 +27,33 @@ export async function GET(req) {
       );
     }
 
+    let assignedRm = null;
+    if (
+      profile.assignedToUserId &&
+      profile.companyId &&
+      String(profile.companyId) === String(tokenUser.companyId)
+    ) {
+      const rm = await User.findOne({
+        _id: profile.assignedToUserId,
+        role: "rm",
+        companyId: profile.companyId,
+      })
+        .select("fullName username email -_id")
+        .lean();
+
+      if (rm) {
+        assignedRm = {
+          name: rm.fullName || rm.username || "",
+          email: rm.email || "",
+        };
+      }
+    }
+
     return NextResponse.json({
       success: true,
       onboardingType: profile.onboardingType || "individual",
       onboarding: profile.onboarding || null,
+      assignedRm,
       profile,
     });
   } catch (err) {
