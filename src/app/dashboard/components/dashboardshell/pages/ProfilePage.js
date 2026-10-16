@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { ModalButton, ModalGrid, ModalInput, ModalShell } from "./modalkit/ModalKit";
 import "./styles/profilepage.css";
 
 export default function ProfilePage() {
@@ -537,202 +538,140 @@ export default function ProfilePage() {
 
       {/* Edit Info Modal */}
       {showEditModal && (
-        <div className="profile-modal-overlay" onClick={() => setShowEditModal(false)}>
-          <div className="profile-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="profile-modal-header">
-              <h3 className="profile-modal-title">Edit Personal Information</h3>
-              <button
-                className="profile-modal-close"
-                onClick={() => setShowEditModal(false)}
-              >
-                ×
-              </button>
-            </div>
+        <ModalShell
+          size="sm"
+          icon="userEdit"
+          title="Edit Personal Information"
+          subtitle="Update your name, email and phone number."
+          onClose={() => setShowEditModal(false)}
+          as="form"
+          wrapperProps={{ onSubmit: handleEditSubmit }}
+          footer={
+            <>
+              <ModalButton variant="danger" onClick={() => setShowEditModal(false)}>
+                Cancel
+              </ModalButton>
+              <ModalButton type="submit" variant="primary" icon="save" disabled={submitting}>
+                {submitting ? "Saving..." : "Save Changes"}
+              </ModalButton>
+            </>
+          }
+        >
+          <ModalInput
+            label="Full Name"
+            icon="user"
+            type="text"
+            id="editFullName"
+            name="fullName"
+            value={editForm.fullName}
+            onChange={handleEditFormChange}
+            placeholder="Enter your full name"
+          />
+          <ModalInput
+            label="Email"
+            icon="mail"
+            type="email"
+            id="editEmail"
+            name="email"
+            value={editForm.email}
+            onChange={handleEditFormChange}
+            placeholder="Enter your email"
+          />
+          <ModalInput
+            label="Phone"
+            icon="phone"
+            type="tel"
+            id="editPhone"
+            name="phone"
+            value={editForm.phone}
+            onChange={handleEditFormChange}
+            placeholder="Enter your phone number"
+          />
 
-            <form className="profile-modal-form" onSubmit={handleEditSubmit}>
-              <div className="profile-form-group">
-                <label htmlFor="editFullName" className="profile-form-label">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="editFullName"
-                  name="fullName"
-                  value={editForm.fullName}
-                  onChange={handleEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="editEmail" className="profile-form-label">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="editEmail"
-                  name="email"
-                  value={editForm.email}
-                  onChange={handleEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="editPhone" className="profile-form-label">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="editPhone"
-                  name="phone"
-                  value={editForm.phone}
-                  onChange={handleEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-
-              {editMessage.text && (
-                <div className={`profile-message ${editMessage.type}`}>{editMessage.text}</div>
-              )}
-
-              <div className="profile-modal-actions">
-                <button
-                  type="button"
-                  className="profile-modal-cancel"
-                  onClick={() => setShowEditModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="profile-modal-submit"
-                  disabled={submitting}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+          {editMessage.text && (
+            <div className={`profile-message ${editMessage.type}`}>{editMessage.text}</div>
+          )}
+        </ModalShell>
       )}
 
       {/* Edit Company Info Modal - Only for Supervisors and RMs */}
       {showCompanyEditModal && companyDetails && (
-        <div className="profile-modal-overlay" onClick={() => setShowCompanyEditModal(false)}>
-          <div className="profile-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="profile-modal-header">
-              <h3 className="profile-modal-title">Edit Company Information</h3>
-              <button
-                className="profile-modal-close"
-                onClick={() => setShowCompanyEditModal(false)}
-              >
-                ×
-              </button>
-            </div>
+        <ModalShell
+          size="md"
+          icon="building"
+          title="Edit Company Information"
+          subtitle="Update your company details."
+          onClose={() => setShowCompanyEditModal(false)}
+          as="form"
+          wrapperProps={{ onSubmit: handleCompanyEditSubmit }}
+          footer={
+            <>
+              <ModalButton variant="danger" onClick={() => setShowCompanyEditModal(false)}>
+                Cancel
+              </ModalButton>
+              <ModalButton type="submit" variant="primary" icon="save" disabled={submitting}>
+                {submitting ? "Saving..." : "Save Changes"}
+              </ModalButton>
+            </>
+          }
+        >
+          <ModalGrid>
+            <ModalInput
+              label="Company Name"
+              icon="building"
+              type="text"
+              id="companyName"
+              name="name"
+              value={companyEditForm.name}
+              onChange={handleCompanyEditFormChange}
+              placeholder="Enter company name"
+            />
+            <ModalInput
+              label="Legal Name"
+              icon="file"
+              type="text"
+              id="legalName"
+              name="legalName"
+              value={companyEditForm.legalName}
+              onChange={handleCompanyEditFormChange}
+              placeholder="Enter legal name"
+            />
+            <ModalInput
+              label="Website"
+              icon="globe"
+              type="text"
+              id="website"
+              name="website"
+              value={companyEditForm.website}
+              onChange={handleCompanyEditFormChange}
+              placeholder="Enter website URL"
+            />
+            <ModalInput
+              label="Registration Number"
+              icon="briefcase"
+              type="text"
+              id="registrationNumber"
+              name="registrationNumber"
+              value={companyEditForm.registrationNumber}
+              onChange={handleCompanyEditFormChange}
+              placeholder="Enter registration number"
+            />
+            <ModalInput
+              label="Tax ID"
+              icon="shield"
+              type="text"
+              id="taxId"
+              name="taxId"
+              value={companyEditForm.taxId}
+              onChange={handleCompanyEditFormChange}
+              placeholder="Enter tax ID"
+            />
+          </ModalGrid>
 
-            <form className="profile-modal-form" onSubmit={handleCompanyEditSubmit}>
-              <div className="profile-form-group">
-                <label htmlFor="companyName" className="profile-form-label">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  id="companyName"
-                  name="name"
-                  value={companyEditForm.name}
-                  onChange={handleCompanyEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter company name"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="legalName" className="profile-form-label">
-                  Legal Name
-                </label>
-                <input
-                  type="text"
-                  id="legalName"
-                  name="legalName"
-                  value={companyEditForm.legalName}
-                  onChange={handleCompanyEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter legal name"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="website" className="profile-form-label">
-                  Website
-                </label>
-                <input
-                  type="text"
-                  id="website"
-                  name="website"
-                  value={companyEditForm.website}
-                  onChange={handleCompanyEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter website URL"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="registrationNumber" className="profile-form-label">
-                  Registration Number
-                </label>
-                <input
-                  type="text"
-                  id="registrationNumber"
-                  name="registrationNumber"
-                  value={companyEditForm.registrationNumber}
-                  onChange={handleCompanyEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter registration number"
-                />
-              </div>
-
-              <div className="profile-form-group">
-                <label htmlFor="taxId" className="profile-form-label">
-                  Tax ID
-                </label>
-                <input
-                  type="text"
-                  id="taxId"
-                  name="taxId"
-                  value={companyEditForm.taxId}
-                  onChange={handleCompanyEditFormChange}
-                  className="profile-form-input"
-                  placeholder="Enter tax ID"
-                />
-              </div>
-
-              {companyEditMessage.text && (
-                <div className={`profile-message ${companyEditMessage.type}`}>{companyEditMessage.text}</div>
-              )}
-
-              <div className="profile-modal-actions">
-                <button
-                  type="button"
-                  className="profile-modal-cancel"
-                  onClick={() => setShowCompanyEditModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="profile-modal-submit"
-                  disabled={submitting}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+          {companyEditMessage.text && (
+            <div className={`profile-message ${companyEditMessage.type}`}>{companyEditMessage.text}</div>
+          )}
+        </ModalShell>
       )}
     </div>
   );

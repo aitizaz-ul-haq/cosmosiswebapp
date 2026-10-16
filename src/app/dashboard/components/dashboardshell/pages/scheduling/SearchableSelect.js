@@ -1,37 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { modalFieldStyle } from "../clientStatusShared";
-
-const listStyle = {
-  position: "absolute",
-  zIndex: 20,
-  top: "100%",
-  left: 0,
-  right: 0,
-  maxHeight: "220px",
-  overflowY: "auto",
-  margin: "0.25rem 0 0",
-  padding: 0,
-  listStyle: "none",
-  background: "#fff",
-  border: "1px solid #d1d5db",
-  borderRadius: "8px",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
-};
-
-const itemStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "0.5rem",
-  padding: "0.45rem 0.7rem",
-  cursor: "pointer",
-  fontSize: "0.9rem",
-};
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Icon, ModalField } from "../modalkit/ModalKit";
 
 // Searchable combobox. options: [{ value, label, flag? }]; selected option is held by the parent.
 export default function SearchableSelect({
   label,
+  icon,
+  required,
+  hint,
   options,
   value,
   onChange,
@@ -42,6 +19,7 @@ export default function SearchableSelect({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const inputId = useId();
   const selected = options.find((o) => o.value === value) || null;
 
   useEffect(() => {
@@ -60,11 +38,10 @@ export default function SearchableSelect({
   const shown = open ? query : selected ? `${selected.flag ? `${selected.flag} ` : ""}${selected.label}` : "";
 
   return (
-    <div ref={ref} style={{ position: "relative" }}>
-      <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-        {label}
+    <div ref={ref}>
+      <ModalField label={label} required={required} hint={hint} icon={icon} htmlFor={inputId}>
         <input
-          style={modalFieldStyle}
+          id={inputId}
           type="text"
           value={shown}
           placeholder={placeholder}
@@ -79,30 +56,31 @@ export default function SearchableSelect({
             setOpen(true);
           }}
         />
-      </label>
-      {open && !disabled && (
-        <ul style={listStyle}>
-          {filtered.length > 0 ? (
-            filtered.map((o) => (
-              <li
-                key={o.value}
-                style={itemStyle}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  onChange(o);
-                  setOpen(false);
-                  setQuery("");
-                }}
-              >
-                {o.flag ? <span style={{ fontSize: "1.1rem" }}>{o.flag}</span> : null}
-                <span>{o.label}</span>
-              </li>
-            ))
-          ) : (
-            <li style={{ ...itemStyle, color: "#9ca3af", cursor: "default" }}>{emptyText}</li>
-          )}
-        </ul>
-      )}
+        <Icon name="chevronDown" size={18} className="mk-control-trail" />
+        {open && !disabled && (
+          <ul className="mk-select-list">
+            {filtered.length > 0 ? (
+              filtered.map((o) => (
+                <li
+                  key={o.value}
+                  className="mk-select-item"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    onChange(o);
+                    setOpen(false);
+                    setQuery("");
+                  }}
+                >
+                  {o.flag ? <span className="mk-select-flag">{o.flag}</span> : null}
+                  <span>{o.label}</span>
+                </li>
+              ))
+            ) : (
+              <li className="mk-select-item mk-select-empty">{emptyText}</li>
+            )}
+          </ul>
+        )}
+      </ModalField>
     </div>
   );
 }

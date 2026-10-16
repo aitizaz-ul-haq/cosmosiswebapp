@@ -382,33 +382,36 @@
 
 .onb-modal-btn {
   padding: 0.55rem 1.25rem;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  font-weight: 700;
+  font-family: inherit;
+  font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   color: #fff;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.onb-modal-btn:hover {
+.onb-modal-btn:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 
 .onb-modal-btn.primary {
-  background: var(--btn-green-light, #5fdbc8);
+  background: #e3f8f2;
+  color: #17b89b;
 }
 
-.onb-modal-btn.primary:hover {
-  background: var(--sitegreen, #21cfb2);
+.onb-modal-btn.primary:hover:not(:disabled) {
+  background: #d3f3ea;
 }
 
 .onb-modal-btn.neutral {
-  background: var(--btn-neutral-light, #9aa0b2);
+  background: #eceff7;
+  color: #1a1a1a;
 }
 
-.onb-modal-btn.neutral:hover {
-  background: #6d7692;
+.onb-modal-btn.neutral:hover:not(:disabled) {
+  background: #e1e5f0;
 }
 
 .onb-modal-btn:disabled,

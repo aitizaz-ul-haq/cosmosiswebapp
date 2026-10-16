@@ -343,7 +343,7 @@ export default function GenericTable({
             className="dash-action-btn dash-btn-green"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "6px",
+              borderRadius: "10px",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
@@ -365,7 +365,7 @@ export default function GenericTable({
             className="dash-action-btn dash-btn-green"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "6px",
+              borderRadius: "10px",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
@@ -387,7 +387,7 @@ export default function GenericTable({
             className="dash-action-btn dash-btn-green"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "6px",
+              borderRadius: "10px",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
@@ -409,7 +409,7 @@ export default function GenericTable({
             className="dash-action-btn dash-btn-green"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "6px",
+              borderRadius: "10px",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
@@ -567,7 +567,7 @@ export default function GenericTable({
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
               >
                 Save
               </button>
@@ -639,7 +639,7 @@ export default function GenericTable({
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
               >
                 Save
               </button>

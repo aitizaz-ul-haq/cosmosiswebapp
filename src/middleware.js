@@ -48,6 +48,7 @@ const ROLE_RULES = {
   client: [
     "/dashboard",
     "/api/me",
+    "/api/clients/me",
     "/api/logout",
     "/api/log"
   ], // only own dashboard

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ModalButton, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
 
 /**
  * Reusable password-verified delete confirmation modal.
@@ -64,97 +65,41 @@ export default function DeleteConfirmModal({
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1100,
-      }}
-      onClick={handleCancel}
-    >
-      <form
-        onSubmit={handleSubmit}
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#fff",
-          width: "min(420px, 92vw)",
-          borderRadius: "12px",
-          padding: "1.5rem",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-          textAlign: "center",
-        }}
-      >
-        <h3 style={{ margin: "0 0 0.5rem", fontSize: "1.15rem", fontWeight: 700 }}>
-          Do you want to delete {itemLabel}?
-        </h3>
-        <p style={{ margin: "0 0 1rem", color: "#6D7692", fontSize: "0.9rem" }}>
-          Enter your password to confirm this action.
-        </p>
-
-        <input
-          type="password"
-          autoFocus
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Your password"
-          style={{
-            width: "100%",
-            padding: "0.6rem 0.75rem",
-            borderRadius: "8px",
-            border: "1px solid #d1d5db",
-            fontSize: "0.95rem",
-            marginBottom: "0.5rem",
-            boxSizing: "border-box",
-          }}
-        />
-
-        {error ? (
-          <p style={{ color: "#dc2626", fontSize: "0.85rem", margin: "0 0 0.5rem" }}>
-            {error}
-          </p>
-        ) : null}
-
-        <div
-          style={{
-            display: "flex",
-            gap: "0.5rem",
-            justifyContent: "center",
-            marginTop: "0.75rem",
-          }}
-        >
-          <button
-            type="button"
-            onClick={handleCancel}
-            disabled={submitting}
-            className="dash-action-btn dash-btn-neutral"
-            style={{
-              padding: "0.5rem 1.1rem",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-            }}
-          >
+    <ModalShell
+      size="sm"
+      icon="trash"
+      iconTone="red"
+      title={`Do you want to delete ${itemLabel}?`}
+      subtitle="Enter your password to confirm this action."
+      onClose={handleCancel}
+      overlayClassName="mk-overlay-top"
+      as="form"
+      wrapperProps={{ onSubmit: handleSubmit }}
+      footer={
+        <>
+          <ModalButton variant="neutral" onClick={handleCancel} disabled={submitting}>
             Cancel
-          </button>
-          <button
+          </ModalButton>
+          <ModalButton
             type="submit"
+            variant="danger"
+            icon="trash"
             disabled={submitting}
             data-log-title={`Confirmed delete: ${itemLabel}`}
-            className="dash-action-btn dash-btn-danger"
-            style={{
-              padding: "0.5rem 1.1rem",
-              fontWeight: 700,
-              borderRadius: "0.5rem",
-              opacity: submitting ? 0.7 : 1,
-            }}
           >
             {submitting ? "Verifying…" : "Delete"}
-          </button>
-        </div>
-      </form>
-    </div>
+          </ModalButton>
+        </>
+      }
+    >
+      <ModalPasswordInput
+        autoFocus
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Your password"
+        aria-label="Your password"
+        error={error}
+      />
+    </ModalShell>
   );
 }

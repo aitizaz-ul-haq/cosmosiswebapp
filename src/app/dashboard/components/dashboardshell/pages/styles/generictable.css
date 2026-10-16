@@ -95,25 +95,28 @@
 }
 
 .generic-table-page-btn {
-  border: 1px solid #d1d5db;
+  border: 1px solid #e6e9f1;
   background: #fff;
   color: var(--sitedark);
   padding: 0.35rem 0.6rem;
-  border-radius: 6px;
+  border-radius: 10px;
+  font-family: inherit;
   font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .generic-table-page-btn:hover:not(:disabled) {
-  border-color: var(--sitegreen);
-  color: var(--sitegreen);
+  border-color: #e3f8f2;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 
 .generic-table-page-btn.active {
-  background: var(--sitegreen);
-  border-color: var(--sitegreen);
-  color: #fff;
+  background: #e3f8f2;
+  border-color: #17b89b;
+  color: #17b89b;
 }
 
 .generic-table-page-btn:disabled {
@@ -159,51 +162,48 @@
   padding: 2px 5px;
   font-size: 0.8rem;
   /* border: 1px solid ; */
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
-/* Action variants */
+/* Action variants (same soft tints as the modal buttons) */
 .generic-btn-details {
-  border: 1px solid #0ea5e9;
-  background: transparent;
-  color: #0ea5e9;
+  border: 1px solid #e6effd;
+  background: #e6effd;
+  color: #3a6fd8;
 }
 .generic-btn-details:hover {
-  background: #0ea5e9;
-  color: #fff;
+  background: #d6e5fb;
 }
 
 .generic-btn-approve {
-  border: 1px solid var(--sitegreen);
-  background: transparent;
-  color: var(--sitegreen);
+  border: 1px solid #e3f8f2;
+  background: #e3f8f2;
+  color: #17b89b;
 }
 .generic-btn-approve:hover {
-  background: var(--sitegreen);
-  color: #fff;
+  background: #d3f3ea;
+  border-color: #d3f3ea;
 }
 
 .generic-btn-reject {
-  border: 1px solid var(--sitedark);
-  background: transparent;
-  color: var(--sitedark);
+  border: 1px solid #eceff7;
+  background: #eceff7;
+  color: #1a1a1a;
 }
 .generic-btn-reject:hover {
-  background: var(--sitedark);
-  color: #fff;
+  background: #e1e5f0;
 }
 
 .generic-btn-delete {
-  border: 1px solid red;
-  background: transparent;
-  color: red;
+  border: 1px solid #fde8e8;
+  background: #fde8e8;
+  color: #d03a3a;
 }
 .generic-btn-delete:hover {
-  background: red;
-  color: #fff;
+  background: #fbd5d5;
 }
 
 /* Modal */

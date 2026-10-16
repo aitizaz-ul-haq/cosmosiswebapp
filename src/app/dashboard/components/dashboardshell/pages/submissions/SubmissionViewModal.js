@@ -1,55 +1,57 @@
 "use client";
 
-import { useEffect } from "react";
-import { modalOverlayStyle } from "../clientStatusShared";
-import "../styles/submissions.css";
+import {
+  DetailList,
+  DetailRow,
+  ModalButton,
+  ModalSection,
+  ModalShell,
+} from "../modalkit/ModalKit";
 
-export default function SubmissionViewModal({ clientName, submission, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
+export default function SubmissionViewModal({ clientName, submission, onClose, clientActions = false }) {
   return (
-    <div style={modalOverlayStyle} onMouseDown={onClose}>
-      <div
-        className="sub-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-label={`Phase ${submission.phase} submission`}
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        <div className="sub-modal-head">
-          <div>
-            <div className="sub-modal-eyebrow">
-              {clientName} · Phase {submission.phase}
-            </div>
-            <h3 className="sub-modal-title">{submission.name}</h3>
-          </div>
-          <button type="button" className="sub-modal-close" onClick={onClose} aria-label="Close">
-            ✕
-          </button>
-        </div>
-
-        <div className="sub-modal-body">
-          {submission.sections.map((section) => (
-            <div className="sub-modal-section" key={section.title}>
-              <h4>{section.title}</h4>
-              <dl>
-                {section.fields.map((f) => (
-                  <div className="sub-modal-field" key={f.label}>
-                    <dt>{f.label}</dt>
-                    <dd>{f.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <ModalShell
+      size="md"
+      icon="file"
+      title={submission.name}
+      subtitle={`${clientName} - Phase ${submission.phase}`}
+      onClose={onClose}
+      headerActions={
+        clientActions ? (
+          <>
+            {/* Placeholders: behaviour to be added later */}
+            <ModalButton
+              variant="neutral"
+              icon="send"
+              data-log-title={`Notify RM clicked: Phase ${submission.phase}`}
+            >
+              Notify RM
+            </ModalButton>
+            <ModalButton
+              variant="primary"
+              icon="pencil"
+              data-log-title={`Edit submission clicked: Phase ${submission.phase}`}
+            >
+              Edit
+            </ModalButton>
+          </>
+        ) : null
+      }
+      footer={
+        <ModalButton variant="neutral" icon="x" onClick={onClose}>
+          Close
+        </ModalButton>
+      }
+    >
+      {submission.sections.map((section) => (
+        <ModalSection key={section.title} icon="file" tone="green" title={section.title}>
+          <DetailList>
+            {section.fields.map((f) => (
+              <DetailRow key={f.label} label={f.label} value={f.value} />
+            ))}
+          </DetailList>
+        </ModalSection>
+      ))}
+    </ModalShell>
   );
 }

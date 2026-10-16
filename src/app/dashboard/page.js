@@ -24,6 +24,7 @@ import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
 import OnboardingStatusPage from "./components/dashboardshell/pages/OnboardingStatusPage";
 import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
+import ClientSubmissionsPage from "./components/dashboardshell/pages/ClientSubmissionsPage";
 import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
 import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDashboard";
 
@@ -78,6 +79,13 @@ const getPageMap = (userRole, setActiveMenu) => {
     return {
       ...baseMap,
       dashboard: <RMDashboard />,
+    };
+  }
+
+  if (userRole === "client") {
+    return {
+      ...baseMap,
+      submissions: <ClientSubmissionsPage />,
     };
   }
 

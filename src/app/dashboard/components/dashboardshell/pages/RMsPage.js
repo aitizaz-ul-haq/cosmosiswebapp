@@ -5,6 +5,97 @@ import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
+import { ModalButton, ModalGrid, ModalInput, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
+
+// Shared Add / Edit RM form (example_modal_4). Submit/close behaviour is owned by the page.
+function RMFormModal({ mode, form, onChange, onSubmit, onClose }) {
+  const isEdit = mode === "edit";
+  const closeLogTitle = isEdit ? "Closed Edit RM form" : "Closed Add RM form";
+  return (
+    <ModalShell
+      icon={isEdit ? "userEdit" : "userPlus"}
+      title={isEdit ? "Edit RM" : "Add RM"}
+      subtitle={
+        isEdit
+          ? "Update the relationship manager's details below."
+          : "Enter the relationship manager's details below."
+      }
+      onClose={onClose}
+      closeLogTitle={closeLogTitle}
+      size="md"
+      as="form"
+      wrapperProps={{ onSubmit }}
+      footer={
+        <>
+          <ModalButton variant="danger" icon="x" onClick={onClose}>
+            Cancel
+          </ModalButton>
+          <ModalButton type="submit" variant="primary" icon="save">
+            {isEdit ? "Save Changes" : "Save"}
+          </ModalButton>
+        </>
+      }
+    >
+      <ModalGrid>
+        <ModalInput
+          label="Username"
+          required
+          icon="user"
+          placeholder="Username"
+          hint="This will be used for system login."
+          value={form.username}
+          onChange={onChange("username")}
+        />
+        <ModalInput
+          label="Full Name"
+          required
+          icon="users"
+          placeholder="Full Name"
+          hint="Enter the relationship manager's full name."
+          value={form.fullName}
+          onChange={onChange("fullName")}
+        />
+        <ModalInput
+          label="Email"
+          required
+          icon="mail"
+          type="email"
+          placeholder="Email"
+          hint="We'll use this email for notifications and account access."
+          value={form.email}
+          onChange={onChange("email")}
+        />
+        <ModalInput
+          label="Phone"
+          required
+          icon="phone"
+          placeholder="Phone"
+          hint="Include country code if applicable."
+          value={form.phone}
+          onChange={onChange("phone")}
+        />
+        {isEdit ? (
+          <ModalPasswordInput
+            label="New Password"
+            placeholder="Leave blank to keep"
+            hint="Leave blank to keep the current password."
+            value={form.password}
+            onChange={onChange("password")}
+          />
+        ) : (
+          <ModalPasswordInput
+            label="Password"
+            required
+            placeholder="Password"
+            hint="Use a strong password for the new account."
+            value={form.password}
+            onChange={onChange("password")}
+          />
+        )}
+      </ModalGrid>
+    </ModalShell>
+  );
+}
 
 export default function RMsPage() {
   const { user } = useUser();
@@ -227,26 +318,6 @@ export default function RMsPage() {
   const tableTitle = "Relationship Managers";
   const tableDescription = "All your companies registered rms are listed here.";
 
-  const fieldStyle = {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    width: "100%",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-  };
-
-  const modalActionBtnStyle = {
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 600,
-    fontSize: "1rem",
-    color: "#fff",
-  };
-
   const columns = [
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "email", header: "Email" },
@@ -272,7 +343,7 @@ export default function RMsPage() {
             onClick={() => openEditModal(row?.original)}
             title="Edit RM details"
             data-log-title={`Edit RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-green"
+            className="dash-action-btn dash-btn-green-soft"
             style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Edit
@@ -336,121 +407,23 @@ export default function RMsPage() {
       />
 
       {showAddModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleAddSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add RM</h3>
-              <button type="button" onClick={closeAddModal} data-log-title="Closed Add RM form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={addForm.username} onChange={handleAddChange("username")} required />
-              <input style={fieldStyle} placeholder="Full Name" value={addForm.fullName} onChange={handleAddChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={addForm.email} onChange={handleAddChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={addForm.phone} onChange={handleAddChange("phone")} required />
-              <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={closeAddModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
+        <RMFormModal
+          mode="add"
+          form={addForm}
+          onChange={handleAddChange}
+          onSubmit={handleAddSubmit}
+          onClose={closeAddModal}
+        />
       )}
 
       {showEditModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleEditSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit RM</h3>
-              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit RM form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={editForm.username} onChange={handleEditChange("username")} required />
-              <input style={fieldStyle} placeholder="Full Name" value={editForm.fullName} onChange={handleEditChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={editForm.email} onChange={handleEditChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={editForm.phone} onChange={handleEditChange("phone")} required />
-              <input style={fieldStyle} type="password" placeholder="New Password (leave blank to keep)" value={editForm.password} onChange={handleEditChange("password")} />
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
+        <RMFormModal
+          mode="edit"
+          form={editForm}
+          onChange={handleEditChange}
+          onSubmit={handleEditSubmit}
+          onClose={closeEditModal}
+        />
       )}
 
       <DeleteConfirmModal

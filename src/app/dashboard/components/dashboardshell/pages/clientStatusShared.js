@@ -10,14 +10,22 @@ export const STATUS_LABELS = {
   cancelled: "Cancelled",
 };
 
+// Same tinted palette as the modal pills (modalkit.css .tone-*); border matches the fill.
+const tone = (bg, text) => ({ bg, text, border: bg });
+const TONE_GREEN = tone("#E3F8F2", "#17B89B");
+const TONE_BLUE = tone("#E6EFFD", "#3A6FD8");
+const TONE_VIOLET = tone("#EFEAFD", "#6D4FD8");
+const TONE_AMBER = tone("#FEF0DC", "#C26A0A");
+const TONE_RED = tone("#FDE8E8", "#C63B3B");
+
 export const STATUS_COLORS = {
-  approval_pending: { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC" },
-  under_review: { bg: "#F3E8FF", text: "#6B21A8", border: "#D8B4FE" },
-  register: { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4" },
-  scheduled: { bg: "#E0F2FE", text: "#075985", border: "#7DD3FC" },
-  ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
-  on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
-  cancelled: { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5" },
+  approval_pending: TONE_AMBER,
+  under_review: TONE_VIOLET,
+  register: TONE_BLUE,
+  scheduled: TONE_BLUE,
+  ongoing: TONE_GREEN,
+  on_hold: TONE_AMBER,
+  cancelled: TONE_RED,
 };
 
 export const ONBOARDING_TYPE_OPTIONS = [
@@ -76,8 +84,8 @@ export const PHASE_SECTIONS = {
 export const actionBtnStyle = {
   padding: "0.4rem 0.75rem",
   textAlign: "center",
-  fontWeight: 700,
-  borderRadius: "0.5rem",
+  fontWeight: 600,
+  borderRadius: "10px",
 };
 
 export const modalFieldStyle = {

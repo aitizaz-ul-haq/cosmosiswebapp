@@ -185,10 +185,10 @@
 }
 
 .report-button {
-  border: 1px solid var(--sitegreen, #2d9f4f);
-  color: var(--sitegreen, #2d9f4f);
-  background: transparent;
-  border-radius: 999px;
+  border: 1px solid #e3f8f2;
+  color: #17b89b;
+  background: #e3f8f2;
+  border-radius: 10px;
   padding: 0.35rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
@@ -197,7 +197,8 @@
 }
 
 .report-button:hover {
-  background: rgba(45, 159, 79, 0.08);
+  background: #d3f3ea;
+  border-color: #d3f3ea;
 }
 
 .log-table {
@@ -234,10 +235,10 @@
 }
 
 .log-button {
-  border: 1px solid #d0d0d0;
-  color: #606060;
-  background: transparent;
-  border-radius: 999px;
+  border: 1px solid #eceff7;
+  color: #1a1a1a;
+  background: #eceff7;
+  border-radius: 10px;
   padding: 0.35rem 0.9rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -246,9 +247,9 @@
 }
 
 .log-button:hover {
-  background: rgba(45, 159, 79, 0.08);
-  border-color: var(--sitegreen, #2d9f4f);
-  color: var(--sitegreen, #2d9f4f);
+  background: #e1e5f0;
+  border-color: #e1e5f0;
+  color: #1a1a1a;
 }
 
 @media (max-width: 1024px) {

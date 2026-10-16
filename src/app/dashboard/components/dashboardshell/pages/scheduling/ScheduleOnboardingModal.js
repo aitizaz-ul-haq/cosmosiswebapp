@@ -14,31 +14,15 @@ import {
   zoneAbbreviation,
 } from "./timeUtils";
 import {
-  modalActionBtnStyle,
-  modalFieldStyle,
-  modalOverlayStyle,
-} from "../clientStatusShared";
+  ModalButton,
+  ModalGrid,
+  ModalInput,
+  ModalPasswordInput,
+  ModalSection,
+  ModalShell,
+  Stat,
+} from "../modalkit/ModalKit";
 import { logUIAction } from "@/lib/logUIAction";
-
-const cardStyle = {
-  background: "#fff",
-  width: "min(560px, 92vw)",
-  maxHeight: "90vh",
-  overflowY: "auto",
-  borderRadius: "12px",
-  padding: "1.25rem",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-  textAlign: "left",
-};
-const labelStyle = { fontSize: "0.85rem", fontWeight: 600, color: "#374151" };
-const noteStyle = {
-  margin: 0,
-  padding: "0.6rem 0.8rem",
-  borderRadius: "8px",
-  background: "#f3f4f6",
-  fontSize: "0.85rem",
-  color: "#374151",
-};
 
 const COUNTRY_OPTIONS = EUROPE_COUNTRIES.map((c) => ({
   value: c.code,
@@ -138,202 +122,206 @@ export default function ScheduleOnboardingModal({
     }
   };
 
-  const header = (
-    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-      <h3 style={{ margin: 0, width: "100%", textAlign: "center", fontSize: "1.2rem" }}>
-        {step !== "form"
-          ? "Confirm the scheduled time"
-          : isEdit
-            ? `Edit schedule for ${client.fullName}`
-            : `Schedule onboarding for ${client.fullName}`}
-      </h3>
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-        data-log-title={`Closed Schedule form: ${client.fullName}`}
-        style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}
-      >
-        ✕
-      </button>
-    </div>
-  );
+  const title =
+    step !== "form"
+      ? "Confirm the scheduled time"
+      : isEdit
+        ? `Edit schedule for ${client.fullName}`
+        : `Schedule onboarding for ${client.fullName}`;
+  const closeLogTitle = `Closed Schedule form: ${client.fullName}`;
 
   if (step === "confirm" && ready) {
     const clientPart = dayPartOf(when, tz);
     const rmPart = dayPartOf(when, rmTz);
     return (
-      <div style={modalOverlayStyle}>
-        <div style={cardStyle} role="dialog" aria-label="Confirm scheduled time">
-          {header}
-          <div style={{ display: "grid", gap: "0.75rem" }}>
-            <p style={{ ...noteStyle, background: "#ede9fe" }}>
-              <strong>{formatDate(when, tz)}</strong> at{" "}
-              <strong>
-                {formatTime(when, tz)} ({clientPart})
-              </strong>{" "}
-              in {place} ({zoneAbbreviation(when, tz)}).
-            </p>
-            {rmTz !== tz && (
-              <p style={noteStyle}>
-                In your location ({rmTz.replace(/_/g, " ")}) this is{" "}
-                <strong>
-                  {formatTime(when, rmTz)} ({rmPart})
-                </strong>
-                , {formatDate(when, rmTz)}.
-              </p>
-            )}
-            <p style={{ margin: 0, fontSize: "0.9rem", color: "#374151" }}>
-              Is this the right time of day? Please check AM and PM carefully: the time you picked
-              falls in the <strong>{clientPart.toLowerCase()}</strong>. If it is a mistake, go back
-              and change it.
-            </p>
-            {!isEdit && (
-              <p style={{ margin: 0, fontSize: "0.85rem", color: "#6b7280" }}>
-                The login credentials will be emailed to {client.email} at this time.
-              </p>
-            )}
-          </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-            <button
-              type="button"
+      <ModalShell
+        icon="clock"
+        title={title}
+        subtitle={place}
+        size="sm"
+        dismissOnOverlay={false}
+        onClose={onClose}
+        closeLogTitle={closeLogTitle}
+        footer={
+          <>
+            <ModalButton
+              variant="danger"
               onClick={() => setStep("form")}
               data-log-title={`Change schedule time clicked: ${client.fullName}`}
-              style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
             >
               Change time
-            </button>
-            <button
-              type="button"
+            </ModalButton>
+            <ModalButton
+              variant="primary"
+              icon="check"
               onClick={save}
               disabled={saving}
               data-log-title={`Confirm schedule onboarding clicked: ${client.fullName}`}
-              style={{ ...modalActionBtnStyle, backgroundColor: "#a78bfa" }}
             >
               {saving ? "Saving..." : "Confirm and schedule"}
-            </button>
-          </div>
-        </div>
-      </div>
+            </ModalButton>
+          </>
+        }
+      >
+        <ModalSection>
+          <Stat
+            icon="calendar"
+            tone="violet"
+            label={`In ${place} (${zoneAbbreviation(when, tz)})`}
+            value={`${formatTime(when, tz)} (${clientPart})`}
+            sub={formatDate(when, tz)}
+          />
+          {rmTz !== tz && (
+            <Stat
+              icon="pin"
+              tone="blue"
+              label={`In your location (${rmTz.replace(/_/g, " ")})`}
+              value={`${formatTime(when, rmTz)} (${rmPart})`}
+              sub={formatDate(when, rmTz)}
+            />
+          )}
+        </ModalSection>
+        <p className="mk-note">
+          Is this the right time of day? Please check AM and PM carefully: the time you picked
+          falls in the <strong>{clientPart.toLowerCase()}</strong>. If it is a mistake, go back and
+          change it.
+        </p>
+        {!isEdit && (
+          <p className="mk-note">
+            The login credentials will be emailed to {client.email} at this time.
+          </p>
+        )}
+      </ModalShell>
     );
   }
 
   return (
-    <div style={modalOverlayStyle}>
-      <form
-        style={cardStyle}
-        onSubmit={(e) => {
+    <ModalShell
+      as="form"
+      wrapperProps={{
+        onSubmit: (e) => {
           e.preventDefault();
           if (ready) setStep("confirm");
-        }}
-      >
-        {header}
-        <div style={{ display: "grid", gap: "0.75rem" }}>
-          {!isEdit && (
-            <>
-              <p style={{ ...noteStyle, background: "#ede9fe" }}>
-                Create the client&apos;s login now. It is emailed to {client.email} at the scheduled time
-                and the client cannot log in before then.
-              </p>
-              <input
-                style={modalFieldStyle}
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="off"
-                required
-              />
-              <input
-                style={modalFieldStyle}
-                type="password"
-                placeholder="Password (min 8 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-                minLength={8}
-                required
-              />
-            </>
-          )}
-          <SearchableSelect
-            label="Country"
-            options={COUNTRY_OPTIONS}
-            value={countryCode}
-            placeholder="Search a country"
-            onChange={(o) => {
-              setCountryCode(o.value);
-              setCityName("");
-            }}
-          />
-          <SearchableSelect
-            label="City"
-            options={cityOptions}
-            value={cityName}
-            placeholder={country ? "Search a city" : "Select a country first"}
-            disabled={!country}
-            onChange={(o) => setCityName(o.value)}
-          />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-            <label style={labelStyle}>
-              Date
-              <input
-                style={modalFieldStyle}
-                type="date"
-                value={date}
-                min={tz ? todayInZone(tz, now) : undefined}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-            </label>
-            <label style={labelStyle}>
-              Time
-              <input
-                style={modalFieldStyle}
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-
-          <div style={noteStyle}>
-            <div>
-              Your time now ({rmTz.replace(/_/g, " ")}): <strong>{formatTime(now, rmTz)}</strong>
-            </div>
-            {tz && (
-              <div>
-                Time now in {place}: <strong>{formatTime(now, tz)}</strong> ({zoneAbbreviation(now, tz)})
-              </div>
-            )}
-            <div style={{ marginTop: "0.25rem", color: "#6b7280" }}>
-              The date and time you enter is in {city ? `${city.name} time` : "the client's local time"}.
-            </div>
-          </div>
-
-          {problem && (
-            <div style={{ ...noteStyle, background: "#fee2e2", color: "#7f1d1d" }}>{problem}</div>
-          )}
-        </div>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-          <button
-            type="button"
+        },
+      }}
+      icon="calendar"
+      title={title}
+      subtitle={
+        isEdit
+          ? "Change when the client's onboarding email is sent."
+          : "Create the login and choose when it is sent."
+      }
+      size="md"
+      dismissOnOverlay={false}
+      onClose={onClose}
+      closeLogTitle={closeLogTitle}
+      footer={
+        <>
+          <ModalButton
+            variant="danger"
             onClick={onClose}
             data-log-title={`Cancel Schedule clicked: ${client.fullName}`}
-            style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
           >
             Cancel
-          </button>
-          <button
+          </ModalButton>
+          <ModalButton
             type="submit"
+            variant="primary"
+            icon="send"
             disabled={!ready}
             data-log-title={`Schedule Onboarding next clicked: ${client.fullName}`}
-            style={{ ...modalActionBtnStyle, backgroundColor: "#a78bfa" }}
           >
             Continue
-          </button>
+          </ModalButton>
+        </>
+      }
+    >
+      {!isEdit && (
+        <>
+          <p className="mk-note">
+            Create the client&apos;s login now. It is emailed to {client.email} at the scheduled
+            time and the client cannot log in before then.
+          </p>
+          <ModalGrid>
+            <ModalInput
+              label="Username"
+              required
+              icon="user"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="off"
+            />
+            <ModalPasswordInput
+              label="Password"
+              required
+              hint="Minimum 8 characters."
+              placeholder="Password (min 8 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              minLength={8}
+            />
+          </ModalGrid>
+        </>
+      )}
+      <ModalGrid>
+        <SearchableSelect
+          label="Country"
+          required
+          icon="globe"
+          options={COUNTRY_OPTIONS}
+          value={countryCode}
+          placeholder="Search a country"
+          onChange={(o) => {
+            setCountryCode(o.value);
+            setCityName("");
+          }}
+        />
+        <SearchableSelect
+          label="City"
+          required
+          icon="pin"
+          options={cityOptions}
+          value={cityName}
+          placeholder={country ? "Search a city" : "Select a country first"}
+          disabled={!country}
+          onChange={(o) => setCityName(o.value)}
+        />
+        <ModalInput
+          label="Date"
+          required
+          icon="calendar"
+          type="date"
+          value={date}
+          min={tz ? todayInZone(tz, now) : undefined}
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <ModalInput
+          label="Time"
+          required
+          icon="clock"
+          type="time"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+        />
+      </ModalGrid>
+
+      <div className="mk-note">
+        <div>
+          Your time now ({rmTz.replace(/_/g, " ")}): <strong>{formatTime(now, rmTz)}</strong>
         </div>
-      </form>
-    </div>
+        {tz && (
+          <div>
+            Time now in {place}: <strong>{formatTime(now, tz)}</strong> ({zoneAbbreviation(now, tz)})
+          </div>
+        )}
+        <div>
+          The date and time you enter is in {city ? `${city.name} time` : "the client's local time"}.
+        </div>
+      </div>
+
+      {problem && <p className="mk-error">{problem}</p>}
+    </ModalShell>
   );
 }

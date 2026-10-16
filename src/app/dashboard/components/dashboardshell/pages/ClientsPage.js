@@ -1,11 +1,104 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import ScheduledDetailsModal from "./ScheduledDetailsModal";
+import {
+  DetailList,
+  DetailRow,
+  Icon,
+  ModalButton,
+  ModalField,
+  ModalGrid,
+  ModalSection,
+  ModalShell,
+  ModalTextarea,
+  STATUS_TONES,
+  StatusPill,
+  initialsOf,
+} from "./modalkit/ModalKit";
+import { STATUS_COLORS } from "./clientStatusShared";
 import { logUIAction } from "@/lib/logUIAction";
+
+// Form controls that keep the native `required` attribute on the input itself.
+function FormInput({ label, icon, hint, id, required, ...inputProps }) {
+  const autoId = useId();
+  const inputId = id || autoId;
+  return (
+    <ModalField label={label} required={required} icon={icon} hint={hint} htmlFor={inputId}>
+      <input id={inputId} required={required} {...inputProps} />
+    </ModalField>
+  );
+}
+
+function FormSelect({ label, icon, hint, id, required, children, ...selectProps }) {
+  const autoId = useId();
+  const selectId = id || autoId;
+  return (
+    <ModalField label={label} required={required} icon={icon} hint={hint} htmlFor={selectId}>
+      <select id={selectId} required={required} {...selectProps}>
+        {children}
+      </select>
+      <Icon name="chevronDown" size={18} className="mk-control-trail" />
+    </ModalField>
+  );
+}
+
+function FormPassword({ label, hint, id, required, ...inputProps }) {
+  const autoId = useId();
+  const inputId = id || autoId;
+  const [shown, setShown] = useState(false);
+  return (
+    <ModalField label={label} required={required} icon="lock" hint={hint} htmlFor={inputId}>
+      <input id={inputId} required={required} type={shown ? "text" : "password"} {...inputProps} />
+      <button
+        type="button"
+        className="mk-control-btn"
+        onClick={() => setShown((s) => !s)}
+        aria-label={shown ? "Hide password" : "Show password"}
+      >
+        <Icon name={shown ? "eyeOff" : "eye"} size={18} />
+      </button>
+    </ModalField>
+  );
+}
+
+// "Shared client" checkbox with the list of other RMs to share with.
+function SharePanel({ form, rmUsers, onSharedChange, onToggleRm }) {
+  const others = rmUsers.filter((rm) => String(rm._id) !== String(form.assignedToUserId));
+  return (
+    <div className="mk-panel mk-span-all">
+      <label className="mk-check" style={{ fontWeight: 600 }}>
+        <input
+          type="checkbox"
+          checked={form.isShared}
+          onChange={(e) => onSharedChange(e.target.checked)}
+        />
+        Shared client (assign to additional RMs)
+      </label>
+      {form.isShared && (
+        <div className="mk-check-list">
+          {others.length === 0 ? (
+            <span className="mk-hint">No other RMs available to share with.</span>
+          ) : (
+            others.map((rm) => (
+              <label key={rm._id} className="mk-check">
+                <input
+                  type="checkbox"
+                  checked={form.sharedWithUserIds.some((id) => String(id) === String(rm._id))}
+                  onChange={() => onToggleRm(rm._id)}
+                />
+                {rm.fullName || rm.username}
+              </label>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ClientsPage() {
   const { user } = useUser();
@@ -152,16 +245,6 @@ export default function ClientsPage() {
     value === "under_review" ||
     value === "register" ||
     value === "scheduled";
-  // Status colors: ongoing green, on_hold yellow, cancelled red
-  const STATUS_COLORS = {
-    approval_pending: { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC" },
-    under_review: { bg: "#F3E8FF", text: "#6B21A8", border: "#D8B4FE" },
-    register: { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4" },
-    scheduled: { bg: "#E0F2FE", text: "#075985", border: "#7DD3FC" },
-    ongoing: { bg: "#DCFCE7", text: "#166534", border: "#86EFAC" },
-    on_hold: { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D" },
-    cancelled: { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5" },
-  };
   const ONBOARDING_TYPE_OPTIONS = [
     { value: "individual", label: "Individual" },
     { value: "joint", label: "Joint" },
@@ -244,9 +327,9 @@ export default function ClientsPage() {
           fontWeight: 600,
           fontSize: "0.82rem",
           lineHeight: 1.3,
-          backgroundColor: "transparent",
-          color: "#21CFB2",
-          border: "1px solid #21CFB2",
+          backgroundColor: "#ECEFF7",
+          color: "#6D7692",
+          border: "1px solid #ECEFF7",
           whiteSpace: "nowrap",
         }}
       >
@@ -534,26 +617,6 @@ export default function ClientsPage() {
       ? "All your registered clients are displayed here."
       : "This is where you can see all your registered clients";
 
-  const fieldStyle = {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    width: "100%",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-  };
-
-  const modalActionBtnStyle = {
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 600,
-    fontSize: "1rem",
-    color: "#fff",
-  };
-
   const columns = [
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "phone", header: "Phone" },
@@ -619,7 +682,7 @@ export default function ClientsPage() {
               onClick={() => openEditModal(row?.original)}
               title="Edit client details"
               data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-              className="dash-action-btn dash-btn-green"
+              className="dash-action-btn dash-btn-green-soft"
               style={actionBtnStyle}
             >
               Edit
@@ -649,6 +712,16 @@ export default function ClientsPage() {
       ),
     },
   ];
+
+  const infoStatusKey = infoClient?.status || "ongoing";
+  const infoName = infoClient?.fullName || infoClient?.username || "Client details";
+  const infoIsIndividual = (infoClient?.onboardingType || "individual") === "individual";
+  const infoPhase = infoClient && infoIsIndividual ? getPhaseConfig(infoClient) : null;
+  const infoStatusPill = (
+    <StatusPill tone={STATUS_TONES[infoStatusKey] || "slate"}>
+      {labelFor(STATUS_LABEL_OPTIONS, infoClient?.status)}
+    </StatusPill>
+  );
 
   return (
     <div>
@@ -694,266 +767,264 @@ export default function ClientsPage() {
       />
 
       {showAddModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleAddSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add Client</h3>
-              <button type="button" onClick={closeAddModal} data-log-title="Closed Add Client form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              {!isRm && (
-                <input style={fieldStyle} placeholder="Username" value={addForm.username} onChange={handleAddChange("username")} required />
-              )}
-              <input style={fieldStyle} placeholder="Full Name" value={addForm.fullName} onChange={handleAddChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={addForm.email} onChange={handleAddChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={addForm.phone} onChange={handleAddChange("phone")} required />
-              {isRm && (
-                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-                  RM Remarks
-                  <textarea
-                    style={{ ...fieldStyle, minHeight: "90px", resize: "vertical" }}
-                    value={addForm.rmRemarks}
-                    onChange={handleAddChange("rmRemarks")}
-                  />
-                </label>
-              )}
-              {!isRm && (
-              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-                Status
-                <select style={fieldStyle} value={addForm.status} onChange={handleAddChange("status")}>
-                  {STATUS_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-              </label>
-              )}
-              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-                Onboarding Type
-                <select style={fieldStyle} value={addForm.onboardingType} onChange={handleAddChange("onboardingType")}>
-                  {ONBOARDING_TYPE_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-              </label>
-              {canAssignRm && (
-                <select
-                  style={fieldStyle}
-                  value={addForm.assignedToUserId}
-                  onChange={handleAddChange("assignedToUserId")}
-                  required
-                >
-                  <option value="">Select RM</option>
-                  {rmUsers.map((rm) => (
-                    <option key={rm._id} value={rm._id}>
-                      {rm.fullName || rm.username}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {canAssignRm && (
-                <div style={{ border: "1px solid #eee", borderRadius: "8px", padding: "0.75rem" }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 600, cursor: "pointer" }}>
-                    <input
-                      type="checkbox"
-                      checked={addForm.isShared}
-                      onChange={(e) => setAddForm((prev) => ({ ...prev, isShared: e.target.checked }))}
-                    />
-                    Shared client (assign to additional RMs)
-                  </label>
-                  {addForm.isShared && (
-                    <div style={{ marginTop: "0.6rem", display: "grid", gap: "0.4rem", maxHeight: "160px", overflowY: "auto" }}>
-                      {rmUsers.filter((rm) => String(rm._id) !== String(addForm.assignedToUserId)).length === 0 ? (
-                        <span style={{ fontSize: "0.85rem", color: "#6b7280" }}>No other RMs available to share with.</span>
-                      ) : (
-                        rmUsers
-                          .filter((rm) => String(rm._id) !== String(addForm.assignedToUserId))
-                          .map((rm) => (
-                            <label key={rm._id} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", cursor: "pointer" }}>
-                              <input
-                                type="checkbox"
-                                checked={addForm.sharedWithUserIds.some((id) => String(id) === String(rm._id))}
-                                onChange={() => toggleSharedRm(setAddForm)(rm._id)}
-                              />
-                              {rm.fullName || rm.username}
-                            </label>
-                          ))
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-              {!isRm && (
-                <input style={fieldStyle} type="password" placeholder="Password" value={addForm.password} onChange={handleAddChange("password")} required />
-              )}
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={closeAddModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
+        <ModalShell
+          as="form"
+          wrapperProps={{ onSubmit: handleAddSubmit }}
+          icon="userPlus"
+          title="Add Client"
+          subtitle={
+            isRm
+              ? "Enter the client's basic information to submit for approval."
+              : "Enter the client's information to create a new client record."
+          }
+          onClose={closeAddModal}
+          closeLogTitle="Closed Add Client form"
+          size="lg"
+          dismissOnOverlay={false}
+          footer={
+            <>
+              <ModalButton variant="danger" onClick={closeAddModal}>
                 Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
-              >
+              </ModalButton>
+              <ModalButton variant="primary" icon="save" type="submit">
                 Save
-              </button>
-            </div>
-          </form>
-        </div>
+              </ModalButton>
+            </>
+          }
+        >
+          <ModalGrid>
+            {!isRm && (
+              <FormInput
+                label="Username"
+                icon="user"
+                placeholder="Enter username"
+                value={addForm.username}
+                onChange={handleAddChange("username")}
+                required
+              />
+            )}
+            <FormInput
+              label="Full Name"
+              icon="user"
+              placeholder="Enter full name"
+              hint="Use the client's legal name as per official documents."
+              value={addForm.fullName}
+              onChange={handleAddChange("fullName")}
+              required
+            />
+            <FormInput
+              label="Email"
+              icon="mail"
+              type="email"
+              placeholder="Enter email address"
+              hint="We'll use this email for notifications and account access."
+              value={addForm.email}
+              onChange={handleAddChange("email")}
+              required
+            />
+            <FormInput
+              label="Phone"
+              icon="phone"
+              placeholder="Enter phone number"
+              hint="Include country code if applicable."
+              value={addForm.phone}
+              onChange={handleAddChange("phone")}
+              required
+            />
+            {!isRm && (
+              <FormSelect
+                label="Status"
+                icon="clock"
+                value={addForm.status}
+                onChange={handleAddChange("status")}
+              >
+                {STATUS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+            <FormSelect
+              label="Onboarding Type"
+              icon="users"
+              hint="Select the onboarding type for this client."
+              value={addForm.onboardingType}
+              onChange={handleAddChange("onboardingType")}
+            >
+              {ONBOARDING_TYPE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </FormSelect>
+            {canAssignRm && (
+              <FormSelect
+                label="Assign RM"
+                icon="briefcase"
+                value={addForm.assignedToUserId}
+                onChange={handleAddChange("assignedToUserId")}
+                required
+              >
+                <option value="">Select RM</option>
+                {rmUsers.map((rm) => (
+                  <option key={rm._id} value={rm._id}>
+                    {rm.fullName || rm.username}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+            {!isRm && (
+              <FormPassword
+                label="Password"
+                placeholder="Enter password"
+                value={addForm.password}
+                onChange={handleAddChange("password")}
+                required
+              />
+            )}
+            {canAssignRm && (
+              <SharePanel
+                form={addForm}
+                rmUsers={rmUsers}
+                onSharedChange={(checked) =>
+                  setAddForm((prev) => ({ ...prev, isShared: checked }))
+                }
+                onToggleRm={toggleSharedRm(setAddForm)}
+              />
+            )}
+          </ModalGrid>
+          {isRm && (
+            <ModalTextarea
+              label="RM Remarks"
+              icon="file"
+              placeholder="Add any relevant remarks about this client..."
+              hint="Include any important background information, notes, or context."
+              maxLength={1000}
+              value={addForm.rmRemarks}
+              onChange={handleAddChange("rmRemarks")}
+            />
+          )}
+        </ModalShell>
       )}
 
       {showEditModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleEditSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit Client</h3>
-              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit Client form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={editForm.username} onChange={handleEditChange("username")} required />
-              <input style={fieldStyle} placeholder="Full Name" value={editForm.fullName} onChange={handleEditChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={editForm.email} onChange={handleEditChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={editForm.phone} onChange={handleEditChange("phone")} required />
-              {canAssignRm && (
-                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-                  Status
-                  <select style={fieldStyle} value={editForm.status} onChange={handleEditChange("status")}>
-                    {STATUS_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
-                </label>
-              )}
-              {canAssignRm && (
-                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>
-                  Onboarding Type
-                  <select style={fieldStyle} value={editForm.onboardingType} onChange={handleEditChange("onboardingType")}>
-                    {ONBOARDING_TYPE_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
-                </label>
-              )}
-              {canAssignRm && (
-                <select
-                  style={fieldStyle}
-                  value={editForm.assignedToUserId}
-                  onChange={handleEditChange("assignedToUserId")}
-                >
-                  <option value="">Reassign RM (optional)</option>
-                  {rmUsers.map((rm) => (
-                    <option key={rm._id} value={rm._id}>
-                      {rm.fullName || rm.username}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {canAssignRm && (
-                <div style={{ border: "1px solid #eee", borderRadius: "8px", padding: "0.75rem" }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 600, cursor: "pointer" }}>
-                    <input
-                      type="checkbox"
-                      checked={editForm.isShared}
-                      onChange={(e) => setEditForm((prev) => ({ ...prev, isShared: e.target.checked }))}
-                    />
-                    Shared client (assign to additional RMs)
-                  </label>
-                  {editForm.isShared && (
-                    <div style={{ marginTop: "0.6rem", display: "grid", gap: "0.4rem", maxHeight: "160px", overflowY: "auto" }}>
-                      {rmUsers.filter((rm) => String(rm._id) !== String(editForm.assignedToUserId)).length === 0 ? (
-                        <span style={{ fontSize: "0.85rem", color: "#6b7280" }}>No other RMs available to share with.</span>
-                      ) : (
-                        rmUsers
-                          .filter((rm) => String(rm._id) !== String(editForm.assignedToUserId))
-                          .map((rm) => (
-                            <label key={rm._id} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", cursor: "pointer" }}>
-                              <input
-                                type="checkbox"
-                                checked={editForm.sharedWithUserIds.some((id) => String(id) === String(rm._id))}
-                                onChange={() => toggleSharedRm(setEditForm)(rm._id)}
-                              />
-                              {rm.fullName || rm.username}
-                            </label>
-                          ))
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-              <input style={fieldStyle} type="password" placeholder="New Password (leave blank to keep)" value={editForm.password} onChange={handleEditChange("password")} />
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
+        <ModalShell
+          as="form"
+          wrapperProps={{ onSubmit: handleEditSubmit }}
+          icon="userEdit"
+          title="Edit Client"
+          subtitle="Update the client's details and access."
+          onClose={closeEditModal}
+          closeLogTitle="Closed Edit Client form"
+          size="lg"
+          dismissOnOverlay={false}
+          footer={
+            <>
+              <ModalButton variant="danger" onClick={closeEditModal}>
                 Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
-              >
+              </ModalButton>
+              <ModalButton variant="primary" icon="save" type="submit">
                 Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
+              </ModalButton>
+            </>
+          }
+        >
+          <ModalGrid>
+            <FormInput
+              label="Username"
+              icon="user"
+              placeholder="Enter username"
+              value={editForm.username}
+              onChange={handleEditChange("username")}
+              required
+            />
+            <FormInput
+              label="Full Name"
+              icon="user"
+              placeholder="Enter full name"
+              value={editForm.fullName}
+              onChange={handleEditChange("fullName")}
+              required
+            />
+            <FormInput
+              label="Email"
+              icon="mail"
+              type="email"
+              placeholder="Enter email address"
+              value={editForm.email}
+              onChange={handleEditChange("email")}
+              required
+            />
+            <FormInput
+              label="Phone"
+              icon="phone"
+              placeholder="Enter phone number"
+              value={editForm.phone}
+              onChange={handleEditChange("phone")}
+              required
+            />
+            {canAssignRm && (
+              <FormSelect
+                label="Status"
+                icon="clock"
+                value={editForm.status}
+                onChange={handleEditChange("status")}
+              >
+                {STATUS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+            {canAssignRm && (
+              <FormSelect
+                label="Onboarding Type"
+                icon="users"
+                value={editForm.onboardingType}
+                onChange={handleEditChange("onboardingType")}
+              >
+                {ONBOARDING_TYPE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+            {canAssignRm && (
+              <FormSelect
+                label="Assigned RM"
+                icon="briefcase"
+                value={editForm.assignedToUserId}
+                onChange={handleEditChange("assignedToUserId")}
+              >
+                <option value="">Reassign RM (optional)</option>
+                {rmUsers.map((rm) => (
+                  <option key={rm._id} value={rm._id}>
+                    {rm.fullName || rm.username}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+            <FormPassword
+              label="New Password"
+              placeholder="Leave blank to keep current"
+              value={editForm.password}
+              onChange={handleEditChange("password")}
+            />
+            {canAssignRm && (
+              <SharePanel
+                form={editForm}
+                rmUsers={rmUsers}
+                onSharedChange={(checked) =>
+                  setEditForm((prev) => ({ ...prev, isShared: checked }))
+                }
+                onToggleRm={toggleSharedRm(setEditForm)}
+              />
+            )}
+          </ModalGrid>
+        </ModalShell>
       )}
 
       {showInfoModal && infoClient && infoClient.status === "scheduled" && (
@@ -973,161 +1044,160 @@ export default function ClientsPage() {
       )}
 
       {showInfoModal && infoClient && infoClient.status !== "scheduled" && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-          onClick={closeInfoModal}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff",
-              width: "min(640px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.5rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "1rem",
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700 }}>
-                {infoClient?.fullName || infoClient?.username || "Client details"}
-              </h3>
-              <button
-                type="button"
-                onClick={closeInfoModal}
-                data-log-title="Close Client Info modal"
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  fontSize: "1.5rem",
-                  lineHeight: 1,
-                  cursor: "pointer",
-                  color: "#6D7692",
-                }}
-                aria-label="Close"
-              >
-                ×
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.35rem" }}>
-              {[
-                { label: "Full name", value: infoClient?.fullName },
-                { label: "Username", value: infoClient?.username },
-                { label: "Email", value: infoClient?.email },
-                { label: "Phone", value: infoClient?.phone },
-                { label: "Company", value: infoClient?.companyName },
-                {
-                  label: "Status",
-                  value: labelFor(STATUS_LABEL_OPTIONS, infoClient?.status),
-                },
-                {
-                  label: "Onboarding type",
-                  value: labelFor(ONBOARDING_TYPE_OPTIONS, infoClient?.onboardingType),
-                },
-                {
-                  label: "Progress",
-                  value:
-                    (infoClient?.onboardingType || "individual") === "individual"
-                      ? `${getPhaseConfig(infoClient).pct}% · Phase ${getPhaseConfig(infoClient).phase} of 6 — ${getPhaseConfig(infoClient).name}`
-                      : "—",
-                },
-                { label: "Assigned to", value: infoClient?.assignedToName },
-                { label: "Assigned by", value: infoClient?.assignedByName },
-                { label: "RM remarks", value: infoClient?.rmRemarks },
-                {
-                  label: "Shared with",
-                  value:
-                    infoClient?.isShared &&
-                    Array.isArray(infoClient?.sharedWithNames) &&
-                    infoClient.sharedWithNames.length > 0
-                      ? infoClient.sharedWithNames.join(", ")
-                      : "—",
-                },
-                {
-                  label: "Created",
-                  value: infoClient?.createdAt
-                    ? new Date(infoClient.createdAt).toLocaleString()
-                    : "—",
-                },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "160px 1fr",
-                    gap: "0.5rem",
-                    padding: "0.5rem 0",
-                    borderBottom: "1px solid #f0f0f0",
-                  }}
-                >
-                  <span style={{ fontWeight: 600, color: "#6D7692" }}>
-                    {item.label}
-                  </span>
-                  <span style={{ color: "#1a1a1a", wordBreak: "break-word" }}>
-                    {item.value || "—"}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "0.75rem",
-                marginTop: "1.25rem",
-              }}
-            >
-              <button
-                type="button"
+        <ModalShell
+          avatar={initialsOf(infoName)}
+          title={infoName}
+          badges={
+            <>
+              {infoClient.companyName ? (
+                <StatusPill tone="slate" icon="building">
+                  {infoClient.companyName}
+                </StatusPill>
+              ) : null}
+              <StatusPill tone="slate" icon="user">
+                {labelFor(ONBOARDING_TYPE_OPTIONS, infoClient.onboardingType)}
+              </StatusPill>
+            </>
+          }
+          onClose={closeInfoModal}
+          closeLogTitle="Close Client Info modal"
+          size="lg"
+          footer={
+            <>
+              <ModalButton
+                variant="info"
+                icon="mail"
                 onClick={() => handleEmail(infoClient?.email)}
                 data-log-title={`Email Client button clicked (info modal): ${infoClient?.fullName || infoClient?.email}`}
-                style={{
-                  padding: "0.5rem 1rem",
-                  fontWeight: 700,
-                  borderRadius: "0.5rem",
-                  backgroundColor: "var(--btn-neutral-light)",
-                  border: "1px solid var(--btn-neutral-light)",
-                  color: "#fff",
-                }}
               >
                 Email
-              </button>
-              <button
-                type="button"
+              </ModalButton>
+              <ModalButton
+                variant="neutral"
+                icon="x"
                 onClick={closeInfoModal}
                 data-log-title="Close Client Info modal"
-                style={{
-                  padding: "0.5rem 1rem",
-                  fontWeight: 700,
-                  borderRadius: "0.5rem",
-                  backgroundColor: "var(--btn-green-light)",
-                  border: "1px solid var(--btn-green-light)",
-                  color: "#fff",
-                }}
               >
                 Close
-              </button>
+              </ModalButton>
+            </>
+          }
+        >
+          <ModalGrid>
+            <div className="mk-stack">
+              <ModalSection
+                icon="user"
+                tone="violet"
+                title="Client Information"
+                description="Basic details and contact information."
+              >
+                <DetailList>
+                  <DetailRow icon="user" label="Full name" value={infoClient?.fullName} />
+                  <DetailRow icon="user" label="Username" value={infoClient?.username} />
+                  <DetailRow icon="mail" label="Email" value={infoClient?.email} />
+                  <DetailRow icon="phone" label="Phone" value={infoClient?.phone} />
+                </DetailList>
+              </ModalSection>
+
+              <ModalSection
+                icon="building"
+                tone="green"
+                title="Company"
+                description="Associated company information."
+              >
+                <DetailList>
+                  <DetailRow icon="building" label="Company" value={infoClient?.companyName} />
+                </DetailList>
+              </ModalSection>
             </div>
-          </div>
-        </div>
+
+            <div className="mk-stack">
+              <ModalSection
+                icon="chart"
+                tone="blue"
+                title="Onboarding & Progress"
+                description="Current onboarding status and progress details."
+              >
+                <DetailList>
+                  <DetailRow icon="clock" label="Status" value={infoStatusPill} />
+                  <DetailRow
+                    icon="users"
+                    label="Onboarding type"
+                    value={labelFor(ONBOARDING_TYPE_OPTIONS, infoClient?.onboardingType)}
+                  />
+                  {infoPhase ? null : <DetailRow icon="chart" label="Progress" value="—" />}
+                </DetailList>
+                {infoPhase ? (
+                  <div
+                    className="mk-progress-box"
+                    title={`Progress is ${infoPhase.pct}% — the client is at Phase ${infoPhase.phase} of 6: ${infoPhase.name}`}
+                  >
+                    <div className="mk-progress-row">
+                      <Icon name="chart" size={17} className="mk-detail-icon" />
+                      <span style={{ fontSize: "0.85rem", color: "#6d7692" }}>Progress</span>
+                      <StatusPill tone="green">{infoPhase.pct}%</StatusPill>
+                      <div
+                        className="mk-progress"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={infoPhase.pct}
+                      >
+                        <div className="mk-progress-bar" style={{ width: `${infoPhase.pct}%` }} />
+                      </div>
+                    </div>
+                    <div>
+                      <StatusPill tone="slate" icon="file">
+                        Phase {infoPhase.phase} of 6 — {infoPhase.name}
+                      </StatusPill>
+                    </div>
+                  </div>
+                ) : null}
+              </ModalSection>
+
+              <ModalSection
+                icon="users"
+                tone="violet"
+                title="Assignment & Access"
+                description="Team members and access information."
+              >
+                <DetailList>
+                  <DetailRow icon="user" label="Assigned to" value={infoClient?.assignedToName} />
+                  <DetailRow icon="user" label="Assigned by" value={infoClient?.assignedByName} />
+                  <DetailRow
+                    icon="share"
+                    label="Shared with"
+                    value={
+                      infoClient?.isShared &&
+                      Array.isArray(infoClient?.sharedWithNames) &&
+                      infoClient.sharedWithNames.length > 0
+                        ? infoClient.sharedWithNames.join(", ")
+                        : "—"
+                    }
+                  />
+                </DetailList>
+              </ModalSection>
+            </div>
+          </ModalGrid>
+
+          <ModalSection
+            icon="file"
+            tone="blue"
+            title="Additional Information"
+            description="Notes and record details."
+          >
+            <DetailList>
+              <DetailRow icon="file" label="RM remarks" value={infoClient?.rmRemarks} />
+              <DetailRow
+                icon="calendar"
+                label="Created"
+                value={
+                  infoClient?.createdAt ? new Date(infoClient.createdAt).toLocaleString() : "—"
+                }
+              />
+            </DetailList>
+          </ModalSection>
+        </ModalShell>
       )}
 
       <DeleteConfirmModal

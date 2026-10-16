@@ -73,71 +73,71 @@ footer {
   --btn-info-light-border:#8FBEF8;
 }
 
-/* Dashboard action buttons: light base color that brightens to the
-   original bright shade on hover, with a smooth animated transition. */
+/* Dashboard action buttons: same look as the modal buttons (see modalkit.css).
+   Primary = solid green; the others are soft tinted fills with coloured text.
+   Sizes are unchanged: padding/size come from actionBtnStyle or the page. */
 .dash-action-btn {
-  color: #fff;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.28s ease, border-color 0.28s ease,
-    transform 0.14s ease, box-shadow 0.22s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.14s ease,
+    box-shadow 0.2s ease;
 }
-.dash-action-btn:hover {
+.dash-action-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
 }
 .dash-action-btn:active {
   transform: translateY(0);
-  box-shadow: none;
 }
 .dash-action-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.dash-btn-green {
-  background-color: var(--btn-green-light);
-  border: 1px solid var(--btn-green-light);
+/* Green buttons: light green fill with dark green text */
+.dash-btn-green,
+.dash-btn-green-soft {
+  background-color: #e3f8f2;
+  color: #17b89b;
 }
-.dash-btn-green:hover {
-  background-color: var(--sitegreen);
-  border-color: var(--sitegreen);
+.dash-btn-green:hover:not(:disabled),
+.dash-btn-green-soft:hover:not(:disabled) {
+  background-color: #d3f3ea;
 }
 
 .dash-btn-danger {
-  background-color: var(--btn-danger-light);
-  border: 1px solid var(--btn-danger-light-border);
+  background-color: #fde8e8;
+  color: #d03a3a;
 }
-.dash-btn-danger:hover {
-  background-color: #dc2626;
-  border-color: #b91c1c;
+.dash-btn-danger:hover:not(:disabled) {
+  background-color: #fbd5d5;
 }
 
 .dash-btn-neutral {
-  background-color: var(--btn-neutral-light);
-  border: 1px solid var(--btn-neutral-light);
+  background-color: #eceff7;
+  color: #1a1a1a;
 }
-.dash-btn-neutral:hover {
-  background-color: #6d7692;
-  border-color: #6d7692;
+.dash-btn-neutral:hover:not(:disabled) {
+  background-color: #e1e5f0;
 }
 
 .dash-btn-info {
-  background-color: var(--btn-info-light);
-  border: 1px solid var(--btn-info-light-border);
+  background-color: #e6effd;
+  color: #3a6fd8;
 }
-.dash-btn-info:hover {
-  background-color: #2563eb;
-  border-color: #1d4ed8;
+.dash-btn-info:hover:not(:disabled) {
+  background-color: #d6e5fb;
 }
 
 .dash-btn-purple {
-  background-color: #a78bfa;
-  border: 1px solid #a78bfa;
+  background-color: #efeafd;
+  color: #6d4fd8;
 }
-.dash-btn-purple:hover {
-  background-color: #7c3aed;
-  border-color: #6d28d9;
+.dash-btn-purple:hover:not(:disabled) {
+  background-color: #e3dafb;
 }
 
 

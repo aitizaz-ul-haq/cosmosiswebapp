@@ -204,7 +204,7 @@ export default function SupervisorsPage() {
             type="button"
             onClick={() => openEditModal(row?.original)}
             title="Edit supervisor details"
-            className="dash-action-btn dash-btn-green"
+            className="dash-action-btn dash-btn-green-soft"
             style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
           >
             Edit
@@ -318,7 +318,7 @@ export default function SupervisorsPage() {
               </button>
               <button
                 type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "var(--btn-green-light)" }}
+                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
               >
                 Save Changes
               </button>

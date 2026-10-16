@@ -5,6 +5,7 @@ import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import ClientInfoModal from "./ClientInfoModal";
+import { ModalButton } from "./modalkit/ModalKit";
 import { ClientStatusBadge, STATUS_LABELS, onboardingTypeLabel, actionBtnStyle } from "./clientStatusShared";
 import { logUIAction } from "@/lib/logUIAction";
 
@@ -207,38 +208,35 @@ export default function UnderReviewPage() {
         footerActions={
           infoClient ? (
             <>
-              <button
-                type="button"
-                onClick={() => handleVerify(infoClient)}
-                title="Verify on Nemesis"
-                data-log-title={`Verify Client button clicked (under review modal): ${infoClient.fullName || infoClient.email}`}
-                className="dash-action-btn dash-btn-info"
-                style={actionBtnStyle}
-              >
-                Verify
-              </button>
-              <button
-                type="button"
+              <ModalButton
+                variant="neutral"
+                icon="mail"
                 onClick={() => handleEmail(infoClient)}
                 disabled={!infoClient.email}
                 title={infoClient.email ? `Email ${infoClient.email}` : "No email on file"}
                 data-log-title={`Email Client button clicked (under review modal): ${infoClient.fullName || infoClient.email}`}
-                className="dash-action-btn dash-btn-neutral"
-                style={actionBtnStyle}
               >
                 Email
-              </button>
-              <button
-                type="button"
+              </ModalButton>
+              <ModalButton
+                variant="info"
+                icon="shield"
+                onClick={() => handleVerify(infoClient)}
+                title="Verify on Nemesis"
+                data-log-title={`Verify Client button clicked (under review modal): ${infoClient.fullName || infoClient.email}`}
+              >
+                Verify
+              </ModalButton>
+              <ModalButton
+                variant="primary"
+                icon="checkCircle"
                 onClick={() => handleApprove(infoClient)}
                 disabled={approvingId === getId(infoClient)}
                 title="Approve client for onboarding"
                 data-log-title={`Approve Client button clicked (under review modal): ${infoClient.fullName || infoClient.email}`}
-                className="dash-action-btn dash-btn-green"
-                style={actionBtnStyle}
               >
                 Approve
-              </button>
+              </ModalButton>
             </>
           ) : null
         }

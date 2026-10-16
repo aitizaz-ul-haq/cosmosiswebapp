@@ -162,6 +162,11 @@ export const dashboardConfigs = {
           label: "Onboarding",
           iconlink: "/images/building.png",
         },
+        {
+          key: "submissions",
+          label: "Submissions",
+          iconlink: "/images/file.png",
+        },
         { 
           key: "profile", 
           label: "Profile",

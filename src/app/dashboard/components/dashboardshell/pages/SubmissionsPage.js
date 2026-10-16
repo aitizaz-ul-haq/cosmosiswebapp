@@ -4,15 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
-import {
-  STATUS_COLORS,
-  STATUS_LABELS,
-  actionBtnStyle,
-  getPhaseConfig,
-} from "./clientStatusShared";
+import { STATUS_COLORS, STATUS_LABELS, getPhaseConfig } from "./clientStatusShared";
 import { buildDummySubmissions } from "./submissions/dummySubmissions";
 import SubmissionViewModal from "./submissions/SubmissionViewModal";
 import PasswordGate from "./submissions/PasswordGate";
+import PhaseRow from "./submissions/PhaseRow";
 import "./styles/generictable.css";
 import "./styles/submissions.css";
 
@@ -28,18 +24,6 @@ const formatCreated = (value) => {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-};
-
-const formatCompletedAt = (value) => {
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 };
 
 const toRow = (client) => {
@@ -58,21 +42,6 @@ const toRow = (client) => {
     submissions: buildDummySubmissions(client),
   };
 };
-
-function TickIcon() {
-  return (
-    <svg viewBox="0 0 12 12" width="14" height="14" aria-hidden="true">
-      <path
-        d="M2.5 6.2l2.2 2.2 4.8-4.8"
-        fill="none"
-        stroke="#17b89b"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function SubmissionAccordion({ row, open, onToggle, onView }) {
   const colors = STATUS_COLORS[row.statusKey] || STATUS_COLORS.ongoing;
@@ -116,40 +85,13 @@ function SubmissionAccordion({ row, open, onToggle, onView }) {
               <div className="sub-acc-empty">No phases submitted yet.</div>
             ) : (
               row.submissions.map((s) => (
-                <div className="sub-phase" key={s.phase}>
-                  <span className="sub-phase-tick" aria-label={s.completed ? "Completed" : "In progress"}>
-                    {s.completed ? <TickIcon /> : null}
-                  </span>
-                  <span className="sub-phase-num">{s.phase}</span>
-                  <span className="sub-phase-name">{s.name}</span>
-                  <span className="sub-phase-when">
-                    {s.completedAt ? (
-                      <>
-                        <span className="sub-acc-label">Completed at</span>{" "}
-                        {formatCompletedAt(s.completedAt)}
-                      </>
-                    ) : (
-                      <span className="sub-phase-pending">Still in progress</span>
-                    )}
-                  </span>
-                  <span className="sub-phase-done">
-                    {!s.completed
-                      ? null
-                      : s.sections.length === s.totalSections
-                        ? `All sub-sections completed (${s.totalSections})`
-                        : `${s.sections.length} of ${s.totalSections} sub-sections completed`}
-                  </span>
-                  <button
-                    type="button"
-                    className="dash-action-btn dash-btn-green"
-                    style={actionBtnStyle}
-                    tabIndex={open ? 0 : -1}
-                    onClick={() => onView(row, s)}
-                    data-log-title={`View submission clicked: ${row.username} - Phase ${s.phase}`}
-                  >
-                    View
-                  </button>
-                </div>
+                <PhaseRow
+                  key={s.phase}
+                  submission={s}
+                  focusable={open}
+                  logLabel={row.username}
+                  onView={(sub) => onView(row, sub)}
+                />
               ))
             )}
           </div>

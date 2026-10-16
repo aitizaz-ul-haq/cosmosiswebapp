@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ModalButton, ModalPasswordInput, ModalShell } from "../modalkit/ModalKit";
 import "../styles/submissions.css";
 
 // Blurs the whole page until the logged-in user re-enters their password.
@@ -40,35 +41,34 @@ export default function PasswordGate({ onVerified }) {
 
   return (
     <div className="sub-gate-overlay">
-      <form
-        className="sub-gate-card"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="sub-gate-title"
-        onSubmit={handleSubmit}
+      <ModalShell
+        size="sm"
+        icon="lock"
+        title="To access this section please enter your password here"
+        dismissOnOverlay={false}
+        as="form"
+        wrapperProps={{ onSubmit: handleSubmit }}
+        footer={
+          <ModalButton
+            type="submit"
+            variant="primary"
+            disabled={submitting}
+            data-log-title="Submissions password Enter button clicked"
+          >
+            {submitting ? "Verifying…" : "Enter"}
+          </ModalButton>
+        }
       >
-        <h3 id="sub-gate-title" className="sub-gate-title">
-          To access this section please enter your password here
-        </h3>
-        <input
-          type="password"
-          className="sub-gate-input"
+        <ModalPasswordInput
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          aria-label="Password"
           autoComplete="current-password"
           autoFocus
+          error={error}
         />
-        {error ? <div className="sub-gate-error">{error}</div> : null}
-        <button
-          type="submit"
-          className="sub-gate-btn"
-          disabled={submitting}
-          data-log-title="Submissions password Enter button clicked"
-        >
-          {submitting ? "Verifying…" : "Enter"}
-        </button>
-      </form>
+      </ModalShell>
     </div>
   );
 }

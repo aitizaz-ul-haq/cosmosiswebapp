@@ -1,104 +1,124 @@
 "use client";
 
+import { STATUS_LABELS, onboardingTypeLabel } from "./clientStatusShared";
 import {
-  STATUS_LABELS,
-  onboardingTypeLabel,
-  modalOverlayStyle,
-  modalCardStyle,
-} from "./clientStatusShared";
+  DetailList,
+  DetailRow,
+  Icon,
+  ModalButton,
+  ModalGrid,
+  ModalSection,
+  ModalShell,
+  STATUS_TONES,
+  StatusPill,
+  initialsOf,
+} from "./modalkit/ModalKit";
 
+// Read-only client details (example_modal_3). Callers can pass their own footer buttons
+// (built with ModalButton) and extra rows that appear in an "Additional details" card.
 export default function ClientInfoModal({ client, onClose, footerActions, extraRows = [] }) {
   if (!client) return null;
 
-  const rows = [
-    { label: "Full name", value: client.fullName },
-    { label: "Email", value: client.email },
-    { label: "Phone", value: client.phone },
-    { label: "Status", value: STATUS_LABELS[client.status] || client.status },
-    { label: "Onboarding type", value: onboardingTypeLabel(client.onboardingType) },
-    { label: "RM name", value: client.assignedToName },
-    { label: "Shared with", value: (client.sharedWithNames || []).join(", ") },
-    { label: "Assigned by", value: client.assignedByName },
-    { label: "RM remarks", value: client.rmRemarks },
-    {
-      label: "Created",
-      value: client.createdAt ? new Date(client.createdAt).toLocaleString() : "",
-    },
-    ...extraRows,
-  ];
+  const name = client.fullName || client.username || "Client details";
+  const statusKey = client.status || "ongoing";
+  const statusLabel = STATUS_LABELS[statusKey] || statusKey;
+  const logName = client.fullName || client.email;
 
   return (
-    <div style={modalOverlayStyle} onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} style={modalCardStyle}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "1rem",
-          }}
-        >
-          <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700 }}>
-            {client.fullName || "Client details"}
-          </h3>
-          <button
-            type="button"
+    <ModalShell
+      avatar={initialsOf(name)}
+      title={name}
+      badges={
+        <StatusPill tone={STATUS_TONES[statusKey] || "slate"} icon="clock">
+          {statusLabel}
+        </StatusPill>
+      }
+      subtitle="Client details and current status."
+      onClose={onClose}
+      closeLogTitle={`Close Client Info modal: ${logName}`}
+      size="md"
+      footer={
+        footerActions || (
+          <ModalButton
+            variant="neutral"
+            icon="x"
             onClick={onClose}
-            aria-label="Close"
-            data-log-title={`Close Client Info modal: ${client.fullName || client.email}`}
-            style={{
-              border: "none",
-              background: "transparent",
-              fontSize: "1.5rem",
-              lineHeight: 1,
-              cursor: "pointer",
-              color: "#6D7692",
-            }}
+            data-log-title={`Close Client Info modal: ${logName}`}
           >
-            ×
-          </button>
-        </div>
+            Close
+          </ModalButton>
+        )
+      }
+    >
+      <ModalGrid>
+        <ModalSection>
+          <DetailList>
+            <DetailRow tile tone="blue" icon="user" label="Full name" value={client.fullName} />
+            <DetailRow tile tone="green" icon="mail" label="Email" value={client.email} />
+            <DetailRow tile tone="violet" icon="phone" label="Phone" value={client.phone} />
+            <DetailRow
+              tile
+              tone="blue"
+              icon="file"
+              label="Status"
+              value={<StatusPill tone={STATUS_TONES[statusKey] || "slate"}>{statusLabel}</StatusPill>}
+            />
+          </DetailList>
+        </ModalSection>
 
-        <div style={{ display: "grid", gap: "0.35rem" }}>
-          {rows.map((item) => (
-            <div
-              key={item.label}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "160px 1fr",
-                gap: "0.5rem",
-                padding: "0.5rem 0",
-                borderBottom: "1px solid #f0f0f0",
-              }}
-            >
-              <span style={{ fontWeight: 600, color: "#6D7692" }}>{item.label}</span>
-              <span style={{ color: "#1a1a1a", wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
-                {item.value || "—"}
-              </span>
-            </div>
-          ))}
-        </div>
+        <ModalSection>
+          <DetailList>
+            <DetailRow
+              tile
+              tone="violet"
+              icon="users"
+              label="Onboarding type"
+              value={onboardingTypeLabel(client.onboardingType)}
+            />
+            <DetailRow tile tone="blue" icon="briefcase" label="RM name" value={client.assignedToName} />
+            <DetailRow
+              tile
+              tone="green"
+              icon="share"
+              label="Shared with"
+              value={(client.sharedWithNames || []).join(", ")}
+            />
+            <DetailRow tile tone="violet" icon="user" label="Assigned by" value={client.assignedByName} />
+          </DetailList>
+        </ModalSection>
+      </ModalGrid>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1.25rem" }}>
-          {footerActions || (
-            <button
-              type="button"
-              onClick={onClose}
-              data-log-title={`Close Client Info modal: ${client.fullName || client.email}`}
-              style={{
-                padding: "0.5rem 1rem",
-                fontWeight: 700,
-                borderRadius: "0.5rem",
-                backgroundColor: "var(--btn-green-light)",
-                border: "1px solid var(--btn-green-light)",
-                color: "#fff",
-              }}
-            >
-              Close
-            </button>
-          )}
+      <div className="mk-panel">
+        <div className="mk-panel-head">
+          <span className="mk-tile mk-tile-sm tone-violet" aria-hidden="true">
+            <Icon name="file" size={17} />
+          </span>
+          <h3 className="mk-section-title">RM remarks</h3>
         </div>
+        <p className="mk-panel-text">{client.rmRemarks || "No remarks added."}</p>
       </div>
-    </div>
+
+      {extraRows.length > 0 ? (
+        <ModalSection icon="info" tone="slate" title="Additional details">
+          <DetailList>
+            {extraRows.map((row) => (
+              <DetailRow key={row.label} label={row.label} value={row.value} />
+            ))}
+          </DetailList>
+        </ModalSection>
+      ) : null}
+
+      <ModalSection>
+        <DetailList>
+          <DetailRow
+            tile
+            tone="blue"
+            icon="calendar"
+            label="Created"
+            value={client.createdAt ? new Date(client.createdAt).toLocaleString() : ""}
+          />
+        </DetailList>
+      </ModalSection>
+    </ModalShell>
   );
 }

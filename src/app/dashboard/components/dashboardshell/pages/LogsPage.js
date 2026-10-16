@@ -326,7 +326,7 @@ export default function LogsPage() {
               <button
                 type="button"
                 onClick={() => fetchLogs()}
-                style={{ ...btnStyle, backgroundColor: "var(--btn-green-light)" }}
+                style={{ ...btnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
                 data-log-title="Logs: Apply filters"
               >
                 Apply filters
