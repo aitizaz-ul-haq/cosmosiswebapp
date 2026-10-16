@@ -6,6 +6,62 @@ lists known problems. Everything here was verified against the code unless marke
 
 Last updated: 2026-10-16. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
+**Standing user instruction:** Whenever you change this application, update `agent.md` in the
+same task before handing it back. Record the resulting behaviour, relevant files, verification
+performed and remaining limitations; correct any descriptions made stale by the change. Keep
+the latest handoff and change log current so GitHub Copilot or another agent can continue.
+
+## Latest handoff for GitHub Copilot — 16 Oct 2026
+
+Implementation baseline before this documentation update: **`17d080a` on `main`**. The working
+tree was clean when this update began. Re-check `git status` before continuing; old change-log
+entries describe earlier stages of development.
+
+The latest completed work is the **client Onboarding timeline and its phase actions**:
+
+- Clicking Phase 1–6 expands that phase's own subheadings inline. Clicking it again collapses
+  the panel; selecting another phase switches panels. The layout follows
+  `public/images/onboarding_detail_timeline.jpg`, with staggered gradient bars and the RM
+  accordion's 800 ms height/fade animation. Reduced-motion users get immediate transitions.
+- Each panel has **Contact RM**, then **Start Phase N**, before the large light-gray phase
+  number. Contact RM opens the user's configured email composer addressed to the assigned RM,
+  with a phase-specific subject; missing RM email disables the action. Start Phase N opens
+  that phase's existing full form modal. Next phase updates the modal and expanded panel;
+  closing restores focus to the corresponding Start button.
+- Submitted phases use **green solid tracks and green tick icons**; pending phases use
+  **red dotted tracks and red cross icons**. Submission comes from `completedSteps` or
+  whole-form status `submitted`/`approved`. Viewing, starting, or moving between phases does
+  not submit them. `currentStep` indicates progress only.
+- Each subsection currently inherits its phase's submission status. Forms still need a
+  persistence/submit API, and independent subsection submission is not tracked. Submissions
+  pages still use dummy data. Phase 0 retains its existing gated legal-document reader;
+  completed form phases are the current evidence that prerequisites were read.
+
+Files to start with (dashboard paths are relative to
+`src/app/dashboard/components/dashboardshell/pages/`):
+
+| File | Responsibility |
+|---|---|
+| `OnboardingPage.js` | Fetches onboarding/RM contact, derives submission state, coordinates panel and modal navigation |
+| `onboarding/OnboardingTimeline.js` | Phase triggers, status classes, accordion ARIA and audit titles |
+| `onboarding/PhaseDetails.js` | Panel header/actions, subsection bars, green ticks/red crosses, collapsed-panel focus exclusion |
+| `onboarding/onboarding.css` | Timeline/status styling, reversible animation and responsive header layout |
+| `onboarding/PhaseModal.js`, `onboarding/phases/Phase1..6*.js` | Existing full forms; preserve 80vw width, 90vh maximum height and existing header/footer sizes |
+| `clientStatusShared.js` | Shared phase names and `PHASE_SECTIONS` headings |
+| `src/app/api/clients/me/route.js` (repo-relative) | Returns `assignedRm: { name, email }` or `null`; requires assigned user, RM role, and matching profile/token/RM tenant; safe contact projection only |
+
+The implementation passed ESLint (0 errors, 4 existing warnings), an isolated production build,
+10 mocked API checks, and fixture-based browser checks at 1440×900, 1104×792 and 375×812.
+Checks covered all six forms, email link addressing, Next/close/focus, status colours, hidden
+panel controls and unchanged modal dimensions. Temporary preview/build processes were stopped
+and their directories removed. These were local checks; deployment and live email delivery
+were not part of this work.
+
+The user's remaining requested work is recorded in §11: onboarding persistence, internal
+notifications, generated external emails, toast triggers, a complete superadmin click audit
+trail, and redesigns of all four dashboards using images the user will provide. Continue from
+the user's next instruction and preserve the existing phase/modal constraints in §9.
+
 ---
 
 ## 1. What the product is
@@ -176,7 +232,7 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 - **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal. Next phase updates both the modal and the expanded timeline panel; closing returns keyboard focus to that phase's Start button. Opening/viewing a form does not change submission status.
 - **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Submitted timeline nodes/tracks and subsection bars are green with the RM-style green tick; pending phases are red with dotted red tracks and subsection red crosses. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
 - **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
-- `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
+- `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile, assigned RM contact) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
 
 ### Submissions (UI-only for now)
 `SubmissionsPage` (RM + supervisor): password gate (`PasswordGate` → `/api/verify-password`, asked on every open; **client-side gate only**) → paginated accordion of engaged clients (ongoing/on_hold/cancelled) → per-phase rows (`PhaseRow`) → `SubmissionViewModal`.
@@ -224,22 +280,24 @@ Commits are all titled "added changes", so this is reconstructed from the diffs.
 - **Onboarding status page** (`OnboardingStatusPage` + `onboardingstatus.css`): expandable rows, progress, status menu, timeline detail.
 - **Client onboarding form**: `PrerequisitesModal` + legal content (Phase 0), updates to phases 1/3/4/5, charges/terms PDFs.
 
-### 16 Oct (this stretch — partly committed as `ba14e1e`/`a698589`, **the rest is uncommitted**)
+### 16 Oct — dashboard, modal and login redesigns (committed)
 Production-build fixes: lint errors in `dashboardshell.js`, `dashboarddetailssection.js`, `ScheduleOnboardingModal.js`; `/dashboard` wrapped in `<Suspense>`; `api/demo-users` marked `force-dynamic`.
 1. **Onboarding status UI**: status dropdown z-index/blink fix (`.onbs-item:has(.onbs-status-list){z-index:30}`).
 2. **Submissions section** (RM + supervisor + client): see §6 — password gate, accordion with plus button (soft-green circle, dark-green plus), phase rows with tick / "Completed at" / sub-section count / "Still in progress", view modal; client variant with Notify RM / Edit placeholders; client sidebar entry; `/api/clients/me` allowed for clients in `middleware.js` (also fixed the client onboarding page silently falling back to defaults).
 3. **Modal kit + modal redesign** (§9a) across the RM and supervisor dashboards.
 4. **Application-wide button/capsule restyle** (§9): global `dash-btn-*`, `STATUS_COLORS`, pagination, profile buttons, report/log buttons, onboarding modal buttons; Edit buttons and then all green buttons = soft green; phase capsules = slate-soft.
-5. **Client Dashboard page** (new, `ClientDashboard.js`): welcome header + the four status cards moved out of the Onboarding page; Onboarding page now shows only the progress timeline (progress card on top, "Before You Begin" removed). Phase timeline circles = light green with dark-green number, current phase has a dark-green ring.
+5. **Client Dashboard page** (new, `ClientDashboard.js`): welcome header + the four status cards moved out of the Onboarding page; Onboarding page shows the progress timeline (progress card on top, "Before You Begin" removed). At this stage phase circles were all green; the later submission-status change below gives pending phases red styling and submitted phases green styling.
 6. **Bug fix**: `Phase1PersonalDetails.js` `AdviserBlock` crashed (`companyName` undefined) — now receives `companyName`.
 7. **Client onboarding phases 1–6 restyled** (§9b) with verified-identical modal sizes; Phase 0 untouched.
 8. **Login page redesign + toasts** (§9c); removed files: `logintopsection.js`, `loginmidsection.js`, `topsectiontextcontainer.js`, `midsectionleftpart.js`, `midsectionloginformbottomline.js`, `changepasswordform.js`, `backbuttonlogin.js`; added `loginhero.js`, `loginicon.js`, `notifs/logintoast.js`; rewrote `login.css`, `loginform.css`, `loader.css`, `notifs.css`, `loginpagedata.json`.
 9. `public/images`: added `example_modal_1..5.png`, `new_log_screen.png`, `login back ground.png`, `login-bg.webp`.
 
-**Uncommitted right now: ~42 files (client dashboard, phase restyle, login, button scheme, etc.). Commit them.**
+The earlier dashboard/login changes are committed, including `2b12ab6`; the onboarding
+accordion and phase actions are included in `17d080a`. Check current Git state rather than
+treating historical work as uncommitted.
 
 ### 16 Oct — client onboarding phase accordion
-- Client phases 1–6 now expand inline to show only their own subheadings, replacing the full-phase modal entry point. Layout follows `onboarding_detail_timeline.jpg` using the dashboard's green palette, and expands/collapses with the RM timeline's animation timing.
+- Client phases 1–6 expand inline to show only their own subheadings, replacing direct modal opening from the phase nodes. Layout follows `onboarding_detail_timeline.jpg` and expands/collapses with the RM timeline's animation timing. The initial all-green presentation was subsequently replaced by the red/green submission states below; full forms are accessible through Start Phase N.
 - Phase 0 keeps its existing legal reader. Existing phase form components and modal dimensions are unchanged.
 - Phase controls now provide explicit audit titles and accessible accordion state. The current onboarding step remains separate from the phase being viewed.
 - Verified with ESLint (0 errors, 4 existing warnings), an isolated production build, and a fixture-based browser preview at 1440×900, 1104×792 and 375×812. Checked all phase headings, open/close animation, rapid toggles, keyboard controls, reduced motion and the unchanged prerequisite reader.
