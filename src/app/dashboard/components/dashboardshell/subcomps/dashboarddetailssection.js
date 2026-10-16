@@ -17,7 +17,7 @@ export default function DashboardDetailsSection({
         setActiveMenu={setActiveMenu}
       />
       {/* Main Section */}
-      <DashboardMenuSection activeMenu={activeMenu} children={children} />
+      <DashboardMenuSection activeMenu={activeMenu}>{children}</DashboardMenuSection>
     </div>
   );
 }

@@ -232,7 +232,7 @@ export default function ScheduleOnboardingModal({
           {!isEdit && (
             <>
               <p style={{ ...noteStyle, background: "#ede9fe" }}>
-                Create the client's login now. It is emailed to {client.email} at the scheduled time
+                Create the client&apos;s login now. It is emailed to {client.email} at the scheduled time
                 and the client cannot log in before then.
               </p>
               <input

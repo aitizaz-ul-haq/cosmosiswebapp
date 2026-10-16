@@ -32,6 +32,11 @@
   backdrop-filter: blur(8px);
 }
 
+/* Keep a row with an open status menu above the rows and detail panel that follow it */
+.onbs-item:has(.onbs-status-list) {
+  z-index: 30;
+}
+
 .onbs-item:focus-visible {
   outline: 2px solid var(--sitegreen, #21cfb2);
   outline-offset: -2px;

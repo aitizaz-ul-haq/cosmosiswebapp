@@ -3,6 +3,8 @@ import User from "@/models/User";
 import Company from "@/models/Company";
 import DemoRequest from "@/models/DemoRequest";
 
+export const dynamic = "force-dynamic";
+
 // GET all users with subscriptionStatus 'demo' (for Super Admin dashboard)
 export async function GET() {
   try {

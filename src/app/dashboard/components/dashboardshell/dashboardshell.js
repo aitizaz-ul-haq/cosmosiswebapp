@@ -28,8 +28,9 @@ export default function DashboardShell({
         config={config}
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
-        children={children}
-      />
+      >
+        {children}
+      </DashboardDetailsSection>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
 import { useUser } from "../context/UserContext";
@@ -87,7 +87,15 @@ const getPageMap = (userRole, setActiveMenu) => {
   };
 };
 
-export default function Dashboard() {
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Dashboard />
+    </Suspense>
+  );
+}
+
+function Dashboard() {
   const { user, logout, loading } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
