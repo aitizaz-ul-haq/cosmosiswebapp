@@ -1,37 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import DashboardSidebarLogoContainer from "./microcomps/dashboardsidebarlogocontainer";
 import DashboardSidebarMenuContainer from "./microcomps/dashboardsidebarmenucontainer";
+import DashboardShellIcon from "./microcomps/dashboardshellicon";
 
-export default function DashboardSideBarSection({
-  config,
-  user,
-  activeMenu,
-  setActiveMenu,
-}) {
-  const [collapsed, setCollapsed] = useState(false);
-
+export default function DashboardSideBarSection({ config, user, activeMenu, setActiveMenu, onLogout, collapsed, onToggle, mobileOpen, onCloseMobile }) {
   return (
-    <div className={`dashboard-sidebar-section ${collapsed ? "collapsed" : ""}`}>
-      <button
-        type="button"
-        className="dashboard-sidebar-toggle"
-        onClick={() => setCollapsed((prev) => !prev)}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        data-log-title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        <span className="dashboard-sidebar-toggle-icon" />
+    <aside id="dashboard-sidebar" className={`dashboard-sidebar-section${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
+      <button type="button" className="dashboard-sidebar-toggle" onClick={onToggle} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} aria-expanded={!collapsed} data-log-title={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+        <DashboardShellIcon name="left" size={17} />
       </button>
-
-      <DashboardSidebarLogoContainer user={user} collapsed={collapsed} />
-      <DashboardSidebarMenuContainer
-        config={config}
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-        collapsed={collapsed}
-      />
-    </div>
+      <button type="button" className="dashboard-sidebar-mobile-close" data-log-title="Close navigation" onClick={onCloseMobile} aria-label="Close navigation"><DashboardShellIcon name="close" /></button>
+      <DashboardSidebarLogoContainer user={user} collapsed={collapsed} onLogout={onLogout} setActiveMenu={setActiveMenu} />
+      <DashboardSidebarMenuContainer config={config} activeMenu={activeMenu} setActiveMenu={setActiveMenu} collapsed={collapsed} />
+      <div className="dashboard-sidebar-footer"><strong>Cosmosis</strong><span>Client Onboarding Platform</span></div>
+    </aside>
   );
 }

@@ -4,14 +4,116 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-10-16. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-10-20. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 16 Oct 2026
+## Latest handoff for GitHub Copilot — 20 Oct 2026
+
+All four role home dashboards and the shared sidebar/header now follow the supplied
+`RM_Dashboard_design.png`, `SUpervisor_dashbaord_design.png`, `client_dashboad_design.png`
+and `Superadmin Dashboard design.png` in `public/images`.
+
+- The sidebar is 262px on the reference desktop canvas, with the supplied gray logo, user
+  identity, teal active item and lavender/wave background. It collapses on desktop and opens
+  as a drawer at 760px and below. The 60px header retains menu search and provides profile,
+  account/logout and notification controls. Poppins is the application-wide typeface,
+  including the home dashboards, navigation, charts, controls and existing forms/modals.
+- `public/images/dashboard-theme/` contains clean background crops from
+  `support_image_instructions.png`; sidebar, navigation header and page title use them.
+  Its README explains the two optional background assets. The supplied support sheet's wave
+  differs slightly from the waves drawn in the reference screens; CSS aligns its placement.
+- `pages/dashboard/DashboardUI.js` and `dashboard-ui.css` provide scoped `dsh-` hero,
+  stat, chart, list, table, action, badge and donut primitives. SVG charts require no new
+  dependency. The role pages no longer import the legacy role dashboard CSS files.
+- RM and supervisor summaries use scoped `/api/clients` data; supervisor team totals and
+  performance also use `/api/users`. RM random counts and sample people were removed.
+  Chart/performance filters and all dashboard actions navigate existing pages. Supervisor
+  submission rows label the recorded relationship as **Assigned RM**, since no submitter
+  actor is stored. `pages/dashboard/data.js` contains these shared derivations.
+- The client dashboard uses its own saved onboarding state, recorded completed phases,
+  uploads and updated timestamp from `/api/clients/me`. A stored zero progress is respected;
+  malformed phase numbers are clamped. The profile completion indicator counts ten personal
+  information fields; it is an estimate, not a persisted backend percentage.
+- Superadmin totals, company pipeline and five most recent audit records use existing APIs.
+  Each request fails independently. Report rows link to the existing Reports page; system
+  health/compliance metrics show unavailable because no monitoring API exists.
+- RM notification cards and the formerly blank Notifications page now show dated client
+  creation/submission/approval activity. This is a derived activity feed, not a persisted
+  unread-notification or delivery system. The header links RMs to it.
+- Existing list-page background branding, onboarding pages, phase forms and their modal
+  constraints remain in place. Added buttons retain readable audit titles.
+- Application-wide capsule follow-up: dashboard `Badge` now wraps the existing ModalKit
+  `StatusPill`, which normalizes workflow/status labels through its shared `STATUS_TONES`.
+  In progress uses `#E3F8F2` / `#17B89B`, Under review uses `#EFEAFD` / `#6D4FD8`,
+  phase/progress capsules use `#ECEFF7` / `#6D7692`. Capsules are fully rounded with
+  semibold labels; compact dashboard sizing remains responsive. The RM orange review
+  override is removed. Pending/demo/hold remain amber, scheduling/registry blue, and
+  rejected/inactive/cancelled red. Demo/request pages now use the same shared pill, legacy
+  `.status-*` CSS matches the original palette, and the client modal's percentage is slate.
+- Application-wide typography follow-up: the modal's Poppins family now applies to regular,
+  medium, semibold and bold UI text. `layout.js` installs `--font-poppins` on `<html>`;
+  `globals.css` sets the family and makes native controls inherit it. Arial overrides in
+  the shell/home dashboards and SVG charts are removed. Public mobile menus, the onboarding
+  information glyph and modal credential text inherit the same family; stale Geist template
+  declarations and serif fallbacks are normalized. Poppins weights 100–900 remain loaded;
+  existing font sizes, weight choices and modal dimensions are preserved.
+  Header status capsules wrap within their available mobile space to accommodate Poppins.
+  Browser platform-font inspection confirms Poppins Regular (400), Medium (500), SemiBold
+  (600) and Bold (700) across all four dashboards, controls, chart labels and desktop/mobile
+  modals. Desktop/laptop/mobile checks report no runtime errors; the Superadmin mobile
+  content remains exactly 390px wide after the header capsule wrap adjustment.
+- Follow-up runtime fix: the five new dashboard/activity loaders use an effect-local
+  `active` flag during cleanup. Every asynchronous success, error and loading update checks
+  this flag, so late responses cannot update an inactive effect after navigation, user
+  changes or React Strict Mode remounts. Cleanup no longer aborts fetches, removing the
+  reported `AbortError: signal is aborted without reason` trigger at the Superadmin cleanup.
+  Requests can finish in the background after cleanup; their results are ignored. The
+  supervisor loader also catches unexpected failures outside its per-request result handling.
+- Logout follow-up: `dashboard/page.js` awaits successful session cleanup, prevents duplicate
+  logout attempts/competing auth redirects, then uses `window.location.replace("/login")`
+  to request a fresh login document. A failed cleanup keeps the current session and shows
+  a retry message. The context only clears its user after a successful response, and its
+  initial session-check effect ignores responses from cleaned-up Strict Mode effects.
+  Middleware allows the exact `/api/logout` path without a valid token, so expired/missing
+  sessions can still clear the cookie. The endpoint expires the root-path cookie with
+  `maxAge: 0`, matching login's `sameSite: lax`, and returns `Cache-Control: no-store`.
+
+Verification: `npx eslint src` passes with zero errors and two existing warnings (Onboarding
+image and Profile effect dependency). An isolated production build passes. Browser fixtures
+cover all roles at 1672×941, 1366×768 and 390×844, scoped content overflow, zero/empty/error
+states, company/client filters, approvals/activity/profile navigation, account menus, desktop
+collapse and the mobile drawer. These checks use local API fixtures and do not validate live
+database records or deploy the app.
+
+Follow-up verification: 25 focused lifecycle checks execute the actual five components'
+transpiled effects with controlled response headers/bodies. They verify cleanup before
+success/failure, cleanup while JSON is pending, Strict Mode setup/cleanup/setup isolation,
+and normal error reporting while mounted. All pass. The temporary harness is
+`/tmp/cosmosis-dashboard-lifecycle.cjs`; it requires only the already-installed Next compiler.
+Twelve targeted Chrome regression cases also pass: delayed native response headers/deferred
+native JSON completion, Strict Mode remounts, Dashboard/Notifications → Profile → back,
+stale-response isolation, and Superadmin/Supervisor partial failures and recovery. Across
+205 intercepted API requests there are no window errors, unhandled rejections or CDP errors.
+The report is `/tmp/cosmosis-dashboard-abort-browser-results.json`; this fixture run did not
+reproduce the original abort error before the fix, and deferred JSON completion is not a
+streamed-body test. The updated isolated production build and ESLint pass.
+
+Logout verification: seven real endpoint cases cover missing, expired and malformed tokens
+and all four valid roles. Nine browser cases cover header/sidebar logout for every role and
+a simulated 503 failure followed by a successful real retry. A 650ms delay confirms navigation
+waits for cookie cleanup; duplicate clicks produce one request. Each success renders the
+login form, removes the cookie, stays signed out after reload/back and rejects direct
+dashboard navigation. All 45 document responses succeeded with zero browser runtime errors.
+Report: `/tmp/cosmosis-logout-browser-results.json`; other API data uses local fixtures.
+ESLint and an isolated production build pass (the same two existing lint warnings).
+The running app's `/login` independently returned 200 with its form. The original reported
+404 was not reproduced; the redirect race and expired-session cleanup defect are addressed.
+
+## Previous handoff — 16 Oct 2026
 
 Implementation baseline before this documentation update: **`17d080a` on `main`**. The working
 tree was clean when this update began. Re-check `git status` before continuing; old change-log
@@ -129,7 +231,7 @@ scripts/                        backfillLogs.js, inspectNemesis*.js, seedNemesis
 public/images/                  All images. login-bg.webp = login background. example_modal_1..5.png = design references
 ```
 
-Class-name prefixes (keep using them): `dash-` global buttons, `generic-table-` tables, `onbs-` onboarding
+Class-name prefixes (keep using them): `dsh-` role home dashboards, `dash-` global buttons, `generic-table-` tables, `onbs-` onboarding
 *status* page, `onb-` client onboarding *form*, `sub-` submissions, `mk-` modal kit, `login-`/`loginform-` login.
 
 ## 4. Data models (`src/models`)
@@ -158,11 +260,15 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 1. `POST /api/login` → bcrypt compare → signs a JWT `{id, username, role, companyId}` (1 day) → sets HttpOnly cookie `token` (`secure` in production, `sameSite: lax`).
    Clients with `isActive === false` get **403** ("account not active yet") — this is how scheduled clients are blocked until their email is sent.
 2. `UserContext` calls `GET /api/me` on every page load to restore the session; `login()` calls `/api/login` then `/api/me`.
-3. `POST /api/logout` clears the cookie.
+3. `POST /api/logout` clears the root-path cookie, including for missing/expired sessions.
+   The dashboard awaits a successful response, clears context state, then replaces the
+   current document with `/login`; duplicate logout/auth redirects are suppressed.
+   Failed cleanup retains the session and reports an error for retry.
 4. API handlers call `verifyToken(req)` (`lib/auth.js`; reads cookie, falls back to `Authorization: Bearer`).
 
 ### `middleware.js` (first line of defence)
 - `PUBLIC_PATHS` (prefix match): `/login`, `/api/login`, `/api/register`, `/api/requestdemo`, `/api/cron`.
+- `/api/logout` is also public by exact path match, for idempotent session cleanup.
 - Everything else under `/dashboard/*` and `/api/*` needs a valid `token`; missing/invalid → redirect to `/login`.
 - `ROLE_RULES` = allowed **path prefixes per role** (non-matching → JSON 403):
   - superadmin: `/dashboard, /api/companies, /api/users, /api/clients, /api/log, /api/logs, /api/demo-requests, /api/demo-users, /api/me, /api/logout, /api/verify-password`
@@ -200,6 +306,7 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
   - client: **dashboard, onboarding, submissions, profile**
 - **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
+- **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for the RM menu.
 - **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side (`PAGE_SIZE` 8 on list pages).
 - **`ActionLogger`** is mounted once and logs every click (see §7). Put `data-log-title="…"` on buttons you add so the audit log is readable (keep the existing ones when restyling).
 
@@ -242,7 +349,7 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 ## 9. UI system and conventions (follow these for any new UI)
 
 ### Design tokens
-- Font: Poppins (`var(--font-poppins)`). Root tokens in `globals.css`: `--sitegreen #21CFB2`, `--sitedark #6D7692` (slate), `--sitewhite`.
+- Font: **Poppins** (`var(--font-poppins), Arial, sans-serif`) application-wide, matching the modals. The font variable is defined on `<html>`; headings, controls, navigation and SVG chart text inherit it. Weights 100–900 are loaded by `layout.js`. Do not add separate Arial, serif, Playfair, Geist or monospace UI overrides. Root tokens in `globals.css`: `--sitegreen #21CFB2`, `--sitedark #6D7692` (slate), `--sitewhite`.
 - Palette used everywhere (hex, keep consistent): ink `#1a1a1a`; slate `#6d7692`; **soft green** fill `#e3f8f2` / text+icon `#17b89b` / hover `#d3f3ea`; slate-soft `#eceff7` (hover `#e1e5f0`); blue `#e6effd`/`#3a6fd8`; violet `#efeafd`/`#6d4fd8`; amber `#fef0dc`/`#c26a0a`; red `#fde8e8`/`#d03a3a`; card border `#e6e9f1`; divider `#eef0f5`.
 - Radii: buttons/inputs **10px**, cards 14–18px, pills fully round. Icons: stroke, 1.8px, `currentColor`, inside a soft-tinted rounded **square tile**.
 
@@ -250,6 +357,12 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 `dash-btn-green` (= `dash-btn-green-soft`: light green fill, dark green text), `dash-btn-danger`, `dash-btn-neutral`, `dash-btn-info`, `dash-btn-purple` — all **soft tinted fills with coloured text**; there is **no solid-green dashboard button any more** (deliberate user decision). Sizes come from the `actionBtnStyle` inline object (`padding .4rem .75rem`, weight 600, radius 10px) — do not change table button sizes. Modal buttons use `ModalButton` (`primary` = soft green, `neutral`, `danger`, `info`, `violet`). Pagination: `.generic-table-page-btn` (active = soft green).
 ### Capsules/pills
 Status colours come from `STATUS_COLORS` in `clientStatusShared.js` (ongoing green, on_hold/approval_pending amber, under_review violet, register/scheduled blue, cancelled red; border = fill). **Phase / progress capsules are slate-soft** (`#eceff7` / `#6d7692`).
+Use `StatusPill` from `modalkit/ModalKit.js` (or dashboard `Badge`, which wraps it) for new
+capsules. Known status text or the explicit `status` prop determines its shared tone, so
+In Progress stays green and Under Review stays violet across roles and pages. `tone` is
+the fallback for non-status labels; teal/mint map to green, purple to violet, orange to
+amber and gray to slate. Keep phase labels/percentages slate; do not add role-specific
+badge color overrides.
 
 ### 9a. Modal kit (`dashboardshell/pages/modalkit/`)
 `ModalKit.js` (read its header comment for the design rules), `modalkit.css`, `Icon.js` (stroke icon set — add icons here). Components: `ModalShell` (props `icon|avatar, title, badges, subtitle, onClose, footer, size sm|md|lg, as/wrapperProps` for forms, `iconTone`, `headerActions`, `overlayClassName`), `ModalSection`, `ModalGrid`, `DetailList/DetailRow`, `Stat`, `StatusPill` + `STATUS_TONES`, `ModalButton`, `ModalField/ModalInput/ModalSelect/ModalTextarea/ModalPasswordInput` (these now forward `required` to the native element), `CopyButton`, `initialsOf`. Escape closes, body scroll is locked, backdrop is blurred.
@@ -273,6 +386,37 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 20 Oct — all role dashboards and navigation redesign
+- Rebuilt RM, supervisor, client and superadmin overview layouts from the four supplied design PNGs, with responsive cards, SVG charts, activity tables, quick actions and progress rings.
+- Extracted the support sheet backgrounds into `public/images/dashboard-theme/`; rebuilt the common sidebar/header, account controls and mobile navigation. Corrected sidebar label casing and the Supervisors typo.
+- Preserved live scoped API data and replaced random/hardcoded metrics. Added real derived client activity to the RM Notifications page and kept unavailable reporting/health data explicit.
+- Added shared `pages/dashboard/` primitives/styles/data helpers. Preserved onboarding/form/modal constraints and non-home list-page branding. See the latest handoff above for verification and current limitations.
+
+### 20 Oct — dashboard cleanup AbortError fix
+- Replaced abort-driven cleanup in SuperAdmin, Supervisor, RM, Client and Notifications loaders with effect-local active guards on all asynchronous state updates. This removes the reported cleanup error trigger and prevents obsolete response/error/loading updates.
+- Preserved independent Superadmin request failures and added a supervisor loader catch for unexpected failures. In-flight network requests may complete after navigation; inactive effects ignore them.
+- Verified 25 controlled lifecycle cases, 12 targeted browser cases (zero browser errors/unhandled rejections), isolated production build and ESLint (zero errors, two existing warnings). See latest handoff for fixture coverage and limitations.
+
+### 20 Oct — consistent status capsules application-wide
+- Dashboard badges reuse ModalKit StatusPill and its original palette. Shared semantic mappings keep In Progress green, Under Review violet, pending/hold/demo amber, scheduled/registry blue, negative states red and phase/progress slate.
+- Removed the RM orange review override, restored fully rounded semibold dashboard capsules, migrated demo/request capsules and corrected the client modal percentage to slate. Existing correct list/submission/onboarding capsules remain on the same original colors.
+- Verified rendered capsule colors and desktop/mobile layouts across all four role dashboards, production build and ESLint (zero errors, two existing warnings).
+
+### 20 Oct — one Poppins typeface across the application
+- Removed the dashboard/sidebar/header/chart Arial overrides and made headings and native form controls inherit the modal's Poppins typeface. Moved the shared font variable to `<html>` for consistent inheritance throughout the app.
+- Updated public mobile navigation, onboarding information/legal text, modal credential text and unused template font declarations. Existing normal-through-bold weights, font sizes and modal size constraints remain in place.
+- Verified production build, ESLint (zero errors, two existing warnings), and actual browser platform fonts at 1672×941, 1366×768 and 390×844. Dashboard/sidebar/control/chart/modal text renders Poppins Regular, Medium, SemiBold and Bold. Allowed mobile header capsules to wrap to prevent overflow with the wider font; a focused 390px recheck passes. Report: `/tmp/cosmosis-font-browser-results.json`.
+
+### 20 Oct — reliable logout navigation and session cleanup
+- Await cookie cleanup before requesting a fresh `/login` document; prevent repeated logout
+  calls and competing auth redirects. Failed cleanup retains authentication and allows retry.
+- Allow the exact logout endpoint with missing/expired tokens, expire the root-path cookie
+  explicitly, and ignore obsolete initial session-check effects.
+- Verified seven real API cases and nine browser cases across four roles and both account
+  menus, including delayed/duplicate requests, failed cleanup/retry, reload/back and protected
+  navigation. Zero document errors or runtime errors; ESLint and isolated build pass.
+  The original 404 was not independently reproduced; see the latest handoff for limits.
 
 ### 13–15 Oct (committed) — registry, scheduling, onboarding status
 - **Approval workflow & registry**: `ClientProfile.status` extended; pages `ApprovalsPage`, `UnderReviewPage`, `RegistryPage`, `ClientInfoModal`, `clientStatusShared.js`; `POST/PATCH /api/clients/registry`; credentials email (`sendCredentialsEmail`, `clientRegistrationEmail`); middleware rules updated.
@@ -324,16 +468,17 @@ treating historical work as uncommitted.
 - Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
 - Submissions client buttons **Notify RM** and **Edit** are placeholders (planned: email/in-app notification to the RM; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
-- Remaining superadmin modals and the generic row-details modal still use the old look (§9a). The Notifications page is empty.
+- Remaining superadmin modals and the generic row-details modal still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.
-- `OnboardingStatusPage`: "In progress" and phase capsules are both green-ish on some rows; Awaiting-registry and Scheduled share blue (user was told, no decision yet).
-- Sidebar label typo "Suprevisors"; JSON file name typo `homaepagedata.json`. `lint` has 4 warnings (img tags / hook deps), 0 errors.
+- `OnboardingStatusPage`: phase capsules use slate `#eceff7` / `#6d7692`; In progress uses green `#e3f8f2` / `#17b89b`. Awaiting-registry and Scheduled share blue.
+- JSON file name typo `homaepagedata.json`. `lint` has two existing warnings (Onboarding image / Profile hook dependency), zero errors.
+- Generated reports and system health/compliance/session metrics have no backend; home dashboards link existing report navigation and show unavailable health values.
 
 **User-requested upcoming work (recorded 16 Oct; implement when directed)**
 - Complete onboarding persistence and the remaining finalization changes.
 - Internal notifications, external email generation and toast triggers.
 - Complete the superadmin audit trail for user clicks, including user name, date/time and clicked button title; build on the existing logger.
-- Redesign all four role dashboards using design images the user will provide.
+- The four role dashboard redesigns were completed on 20 Oct using the supplied images (latest handoff above).
 
 ## 12. How to verify changes (what has worked here)
 

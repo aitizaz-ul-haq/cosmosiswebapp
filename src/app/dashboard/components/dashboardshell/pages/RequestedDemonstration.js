@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 // import GenericTable from "./shared/GenericTable";
 import GenericTable from "./GenericTable";
+import { StatusPill } from "./modalkit/ModalKit";
 
 export default function DemoRequestsTable() {
   const [requests, setRequests] = useState([]);
@@ -48,17 +49,11 @@ export default function DemoRequestsTable() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ getValue }) => {
-        const status = getValue()?.toLowerCase();
-        let className = "status-badge";
-        if (status === "pending") className += " status-pending";
-        if (status === "approved" || status === "active")
-          className += " status-active";
-        if (status === "rejected" || status === "inactive")
-          className += " status-rejected";
-
-        return <span className={className}>{getValue()}</span>;
-      },
+      cell: ({ getValue }) => (
+        <StatusPill status={getValue()} className="status-badge">
+          {getValue()}
+        </StatusPill>
+      ),
     },
     {
       accessorKey: "createdAt",

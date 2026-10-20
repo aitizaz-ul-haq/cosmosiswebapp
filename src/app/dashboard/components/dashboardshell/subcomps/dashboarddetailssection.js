@@ -1,22 +1,10 @@
 import DashboardHeaderSection from "./dashboardheadersection";
 import DashboardMenuSection from "./dashboardmenusection";
 
-export default function DashboardDetailsSection({
-  onLogout,
-  config,
-  activeMenu,
-  setActiveMenu,
-  children,
-}) {
+export default function DashboardDetailsSection({ onLogout, user, config, activeMenu, setActiveMenu, mobileOpen, onOpenMobile, children }) {
   return (
     <div className="dashboard-details-section">
-      {/* Header Section */}
-      <DashboardHeaderSection
-        onLogout={onLogout}
-        config={config}
-        setActiveMenu={setActiveMenu}
-      />
-      {/* Main Section */}
+      <DashboardHeaderSection onLogout={onLogout} user={user} config={config} setActiveMenu={setActiveMenu} mobileOpen={mobileOpen} onOpenMobile={onOpenMobile} />
       <DashboardMenuSection activeMenu={activeMenu}>{children}</DashboardMenuSection>
     </div>
   );

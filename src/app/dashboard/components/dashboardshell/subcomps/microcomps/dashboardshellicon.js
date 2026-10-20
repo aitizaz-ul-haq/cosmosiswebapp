@@ -1,0 +1,29 @@
+export default function DashboardShellIcon({ name, size = 22, ...props }) {
+  const paths = {
+    dashboard: <><rect x="3" y="3" width="7" height="7" rx=".7" fill="currentColor" stroke="none"/><rect x="14" y="3" width="7" height="7" rx=".7" fill="currentColor" stroke="none"/><rect x="3" y="14" width="7" height="7" rx=".7" fill="currentColor" stroke="none"/><rect x="14" y="14" width="7" height="7" rx=".7" fill="currentColor" stroke="none"/></>,
+    companies: <><path d="M4 21V6l9-3v18M13 9h7v12M2 21h20M7 8v2m3-3v2m-3 4v2m3-3v2m-3 4v2m3-3v2m6-8v2m0 3v2"/></>,
+    clients: <><circle cx="10" cy="7" r="4" fill="currentColor" stroke="none"/><path d="M2.5 21v-3a7.5 7.5 0 0 1 13-5M15 19h7m-3.5-3.5v7"/><path d="M3 20c0-4 3-6 7-6 1 0 2 .2 3 .6V22H3Z" fill="currentColor" stroke="none"/></>,
+    users: <><circle cx="12" cy="7" r="3.4" fill="currentColor" stroke="none"/><circle cx="4.4" cy="8.5" r="2.5" fill="currentColor" stroke="none"/><circle cx="19.6" cy="8.5" r="2.5" fill="currentColor" stroke="none"/><path d="M6 21v-4c0-3 2-5 6-5s6 2 6 5v4ZM1 19v-3c0-2 1-4 4-4 1 0 2 .2 2.5.7M23 19v-3c0-2-1-4-4-4-1 0-2 .2-2.5.7" fill="currentColor" stroke="none"/></>,
+    supervisors: <><circle cx="11" cy="6.5" r="4" fill="currentColor" stroke="none"/><path d="M3 22v-3c0-4 3-6 8-6 2 0 4 .4 5 1.5V22Z" fill="currentColor" stroke="none"/><circle cx="19" cy="17" r="3"/><path d="M19 15.5v1.8l1.2.7"/></>,
+    rms: <><circle cx="12" cy="6.5" r="4" fill="currentColor" stroke="none"/><path d="M3 22v-3c0-4 3-6 9-6s9 2 9 6v3Z" fill="currentColor" stroke="none"/><path d="m9 14 3 6 3-6m-3 0v4" stroke="#fff" strokeWidth="1"/></>,
+    profile: <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><circle cx="12" cy="8.5" r="3" fill="white" stroke="none"/><path d="M6 19v-1c0-3 2-4 6-4s6 1 6 4v1" fill="white" stroke="none"/></>,
+    scheduled: <><rect x="4" y="5" width="16" height="17" rx="1.5"/><path d="M8 2v6m8-6v6M4 11h16M8 14h2m4 0h2m-8 4h2m4 0h2"/></>,
+    onboardingstatus: <><circle cx="12" cy="12" r="9"/><path d="M12 5v7l4 2"/></>,
+    approvals: <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="m6.5 12 3.5 3.5 7.5-7.5" stroke="#fff"/></>,
+    underreview: <><circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 6 6"/></>,
+    registry: <><path d="M9 3h10v14M14 7h4M14 10h4"/><circle cx="9" cy="14" r="8"/><path d="M9 10v4l3 2M3 4l3 2M2 7l4-1"/></>,
+    document: <><path d="M6 2h8l5 5v15H6Z"/><path d="M14 2v6h5M9 12h7m-7 4h7"/></>,
+    submissions: <><path d="M7 3h9l5 5v13H7M16 3v6h5M10 12h7m-7 4h7"/><path d="M3 7v14h10"/></>,
+    reports: <><path d="M6 2h8l5 5v15H6Z"/><path d="M14 2v6h5M9 12h7m-7 4h7"/></>,
+    logs: <><circle cx="12" cy="12" r="9"/><path d="M12 5v7l4 2"/></>,
+    notifications: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M9 20h6m-4-18h2"/></>,
+    settings: <><path d="m9 3 .8-2h4.4l.8 2 2 .9 2.1-.4 2.2 3.8L20 9l.2 2.3 1.5 1.6-2.2 3.8-2.1-.3-2 .9-.8 2h-4.4l-.8-2-2-.9-2.1.3-2.2-3.8L4.5 11l.2-2.3-1.4-1.7 2.2-3.8 2.1.4Z" transform="translate(0 1) scale(.98)"/><circle cx="12" cy="11" r="3"/></>,
+    search: <><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>,
+    chevron: <path d="m8 10 4 4 4-4"/>,
+    left: <path d="m14 6-6 6 6 6"/>,
+    menu: <path d="M3 6h18M3 12h18M3 18h18"/>,
+    close: <path d="m6 6 12 12M6 18 18 6"/>,
+    logout: <><path d="M10 3H4v18h6m5-14 5 5-5 5M9 12h11"/></>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{paths[name] || paths.document}</svg>;
+}

@@ -1,93 +1,33 @@
 "use client";
 
 import { useMemo, useRef, useState, useEffect } from "react";
-import Image from "next/image";
+import DashboardShellIcon from "./dashboardshellicon";
 
 export default function DashboardHeaderSearchBar({ config, setActiveMenu }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
-
-  const menuItems = config?.sidebar?.menu || [];
-
   const results = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return [];
-    return menuItems.filter(
-      (item) =>
-        item.label.toLowerCase().includes(term) ||
-        item.key.toLowerCase().includes(term)
-    );
-  }, [query, menuItems]);
+    const menuItems = config?.sidebar?.menu || [];
+    return menuItems.filter((item) => item.label.toLowerCase().includes(term) || item.key.toLowerCase().includes(term));
+  }, [query, config]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const close = (event) => { if (!containerRef.current?.contains(event.target)) setOpen(false); };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
   }, []);
-
-  const handleSelect = (item) => {
-    setActiveMenu?.(item.key);
-    setQuery("");
-    setOpen(false);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && results.length > 0) {
-      handleSelect(results[0]);
-    } else if (e.key === "Escape") {
-      setOpen(false);
-    }
-  };
+  const select = (item) => { setActiveMenu?.(item.key); setQuery(""); setOpen(false); };
 
   return (
     <div className="dashboard-header-search" ref={containerRef}>
-      <input
-        type="text"
-        className="dashboard-header-search-input"
-        placeholder="Search..."
-        aria-label="Search"
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-        onKeyDown={handleKeyDown}
-      />
-
-      {open && query.trim() && (
-        <ul className="dashboard-header-search-results">
-          {results.length > 0 ? (
-            results.map((item) => (
-              <li
-                key={item.key}
-                className="dashboard-header-search-result-item"
-                onClick={() => handleSelect(item)}
-              >
-                {item.iconlink && (
-                  <Image
-                    src={item.iconlink}
-                    width={18}
-                    height={18}
-                    alt={item.label}
-                  />
-                )}
-                <span>{item.label}</span>
-              </li>
-            ))
-          ) : (
-            <li className="dashboard-header-search-no-result">
-              No results found
-            </li>
-          )}
-        </ul>
-      )}
+      <DashboardShellIcon name="search" size={21} className="dashboard-search-icon" />
+      <input type="search" className="dashboard-header-search-input" placeholder={config?.header?.searchPlaceholder || "Search dashboard..."} aria-label="Search dashboard pages" aria-controls={open && query.trim() ? "dashboard-search-results" : undefined} value={query} onChange={(event) => { setQuery(event.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={(event) => { if (event.key === "Enter" && results.length) select(results[0]); if (event.key === "Escape") setOpen(false); }} />
+      {open && query.trim() && <ul className="dashboard-header-search-results" id="dashboard-search-results">
+        {results.length ? results.map((item) => <li key={item.key}><button type="button" className="dashboard-header-search-result-item" data-log-title={`Search result: ${item.label}`} onClick={() => select(item)}><DashboardShellIcon name={item.key} size={18}/><span>{item.label}</span></button></li>) : <li className="dashboard-header-search-no-result">No results found</li>}
+      </ul>}
     </div>
   );
 }

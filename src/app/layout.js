@@ -24,8 +24,8 @@ const poppins = Poppins({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${poppins.variable}`}>
+    <html lang="en" className={poppins.variable}>
+      <body>
         <UserProvider>
           {/* <Header /> */}
           <main className="site-main">{children}</main>

@@ -1,15 +1,4 @@
 export default function DashboardMenuSection({ activeMenu, children }) {
-  // Show the branded background on every page except the profile page
-  // (client onboarding provides its own background/logo treatment).
-  const showBackground =
-    activeMenu !== "profile" && activeMenu !== "onboarding";
-  return (
-    <div
-      className={`dashboard-menus-section${
-        showBackground ? " dashboard-menus-bg" : ""
-      }`}
-    >
-      {children}
-    </div>
-  );
+  const brandedPage = !["dashboard", "profile", "onboarding", "notifications"].includes(activeMenu);
+  return <div className={`dashboard-menus-section${activeMenu === "dashboard" ? " dashboard-home-content" : ""}${brandedPage ? " dashboard-menus-bg" : ""}`} id="dashboard-content" role="region" aria-label="Dashboard content">{children}</div>;
 }

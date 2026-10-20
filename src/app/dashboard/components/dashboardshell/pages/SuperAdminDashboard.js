@@ -1,267 +1,152 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import "../styles/superadmindashboard.css";
+import { ActionList, ActivityTable, Badge, DashboardHero, Icon, Panel, StackedBarChart, StatCard } from "./dashboard/DashboardUI";
 
-// Human readable label for a log row's action (kept in sync with LogsPage)
+const REPORTS = [
+  { title: "Monthly Onboarding Summary", description: "Review onboarding across all companies", icon: "document", tone: "teal" },
+  { title: "User Activity Report", description: "Explore activity across the platform", icon: "chart", tone: "violet" },
+  { title: "Compliance Status Report", description: "Review client onboarding requirements", icon: "shield", tone: "teal" },
+  { title: "Company Growth Report", description: "View your registered companies", icon: "trend", tone: "violet" },
+  { title: "System Audit Report", description: "Review platform audit activity", icon: "clock", tone: "slate" },
+];
+
 function actionLabel(row) {
-  const a = row?.action || "";
-  switch (a) {
-    case "login_success":
-      return "Logged in";
-    case "login_failed":
-      return "Failed login attempt";
-    case "logout":
-      return "Logged out";
-    default:
-      break;
-  }
-  if (a === "button_click") {
-    return row?.actionTitle ? `Clicked: ${row.actionTitle}` : "Clicked a control";
-  }
-  if (row?.actionTitle) return row.actionTitle;
-  return a || "—";
-}
-
-function formatTime(value) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? "—" : d.toLocaleTimeString();
+  if (row.action === "login_success") return "User Login";
+  if (row.action === "login_failed") return "Login Failed";
+  if (row.action === "logout") return "User Logout";
+  return row.actionTitle || (row.action || "Activity").replace(/_/g, " ");
 }
 
 function formatDate(value) {
   if (!value) return "—";
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString("en-US", {
+    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
+}
+
+function companyId(value) { return String(value?._id || value || ""); }
+
+function pipelineValues(clients) {
+  return clients.reduce((values, client) => {
+    const status = client.onboarding?.status;
+    if (status === "approved") values[0] += 1;
+    else if (status === "submitted" || client.status === "under_review") values[2] += 1;
+    else if (status === "in_progress") values[1] += 1;
+    else values[3] += 1;
+    return values;
+  }, [0, 0, 0, 0]);
 }
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
-  const [companyCount, setCompanyCount] = useState(0);
-  const [supervisorCount, setSupervisorCount] = useState(0);
-  const [userCount, setUserCount] = useState(0);
-  const [ongoingOnboarding] = useState(12);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [counts, setCounts] = useState({ companies: null, supervisors: null, users: null });
+  const [companies, setCompanies] = useState([]);
+  const [clients, setClients] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
-    const fetchCounts = async () => {
+    let active = true;
+    const options = { credentials: "include", cache: "no-store" };
+    async function request(url) {
+      const response = await fetch(url, options);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Unable to load dashboard data.");
+      return data;
+    }
+    const requests = [
+      { label: "Company totals", url: "/api/companies?count=true", apply: (data) => setCounts((previous) => ({ ...previous, companies: Number(data.count) || 0 })) },
+      { label: "Supervisor totals", url: "/api/users?role=supervisor&count=true", apply: (data) => setCounts((previous) => ({ ...previous, supervisors: Number(data.count) || 0 })) },
+      { label: "User totals", url: "/api/users?count=true", apply: (data) => setCounts((previous) => ({ ...previous, users: Number(data.count) || 0 })) },
+      { label: "Companies", url: "/api/companies", apply: (data) => setCompanies(Array.isArray(data.companies) ? data.companies : []) },
+      { label: "Onboardings", url: "/api/clients", apply: (data) => setClients(Array.isArray(data.clients) ? data.clients : []) },
+      { label: "Platform activity", url: "/api/logs?limit=5", apply: (data) => setLogs(Array.isArray(data.logs) ? data.logs.slice(0, 5) : []) },
+    ];
+    Promise.allSettled(requests.map(async ({ label, url, apply }) => {
       try {
-        const [companyRes, supervisorRes, userRes] = await Promise.all([
-          fetch("/api/companies?count=true", { credentials: "include" }),
-          fetch("/api/users?role=supervisor&count=true", { credentials: "include" }),
-          fetch("/api/users?count=true", { credentials: "include" }),
-        ]);
-
-        if (companyRes.ok) {
-          const companyData = await companyRes.json();
-          setCompanyCount(companyData.count || 0);
-        }
-
-        if (supervisorRes.ok) {
-          const supervisorData = await supervisorRes.json();
-          setSupervisorCount(supervisorData.count || 0);
-        }
-
-        if (userRes.ok) {
-          const userData = await userRes.json();
-          setUserCount(userData.count || 0);
-        }
+        const data = await request(url);
+        if (active) apply(data);
       } catch (err) {
-        console.error("Error fetching dashboard counts:", err);
-        setError("Failed to load dashboard data");
-      } finally {
-        setLoading(false);
+        if (active && err?.name !== "AbortError") setErrors((previous) => [...previous, label]);
       }
-    };
-
-    fetchCounts();
+    })).then(() => { if (active) setLoading(false); });
+    // Development remounts and navigation must not publish stale results.
+    return () => { active = false; };
   }, []);
 
-  // 🔒 Load the latest audit logs to show in the overview card
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const res = await fetch("/api/logs", { credentials: "include" });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && Array.isArray(data.logs)) {
-          setLogs(data.logs);
-        }
-      } catch (err) {
-        console.error("Error fetching latest logs:", err);
-      }
-    };
+  const bars = useMemo(() => {
+    const companyRows = companies.length > 0 ? companies : [...new Map((clients || []).map((client) => [companyId(client.companyId), { _id: client.companyId, name: client.companyName || "Unassigned Company" }])).values()];
+    return companyRows.filter((company) => companyFilter === "all" || companyId(company._id) === companyFilter).map((company) => {
+      const group = (clients || []).filter((client) => companyId(client.companyId) === companyId(company._id));
+      return { label: company.name, sublabel: `(${group.length} total)`, values: pipelineValues(group) };
+    });
+  }, [companies, clients, companyFilter]);
 
-    fetchLogs();
-  }, []);
-
-  const reports = [
-    { action: "Client created", name: "RM John Smith" },
-    { action: "RM created", name: "Client Amina Khan" },
-    { action: "Client deleted", name: "RM David Ortiz" },
-    { action: "RM removed", name: "Supervisor Maya Patel" },
-    { action: "Client updated", name: "RM Olivia Brooks" },
-    { action: "Supervisor updated", name: "Sofia Reed" },
-  ];
+  const goTo = (menu) => router.push(`/dashboard?menu=${menu}`);
+  const showCount = (value) => value == null ? loading ? "…" : "—" : value;
+  const ongoingCount = clients?.filter((client) => client.onboarding?.status === "in_progress").length;
 
   return (
-    <div className="superadmin-dashboard-container">
-      {error && <div className="dashboard-error">{error}</div>}
-
-      <div className="dashboard-stat-cards">
-        <div className="stat-card green-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="7" y1="7" x2="17" y2="7"></line>
-              <line x1="7" y1="12" x2="17" y2="12"></line>
-              <line x1="7" y1="17" x2="17" y2="17"></line>
-            </svg>
-            <h2 className="stat-card-label">Companies</h2>
-          </div>
-          <div className="stat-card-value">{loading ? "..." : companyCount}</div>
-        </div>
-
-        <div className="stat-card gray-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <h2 className="stat-card-label">Supervisors</h2>
-          </div>
-          <div className="stat-card-value">{loading ? "..." : supervisorCount}</div>
-        </div>
-
-        <div className="stat-card green-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M17 11a4 4 0 1 0 0-8"></path>
-              <path d="M3 21v-2a4 4 0 0 1 4-4h4"></path>
-              <path d="M17 21v-2a4 4 0 0 0-3-3.87"></path>
-            </svg>
-            <h2 className="stat-card-label">Users</h2>
-          </div>
-          <div className="stat-card-value">{loading ? "..." : userCount}</div>
-        </div>
-
-        <div className="stat-card gray-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="1"></circle>
-              <circle cx="19" cy="12" r="1"></circle>
-              <circle cx="5" cy="12" r="1"></circle>
-            </svg>
-            <h2 className="stat-card-label">In Progress Onboardings</h2>
-          </div>
-          <div className="stat-card-value">{ongoingOnboarding}</div>
-        </div>
+    <div className="dsh-dashboard dsh-dashboard--admin">
+      <DashboardHero title="Superadmin Dashboard" subtitle="Platform overview and management for the Cosmosis client onboarding system." tagline="Secure Onboarding. Stronger Investments." />
+      {errors.length > 0 && <div className="dsh-error" role="alert">Unable to load: {errors.join(", ")}. Refresh to try again.</div>}
+      <div className="dsh-stats">
+        <StatCard label="Total Companies" value={showCount(counts.companies)} icon="building" description="Registered on the platform" />
+        <StatCard label="Supervisors" value={showCount(counts.supervisors)} icon="users" description="Across all companies" />
+        <StatCard label="Total Users" value={showCount(counts.users)} icon="users" tone="teal" description="Across all platform roles" />
+        <StatCard label="In-Progress Onboardings" value={showCount(ongoingCount)} icon="document" tone="slate" description="Currently completing onboarding" />
       </div>
 
-      <div className="admin-activity-cards">
-        <div className="activity-card">
-          <div className="activity-card-header">
-            <svg
-              className="activity-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            <h3 className="activity-card-title">Reports</h3>
-          </div>
-          <ul className="activity-list reports-list">
-            {reports.map((item, index) => (
-              <li key={index} className="activity-list-item reports-list-item">
-                <div className="report-row">
-                  <span className="report-action">{item.action}</span>
-                  <span className="report-name"> - {item.name}</span>
-                </div>
-                <button
-                  type="button"
-                  className="report-button"
-                  onClick={() => router.push("/dashboard?menu=reports")}
-                >
-                  Check report
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="activity-card">
-          <div className="activity-card-header">
-            <svg
-              className="activity-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <h3 className="activity-card-title">Logs</h3>
-          </div>
-          <div className="log-table">
-            <div className="log-row log-header">
-              <span>Date</span>
-              <span>Time</span>
-              <span>Company</span>
-              <span>Activity</span>
+      <div className="dsh-admin-top dsh-row-top">
+        <Panel title="Onboarding Pipeline by Company" icon="chart" action={<select className="dsh-select" data-log-title="Superadmin dashboard: filter company pipeline" aria-label="Filter onboarding pipeline by company" value={companyFilter} onChange={(event) => setCompanyFilter(event.target.value)}>
+          <option value="all">All Companies</option>{companies.map((company) => <option key={company._id} value={companyId(company._id)}>{company.name}</option>)}
+        </select>}><StackedBarChart bars={bars} /></Panel>
+        <Panel title="Recent Reports" icon="document" action={<button type="button" data-log-title="Superadmin dashboard: view all reports" className="dsh-text-button" onClick={() => goTo("reports")}>View all</button>}>
+          <div className="dsh-report-list">{REPORTS.map((report) => (
+            <div className="dsh-report-item" key={report.title}>
+              <span className={`dsh-report-icon dsh-tone--${report.tone}`}><Icon name={report.icon} size={23} /></span>
+              <div className="dsh-report-copy"><strong>{report.title}</strong><span>{report.description}</span></div>
+              <button className="dsh-report-button" data-log-title={`Superadmin dashboard: view ${report.title}`} type="button" onClick={() => goTo("reports")}>View report</button>
             </div>
-            {logs.length === 0 ? (
-              <div className="log-row">
-                <span data-label="Activity">No activity logged yet</span>
-              </div>
-            ) : (
-              logs.map((item, index) => (
-                <div key={item._id || index} className="log-row">
-                  <span data-label="Date">{formatDate(item.createdAt)}</span>
-                  <span data-label="Time">{formatTime(item.createdAt)}</span>
-                  <span data-label="Company">{item.companyName || "—"}</span>
-                  <span data-label="Activity">{actionLabel(item)}</span>
-                  <button
-                    type="button"
-                    className="log-button"
-                    onClick={() => router.push("/dashboard?menu=logs")}
-                  >
-                    Check activity
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+          ))}</div>
+        </Panel>
+        <Panel title="Quick Actions" icon="lightning"><ActionList items={[
+          { title: "Add New Company", description: "Register a new company to the platform", icon: "building", tone: "teal", onClick: () => goTo("companies") },
+          { title: "Invite Supervisor", description: "Create a new supervisor account", icon: "userPlus", tone: "violet", onClick: () => goTo("supervisors") },
+          { title: "View Platform Logs", description: "Check system activity and audit logs", icon: "document", tone: "slate", onClick: () => goTo("logs") },
+          { title: "Generate Report", description: "View platform reporting", icon: "chart", tone: "violet", onClick: () => goTo("reports") },
+        ]} /></Panel>
+      </div>
+
+      <div className="dsh-admin-bottom dsh-row-bottom">
+        <Panel title="Recent Platform Activity" icon="clock" action={<button type="button" data-log-title="Superadmin dashboard: view all platform logs" className="dsh-text-button" onClick={() => goTo("logs")}>View all logs</button>}>
+          <ActivityTable columns={[
+            { key: "createdAt", label: "Date & Time", render: formatDate },
+            { key: "action", label: "Activity", render: (_value, row) => actionLabel(row) },
+            { key: "entity", label: "Entity", render: (_value, row) => row.metadata?.entity || row.role || "Platform" },
+            { key: "details", label: "Details", render: (_value, row) => row.actionTitle || actionLabel(row) },
+            { key: "username", label: "User", render: (value, row) => value || row.name || "—" },
+            { key: "status", label: "Status", render: (_value, row) => <Badge tone={row.action === "login_failed" ? "red" : "teal"}>{row.action === "login_failed" ? "Failed" : "Recorded"}</Badge> },
+          ]} rows={logs} emptyMessage={loading ? "Loading platform activity…" : errors.includes("Platform activity") ? "Platform activity is unavailable." : "No platform activity has been recorded yet."} />
+        </Panel>
+        <Panel title="System Health & Compliance" icon="shield" action={<Badge tone="slate">Monitoring unavailable</Badge>}>
+          <div className="dsh-health-grid">{[
+            { label: "System Uptime", icon: "server", tone: "teal", description: "Unavailable" },
+            { label: "Compliance Status", icon: "shield", tone: "teal", description: "Unavailable" },
+            { label: "Storage Usage", icon: "database", tone: "violet", description: "Unavailable" },
+            { label: "Active Sessions", icon: "users", tone: "violet", description: "Unavailable" },
+          ].map((metric) => (
+            <div className="dsh-health-item" key={metric.label}>
+              <span className={`dsh-health-icon dsh-tone--${metric.tone}`}><Icon name={metric.icon} size={26} /></span>
+              <div className="dsh-health-copy"><span>{metric.label}</span><strong className="dsh-health-value">—</strong><small>{metric.description}</small></div>
+            </div>
+          ))}</div>
+        </Panel>
       </div>
     </div>
   );

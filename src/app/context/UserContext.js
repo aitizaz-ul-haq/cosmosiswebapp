@@ -46,24 +46,25 @@ export function UserProvider({ children }) {
 
   // 🔓 logout clears state + cookie
   async function logout() {
-    try {
-      await fetch("/api/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch (err) {
-      console.error("Logout error:", err);
-    } finally {
-      setUser(null);
+    const res = await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      throw new Error("Unable to clear the session");
     }
+    setUser(null);
   }
 
   // 🌀 check if user is already logged in on refresh
   useEffect(() => {
+    let active = true;
     (async () => {
       try {
         const res = await fetch("/api/me", { credentials: "include" });
         const data = await res.json();
+        if (!active) return;
 
         if (res.ok && data.success) {
           setUser(data.user); // ✅ user: { id, username, role, companyId }
@@ -71,12 +72,14 @@ export function UserProvider({ children }) {
           setUser(null);
         }
       } catch (err) {
+        if (!active) return;
         console.error("Auto-login error:", err);
         setUser(null);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     })();
+    return () => { active = false; };
   }, []);
 
   return (

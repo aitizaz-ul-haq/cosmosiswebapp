@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
+import { StatusPill } from "./modalkit/ModalKit";
 
 export default function DemoUsers() {
   const [users, setUsers] = useState([]);
@@ -26,26 +27,11 @@ export default function DemoUsers() {
     {
       accessorKey: "subscriptionStatus",
       header: "Subscription Status",
-      cell: ({ getValue }) => {
-        const status = getValue();
-        let className = "status-badge";
-        if (status === "demo") className += " status-demo";
-        // Add more status styles as needed
-        return (
-          <span
-            className={className}
-            style={{
-              background: status === "demo" ? "#FFD600" : undefined,
-              color: "#333",
-              borderRadius: "999px",
-              padding: "0.25em 1em",
-              display: "inline-block",
-            }}
-          >
-            {status}
-          </span>
-        );
-      },
+      cell: ({ getValue }) => (
+        <StatusPill status={getValue()} tone="amber" className="status-badge">
+          {getValue()}
+        </StatusPill>
+      ),
     },
   ];
 

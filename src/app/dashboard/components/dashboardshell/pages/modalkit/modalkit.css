@@ -319,7 +319,7 @@
 }
 
 .mk-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: inherit;
 }
 
 /* Progress bar box (onboarding progress) */

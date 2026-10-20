@@ -1,37 +1,13 @@
 import Image from "next/image";
+import DashboardAccountMenu from "./dashboardaccountmenu";
 
-function toTitleCase(value = "") {
-  return value
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-}
-
-function getDisplayRole(role = "") {
-  if (role === "rm") return "Relationship Manager";
-  return role;
-}
-
-export default function DashboardSidebarLogoContainer({ user, collapsed }) {
-  const displayName = toTitleCase(user?.fullName || user?.username || "");
-  const displayRole = getDisplayRole(user?.role || "");
-
-  if (collapsed) return null;
-
+export default function DashboardSidebarLogoContainer({ user, collapsed, onLogout, setActiveMenu }) {
   return (
     <div className="dashboard-sidebar-logo-container">
-      <Image
-        src="/images/sidebarlogo.png"
-        width={209}
-        height={108}
-        alt="cosmosis logo"
-        title="cosmosis logo"
-      />
-      <div className="dashboard-sidebar-user-info">
-        <p className="dashboard-sidebar-user-name">{displayName}</p>
-        <p className="dashboard-sidebar-user-role">{displayRole}</p>
-      </div>
+      <a href="/dashboard" className="dashboard-sidebar-brand" data-log-title="Cosmosis dashboard" aria-label="Cosmosis dashboard">
+        <Image src="/images/cosmosis_logo_dark_dashboard.png" width={157} height={83} alt="Cosmosis" priority />
+      </a>
+      <DashboardAccountMenu user={user} onLogout={onLogout} setActiveMenu={setActiveMenu} sidebar collapsed={collapsed} />
     </div>
   );
 }

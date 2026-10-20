@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
 import { useUser } from "../context/UserContext";
@@ -29,7 +29,7 @@ import ClientDashboard from "./components/dashboardshell/pages/ClientDashboard";
 import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
 import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDashboard";
 
-// import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
+import NotificationsPage from "./components/dashboardshell/pages/NotificationsPage";
 // import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
 // import DemoUsers from "./components/dashboardshell/pages/DemoUsers";
 // import DemoRequests from "./components/dashboardshell/pages/DemoRequests";
@@ -39,7 +39,6 @@ import SuperAdminDashboard from "./components/dashboardshell/pages/SuperAdminDas
 const getPageMap = (userRole, setActiveMenu) => {
   const baseMap = {
     // "demo users": <DemoUsers />,
-    // notifications: <NotificationsPage />,
     // "system settings": <SettingsPage />,
     // requesteddemonstration: <RequestedDemonstration />,
 
@@ -58,7 +57,7 @@ const getPageMap = (userRole, setActiveMenu) => {
     submissions: <SubmissionsPage />,
     onboardingstatus: <OnboardingStatusPage onNavigate={setActiveMenu} />,
     underreview: <UnderReviewPage />,
-    notifications: <div className="dashboard-empty-page"></div>,
+    notifications: <NotificationsPage />,
   };
 
   // Role-based dashboard override
@@ -110,13 +109,14 @@ function Dashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeMenu, setActiveMenu] = useState("");
+  const logoutPending = useRef(false);
 
   useEffect(() => {
     // Wait for the auto-login check to finish before deciding to redirect.
-    if (loading) return;
+    if (loading || logoutPending.current) return;
 
     if (!user) {
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
@@ -140,9 +140,18 @@ function Dashboard() {
   if (loading || !user) return <p>Loading...</p>;
 
   const handleLogout = async () => {
-    await logUIAction("logout", { username: user.username });
-    logout();
-    router.push("/login");
+    if (logoutPending.current) return;
+    logoutPending.current = true;
+    try {
+      await logUIAction("logout", { username: user.username });
+      await logout();
+      // Load a fresh login document after clearing the cookie and router cache.
+      window.location.replace("/login");
+    } catch (err) {
+      logoutPending.current = false;
+      console.error("Logout failed:", err);
+      window.alert("Unable to log out. Please try again.");
+    }
   };
 
   const config = dashboardConfigs[user.role] || dashboardConfigs.client;

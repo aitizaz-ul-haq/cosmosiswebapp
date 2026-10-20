@@ -174,7 +174,7 @@
   justify-content: center;
   font-weight: 800;
   font-style: italic;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: inherit;
   flex-shrink: 0;
 }
 
@@ -845,7 +845,7 @@
 .onb-legal {
   max-width: 960px;
   margin: 0 auto;
-  font-family: var(--font-poppins), serif;
+  font-family: var(--font-poppins), Arial, sans-serif;
   color: #7a8090;
   font-size: 1.1rem;
   line-height: 1.6;

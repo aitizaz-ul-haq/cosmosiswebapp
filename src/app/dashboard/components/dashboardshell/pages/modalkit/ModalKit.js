@@ -164,10 +164,17 @@ export function DetailRow({ icon, label, value, tile = false, tone = "slate", mo
   );
 }
 
-// Coloured status chip. tone: green | amber | red | blue | violet | slate
-export function StatusPill({ tone = "slate", icon, dot = false, children }) {
+const PILL_TONE_ALIASES = { teal: "green", mint: "green", purple: "violet", orange: "amber", gray: "slate" };
+
+// Known statuses keep the same colour in every view; other labels use their tone.
+export function StatusPill({ tone = "slate", status, icon, dot = false, children, className = "", ...rest }) {
+  const value = status ?? (typeof children === "string" ? children : "");
+  const key = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  const resolvedTone = Object.prototype.hasOwnProperty.call(STATUS_TONES, key)
+    ? STATUS_TONES[key]
+    : PILL_TONE_ALIASES[tone] || tone;
   return (
-    <span className={`mk-pill tone-${tone}`}>
+    <span className={`mk-pill tone-${resolvedTone} ${className}`.trim()} {...rest}>
       {dot ? <span className="mk-pill-dot" /> : null}
       {icon ? <Icon name={icon} size={14} /> : null}
       {children}
@@ -175,15 +182,36 @@ export function StatusPill({ tone = "slate", icon, dot = false, children }) {
   );
 }
 
-// Maps the app's client status keys to a pill tone.
+// Shared workflow, onboarding, activity and account status palette.
 export const STATUS_TONES = {
   approval_pending: "amber",
   under_review: "violet",
   register: "blue",
+  awaiting_registry: "blue",
   scheduled: "blue",
   ongoing: "green",
+  in_progress: "green",
   on_hold: "amber",
   cancelled: "red",
+  canceled: "red",
+  pending: "amber",
+  demo: "amber",
+  submitted: "violet",
+  approved: "green",
+  completed: "green",
+  uploaded: "green",
+  assigned: "green",
+  recorded: "green",
+  success: "green",
+  active: "green",
+  failed: "red",
+  rejected: "red",
+  inactive: "red",
+  changes_required: "red",
+  not_started: "slate",
+  draft: "slate",
+  phase: "slate",
+  monitoring_unavailable: "slate",
 };
 
 export function ModalButton({

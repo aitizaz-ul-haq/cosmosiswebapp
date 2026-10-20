@@ -1135,7 +1135,7 @@ export default function ClientsPage() {
                     <div className="mk-progress-row">
                       <Icon name="chart" size={17} className="mk-detail-icon" />
                       <span style={{ fontSize: "0.85rem", color: "#6d7692" }}>Progress</span>
-                      <StatusPill tone="green">{infoPhase.pct}%</StatusPill>
+                      <StatusPill tone="slate">{infoPhase.pct}%</StatusPill>
                       <div
                         className="mk-progress"
                         role="progressbar"

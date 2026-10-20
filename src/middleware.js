@@ -68,8 +68,8 @@ async function verifyJWT(token) {
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
-  // allow public paths
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+  // Session cleanup must also work when the token is missing or expired.
+  if (pathname === "/api/logout" || PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 

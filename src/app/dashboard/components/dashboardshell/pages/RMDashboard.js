@@ -1,162 +1,87 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
-import { useEffect, useState } from "react";
-import "../styles/rmdashboard.css";
+import { DashboardHero, StatCard, Panel, Icon, Badge, StackedBarChart, EmptyState, ActivityTable } from "./dashboard/DashboardUI";
+import { clientId, clientName, clientCompleted, clientInProgress, clientEvents, filterClients, formatDate, monthlyTrend, phaseBars, relativeTime, scheduleParts, submissionRows, validDate } from "./dashboard/data";
 
 export default function RMDashboard() {
   const { user } = useUser();
-  const [clientCount, setClientCount] = useState(0);
-  const [ongoingOnboarding, setOngoingOnboarding] = useState(0);
-  const [completedOnboarding, setCompletedOnboarding] = useState(0);
-  const [submissions, setSubmissions] = useState(0);
+  const router = useRouter();
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [progressFilter, setProgressFilter] = useState("all");
 
   useEffect(() => {
-    const fetchCounts = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
+    if (!user) return;
+    let active = true;
+    const load = async () => {
+      setLoading(true);
+      setError("");
       try {
-        // Fetch clients assigned to this RM (same as ClientsPage does)
-        const clientRes = await fetch("/api/clients", {
-          credentials: "include",
-          cache: "no-store",
-        });
-
-        const clientData = await clientRes.json().catch(() => ({}));
-        
-        if (!clientRes.ok) {
-          console.error("Failed to fetch clients:", clientData?.error);
-          setClientCount(0);
-        } else {
-          const clients = clientData.clients || [];
-          console.log("RM Dashboard: Fetched clients:", clients.length, clients);
-          setClientCount(clients.length);
-        }
-
-        // Set placeholder random values for other cards (to be implemented later)
-        setOngoingOnboarding(Math.floor(Math.random() * 10) + 1);
-        setCompletedOnboarding(Math.floor(Math.random() * 15) + 5);
-        setSubmissions(Math.floor(Math.random() * 20) + 10);
+        const response = await fetch("/api/clients", { credentials: "include", cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "Failed to load dashboard data");
+        if (active) setClients(data.clients || []);
       } catch (err) {
-        console.error("Error fetching counts:", err);
-        setError("Failed to load dashboard data");
-        setClientCount(0);
+        if (active && err?.name !== "AbortError") setError(err?.message || "Failed to load dashboard data");
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
-
-    fetchCounts();
+    load();
+    return () => { active = false; };
   }, [user]);
 
-  const onboardingSteps = [
-    { client: "John Anderson", label: "Personal Details", percentage: 20 },
-    { client: "Sarah Mitchell", label: "Source of Wealth", percentage: 35 },
-    { client: "Michael Chen", label: "Financial Profile", percentage: 50 },
-    { client: "Emma Williams", label: "Risk Profile", percentage: 65 },
-    { client: "David Martinez", label: "Signature", percentage: 80 },
-    { client: "Lisa Thompson", label: "Documentation Checklist", percentage: 100 },
-  ];
+  const navigate = (menu) => router.push(`/dashboard?menu=${menu}`);
+  const events = useMemo(() => clientEvents(clients), [clients]);
+  const submissions = useMemo(() => submissionRows(clients), [clients]);
+  const upcoming = useMemo(() => clients.filter((client) => client.status === "scheduled" && validDate(client.scheduledRegistrationAt)?.getTime() >= Date.now()).sort((a, b) => new Date(a.scheduledRegistrationAt) - new Date(b.scheduledRegistrationAt)), [clients]);
+  const completed = clients.filter(clientCompleted);
+  const inProgress = clients.filter(clientInProgress);
+  const totalClientTrend = monthlyTrend(clients.map((client) => client.createdAt));
+  const completedTrend = monthlyTrend(completed.map((client) => client.onboarding?.approvedAt));
+  const progressClients = filterClients(clients, progressFilter);
+  const value = (count) => loading ? "…" : error ? "—" : count;
+  const viewAll = (menu, label = "View all") => <button type="button" className="dsh-text-action" data-log-title={`Dashboard: ${label} ${menu}`} onClick={() => navigate(menu)}>{label}</button>;
 
   return (
-    <div className="rm-dashboard-container">
-      {error && <div className="dashboard-error">{error}</div>}
-
-      <div className="dashboard-stat-cards">
-        <div className="stat-card clients-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="9" y1="9" x2="15" y2="9"></line>
-              <line x1="9" y1="15" x2="15" y2="15"></line>
-            </svg>
-            <h2 className="stat-card-label">Clients</h2>
-          </div>
-          <div className="stat-card-value">{loading ? "..." : clientCount}</div>
-        </div>
-
-        <div className="stat-card ongoing-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="1"></circle>
-              <circle cx="19" cy="12" r="1"></circle>
-              <circle cx="5" cy="12" r="1"></circle>
-            </svg>
-            <h2 className="stat-card-label">In Progress Onboardings</h2>
-          </div>
-          <div className="stat-card-value">{ongoingOnboarding}</div>
-        </div>
-
-        <div className="stat-card completed-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <h2 className="stat-card-label">Completed Onboardings</h2>
-          </div>
-          <div className="stat-card-value">{completedOnboarding}</div>
-        </div>
-
-        <div className="stat-card submissions-card">
-          <div className="stat-card-header">
-            <svg
-              className="stat-card-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-              <polyline points="17 21 17 13 7 13 7 21"></polyline>
-              <polyline points="7 3 7 8 15 8"></polyline>
-            </svg>
-            <h2 className="stat-card-label">Submissions</h2>
-          </div>
-          <div className="stat-card-value">{submissions}</div>
-        </div>
+    <div className="dashboard-page dsh-page--rm" aria-busy={loading}>
+      <DashboardHero title="Relationship Manager Dashboard" subtitle="Manage your client relationships, track onboarding progress, and stay on top of key activities." tagline={<>Stronger Relationships.<br />Smoother Onboarding.</>} />
+      {error && <div className="dsh-error" role="alert">{error}</div>}
+      <div className="dsh-stats">
+        <StatCard label="Total Clients" value={value(clients.length)} icon="users" tone="violet" trend={totalClientTrend} description={totalClientTrend == null ? "Assigned to you" : "vs last month"} />
+        <StatCard label="In Progress Onboardings" value={value(inProgress.length)} icon="file" tone="violet" description="Currently onboarding" />
+        <StatCard label="Completed Onboardings" value={value(completed.length)} icon="checkCircle" tone="green" trend={completedTrend} description={completedTrend == null ? "Approved applications" : "vs last month"} />
+        <StatCard label="Scheduled Meetings" value={value(upcoming.length)} icon="calendar" tone="violet" description="Upcoming onboardings" />
       </div>
 
-      <div className="onboarding-section">
-        <h2 className="onboarding-title">Onboarding Progress</h2>
-        <div className="progress-bars-container">
-          {onboardingSteps.map((step, index) => (
-            <div key={index} className="progress-bar-item">
-              <div className="progress-bar-label">
-                <span className="progress-bar-name">{step.client} - {step.label}</span>
-                <span className="progress-bar-percentage">{step.percentage}%</span>
-              </div>
-              <div className="progress-bar-track">
-                <div
-                  className="progress-bar-fill"
-                  style={{ width: `${step.percentage}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="dsh-row-top dsh-grid dsh-grid--rm">
+        <Panel title="Client Onboarding Progress" icon="chart" action={<select className="dsh-select" aria-label="Filter client onboarding progress" value={progressFilter} onChange={(event) => setProgressFilter(event.target.value)}><option value="all">My Clients</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="under_review">Under Review</option></select>}>
+          <StackedBarChart bars={phaseBars(progressClients)} max={Math.max(10, progressClients.length)} />
+        </Panel>
+
+        <Panel title="Upcoming Scheduled Clients" icon="calendar" action={viewAll("scheduled")}>
+          {upcoming.length ? <ul className="dsh-list dsh-schedule-list">{upcoming.slice(0, 4).map((client) => {
+            const schedule = scheduleParts(client);
+            return <li className="dsh-list-row" key={clientId(client)}><div className="dsh-date-tile"><small>{schedule.month}</small><strong>{schedule.day}</strong></div><div className="dsh-list-copy"><strong>{clientName(client)}</strong><span>Scheduled onboarding</span><span>{schedule.time}{client.scheduledCity ? ` · ${client.scheduledCity}` : ""}</span></div><button type="button" className="dsh-inline-action" data-log-title={`Dashboard: View scheduled onboarding for ${clientName(client)}`} onClick={() => navigate("scheduled")} aria-label={`View scheduled onboarding for ${clientName(client)}`}>View details</button></li>;
+          })}</ul> : <EmptyState>{loading ? "Loading scheduled clients…" : "No upcoming scheduled clients."}</EmptyState>}
+        </Panel>
+
+        <Panel title="Recent Notifications" icon="bell" action={viewAll("notifications")}>
+          {events.length ? <ul className="dsh-list dsh-notification-list">{events.slice(0, 4).map((event) => <li className="dsh-list-row" key={event.id}><span className={`dsh-list-icon dsh-tone--${event.tone}`}><Icon name={event.icon} size={21} /></span><div className="dsh-list-copy"><strong>{event.title}</strong><span>{event.description}</span><span>{relativeTime(event.date)}</span></div><button type="button" className="dsh-chevron" data-log-title={`Dashboard: ${event.title} for ${event.name}`} onClick={() => navigate(event.menu)} aria-label={`View ${event.title.toLowerCase()}`}><Icon name="chevronRight" size={18} /></button></li>)}</ul> : <EmptyState>{loading ? "Loading notifications…" : "No recent notifications."}</EmptyState>}
+        </Panel>
+      </div>
+
+      <div className="dsh-row-bottom dsh-grid dsh-grid--rm-bottom">
+        <Panel title="Recent Client Activity" icon="clock" action={viewAll("clients", "View all activity")}>
+          <ActivityTable columns={[{ key: "date", label: "Date & Time", render: (date) => formatDate(date, true) }, { key: "name", label: "Client" }, { key: "activity", label: "Activity" }, { key: "details", label: "Details" }, { key: "status", label: "Status", render: (status, row) => <Badge tone={row.tone}>{status}</Badge> }]} rows={events.slice(0, 5)} emptyMessage={loading ? "Loading client activity…" : "No recent client activity."} />
+        </Panel>
+        <Panel title="Latest Submissions" icon="file" action={viewAll("submissions")}>
+          {submissions.length ? <ul className="dsh-list dsh-submission-list">{submissions.slice(0, 4).map((submission) => <li className="dsh-list-row" key={submission.id}><span className={`dsh-list-icon dsh-tone--${submission.tone}`}><Icon name="file" size={18} /></span><div className="dsh-list-copy"><strong>{submission.name}</strong><span>{submission.title}</span></div><span className="dsh-list-meta">{formatDate(submission.date)}</span><Badge tone={submission.tone}>{submission.status}</Badge><button type="button" className="dsh-chevron" data-log-title={`Dashboard: View submission from ${submission.name}`} onClick={() => navigate("submissions")} aria-label={`View submission from ${submission.name}`}><Icon name="chevronRight" size={18} /></button></li>)}</ul> : <EmptyState>{loading ? "Loading submissions…" : "No applications have been submitted yet."}</EmptyState>}
+        </Panel>
       </div>
     </div>
   );

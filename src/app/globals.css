@@ -25,7 +25,16 @@ body {
   width: 100%;
   /* display: flex; 
   flex-direction: column;  */
-  font-family: var(--font-poppins), serif;
+  font-family: var(--font-poppins), Arial, sans-serif;
+}
+
+button,
+input,
+textarea,
+select,
+optgroup,
+option {
+  font-family: inherit;
 }
 
 main {
@@ -40,7 +49,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-poppins), serif; /* Playfair Display Medium */
+  font-family: inherit;
   font-weight: 500;
   color: var(--heading-color);
 }
@@ -157,15 +166,15 @@ footer {
 
 /* Utility font classes */
 .font-playfair {
-  font-family: var(--font-poppins), serif;
+  font-family: var(--font-poppins), Arial, sans-serif;
 }
 .font-inria {
-  font-family: var(--font-poppins), serif;
+  font-family: var(--font-poppins), Arial, sans-serif;
   /* color: var(--sitedark); */
 }
 
 .font-inter {
-  font-family: var(--font-poppins), serif;
+  font-family: var(--font-poppins), Arial, sans-serif;
 }
 
 .general-linkage {

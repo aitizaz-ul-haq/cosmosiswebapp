@@ -1,7 +1,7 @@
 // src/app/dashboard/configs.js
 export const dashboardConfigs = {
   superadmin: {
-    header: { logoText: "Super Admin" },
+    header: { logoText: "Superadmin", searchPlaceholder: "Search companies, supervisors, users, reports..." },
     sidebar: {
       menu: [
         {
@@ -26,7 +26,7 @@ export const dashboardConfigs = {
         },
         {
           key: "supervisors",
-          label: "Suprevisors",
+          label: "Supervisors",
           iconlink: "/images/manager.png",
         },
         {
@@ -55,7 +55,7 @@ export const dashboardConfigs = {
     },
   },
   supervisor: {
-    header: { logoText: "Supervisor" },
+    header: { logoText: "Supervisor", searchPlaceholder: "Search clients, relationship managers, submissions, reports..." },
     sidebar: {
       menu: [
         {
@@ -75,17 +75,17 @@ export const dashboardConfigs = {
         },
         {
           key: "onboardingstatus",
-          label: "Onboarding status",
+          label: "Onboarding Status",
           iconlink: "/images/OnboardingStatus.png",
         },
         {
           key: "approvals",
-          label: "Pending approvals",
+          label: "Pending Approvals",
           iconlink: "/images/tick-filled-white.svg",
         },
         {
           key: "underreview",
-          label: "Under review",
+          label: "Under Review",
           iconlink: "/images/under-review-white.svg",
         },
         {
@@ -107,7 +107,7 @@ export const dashboardConfigs = {
     },
   },
   rm: {
-    header: { logoText: "Relationship Manager" },
+    header: { logoText: "Relationship Manager", searchPlaceholder: "Search clients, onboarding, submissions, reports..." },
     sidebar: {
       menu: [
         {
@@ -122,7 +122,7 @@ export const dashboardConfigs = {
         },
         {
           key: "registry",
-          label: "Awaiting registry",
+          label: "Awaiting Registry",
           iconlink: "/images/file.png",
         },
         {
@@ -132,7 +132,7 @@ export const dashboardConfigs = {
         },
         {
           key: "onboardingstatus",
-          label: "Onboarding status",
+          label: "Onboarding Status",
           iconlink: "/images/OnboardingStatus.png",
         },
         {
@@ -147,14 +147,14 @@ export const dashboardConfigs = {
         },
         {
           key: "profile",
-          label: "Profile settings",
+          label: "Profile Settings",
           iconlink: "/images/profile-user.png",
         },
       ],
     },
   },
   client: {
-    header: { logoText: "Client" },
+    header: { logoText: "Client", searchPlaceholder: "Search onboarding tasks, documents, or help..." },
     sidebar: {
       menu: [
         {
