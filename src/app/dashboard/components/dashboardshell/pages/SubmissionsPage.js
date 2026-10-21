@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
-import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
+import TablePageLayout from "./pagecomponents/TablePageLayout";
+import ManagementTableToolbar from "./pagecomponents/ManagementTableToolbar";
+import ManagementTablePagination from "./pagecomponents/ManagementTablePagination";
 import { STATUS_COLORS, STATUS_LABELS, getPhaseConfig } from "./clientStatusShared";
 import { buildDummySubmissions } from "./submissions/dummySubmissions";
 import SubmissionViewModal from "./submissions/SubmissionViewModal";
@@ -16,6 +18,11 @@ const PAGE_SIZE = 8;
 // Same clients as the Onboarding status page: those actively going through onboarding.
 const ENGAGED_STATUSES = new Set(["ongoing", "on_hold", "cancelled"]);
 const FILTERABLE_FIELDS = ["username", "status", "phase"];
+const FILTER_COLUMNS = [
+  { accessorKey: "username", header: "Client" },
+  { accessorKey: "status", header: "Status" },
+  { accessorKey: "phase", header: "Phase" },
+];
 
 const getRowId = (client) => String(client.profileId || client.userId);
 
@@ -171,32 +178,39 @@ export default function SubmissionsPage() {
       return next;
     });
 
-  if (unlocked && loading) return <GenericTableLoader />;
-
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
   const currentIndex = Math.min(pageIndex, pageCount - 1);
   const pageRows = filteredRows.slice(currentIndex * PAGE_SIZE, (currentIndex + 1) * PAGE_SIZE);
-  const firstRow = filteredRows.length === 0 ? 0 : currentIndex * PAGE_SIZE + 1;
-  const lastRow = Math.min(filteredRows.length, (currentIndex + 1) * PAGE_SIZE);
 
   return (
-    <div className="generic-table-container">
-      <GenericTableHeader
+    <TablePageLayout
+      title="Submissions"
+      description="Here you can view all the phases that have been submitted by your clients."
+      className="submissions-table-page"
+      loading={unlocked && loading}
+    >
+      <ManagementTableToolbar
         title="Submissions"
-        description="Here you can view all the phases that have been submitted by your clients."
+        columns={FILTER_COLUMNS}
         filterField={filterField}
         setFilterField={setFilterField}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
         filterableFields={FILTERABLE_FIELDS}
+        searchPlaceholder="Search submissions by client, status, or phase..."
       />
 
       {error ? <div className="sub-error">{error}</div> : null}
 
-      {!unlocked ? null : pageRows.length === 0 ? (
+      {unlocked && loading ? <GenericTableLoader /> : !unlocked ? null : pageRows.length === 0 ? (
         <div className="sub-empty">{error ? "" : "No client submissions to show."}</div>
       ) : (
         <div className="sub-list">
+          <div className="sub-list-heading" aria-hidden="true">
+            <span>Client</span>
+            <span>Phase &amp; status</span>
+            <span>Details</span>
+          </div>
           {pageRows.map((row) => (
             <SubmissionAccordion
               key={row.id}
@@ -209,48 +223,13 @@ export default function SubmissionsPage() {
         </div>
       )}
 
-      <div className="generic-table-pagination">
-        <div className="generic-table-pagination-info">
-          Showing {firstRow}-{lastRow} of {filteredRows.length}
-        </div>
-        <div className="generic-table-pagination-controls">
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(0)}
-            disabled={currentIndex === 0}
-          >
-            First
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(currentIndex - 1)}
-            disabled={currentIndex === 0}
-          >
-            Prev
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(currentIndex + 1)}
-            disabled={currentIndex >= pageCount - 1}
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(pageCount - 1)}
-            disabled={currentIndex >= pageCount - 1}
-          >
-            Last
-          </button>
-        </div>
-        <div className="generic-table-pagination-status">
-          Page {currentIndex + 1} of {pageCount}
-        </div>
-      </div>
+      {(!unlocked || !loading) && (
+        <ManagementTablePagination
+          pagination={{ pageIndex: currentIndex, pageSize: PAGE_SIZE }}
+          total={filteredRows.length}
+          onPageChange={setPageIndex}
+        />
+      )}
 
       {viewing ? (
         <SubmissionViewModal
@@ -261,6 +240,6 @@ export default function SubmissionsPage() {
       ) : null}
 
       {!unlocked ? <PasswordGate onVerified={() => setUnlocked(true)} /> : null}
-    </div>
+    </TablePageLayout>
   );
 }

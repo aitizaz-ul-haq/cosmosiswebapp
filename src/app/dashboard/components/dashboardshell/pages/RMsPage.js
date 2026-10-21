@@ -5,7 +5,7 @@ import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
-import { ModalButton, ModalGrid, ModalInput, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
+import { Icon, ModalButton, ModalGrid, ModalInput, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
 
 // Shared Add / Edit RM form (example_modal_4). Submit/close behaviour is owned by the page.
 function RMFormModal({ mode, form, onChange, onSubmit, onClose }) {
@@ -316,7 +316,7 @@ export default function RMsPage() {
   };
 
   const tableTitle = "Relationship Managers";
-  const tableDescription = "All your companies registered rms are listed here.";
+  const tableDescription = "Manage your company’s relationship managers. Search, filter, and update their accounts.";
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
@@ -327,15 +327,15 @@ export default function RMsPage() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="management-row-actions">
           <button
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
             title="Send email now"
             data-log-title={`Email RM button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
-            className="dash-action-btn dash-btn-neutral"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-neutral"
           >
+            <Icon name="mail" size={16} />
             Email
           </button>
           <button
@@ -343,9 +343,9 @@ export default function RMsPage() {
             onClick={() => openEditModal(row?.original)}
             title="Edit RM details"
             data-log-title={`Edit RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-green-soft"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-edit"
           >
+            <Icon name="pencil" size={16} />
             Edit
           </button>
           <button
@@ -353,9 +353,9 @@ export default function RMsPage() {
             onClick={() => handleDelete(row?.original?._id)}
             title="Delete RM"
             data-log-title={`Delete RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-danger"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-danger"
           >
+            <Icon name="trash" size={16} />
             Delete
           </button>
         </div>

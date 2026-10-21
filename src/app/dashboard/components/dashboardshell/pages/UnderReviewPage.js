@@ -5,8 +5,8 @@ import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import ClientInfoModal from "./ClientInfoModal";
-import { ModalButton } from "./modalkit/ModalKit";
-import { ClientStatusBadge, STATUS_LABELS, onboardingTypeLabel, actionBtnStyle } from "./clientStatusShared";
+import { Icon, ModalButton } from "./modalkit/ModalKit";
+import { ClientStatusBadge, STATUS_LABELS, onboardingTypeLabel } from "./clientStatusShared";
 import { logUIAction } from "@/lib/logUIAction";
 
 const VERIFY_URL = "https://www.nemesisam.com/";
@@ -147,15 +147,15 @@ export default function UnderReviewPage() {
         const client = row.original;
         const label = client.fullName || client.email || client._id;
         return (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          <div className="management-row-actions">
             <button
               type="button"
               onClick={() => openInfo(client)}
               title="Show client details"
               data-log-title={`Details Under Review button clicked: ${label}`}
-              className="dash-action-btn dash-btn-green"
-              style={actionBtnStyle}
+              className="management-row-action is-edit"
             >
+              <Icon name="info" size={16} />
               Details
             </button>
             <button
@@ -163,9 +163,9 @@ export default function UnderReviewPage() {
               onClick={() => setDeleteTarget(client)}
               title="Delete client"
               data-log-title={`Delete Under Review button clicked: ${label}`}
-              className="dash-action-btn dash-btn-danger"
-              style={actionBtnStyle}
+              className="management-row-action is-danger"
             >
+              <Icon name="trash" size={16} />
               Delete
             </button>
           </div>
@@ -193,7 +193,7 @@ export default function UnderReviewPage() {
 
       <GenericTable
         title="Under Review"
-        description="Here you can see all your under review clients."
+        description="View clients who are currently under review."
         data={clients}
         columns={columns}
         filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}

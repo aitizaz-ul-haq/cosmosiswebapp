@@ -169,33 +169,6 @@ export default function LogsPage() {
     []
   );
 
-  const fieldStyle = {
-    padding: "0.45rem 0.6rem",
-    fontSize: "0.9rem",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    background: "#fff",
-  };
-
-  const labelStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.25rem",
-    fontSize: "0.8rem",
-    fontWeight: 600,
-    color: "#374151",
-  };
-
-  const btnStyle = {
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "6px",
-    fontWeight: 600,
-    fontSize: "0.9rem",
-    color: "#fff",
-    cursor: "pointer",
-  };
-
   return (
     <div>
       {/* 🔎 Timeline-based filter panel — rendered under the table description */}
@@ -210,86 +183,63 @@ export default function LogsPage() {
         disableRowModal
         hideDefaultFilter
         filtersSlot={
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #eee",
-              borderRadius: "12px",
-              padding: "1rem",
-              marginBottom: "1rem",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-            }}
-          >
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                gap: "0.75rem",
-                alignItems: "end",
-              }}
-            >
-              <label style={labelStyle}>
+          <div className="table-custom-filters">
+            <div className="table-filter-grid">
+              <label className="table-filter-field">
                 From date
                 <input
                   type="date"
-                  style={fieldStyle}
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 From time
                 <input
                   type="time"
                   step="1"
-                  style={fieldStyle}
                   value={fromTime}
                   onChange={(e) => setFromTime(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 To date
                 <input
                   type="date"
-                  style={fieldStyle}
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 To time
                 <input
                   type="time"
                   step="1"
-                  style={fieldStyle}
                   value={toTime}
                   onChange={(e) => setToTime(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 Company
                 <input
                   type="text"
                   placeholder="Company name"
-                  style={fieldStyle}
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 User
                 <input
                   type="text"
                   placeholder="Name or username"
-                  style={fieldStyle}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </label>
-              <label style={labelStyle}>
+              <label className="table-filter-field">
                 Action
                 <select
-                  style={fieldStyle}
                   value={actionType}
                   onChange={(e) => setActionType(e.target.value)}
                 >
@@ -305,12 +255,12 @@ export default function LogsPage() {
               </label>
             </div>
 
-            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.9rem", justifyContent: "flex-end" }}>
+            <div className="table-filter-actions">
               <button
                 type="button"
                 onClick={() => fetchLogs()}
                 disabled={loading}
-                style={{ ...btnStyle, backgroundColor: "var(--btn-info-light)", opacity: loading ? 0.7 : 1 }}
+                className="table-filter-button"
                 data-log-title="Logs: Get latest logs"
               >
                 {loading ? "Refreshing…" : "Get latest logs"}
@@ -318,7 +268,7 @@ export default function LogsPage() {
               <button
                 type="button"
                 onClick={clearFilters}
-                style={{ ...btnStyle, backgroundColor: "var(--btn-neutral-light)" }}
+                className="table-filter-button"
                 data-log-title="Logs: Clear filters"
               >
                 Clear
@@ -326,7 +276,7 @@ export default function LogsPage() {
               <button
                 type="button"
                 onClick={() => fetchLogs()}
-                style={{ ...btnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
+                className="table-filter-button is-primary"
                 data-log-title="Logs: Apply filters"
               >
                 Apply filters
@@ -334,7 +284,7 @@ export default function LogsPage() {
             </div>
 
             {error && (
-              <p style={{ color: "#dc2626", marginTop: "0.6rem", fontSize: "0.9rem" }}>{error}</p>
+              <p className="table-filter-error" role="alert">{error}</p>
             )}
           </div>
         }

@@ -10,9 +10,9 @@ import {
   STATUS_LABELS,
   ONBOARDING_TYPE_OPTIONS,
   onboardingTypeLabel,
-  actionBtnStyle,
 } from "./clientStatusShared";
 import {
+  Icon,
   ModalButton,
   ModalGrid,
   ModalInput,
@@ -243,15 +243,15 @@ export default function RegistryPage() {
         const client = row.original;
         const label = client.fullName || client.email || client._id;
         return (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          <div className="management-row-actions">
             <button
               type="button"
               onClick={() => openInfo(client)}
               title="Show client info"
               data-log-title={`Info Registry button clicked: ${label}`}
-              className="dash-action-btn dash-btn-info"
-              style={actionBtnStyle}
+              className="management-row-action is-info"
             >
+              <Icon name="info" size={16} />
               Info
             </button>
             <button
@@ -259,9 +259,9 @@ export default function RegistryPage() {
               onClick={() => setDeleteTarget(client)}
               title="Delete client"
               data-log-title={`Delete Registry button clicked: ${label}`}
-              className="dash-action-btn dash-btn-danger"
-              style={actionBtnStyle}
+              className="management-row-action is-danger"
             >
+              <Icon name="trash" size={16} />
               Delete
             </button>
             <button
@@ -269,9 +269,9 @@ export default function RegistryPage() {
               onClick={() => setChoiceTarget(client)}
               title="Register now or schedule the onboarding"
               data-log-title={`Register Client button clicked: ${label}`}
-              className="dash-action-btn dash-btn-green"
-              style={actionBtnStyle}
+              className="management-row-action is-edit"
             >
+              <Icon name="userPlus" size={16} />
               Register
             </button>
             <button
@@ -279,9 +279,9 @@ export default function RegistryPage() {
               onClick={() => openEdit(client)}
               title="Edit client details"
               data-log-title={`Edit Registry button clicked: ${label}`}
-              className="dash-action-btn dash-btn-green-soft"
-              style={actionBtnStyle}
+              className="management-row-action is-edit"
             >
+              <Icon name="pencil" size={16} />
               Edit
             </button>
           </div>

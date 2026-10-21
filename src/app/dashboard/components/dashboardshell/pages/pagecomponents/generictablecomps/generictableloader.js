@@ -1,8 +1,13 @@
+"use client";
+
+import CosmosisLoader from "../../loading/CosmosisLoader";
+import { useDashboardPageLoading } from "../../loading/DashboardPageLoading";
+
 export default function GenericTableLoader() {
+  const managed = useDashboardPageLoading(true);
   return (
-    <div className="generic-table-loader">
-      <div className="generic-table-spinner"></div>
-      <p className="generic-table-loader-text">Loading…</p>
+    <div className="generic-table-loader" aria-hidden={managed ? true : undefined}>
+      {!managed && <CosmosisLoader />}
     </div>
   );
 }

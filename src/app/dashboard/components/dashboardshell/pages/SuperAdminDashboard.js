@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import { ActionList, ActivityTable, Badge, DashboardHero, Icon, Panel, StackedBarChart, StatCard } from "./dashboard/DashboardUI";
 
 const REPORTS = [
@@ -49,6 +50,8 @@ export default function SuperAdminDashboard() {
   const [companyFilter, setCompanyFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     let active = true;

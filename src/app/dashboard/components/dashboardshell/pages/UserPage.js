@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import { Icon, ModalButton, ModalShell } from "./modalkit/ModalKit";
+import { UserFormFields } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
 
 export default function UserPage() {
@@ -159,26 +161,6 @@ export default function UserPage() {
   const tableTitle = "Users";
   const tableDescription = "All users in the system. Search, filter, and manage users here.";
 
-  const fieldStyle = {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    width: "100%",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-  };
-
-  const modalActionBtnStyle = {
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 600,
-    fontSize: "1rem",
-    color: "#fff",
-  };
-
   const columns = [
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "email", header: "Email" },
@@ -188,32 +170,32 @@ export default function UserPage() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="management-row-actions">
           <button
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
             title="Send email now"
-            className="dash-action-btn dash-btn-neutral"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-neutral"
           >
+            <Icon name="mail" size={16} />
             Email
           </button>
           <button
             type="button"
             onClick={() => openEditModal(row?.original)}
             title="Edit user details"
-            className="dash-action-btn dash-btn-green-soft"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-edit"
           >
+            <Icon name="pencil" size={16} />
             Edit
           </button>
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
             title="Delete user"
-            className="dash-action-btn dash-btn-danger"
-            style={{ padding: "0.4rem 0.75rem", textAlign: "center", fontWeight: 700, borderRadius: "0.5rem" }}
+            className="management-row-action is-danger"
           >
+            <Icon name="trash" size={16} />
             Delete
           </button>
         </div>
@@ -242,7 +224,7 @@ export default function UserPage() {
         description={tableDescription}
         data={users}
         columns={columns}
-        filterableFields={columns.map((col) => col.accessorKey)}
+        filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}
         actions={[]}
         loading={loading}
         onUserCreated={(newUser) => setUsers((prev) => [newUser, ...prev])}
@@ -250,77 +232,34 @@ export default function UserPage() {
       />
 
       {showEditModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleEditSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Edit User</h3>
-              <button type="button" onClick={closeEditModal} data-log-title="Closed Edit User form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={editForm.username} onChange={handleEditChange("username")} required />
-              <input style={fieldStyle} placeholder="Full Name" value={editForm.fullName} onChange={handleEditChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={editForm.email} onChange={handleEditChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={editForm.phone} onChange={handleEditChange("phone")} required />
-              <input style={fieldStyle} type="password" placeholder="New Password (leave blank to keep)" value={editForm.password} onChange={handleEditChange("password")} />
-              <select style={fieldStyle} value={editForm.role} onChange={handleEditChange("role")} required>
-                <option value="supervisor">supervisor</option>
-                <option value="rm">rm</option>
-                <option value="client">client</option>
-              </select>
-              <select style={fieldStyle} value={editForm.companyId} onChange={handleEditChange("companyId")}
-                required={editForm.role !== "superadmin"}
-              >
-                <option value="">Select company</option>
-                {companies.map((company) => (
-                  <option key={company._id} value={company._id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={closeEditModal}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
+        <ModalShell
+          as="form"
+          wrapperProps={{ onSubmit: handleEditSubmit }}
+          icon="userEdit"
+          title="Edit User"
+          subtitle="Update the user's account details and access."
+          onClose={closeEditModal}
+          closeLogTitle="Closed Edit User form"
+          size="lg"
+          dismissOnOverlay={false}
+          footer={
+            <>
+              <ModalButton variant="danger" onClick={closeEditModal}>
                 Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
-              >
+              </ModalButton>
+              <ModalButton variant="primary" icon="save" type="submit">
                 Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
+              </ModalButton>
+            </>
+          }
+        >
+          <UserFormFields
+            form={editForm}
+            onChange={handleEditChange}
+            companies={companies}
+            mode="edit"
+          />
+        </ModalShell>
       )}
 
       <DeleteConfirmModal

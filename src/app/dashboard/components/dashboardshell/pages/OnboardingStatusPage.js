@@ -3,12 +3,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
-import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
+import TablePageLayout from "./pagecomponents/TablePageLayout";
+import ManagementTableToolbar from "./pagecomponents/ManagementTableToolbar";
+import ManagementTablePagination from "./pagecomponents/ManagementTablePagination";
 import {
   PHASE_CONFIG,
   PHASE_SECTIONS,
   STATUS_COLORS,
-  actionBtnStyle,
   getPhaseConfig,
   onboardingTypeLabel,
 } from "./clientStatusShared";
@@ -29,6 +30,13 @@ const STATUS_OPTIONS = [
 ];
 const STATUS_LABEL = Object.fromEntries(STATUS_OPTIONS.map((o) => [o.value, o.label]));
 const FILTERABLE_FIELDS = ["fullName", "created", "rmRemarks", "status", "phase"];
+const FILTER_COLUMNS = [
+  { accessorKey: "fullName", header: "Client" },
+  { accessorKey: "created", header: "Created" },
+  { accessorKey: "rmRemarks", header: "RM remarks" },
+  { accessorKey: "status", header: "Status" },
+  { accessorKey: "phase", header: "Phase" },
+];
 
 const formatCreated = (value) => {
   if (!value) return "—";
@@ -217,8 +225,7 @@ function StatusMenu({ current, busy, clientName, onSelect }) {
     <div className="onbs-status-menu" ref={ref} onClick={(e) => e.stopPropagation()}>
       <button
         type="button"
-        className="dash-action-btn dash-btn-neutral"
-        style={actionBtnStyle}
+        className="management-row-action is-neutral"
         aria-haspopup="menu"
         aria-expanded={open}
         disabled={busy}
@@ -265,16 +272,14 @@ function TimelineDetail({ row, closing, isSupervisor, onNavigate }) {
               <>
                 <button
                   type="button"
-                  className="dash-action-btn dash-btn-green"
-                  style={actionBtnStyle}
+                  className="management-row-action is-edit"
                   data-log-title={`Notify RM button clicked: ${row.fullName}`}
                 >
                   Notify RM
                 </button>
                 <button
                   type="button"
-                  className="dash-action-btn dash-btn-green"
-                  style={actionBtnStyle}
+                  className="management-row-action is-edit"
                   onClick={() => onNavigate?.("submissions")}
                   data-log-title={`Submissions button clicked (timeline): ${row.fullName}`}
                 >
@@ -285,8 +290,7 @@ function TimelineDetail({ row, closing, isSupervisor, onNavigate }) {
               <>
                 <button
                   type="button"
-                  className="dash-action-btn dash-btn-neutral onbs-email-btn"
-                  style={actionBtnStyle}
+                  className="management-row-action is-neutral onbs-email-btn"
                   disabled={!row.client.email}
                   title={row.client.email ? `Email ${row.client.email}` : "No email on file"}
                   onClick={() => {
@@ -298,8 +302,7 @@ function TimelineDetail({ row, closing, isSupervisor, onNavigate }) {
                 </button>
                 <button
                   type="button"
-                  className="dash-action-btn dash-btn-danger"
-                  style={actionBtnStyle}
+                  className="management-row-action is-danger"
                   data-log-title={`Report Supervisor button clicked: ${row.fullName}`}
                 >
                   Report Supervisor
@@ -471,34 +474,41 @@ export default function OnboardingStatusPage({ onNavigate }) {
     setPageIndex(0);
   }, [filterField, filterValue]);
 
-  if (loading) return <GenericTableLoader />;
-
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
   const currentIndex = Math.min(pageIndex, pageCount - 1);
   const pageRows = filteredRows.slice(currentIndex * PAGE_SIZE, (currentIndex + 1) * PAGE_SIZE);
-  const firstRow = filteredRows.length === 0 ? 0 : currentIndex * PAGE_SIZE + 1;
-  const lastRow = Math.min(filteredRows.length, (currentIndex + 1) * PAGE_SIZE);
 
   return (
-    <div className="generic-table-container">
-      <GenericTableHeader
+    <TablePageLayout
+      title="Onboarding Status"
+      description="Track how far each of your clients has progressed through onboarding."
+      className="onboarding-status-table-page"
+      loading={loading}
+    >
+      <ManagementTableToolbar
         title="Onboarding Status"
-        description="Track how far each of your clients has progressed through onboarding."
+        columns={FILTER_COLUMNS}
         filterField={filterField}
         setFilterField={setFilterField}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
         filterableFields={FILTERABLE_FIELDS}
+        searchPlaceholder="Search clients by name, status, phase, or remarks..."
       />
 
       {error ? <div className="onbs-error">{error}</div> : null}
 
-      {pageRows.length === 0 ? (
+      {loading ? <GenericTableLoader /> : pageRows.length === 0 ? (
         <div className="onbs-empty">
           {error ? "" : "No clients are currently going through onboarding."}
         </div>
       ) : (
         <div className="onbs-list">
+          <div className="onbs-list-heading" aria-hidden="true">
+            <span>Client &amp; progress</span>
+            <span>Status &amp; phase</span>
+            <span>Actions</span>
+          </div>
           {pageRows.map((row) => {
             const id = getRowId(row);
             const isOpen = openId === id;
@@ -576,8 +586,7 @@ export default function OnboardingStatusPage({ onNavigate }) {
                 )}
                 <button
                   type="button"
-                  className="dash-action-btn dash-btn-green"
-                  style={actionBtnStyle}
+                  className="management-row-action is-edit"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggle();
@@ -602,48 +611,13 @@ export default function OnboardingStatusPage({ onNavigate }) {
         </div>
       )}
 
-      <div className="generic-table-pagination">
-        <div className="generic-table-pagination-info">
-          Showing {firstRow}-{lastRow} of {filteredRows.length}
-        </div>
-        <div className="generic-table-pagination-controls">
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(0)}
-            disabled={currentIndex === 0}
-          >
-            First
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(currentIndex - 1)}
-            disabled={currentIndex === 0}
-          >
-            Prev
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(currentIndex + 1)}
-            disabled={currentIndex >= pageCount - 1}
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => setPageIndex(pageCount - 1)}
-            disabled={currentIndex >= pageCount - 1}
-          >
-            Last
-          </button>
-        </div>
-        <div className="generic-table-pagination-status">
-          Page {currentIndex + 1} of {pageCount}
-        </div>
-      </div>
-    </div>
+      {!loading && (
+        <ManagementTablePagination
+          pagination={{ pageIndex: currentIndex, pageSize: PAGE_SIZE }}
+          total={filteredRows.length}
+          onPageChange={setPageIndex}
+        />
+      )}
+    </TablePageLayout>
   );
 }

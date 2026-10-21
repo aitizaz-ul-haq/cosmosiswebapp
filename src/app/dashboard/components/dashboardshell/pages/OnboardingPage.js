@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import "./onboarding/onboarding.css";
 import { PHASE_CONFIG } from "./clientStatusShared";
 import OnboardingTimeline from "./onboarding/OnboardingTimeline";
@@ -42,6 +43,8 @@ export default function OnboardingPage() {
   const [expandedPhase, setExpandedPhase] = useState(null);
   const [openPhase, setOpenPhase] = useState(null);
   const [prerequisitesOpen, setPrerequisitesOpen] = useState(false);
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     let cancelled = false;

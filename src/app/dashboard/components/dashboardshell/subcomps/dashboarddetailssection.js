@@ -5,7 +5,7 @@ export default function DashboardDetailsSection({ onLogout, user, config, active
   return (
     <div className="dashboard-details-section">
       <DashboardHeaderSection onLogout={onLogout} user={user} config={config} setActiveMenu={setActiveMenu} mobileOpen={mobileOpen} onOpenMobile={onOpenMobile} />
-      <DashboardMenuSection activeMenu={activeMenu}>{children}</DashboardMenuSection>
+      <DashboardMenuSection activeMenu={activeMenu} userRole={user?.role}>{children}</DashboardMenuSection>
     </div>
   );
 }

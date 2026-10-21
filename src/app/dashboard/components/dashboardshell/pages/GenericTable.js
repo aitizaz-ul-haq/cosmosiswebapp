@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useReactTable, getCoreRowModel, getPaginationRowModel } from "@tanstack/react-table";
 import TableModal from "./pagecomponents/tablemodal";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
-import GenericTableHeader from "./pagecomponents/generictablecomps/generictableheader";
 import GenericTableThead from "./pagecomponents/generictablecomps/generictablethead";
 import GenericTableTbody from "./pagecomponents/generictablecomps/generictabletbody";
+import ManagementTableToolbar from "./pagecomponents/ManagementTableToolbar";
+import ManagementTablePagination from "./pagecomponents/ManagementTablePagination";
+import TablePageLayout from "./pagecomponents/TablePageLayout";
+import { AddCompanyModal, AddUserModal } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
-import "./styles/generictable.css";
 
 export default function GenericTable({
   title = "Table",
@@ -228,48 +230,27 @@ export default function GenericTable({
     setShowAddUserModal(false);
   };
 
-  const fieldStyle = {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    width: "100%",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-  };
+  const searchableFields = useMemo(() => {
+    const fields = filterableFields.filter(Boolean);
+    return fields.length ? fields : columns
+      .filter((column) => column.accessorKey || column.accessorFn)
+      .map((column) => column.accessorKey || column.id)
+      .filter(Boolean);
+  }, [columns, filterableFields]);
 
-  const labelStyle = {
-    display: "flex",
-    gap: "0.5rem",
-    alignItems: "center",
-    fontSize: "0.95rem",
-  };
-
-  const modalActionBtnStyle = {
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 600,
-    fontSize: "1rem",
-    color: "#fff",
-  };
-
-  // 🔍 Filter logic
   const filteredData = useMemo(() => {
-    return data.filter((r) => {
-      if (filterField === "all" || filterValue === "") return true;
-      if (filterField.toLowerCase().includes("date")) {
-        return new Date(r[filterField])
-          .toLocaleDateString()
-          .includes(filterValue);
-      }
-      return r[filterField]
-        ?.toString()
-        .toLowerCase()
-        .includes(filterValue.toLowerCase());
-    });
-  }, [data, filterField, filterValue]);
+    const query = filterValue.trim().toLowerCase();
+    if (!query) return data;
+    const fields = filterField === "all" ? searchableFields : [filterField];
+    return data.filter((row, index) => fields.some((field) => {
+      const column = columns.find((item) => (item.accessorKey || item.id) === field);
+      const value = column?.accessorFn
+        ? column.accessorFn(row, index)
+        : field.split(".").reduce((current, key) => current?.[key], row);
+      const text = value instanceof Date ? value.toISOString() : String(value ?? "");
+      return text.toLowerCase().includes(query);
+    }));
+  }, [data, columns, filterField, filterValue, searchableFields]);
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -285,367 +266,73 @@ export default function GenericTable({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const pageCount = Math.max(1, Math.ceil(filteredData.length / pagination.pageSize));
-  const visiblePageCount = 5;
-  const currentPage = pagination.pageIndex + 1;
-  const firstRow = filteredData.length === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
-  const lastRow = Math.min(filteredData.length, pagination.pageIndex * pagination.pageSize + pagination.pageSize);
-
-  const getPageNumbers = () => {
-    if (pageCount <= visiblePageCount) {
-      return Array.from({ length: pageCount }, (_, i) => i);
-    }
-
-    const half = Math.floor(visiblePageCount / 2);
-    let start = pagination.pageIndex - half;
-    let end = pagination.pageIndex + half;
-
-    if (start < 0) {
-      start = 0;
-      end = visiblePageCount - 1;
-    }
-
-    if (end >= pageCount) {
-      end = pageCount - 1;
-      start = end - (visiblePageCount - 1);
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
-
-  if (loading) {
-    return <GenericTableLoader />;
-  }
+  const addAction = title === "Companies"
+    ? { onClick: () => setShowAddCompanyModal(true), label: "Add Company", logTitle: "New Company button clicked" }
+    : title === "Users"
+      ? { onClick: () => setShowAddUserModal(true), label: "Add User", logTitle: "New User button clicked" }
+      : onAddRM
+        ? { onClick: onAddRM, label: "Add RM", logTitle: "New RM button clicked" }
+        : onAddClient
+          ? { onClick: onAddClient, label: "Add Client", logTitle: "New Client button clicked" }
+          : null;
 
   return (
-    <div className="generic-table-container">
-      {/* Header */}
-      <GenericTableHeader
-        title={title}
-        description={description}
-        filterField={filterField}
-        setFilterField={setFilterField}
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        filterableFields={filterableFields}
-        hideDefaultFilter={hideDefaultFilter}
-      />
-
-      {/* Custom filters slot (rendered directly under the description) */}
-      {filtersSlot}
-
-      {title === "Companies" && (
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
-          <button
-            type="button"
-            onClick={() => setShowAddCompanyModal(true)}
-            data-log-title="New Company button clicked"
-            className="dash-action-btn dash-btn-green"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 600,
-              fontSize: "1rem",
-            }}
-          >
-            + Add Companies
-          </button>
-        </div>
-      )}
-
-      {title === "Users" && (
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
-          <button
-            type="button"
-            onClick={() => setShowAddUserModal(true)}
-            data-log-title="New User button clicked"
-            className="dash-action-btn dash-btn-green"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 600,
-              fontSize: "1rem",
-            }}
-          >
-            + Add User
-          </button>
-        </div>
-      )}
-
-      {title === "Relationship Managers" && onAddRM && (
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
-          <button
-            type="button"
-            onClick={onAddRM}
-            data-log-title="New RM button clicked"
-            className="dash-action-btn dash-btn-green"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 600,
-              fontSize: "1rem",
-            }}
-          >
-            + Add RM
-          </button>
-        </div>
-      )}
-
-      {title === "Clients" && onAddClient && (
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
-          <button
-            type="button"
-            onClick={onAddClient}
-            data-log-title="New Client button clicked"
-            className="dash-action-btn dash-btn-green"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 600,
-              fontSize: "1rem",
-            }}
-          >
-            + Add Clients
-          </button>
-        </div>
-      )}
-
-      {/* Table */}
-      <table className="generic-table">
-        <GenericTableThead table={table} actions={actions} />
-        <GenericTableTbody
-          table={table}
-          filteredData={filteredData}
+    <>
+      <TablePageLayout title={title} description={description} loading={loading}>
+        <ManagementTableToolbar
+          title={title}
           columns={columns}
-          actions={actions}
-          setSelectedRow={disableRowModal ? null : setSelectedRow}
+          filterableFields={searchableFields}
+          filterField={filterField}
+          setFilterField={setFilterField}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+          hideDefaultFilter={hideDefaultFilter}
+          customFilters={filtersSlot}
+          onAdd={addAction?.onClick}
+          addLabel={addAction?.label}
+          addLogTitle={addAction?.logTitle}
         />
-      </table>
-
-      <div className="generic-table-pagination">
-        <div className="generic-table-pagination-info">
-          Showing {firstRow}-{lastRow} of {filteredData.length}
-        </div>
-        <div className="generic-table-pagination-controls">
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            First
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Prev
-          </button>
-
-          {getPageNumbers().map((pageIndex) => (
-            <button
-              key={pageIndex}
-              type="button"
-              className={
-                pageIndex === pagination.pageIndex
-                  ? "generic-table-page-btn active"
-                  : "generic-table-page-btn"
-              }
-              onClick={() => table.setPageIndex(pageIndex)}
-            >
-              {pageIndex + 1}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            className="generic-table-page-btn"
-            onClick={() => table.setPageIndex(pageCount - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            Last
-          </button>
-        </div>
-        <div className="generic-table-pagination-status">
-          Page {currentPage} of {pageCount}
-        </div>
-      </div>
+        {loading ? <GenericTableLoader /> : (
+          <>
+            <div className="management-table-scroll" role="region" aria-label={`${title} table`} tabIndex={0}>
+              <table className="generic-table">
+                <GenericTableThead table={table} actions={actions} />
+                <GenericTableTbody
+                  table={table}
+                  filteredData={filteredData}
+                  columns={columns}
+                  actions={actions}
+                  setSelectedRow={disableRowModal ? null : setSelectedRow}
+                />
+              </table>
+            </div>
+            <ManagementTablePagination
+              pagination={pagination}
+              total={filteredData.length}
+              onPageChange={(pageIndex) => table.setPageIndex(pageIndex)}
+            />
+          </>
+        )}
+      </TablePageLayout>
 
       {showAddCompanyModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleCompanySubmit}
-            style={{
-              background: "#fff",
-              width: "min(900px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add Company</h3>
-              <button type="button" onClick={() => setShowAddCompanyModal(false)} data-log-title="Closed Add Company form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Name" value={companyForm.name} onChange={handleCompanyChange("name")} required />
-              <input style={fieldStyle} placeholder="Legal Name" value={companyForm.legalName} onChange={handleCompanyChange("legalName")} required />
-              <input style={fieldStyle} placeholder="Tenant Key (slug)" value={companyForm.tenantKey} onChange={handleCompanyChange("tenantKey")} required />
-              <select style={fieldStyle} value={companyForm.status} onChange={handleCompanyChange("status")} required>
-                <option value="active">Active</option>
-                <option value="suspended">Suspended</option>
-              </select>
-
-              <input style={fieldStyle} placeholder="Primary Contact Full Name" value={companyForm.primaryContact.fullName} onChange={handleCompanyChange("primaryContact.fullName")} required />
-              <input style={fieldStyle} placeholder="Primary Contact Email" value={companyForm.primaryContact.email} onChange={handleCompanyChange("primaryContact.email")} required />
-              <input style={fieldStyle} placeholder="Primary Contact Phone" value={companyForm.primaryContact.phone} onChange={handleCompanyChange("primaryContact.phone")} required />
-
-              <input style={fieldStyle} placeholder="Address Line 1" value={companyForm.address.line1} onChange={handleCompanyChange("address.line1")} required />
-              <input style={fieldStyle} placeholder="Address Line 2" value={companyForm.address.line2} onChange={handleCompanyChange("address.line2")} required />
-              <input style={fieldStyle} placeholder="City" value={companyForm.address.city} onChange={handleCompanyChange("address.city")} required />
-              <input style={fieldStyle} placeholder="State/Province" value={companyForm.address.stateOrProvince} onChange={handleCompanyChange("address.stateOrProvince")} required />
-              <input style={fieldStyle} placeholder="Postal Code" value={companyForm.address.postalCode} onChange={handleCompanyChange("address.postalCode")} required />
-              <input style={fieldStyle} placeholder="Country" value={companyForm.address.country} onChange={handleCompanyChange("address.country")} required />
-
-              <input style={fieldStyle} placeholder="Registration Number" value={companyForm.registrationNumber} onChange={handleCompanyChange("registrationNumber")} required />
-              <input style={fieldStyle} placeholder="Tax ID" value={companyForm.taxId} onChange={handleCompanyChange("taxId")} required />
-              <input style={fieldStyle} placeholder="Website" value={companyForm.website} onChange={handleCompanyChange("website")} required />
-              <input style={fieldStyle} placeholder="Logo URL" value={companyForm.logoUrl} onChange={handleCompanyChange("logoUrl")} required />
-
-              <input style={fieldStyle} placeholder="Brand Primary Color" value={companyForm.brand.primaryColor} onChange={handleCompanyChange("brand.primaryColor")} required />
-              <input style={fieldStyle} placeholder="Brand Secondary Color" value={companyForm.brand.secondaryColor} onChange={handleCompanyChange("brand.secondaryColor")} required />
-              <input style={fieldStyle} placeholder="Email From Name" value={companyForm.brand.emailFromName} onChange={handleCompanyChange("brand.emailFromName")} required />
-
-              <textarea style={fieldStyle} placeholder="Notes" value={companyForm.notes} onChange={handleCompanyChange("notes")} rows={3} required />
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={() => setShowAddCompanyModal(false)}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
+        <AddCompanyModal
+          form={companyForm}
+          onChange={handleCompanyChange}
+          onSubmit={handleCompanySubmit}
+          onClose={() => setShowAddCompanyModal(false)}
+        />
       )}
 
       {showAddUserModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <form
-            onSubmit={handleUserSubmit}
-            style={{
-              background: "#fff",
-              width: "min(700px, 92vw)",
-              maxHeight: "85vh",
-              overflowY: "auto",
-              borderRadius: "12px",
-              padding: "1.25rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-              textAlign: "left",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-              <h3 style={{ margin: 0, textAlign: "center", width: "100%", fontSize: "1.2rem" }}>Add User</h3>
-              <button type="button" onClick={() => setShowAddUserModal(false)} data-log-title="Closed Add User form" style={{ border: "none", background: "transparent", fontSize: "1.25rem" }}>
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gap: "0.75rem" }}>
-              <input style={fieldStyle} placeholder="Username" value={userForm.username} onChange={handleUserChange("username")} required />
-              <input style={fieldStyle} placeholder="Full Name" value={userForm.fullName} onChange={handleUserChange("fullName")} required />
-              <input style={fieldStyle} type="email" placeholder="Email" value={userForm.email} onChange={handleUserChange("email")} required />
-              <input style={fieldStyle} placeholder="Phone" value={userForm.phone} onChange={handleUserChange("phone")} required />
-              <input style={fieldStyle} type="password" placeholder="Password" value={userForm.passwordHash} onChange={handleUserChange("passwordHash")} required />
-              <select style={fieldStyle} value={userForm.role} onChange={handleUserChange("role")} required>
-                <option value="supervisor">supervisor</option>
-                <option value="rm">rm</option>
-                <option value="client">client</option>
-              </select>
-              <select style={fieldStyle} value={userForm.companyId} onChange={handleUserChange("companyId")} required>
-                <option value="">Select company</option>
-                {companies.map((company) => (
-                  <option key={company._id} value={company._id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "1rem" }}>
-              <button
-                type="button"
-                onClick={() => setShowAddUserModal(false)}
-                style={{ ...modalActionBtnStyle, backgroundColor: "#E57373" }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                style={{ ...modalActionBtnStyle, backgroundColor: "#e3f8f2", color: "#17b89b" }}
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
+        <AddUserModal
+          form={userForm}
+          onChange={handleUserChange}
+          onSubmit={handleUserSubmit}
+          onClose={() => setShowAddUserModal(false)}
+          companies={companies}
+        />
       )}
 
       {/* Modal */}
@@ -656,6 +343,6 @@ export default function GenericTable({
           actions={actions.filter((a) => a.type !== "details")}
         />
       )}
-    </div>
+    </>
   );
 }

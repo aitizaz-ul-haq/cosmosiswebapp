@@ -1,7 +1,5 @@
 "use client";
 
-import { actionBtnStyle } from "../clientStatusShared";
-
 export const formatCompletedAt = (value) => {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "—";
@@ -56,8 +54,7 @@ export default function PhaseRow({ submission: s, focusable = true, logLabel, on
       </span>
       <button
         type="button"
-        className="dash-action-btn dash-btn-green"
-        style={actionBtnStyle}
+        className="management-row-action is-edit"
         tabIndex={focusable ? 0 : -1}
         onClick={() => onView(s)}
         data-log-title={`View submission clicked: ${logLabel} - Phase ${s.phase}`}

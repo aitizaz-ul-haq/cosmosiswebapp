@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
+import CosmosisLoader from "./loading/CosmosisLoader";
 import { ModalButton, ModalGrid, ModalInput, ModalShell } from "./modalkit/ModalKit";
 import "./styles/profilepage.css";
 
@@ -10,6 +12,7 @@ export default function ProfilePage() {
   const [userDetails, setUserDetails] = useState(null);
   const [companyDetails, setCompanyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [companyLoading, setCompanyLoading] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCompanyEditModal, setShowCompanyEditModal] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -48,6 +51,8 @@ export default function ProfilePage() {
   const [companyEditMessage, setCompanyEditMessage] = useState({ type: "", text: "" });
   const [submitting, setSubmitting] = useState(false);
 
+  const managedLoading = useDashboardPageLoading(loading || companyLoading);
+
   // Fetch full user details
   useEffect(() => {
     fetchUserDetails();
@@ -78,6 +83,7 @@ export default function ProfilePage() {
   };
 
   const fetchCompanyDetails = async (companyId) => {
+    setCompanyLoading(true);
     try {
       const res = await fetch(`/api/companies?id=${companyId}`, { credentials: "include" });
       const data = await res.json();
@@ -106,6 +112,8 @@ export default function ProfilePage() {
       }
     } catch (err) {
       console.error("Failed to fetch company details:", err);
+    } finally {
+      setCompanyLoading(false);
     }
   };
 
@@ -273,7 +281,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="profile-loading">
-        <div className="profile-spinner"></div>
+        {!managedLoading && <CosmosisLoader label="Loading profile…" />}
       </div>
     );
   }

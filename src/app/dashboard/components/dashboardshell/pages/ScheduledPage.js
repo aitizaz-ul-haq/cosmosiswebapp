@@ -5,11 +5,11 @@ import { useUser } from "@/app/context/UserContext";
 import GenericTable from "./GenericTable";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import ScheduledDetailsModal from "./ScheduledDetailsModal";
+import { Icon } from "./modalkit/ModalKit";
 import {
   ClientStatusBadge,
   STATUS_LABELS,
   onboardingTypeLabel,
-  actionBtnStyle,
 } from "./clientStatusShared";
 import { formatCompact, getBrowserTimeZone } from "./scheduling/timeUtils";
 import { logUIAction } from "@/lib/logUIAction";
@@ -131,15 +131,15 @@ export default function ScheduledPage() {
         const client = row.original;
         const label = client.fullName || client.email || client._id;
         return (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          <div className="management-row-actions">
             <button
               type="button"
               onClick={() => openInfo(client)}
               title="Show scheduled onboarding details"
               data-log-title={`Details Scheduled button clicked: ${label}`}
-              className="dash-action-btn dash-btn-info"
-              style={actionBtnStyle}
+              className="management-row-action is-info"
             >
+              <Icon name="calendar" size={16} />
               Details
             </button>
             <button
@@ -147,9 +147,9 @@ export default function ScheduledPage() {
               onClick={() => setDeleteTarget(client)}
               title="Delete client"
               data-log-title={`Delete Scheduled button clicked: ${label}`}
-              className="dash-action-btn dash-btn-danger"
-              style={actionBtnStyle}
+              className="management-row-action is-danger"
             >
+              <Icon name="trash" size={16} />
               Delete
             </button>
           </div>

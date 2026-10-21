@@ -3,15 +3,40 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
+import GenericTable from "./GenericTable";
 import { DashboardHero, EmptyState, Icon, Panel } from "./dashboard/DashboardUI";
 import { clientEvents, formatDate, relativeTime } from "./dashboard/data";
 
-export default function NotificationsPage() {
-  const { user } = useUser();
+const notificationColumns = [
+  { accessorKey: "title", header: "Notification" },
+  { accessorKey: "message", header: "Message" },
+  { accessorKey: "companyName", header: "Company" },
+  { accessorKey: "recipient", header: "Recipient" },
+  { accessorKey: "createdDate", header: "Date" },
+  { accessorKey: "status", header: "Status" },
+];
+
+function PlatformNotifications() {
+  return (
+    <GenericTable
+      title="Notifications"
+      description="View platform notifications and updates. Search and filter by notification, message, company, recipient, date, or status."
+      data={[]}
+      columns={notificationColumns}
+      filterableFields={notificationColumns.map((column) => column.accessorKey)}
+      disableRowModal
+    />
+  );
+}
+
+function ClientActivityNotifications({ user }) {
   const router = useRouter();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     if (!user) return;
@@ -51,4 +76,10 @@ export default function NotificationsPage() {
       </Panel>
     </div>
   );
+}
+
+export default function NotificationsPage() {
+  const { user } = useUser();
+  if (!user) return null;
+  return user.role === "superadmin" ? <PlatformNotifications /> : <ClientActivityNotifications user={user} />;
 }

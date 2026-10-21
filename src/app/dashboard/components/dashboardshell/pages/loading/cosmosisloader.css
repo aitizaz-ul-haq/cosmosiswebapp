@@ -1,0 +1,71 @@
+.cosmosis-loader {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 104px;
+  gap: 12px;
+  color: #00c9b1;
+}
+
+.cosmosis-loader-logo {
+  display: block;
+  width: 100%;
+  height: 104px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.cosmosis-loader-track {
+  stroke: currentColor;
+  stroke-width: 1.3;
+  opacity: .34;
+}
+
+.cosmosis-loader-orbit {
+  transform-origin: 60px 60px;
+  animation: cosmosis-logo-orbit 2.8s linear infinite;
+}
+
+.cosmosis-loader-trail {
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 22 78;
+  stroke-dashoffset: -4;
+  opacity: .68;
+}
+
+.cosmosis-loader-primary { fill: currentColor; }
+.cosmosis-loader-satellite { fill: currentColor; }
+
+.cosmosis-loader-label {
+  color: inherit;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.cosmosis-loader-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes cosmosis-logo-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmosis-loader-orbit { animation: none; }
+}

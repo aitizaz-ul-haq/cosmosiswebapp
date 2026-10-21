@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import { DashboardHero, StatCard, Panel, Icon, Badge, StackedBarChart, EmptyState, ActivityTable } from "./dashboard/DashboardUI";
 import { clientId, clientName, clientCompleted, clientInProgress, clientEvents, filterClients, formatDate, monthlyTrend, phaseBars, relativeTime, scheduleParts, submissionRows, validDate } from "./dashboard/data";
 
@@ -13,6 +14,8 @@ export default function RMDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [progressFilter, setProgressFilter] = useState("all");
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     if (!user) return;

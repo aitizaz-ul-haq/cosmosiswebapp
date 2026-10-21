@@ -17,7 +17,7 @@ export default function GenericTableTbody({
     <tbody>
       {rows.length === 0 ? (
         <tr>
-          <td colSpan={totalCols} style={{ textAlign: "center" }}>
+          <td className="generic-table-empty" colSpan={totalCols} style={{ textAlign: "center" }}>
             No data found
           </td>
         </tr>
@@ -29,13 +29,13 @@ export default function GenericTableTbody({
             style={{ cursor: setSelectedRow ? "pointer" : "default" }}
           >
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id}>
+              <td key={cell.id} className={cell.column.id === "actions" ? "table-action-cell" : undefined}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
 
             {actions.length > 0 && (
-              <td className="generic-table-actions">
+              <td className="generic-table-actions table-action-cell">
                 {actions.map((act, idx) => (
                   <button
                     key={idx}

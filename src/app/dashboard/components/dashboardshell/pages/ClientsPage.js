@@ -219,14 +219,6 @@ export default function ClientsPage() {
   const canAssignRm = user?.role === "supervisor" || user?.role === "superadmin";
   const isRm = user?.role === "rm";
 
-  // Shared layout style for table action buttons (colors come from CSS classes)
-  const actionBtnStyle = {
-    padding: "0.4rem 0.75rem",
-    textAlign: "center",
-    fontWeight: 700,
-    borderRadius: "0.5rem",
-  };
-
   const STATUS_OPTIONS = [
     { value: "ongoing", label: "In progress" },
     { value: "on_hold", label: "On hold" },
@@ -615,7 +607,7 @@ export default function ClientsPage() {
   const tableDescription =
     user?.role === "rm"
       ? "All your registered clients are displayed here."
-      : "This is where you can see all your registered clients";
+      : "All your registered clients are displayed here.";
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
@@ -665,15 +657,15 @@ export default function ClientsPage() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="management-row-actions">
           <button
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
             title="Send email now"
             data-log-title={`Email Client button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
-            className="dash-action-btn dash-btn-neutral"
-            style={actionBtnStyle}
+            className="management-row-action is-neutral"
           >
+            <Icon name="mail" size={16} />
             Email
           </button>
           {!isWorkflowStatus(row?.original?.status) && (
@@ -682,9 +674,9 @@ export default function ClientsPage() {
               onClick={() => openEditModal(row?.original)}
               title="Edit client details"
               data-log-title={`Edit Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-              className="dash-action-btn dash-btn-green-soft"
-              style={actionBtnStyle}
+              className="management-row-action is-edit"
             >
+              <Icon name="pencil" size={16} />
               Edit
             </button>
           )}
@@ -693,9 +685,9 @@ export default function ClientsPage() {
             onClick={() => openInfoModal(row?.original)}
             title="Show client info"
             data-log-title={`Info Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-info"
-            style={actionBtnStyle}
+            className="management-row-action is-info"
           >
+            <Icon name="info" size={16} />
             Info
           </button>
           <button
@@ -703,9 +695,9 @@ export default function ClientsPage() {
             onClick={() => handleDelete(row?.original)}
             title="Delete client"
             data-log-title={`Delete Client button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
-            className="dash-action-btn dash-btn-danger"
-            style={actionBtnStyle}
+            className="management-row-action is-danger"
           >
+            <Icon name="trash" size={16} />
             Delete
           </button>
         </div>

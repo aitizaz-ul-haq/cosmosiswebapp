@@ -36,11 +36,11 @@ export const dashboardConfigs = {
         },
         { key: "logs", label: "Logs", iconlink: "/images/file.png" },
         { key: "reports", label: "Reports", iconlink: "/images/report.png" },
-        // {
-        //   key: "notifications",
-        //   label: "Notifications",
-        //   iconlink: "/images/bell.png",
-        // },
+        {
+          key: "notifications",
+          label: "Notifications",
+          iconlink: "/images/bell-filled-white.svg",
+        },
         // {
         //   key: "system settings",
         //   label: "System Settings",

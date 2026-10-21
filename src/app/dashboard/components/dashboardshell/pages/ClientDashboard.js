@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import { PHASE_CONFIG } from "./clientStatusShared";
 import { ActionList, ActivityTable, Badge, DashboardHero, DonutProgress, EmptyState, Icon, Panel, StatCard } from "./dashboard/DashboardUI";
 
@@ -37,6 +38,8 @@ export default function ClientDashboard() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     let active = true;

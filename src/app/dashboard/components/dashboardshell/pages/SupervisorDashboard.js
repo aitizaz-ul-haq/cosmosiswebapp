@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
+import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import { DashboardHero, StatCard, Panel, Icon, Badge, StackedBarChart, ActionList, EmptyState, ActivityTable, Avatar } from "./dashboard/DashboardUI";
 import { clientBars, clientCompleted, clientId, clientInProgress, clientName, filterClients, formatDate, managerClients, monthlyTrend, relativeTime, submissionRows, withinPeriod } from "./dashboard/data";
 
@@ -17,6 +18,8 @@ export default function SupervisorDashboard() {
   const [available, setAvailable] = useState({ clients: false, managers: false });
   const [progressFilter, setProgressFilter] = useState("all");
   const [performancePeriod, setPerformancePeriod] = useState("this_month");
+
+  useDashboardPageLoading(loading);
 
   useEffect(() => {
     if (!user?.companyId) {
