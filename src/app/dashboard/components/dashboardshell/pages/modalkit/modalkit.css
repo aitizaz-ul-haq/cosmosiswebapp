@@ -68,6 +68,115 @@
   max-width: 980px;
 }
 
+/* Keep wide modals in the content stage below the header and beside the sidebar. */
+.mk-overlay.mk-company-overlay,
+.mk-overlay.mk-scheduled-details-overlay,
+.mk-overlay.mk-client-info-overlay {
+  --mk-content-gap: 1.25rem;
+  position: absolute;
+  padding: var(--mk-content-gap);
+}
+
+.mk-company-overlay .mk-card,
+.mk-scheduled-details-overlay .mk-card,
+.mk-client-info-overlay .mk-card {
+  max-width: 1200px;
+  max-height: min(var(--mk-content-max-height, 760px), calc(100vh - var(--dashboard-header-height, 60px) - 2 * var(--mk-content-gap)));
+  max-height: min(var(--mk-content-max-height, 760px), calc(100dvh - var(--dashboard-header-height, 60px) - 2 * var(--mk-content-gap)));
+}
+
+.mk-company-overlay .mk-header,
+.mk-company-overlay .mk-footer,
+.mk-scheduled-details-overlay .mk-header,
+.mk-scheduled-details-overlay .mk-footer,
+.mk-client-info-overlay .mk-header,
+.mk-client-info-overlay .mk-footer {
+  flex-shrink: 0;
+}
+
+.mk-scheduled-details-overlay,
+.mk-client-info-overlay {
+  --mk-content-max-height: 640px;
+}
+
+.mk-client-info-overlay .mk-card {
+  height: 640px;
+}
+
+.mk-scheduled-details-overlay .mk-section,
+.mk-client-info-overlay .mk-section {
+  min-width: 0;
+  padding: 0.85rem 1rem;
+}
+
+.mk-scheduled-details-overlay .mk-detail-row,
+.mk-client-info-overlay .mk-detail-row {
+  padding: 0.45rem 0;
+}
+
+.mk-scheduled-details-overlay .mk-value-actions {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.mk-scheduled-details-overlay .mk-value-actions > span,
+.mk-scheduled-details-overlay .mk-stat > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mk-scheduled-details-overlay .mk-location .mk-pill {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.mk-client-info-overlay .mk-progress-box .mk-pill {
+  white-space: normal;
+}
+
+.mk-company-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+
+.mk-company-fields .mk-section {
+  min-width: 0;
+  padding: 0.9rem 1rem;
+}
+
+.mk-company-fields .mk-grid {
+  gap: 0.7rem 1rem;
+}
+
+.mk-company-fields .mk-control input,
+.mk-company-fields .mk-control select,
+.mk-company-fields .mk-control textarea {
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+.mk-company-fields .mk-control textarea {
+  min-height: 80px;
+}
+
+@media (max-width: 1000px) {
+  .mk-company-fields,
+  .mk-scheduled-details-overlay .mk-scheduled-details-grid,
+  .mk-client-info-overlay .mk-client-info-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px), (max-height: 500px) {
+  .mk-overlay.mk-company-overlay,
+  .mk-overlay.mk-scheduled-details-overlay,
+  .mk-overlay.mk-client-info-overlay {
+    --mk-content-gap: 0.75rem;
+  }
+}
+
 /* ---------- Header ---------- */
 .mk-header {
   display: flex;

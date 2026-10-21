@@ -13,9 +13,9 @@
 }
 
 .profile-overview-title {
-  font-size: 1.9rem;
+  font-size: var(--dashboard-heading-size);
   font-weight: 500;
-  color: var(--sitedark);
+  color: var(--dashboard-heading-color);
   margin: 0 0 0.4rem;
 }
 
@@ -383,10 +383,6 @@
     border-right: none;
     padding-bottom: 1.35rem;
     border-bottom: 1px solid #eef0f5;
-  }
-
-  .profile-overview-title {
-    font-size: 1.6rem;
   }
 
   .profile-info-label {

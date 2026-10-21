@@ -5,7 +5,7 @@ import CosmosisLoader from "./CosmosisLoader";
 import "./dashboardpageloading.css";
 
 const DashboardLoadingContext = createContext(null);
-const MINIMUM_LOADING_MS = 2000;
+const MINIMUM_LOADING_MS = 1200;
 
 // Pages report their own readiness; background requests and audit logs do not block navigation.
 export function useDashboardPageLoading(isLoading) {
@@ -92,7 +92,7 @@ export default function DashboardPageLoading({ children, pageLabel = "page" }) {
         </div>
         {loading && (
           <div className="dashboard-page-loading-overlay" data-testid="dashboard-page-loader">
-            <CosmosisLoader label={`Loading ${pageLabel}…`} />
+            <CosmosisLoader label={`Loading ${pageLabel}`} />
           </div>
         )}
       </div>

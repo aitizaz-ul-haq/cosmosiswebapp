@@ -6,7 +6,7 @@
   flex: 0 0 auto;
   width: 104px;
   gap: 12px;
-  color: #00c9b1;
+  color: var(--sitedark, #6d7692);
 }
 
 .cosmosis-loader-logo {
@@ -19,22 +19,12 @@
 
 .cosmosis-loader-track {
   stroke: currentColor;
-  stroke-width: 1.3;
-  opacity: .34;
+  stroke-width: 1.8;
 }
 
 .cosmosis-loader-orbit {
   transform-origin: 60px 60px;
   animation: cosmosis-logo-orbit 2.8s linear infinite;
-}
-
-.cosmosis-loader-trail {
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-dasharray: 22 78;
-  stroke-dashoffset: -4;
-  opacity: .68;
 }
 
 .cosmosis-loader-primary { fill: currentColor; }

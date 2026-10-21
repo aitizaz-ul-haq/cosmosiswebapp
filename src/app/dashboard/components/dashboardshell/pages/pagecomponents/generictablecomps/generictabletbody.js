@@ -29,7 +29,11 @@ export default function GenericTableTbody({
             style={{ cursor: setSelectedRow ? "pointer" : "default" }}
           >
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className={cell.column.id === "actions" ? "table-action-cell" : undefined}>
+              <td
+                key={cell.id}
+                className={cell.column.id === "actions" ? "table-action-cell" : undefined}
+                title={cell.column.columnDef.meta?.showTitle ? String(cell.getValue() ?? "") : undefined}
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}

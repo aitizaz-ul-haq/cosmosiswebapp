@@ -218,6 +218,7 @@ export default function ClientsPage() {
 
   const canAssignRm = user?.role === "supervisor" || user?.role === "superadmin";
   const isRm = user?.role === "rm";
+  const isSupervisor = user?.role === "supervisor";
 
   const STATUS_OPTIONS = [
     { value: "ongoing", label: "In progress" },
@@ -611,7 +612,7 @@ export default function ClientsPage() {
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
-    { accessorKey: "phone", header: "Phone" },
+    ...(isSupervisor ? [] : [{ accessorKey: "phone", header: "Phone" }]),
     {
       id: "status",
       header: "Status",
@@ -703,7 +704,11 @@ export default function ClientsPage() {
         </div>
       ),
     },
-  ];
+  ].map((column) =>
+    isSupervisor && ["fullName", "assignedToName", "sharedWith", "assignedByName"].includes(column.accessorKey || column.id)
+      ? { ...column, meta: { showTitle: true } }
+      : column
+  );
 
   const infoStatusKey = infoClient?.status || "ongoing";
   const infoName = infoClient?.fullName || infoClient?.username || "Client details";
@@ -747,6 +752,7 @@ export default function ClientsPage() {
       ) : null}
 
       <GenericTable
+        className={isSupervisor ? "supervisor-clients-table" : ""}
         title={tableTitle}
         description={tableDescription}
         data={clients}
@@ -1054,6 +1060,7 @@ export default function ClientsPage() {
           onClose={closeInfoModal}
           closeLogTitle="Close Client Info modal"
           size="lg"
+          overlayClassName="mk-client-info-overlay"
           footer={
             <>
               <ModalButton
@@ -1075,7 +1082,7 @@ export default function ClientsPage() {
             </>
           }
         >
-          <ModalGrid>
+          <ModalGrid className="mk-client-info-grid">
             <div className="mk-stack">
               <ModalSection
                 icon="user"

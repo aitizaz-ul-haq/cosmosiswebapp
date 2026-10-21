@@ -19,7 +19,9 @@ export default function ManagementTableToolbar({
     Companies: "Search companies by name, contact, email, or phone...",
     Supervisors: "Search supervisors by name, email, company, or role...",
     Users: "Search users by name, email, company, or role...",
-    Clients: "Search clients by name, phone, or assignment...",
+    Clients: columns.some((column) => column.accessorKey === "phone")
+      ? "Search clients by name, phone, or assignment..."
+      : "Search clients by name or assignment...",
     "Relationship Managers": "Search relationship managers by name, email, phone, or company...",
   };
 

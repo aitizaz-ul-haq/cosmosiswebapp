@@ -4,14 +4,128 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-10-20. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-10-21. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 20 Oct 2026
+## Latest handoff for GitHub Copilot — 21 Oct 2026
+
+- Clients-page Info dialogs use `mk-client-info-overlay`, sharing the content-stage layout
+  below the header/beside the sidebar and a 1200px maximum width. Their height is fixed at
+  640px, capped by available viewport height, so short and long RM remarks do not resize the
+  card. Header/footer stay visible; the body scrolls through the five information sections.
+  Compact rows and stacking below 1000px preserve access on small screens. This is the
+  non-scheduled Info dialog in `ClientsPage.js`, distinct from `ClientInfoModal.js` used by
+  approval/review/registry pages. Scheduled records retain `ScheduledDetailsModal`.
+- Supervisor Clients removes the Phone column and its filter/search hint. Phone remains in
+  client forms/details and the RM Clients table. `GenericTable` now forwards `className` to
+  `TablePageLayout`; `ClientsPage` supplies `supervisor-clients-table` only for supervisors.
+  Scoped table rules remove the 800px minimum and use standard 55px desktop rows. The 300px
+  Actions column keeps all four buttons on one line; Status, Progress and Onboarding Type
+  have reserved widths, and the remaining text columns share the space. Long text uses an
+  ellipsis with its full value in a native hover title and in Info. `GenericTableTbody` reads
+  the optional column `meta.showTitle` flag; only these supervisor text columns enable it.
+  At 1100px and below, labelled records retain all eight fields and native headers; Actions
+  uses the full record width so its four buttons still stay on one line.
+  Files: `ClientsPage.js`, `GenericTable.js`, `styles/managementtable.css`,
+  `pagecomponents/ManagementTableToolbar.js`,
+  `pagecomponents/generictablecomps/generictabletbody.js` and `modalkit/modalkit.css`.
+- Compact-row verification: at 1672×941, 1366×768 and collapsed-sidebar laptop all three
+  fixture rows, including long names/shared lists, measure exactly 55px. In all five layouts
+  (also 844×390 and 390×844) every row's Email/Edit/Info/Delete buttons share the same top
+  coordinate; all 60 native button hit tests pass with no table/document horizontal overflow.
+  Full name/assignment/shared values remain in native hover titles and Info; Phone remains
+  absent for supervisors and present for RMs. Production build and ESLint pass with the same
+  two existing lint warnings. No runtime errors; two existing table whitespace warnings remain.
+  Report: `/tmp/cosmosis-supervisor-clients-compact-browser-results.json`; screenshots:
+  `/tmp/cosmosis-supervisor-clients-compact-{desktop,laptop,landscape,mobile,laptop-collapsed}.png`.
+  Browser data used intercepted API fixtures; no live database writes or deployment.
+- Earlier Clients Info/table verification: ten Info cases compare short remarks against approximately
+  10,000 characters at 1672×941, 1366×768, 844×390, 390×844 and collapsed-sidebar laptop.
+  Card/header/body/footer bounds are identical for each short/long pair: 640px card height,
+  reduced to 306px only for the short landscape viewport. Last remarks text and Created are
+  reachable through only body scrolling; title/Email/Close remain accessible. Table wrappers
+  have equal client/scroll widths at all five sizes (1312, 1006, 519, 324 and 1188px) even
+  with long client/shared RM names. Eight columns remain, Phone is absent only for supervisors,
+  and Phone remains in Info/Edit and the RM table. Email mailto, Info/Close/Edit and search
+  filtering pass. No runtime errors; two existing table whitespace warnings remain. Full
+  ESLint and an isolated production build pass with the same two existing lint warnings.
+  Report: `/tmp/cosmosis-supervisor-clients-browser-results.json`; screenshots include
+  `/tmp/cosmosis-supervisor-clients-{desktop,laptop,landscape,mobile,laptop-collapsed}-{short,long}.png`
+  and `/tmp/cosmosis-supervisor-clients-table-{desktop,laptop,landscape,mobile,laptop-collapsed}-supervisor.png`.
+  Tests use intercepted API fixtures, without live database writes or email delivery.
+- RM Scheduled Onboarding's Client Schedule Details modal now uses
+  `overlayClassName="mk-scheduled-details-overlay"`. It shares the company modal's 1200px
+  maximum width and content-stage positioning below the top bar/beside the sidebar, with a
+  shorter 640px maximum height capped by available dynamic viewport space. Header/footer
+  remain visible while the body scrolls. Compact detail rows/sections reduce content height;
+  section columns stack below 1000px, and credentials/location values wrap on small screens.
+  Company dimensions retain their 760px cap. Files: `ScheduledDetailsModal.js` and
+  `modalkit/modalkit.css`; the shared spacing variable is now `--mk-content-gap`.
+- Scheduled-details verification: five browser cases at 1672×941, 1366×768, 844×390,
+  390×844 and collapsed-sidebar laptop pass. All four sections/eight detail rows are reachable
+  using only body scrolling; header/footer and credential actions remain accessible. Long
+  96-character usernames, 94-character passwords and remarks do not cause horizontal overflow.
+  Native clipboard readback, password Show/Hide, nested Edit schedule open/cancel and Close
+  pass at every size. Two company Add/Edit regressions retain 1200×760 desktop dimensions.
+  No runtime errors; two existing table whitespace warnings remain. ESLint and isolated
+  production build pass with the same two lint warnings. Report:
+  `/tmp/cosmosis-scheduled-details-browser-results.json`; screenshots:
+  `/tmp/cosmosis-scheduled-{desktop,laptop,landscape,mobile,laptop-collapsed}.png`.
+  API data was intercepted with local fixtures; no live credentials or database writes used.
+- All dashboard main page headings now share `--dashboard-heading-size: 32px` and
+  `--dashboard-heading-color: #59638f` from `.dashboard-container`. This covers every role's
+  dashboard hero (including Superadmin Dashboard), Notifications, table/list pages, Profile
+  Overview, Client Onboarding and the individual page's Onboarding Progress title. Removed
+  the hero/table/Profile mobile size overrides so
+  titles stay 32px at every viewport. Rules live in `dashboard/dashboard-ui.css`,
+  `styles/{managementtable,profilepage}.css`, `onboarding/onboarding.css` and the shared shell
+  stylesheet. Section/card titles and public/login page typography retain their hierarchy.
+- Heading verification: 60 fixture-based browser cases cover every role's 29 sidebar
+  destinations at 1672×941 and 390×844, plus the corporate onboarding branch at both sizes.
+  Every main title computes to 32px and `rgb(89, 99, 143)` with no heading/document overflow.
+  Superadmin Dashboard wraps cleanly onto two mobile lines. No runtime exceptions or
+  unexpected console errors; three existing table whitespace warnings remain. Final isolated
+  production build and ESLint pass (same two lint warnings). Report:
+  `/tmp/cosmosis-heading-browser-results.json`; screenshots include
+  `/tmp/cosmosis-heading-superadmin-dashboard-{desktop,mobile}.png` and
+  `/tmp/cosmosis-heading-client-{onboarding,profile}-mobile.png`. API data was intercepted
+  with local fixtures; no live database verification or deployment.
+- Add Company and Edit Company use the scoped `mk-company-overlay`, positioned within the
+  existing dashboard content stage below the header and beside the sidebar. The modal is up
+  to 1200px wide and 760px tall, capped by the available dynamic viewport height with outer
+  spacing. The shared header height is now `--dashboard-header-height: 60px`.
+- `superadmin/SuperadminForms.js` arranges company details/address, contact/online presence,
+  and branding/notes in paired sections on wide screens. Sections stack at 1000px; the
+  existing field grids stack at 720px. Inputs and notes are more compact. The title, close
+  button and footer remain visible while only the form body scrolls. Edit notes span both
+  columns. Existing fields, validation, nested updates and submit handlers are retained.
+- Shared dashboard loading now has a **1200ms minimum**, continuing while any registered
+  page data source is pending. `loading/CosmosisLoader.js` displays `Loading` without dots,
+  uses the application's `--sitedark` gray (`#6d7692`), and draws one continuous opaque
+  1.8px circular line. The two logo circles still orbit; reduced motion disables animation.
+  The overlapping dashed trail that caused uneven line weight is removed.
+- Main files: `CompaniesPage.js`, `ScheduledDetailsModal.js`, `superadmin/SuperadminForms.js`, `modalkit/modalkit.css`,
+  `loading/{CosmosisLoader.js,cosmosisloader.css,DashboardPageLoading.js}` and
+  `../styles/dashboardshell.css` (dashboard-page-relative paths).
+
+Verification: `npx eslint src` passes with zero errors and the same two existing warnings
+(Onboarding image and Profile effect dependency). An isolated production build passes.
+Ten fixture-based browser cases cover Add/Edit at 1672×941, 1366×768, 844×390 and 390×844,
+plus a collapsed-sidebar laptop. Cards stay below the top bar and beside the sidebar, with
+visible close/save controls, no horizontal form overflow and all fields/notes reachable by
+scrolling only the form body. Create/edit retain 21/18 controls and their nested POST/PATCH
+payloads. Fast data shows the loader for 1231ms; a 2100ms request keeps it visible for 2126ms.
+Computed color, uniform ring, dot-free text and reduced-motion behavior pass. No runtime
+exceptions or unexpected console errors; three existing `GenericTableThead` whitespace-in-tr
+warnings remain. Report: `/tmp/cosmosis-company-loader-browser-results.json`; screenshots:
+`/tmp/cosmosis-company-{add,edit}-{desktop,laptop,landscape,mobile,laptop-collapsed}.png`.
+The preview used intercepted API fixtures; no live database writes or deployment were tested.
+
+## Previous handoff — 20 Oct 2026
 
 All four role home dashboards and the shared sidebar/header now follow the supplied
 `RM_Dashboard_design.png`, `SUpervisor_dashbaord_design.png`, `client_dashboad_design.png`
@@ -308,6 +422,10 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
 - **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for the RM menu.
 - **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side (`PAGE_SIZE` 8 on list pages).
+- **Page loading**: `loading/DashboardPageLoading.js` wraps the keyed destination in the content
+  stage; `useDashboardPageLoading` registers pending page data. The logo stays visible for at
+  least 1200ms and as long as registered data is pending. The content is inert while covered.
+  Background requests and audit logging do not register as blocking data sources.
 - **`ActionLogger`** is mounted once and logs every click (see §7). Put `data-log-title="…"` on buttons you add so the audit log is readable (keep the existing ones when restyling).
 
 ## 7. Cross-cutting libraries (`src/lib`)
@@ -350,6 +468,11 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 
 ### Design tokens
 - Font: **Poppins** (`var(--font-poppins), Arial, sans-serif`) application-wide, matching the modals. The font variable is defined on `<html>`; headings, controls, navigation and SVG chart text inherit it. Weights 100–900 are loaded by `layout.js`. Do not add separate Arial, serif, Playfair, Geist or monospace UI overrides. Root tokens in `globals.css`: `--sitegreen #21CFB2`, `--sitedark #6D7692` (slate), `--sitewhite`.
+- Dashboard main page headings use `--dashboard-heading-size: 32px` and
+  `--dashboard-heading-color: #59638f`, declared on `.dashboard-container`. Keep these values
+  on desktop and mobile for DashboardHero, TablePageLayout, Profile Overview and Client
+  Onboarding (including its Onboarding Progress title). Section/card/modal headings keep
+  their existing hierarchy.
 - Palette used everywhere (hex, keep consistent): ink `#1a1a1a`; slate `#6d7692`; **soft green** fill `#e3f8f2` / text+icon `#17b89b` / hover `#d3f3ea`; slate-soft `#eceff7` (hover `#e1e5f0`); blue `#e6effd`/`#3a6fd8`; violet `#efeafd`/`#6d4fd8`; amber `#fef0dc`/`#c26a0a`; red `#fde8e8`/`#d03a3a`; card border `#e6e9f1`; divider `#eef0f5`.
 - Radii: buttons/inputs **10px**, cards 14–18px, pills fully round. Icons: stroke, 1.8px, `currentColor`, inside a soft-tinted rounded **square tile**.
 
@@ -367,8 +490,14 @@ badge color overrides.
 ### 9a. Modal kit (`dashboardshell/pages/modalkit/`)
 `ModalKit.js` (read its header comment for the design rules), `modalkit.css`, `Icon.js` (stroke icon set — add icons here). Components: `ModalShell` (props `icon|avatar, title, badges, subtitle, onClose, footer, size sm|md|lg, as/wrapperProps` for forms, `iconTone`, `headerActions`, `overlayClassName`), `ModalSection`, `ModalGrid`, `DetailList/DetailRow`, `Stat`, `StatusPill` + `STATUS_TONES`, `ModalButton`, `ModalField/ModalInput/ModalSelect/ModalTextarea/ModalPasswordInput` (these now forward `required` to the native element), `CopyButton`, `initialsOf`. Escape closes, body scroll is locked, backdrop is blurred.
 Design references: `public/images/example_modal_1..5.png` (1 scheduled details, 2/3 client info, 4 edit RM form, 5 add client form).
-Converted to the kit: `ClientInfoModal`, `ScheduledDetailsModal`, `DeleteConfirmModal`, Add/Edit/Info modals in `ClientsPage`, `RegistryPage` modals, `ScheduleOnboardingModal` (+`SearchableSelect`), `RMsPage` Add/Edit, `ApprovalsPage`/`UnderReviewPage` footers, `ProfilePage` edit modals, `PasswordGate`, `SubmissionViewModal`.
-**Not yet converted** (still old inline-style modals): superadmin-only Add Company / Add User / Edit Company / Edit User / Edit Supervisor (`GenericTable.js`, `CompaniesPage`, `UserPage`, `SupervisorPage`), the generic row-details modal (`pagecomponents/tablemodal.js`), `LogsPage` filters.
+Converted to the kit: `ClientInfoModal`, `ScheduledDetailsModal`, `DeleteConfirmModal`, Add/Edit/Info modals in `ClientsPage`, `RegistryPage` modals, `ScheduleOnboardingModal` (+`SearchableSelect`), `RMsPage` Add/Edit, `ApprovalsPage`/`UnderReviewPage` footers, `ProfilePage` edit modals, `PasswordGate`, `SubmissionViewModal`, and superadmin Add/Edit Company, Add/Edit User and Edit Supervisor (`superadmin/SuperadminForms.js`, `CompaniesPage`, `UserPage`, `SupervisorPage`).
+Company Add/Edit uses `overlayClassName="mk-company-overlay"` and `mk-company-fields` to fit the
+content stage beneath the top bar. Scheduled details uses `mk-scheduled-details-overlay`,
+sharing the 1200px width/positioning while capping height at 640px (company remains 760px).
+Both keep their header/footer visible and scroll the body; other modal sizes retain their rules.
+Clients-page Info uses `mk-client-info-overlay` with a fixed 640px height (viewport capped),
+1200px maximum width, compact rows and a scrollable body, so remarks never determine card size.
+**Not yet converted** (still old inline-style modals): the generic row-details modal (`pagecomponents/tablemodal.js`) and `LogsPage` filters.
 
 ### 9b. Client onboarding phase modals (1–6) — hard constraint
 Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw; max-height:90vh }`, header 82.8px, footer 71.6px). Restyling is scoped with the class **`.onb-v2`** added to the backdrop in `PhaseModal.js` (blurred backdrop, 18px radius, icon tile, round close). Form look lives in `onboarding.css` ("Form primitives" section): section titles with icon tile, label icon tiles, 10px inputs with green focus ring, custom radios/checkboxes (soft green + dark green tick), bordered cards (`.onb-holder-col`, `.onb-sig-block`), tables with rounded ring (`.onb-table-wrap`; outer cell borders made transparent to keep size identical). `SectionTitle` takes an `icon` prop (icons from `modalkit/Icon.js`). Phase 0 reuses the base `.onb-modal*` classes unchanged (its buttons share `.onb-modal-btn`, which uses the soft-green scheme).
@@ -386,6 +515,51 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 21 Oct — compact supervisor Clients rows and single-line actions
+- Restored 55px desktop client rows and reserved a 300px Actions column for all four buttons
+  on one line. Status/Progress/type widths stay predictable; longer name/assignment values
+  display an ellipsis with a full native title and remain available in Info.
+- Narrow labelled records give Actions the full row width. Phone remains removed only for
+  supervisors; the fixed-size Info modal and other role tables retain their behavior.
+- Verified exact 55px desktop/laptop rows, one-line action buttons at five layouts and no
+  horizontal overflow, including 60 native button hit tests. Isolated build and ESLint pass
+  (same two existing warnings); full values remain available through titles and Info.
+
+### 21 Oct — stable Clients info modal and supervisor table fit
+- Fixed the Clients Info dialog at 640px high (capped by available viewport space) and up to
+  1200px wide within the dashboard content stage. Long remarks scroll through the body without
+  growing the card; title/actions remain visible and narrow screens stack information sections.
+- Removed Phone only from the supervisor Clients table and updated its search hint. Scoped
+  fixed columns, wrapping values/actions and labelled records on narrow screens retain all
+  remaining information without horizontal overflow. Client phone forms/details and the RM
+  table retain Phone. Verification is recorded in the latest handoff.
+
+### 21 Oct — scheduled onboarding details modal fit
+- Applied the company modal's wider content-stage layout to RM Scheduled Onboarding details,
+  with a 1200px maximum width, a 640px/available-viewport height cap and visible header/footer.
+  Scoped compact rows, wrapping credentials/location values and stacked narrow-screen sections
+  keep all details reachable through the body scrollbar. Company height remains 760px.
+- Verified ESLint (zero errors, two existing warnings) and an isolated production build.
+  Responsive layout and credential/edit-action browser results are recorded in the handoff.
+
+### 21 Oct — consistent dashboard page headings
+- Standardized every role's main dashboard/page title to 32px and #59638f through shared
+  shell tokens. Updated dashboard heroes (including Superadmin Dashboard), list/table pages,
+  Profile Overview and Client Onboarding, removing responsive size overrides.
+- Verified ESLint (zero errors, two existing warnings) and an isolated production build.
+  Browser verification of title styles and responsive wrapping is recorded in the handoff.
+
+### 21 Oct — company modal fit and loading refinements
+- Widened Add/Edit Company to a 1200px maximum, capped height at 760px and the available
+  viewport, and anchored the overlay within the dashboard content stage under the top bar.
+  Company form sections now use two columns on wide screens, with compact controls and a
+  scrollable body between a persistent header/footer; responsive stacking preserves access.
+- Reduced shared dashboard loading minimum from 2000ms to 1200ms without shortening pending
+  data loads. Reused the shared dark-gray token, removed Loading dots and replaced the
+  partial dashed logo trail with one uniform 1.8px circular line.
+- Verified ESLint (zero errors, two existing warnings) and an isolated production build.
+  Browser fixtures and final layout/timing results are recorded in the latest handoff.
 
 ### 20 Oct — all role dashboards and navigation redesign
 - Rebuilt RM, supervisor, client and superadmin overview layouts from the four supplied design PNGs, with responsive cards, SVG charts, activity tables, quick actions and progress rings.
@@ -468,7 +642,7 @@ treating historical work as uncommitted.
 - Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
 - Submissions client buttons **Notify RM** and **Edit** are placeholders (planned: email/in-app notification to the RM; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
-- Remaining superadmin modals and the generic row-details modal still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
+- The generic row-details modal and Logs filters still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.
 - `OnboardingStatusPage`: phase capsules use slate `#eceff7` / `#6d7692`; In progress uses green `#e3f8f2` / `#17b89b`. Awaiting-registry and Scheduled share blue.
 - JSON file name typo `homaepagedata.json`. `lint` has two existing warnings (Onboarding image / Profile hook dependency), zero errors.

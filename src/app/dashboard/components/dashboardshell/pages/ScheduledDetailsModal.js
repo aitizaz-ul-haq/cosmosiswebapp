@@ -100,6 +100,7 @@ export default function ScheduledDetailsModal({ client, onClose, onScheduleChang
         onClose={onClose}
         closeLogTitle={`Close Scheduled details: ${logName}`}
         size="lg"
+        overlayClassName="mk-scheduled-details-overlay"
         footer={
           <>
             {canEdit && (
@@ -122,7 +123,7 @@ export default function ScheduledDetailsModal({ client, onClose, onScheduleChang
           </>
         }
       >
-        <ModalGrid>
+        <ModalGrid className="mk-scheduled-details-grid">
           <div className="mk-stack">
             <ModalSection
               icon="file"

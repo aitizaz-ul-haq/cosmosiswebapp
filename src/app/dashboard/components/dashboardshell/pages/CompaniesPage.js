@@ -229,6 +229,7 @@ export default function CompaniesPage() {
           onClose={closeEditModal}
           closeLogTitle="Closed Edit Company form"
           size="lg"
+          overlayClassName="mk-company-overlay"
           dismissOnOverlay={false}
           footer={
             <>

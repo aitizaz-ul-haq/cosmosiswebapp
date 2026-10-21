@@ -15,6 +15,7 @@ import { logUIAction } from "@/lib/logUIAction";
 export default function GenericTable({
   title = "Table",
   description = "",
+  className = "",
   data = [],
   columns = [],
   filterableFields = [],
@@ -278,7 +279,7 @@ export default function GenericTable({
 
   return (
     <>
-      <TablePageLayout title={title} description={description} loading={loading}>
+      <TablePageLayout title={title} description={description} loading={loading} className={className}>
         <ManagementTableToolbar
           title={title}
           columns={columns}

@@ -33,7 +33,7 @@ export function CompanyFormFields({ form, onChange, mode = "create" }) {
   );
 
   return (
-    <>
+    <div className="mk-company-fields">
       <ModalSection
         icon="building"
         tone="green"
@@ -59,6 +59,17 @@ export function CompanyFormFields({ form, onChange, mode = "create" }) {
         </ModalGrid>
       </ModalSection>
 
+      <ModalSection icon="pin" tone="violet" title="Company address" description="Office and mailing address.">
+        <ModalGrid>
+          {input("address.line1", "Address line 1", "pin")}
+          {input("address.line2", "Address line 2", "pin")}
+          {input("address.city", "City", "building")}
+          {input("address.stateOrProvince", "State / province", "pin")}
+          {input("address.postalCode", "Postal code", "mail")}
+          {input("address.country", "Country", "globe")}
+        </ModalGrid>
+      </ModalSection>
+
       <ModalSection
         icon="user"
         tone="blue"
@@ -69,17 +80,6 @@ export function CompanyFormFields({ form, onChange, mode = "create" }) {
           {input("primaryContact.fullName", "Contact full name", "user")}
           {input("primaryContact.email", "Contact email", "mail")}
           {input("primaryContact.phone", "Contact phone", "phone")}
-        </ModalGrid>
-      </ModalSection>
-
-      <ModalSection icon="pin" tone="violet" title="Company address" description="Office and mailing address.">
-        <ModalGrid>
-          {input("address.line1", "Address line 1", "pin")}
-          {input("address.line2", "Address line 2", "pin")}
-          {input("address.city", "City", "building")}
-          {input("address.stateOrProvince", "State / province", "pin")}
-          {input("address.postalCode", "Postal code", "mail")}
-          {input("address.country", "Country", "globe")}
         </ModalGrid>
       </ModalSection>
 
@@ -100,7 +100,12 @@ export function CompanyFormFields({ form, onChange, mode = "create" }) {
         </ModalSection>
       ) : null}
 
-      <ModalSection icon="file" title="Additional information" description="Notes about this company.">
+      <ModalSection
+        icon="file"
+        title="Additional information"
+        description="Notes about this company."
+        className={mode === "edit" ? "mk-span-all" : ""}
+      >
         <ModalTextarea
           label="Notes"
           icon="file"
@@ -111,7 +116,7 @@ export function CompanyFormFields({ form, onChange, mode = "create" }) {
           onChange={onChange("notes")}
         />
       </ModalSection>
-    </>
+    </div>
   );
 }
 
@@ -172,6 +177,7 @@ export function AddCompanyModal({ form, onChange, onSubmit, onClose, canSubmit =
       title="Add Company"
       subtitle="Create a company and set up its contact, address and branding."
       size="lg"
+      overlayClassName="mk-company-overlay"
       onClose={onClose}
       dismissOnOverlay={false}
       closeLogTitle="Closed Add Company form"
