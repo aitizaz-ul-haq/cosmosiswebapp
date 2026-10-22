@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import LegalDocument from "./legal/LegalDocument";
 import { getBrand } from "./legal/brand";
 import { buildCharges } from "./legal/chargesContent";
@@ -54,8 +55,9 @@ export default function PrerequisitesModal({ companyName, onClose }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
-    <div className="onb-modal-backdrop" onClick={onClose}>
+  // Escape the dashboard stage's stacking isolation, as the phase forms do.
+  return createPortal(
+    <div className="onb-modal-backdrop onb-prerequisites-backdrop" onClick={onClose}>
       <div className="onb-modal" onClick={(e) => e.stopPropagation()}>
         <div className="onb-modal-header">
           <span className="onb-modal-badge">0</span>
@@ -119,6 +121,7 @@ export default function PrerequisitesModal({ companyName, onClose }) {
           </span>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

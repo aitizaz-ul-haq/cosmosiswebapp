@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 // Modal that hosts a single phase's form. Body scrolls independently.
 export default function PhaseModal({
@@ -9,6 +10,7 @@ export default function PhaseModal({
   totalPhases,
   onClose,
   onNext,
+  initialSection,
   children,
 }) {
   const bodyRef = useRef(null);
@@ -23,12 +25,22 @@ export default function PhaseModal({
 
   // Always show each phase from the top when navigating between phases.
   useEffect(() => {
-    if (bodyRef.current) bodyRef.current.scrollTop = 0;
-  }, [id]);
+    const body = bodyRef.current;
+    if (!body) return;
+    body.scrollTop = 0;
+    if (initialSection == null) return;
+    const heading = body.querySelectorAll(".onb-section-title")[initialSection];
+    if (heading) {
+      heading.tabIndex = -1;
+      body.scrollTop = heading.getBoundingClientRect().top - body.getBoundingClientRect().top - 16;
+      heading.focus({ preventScroll: true });
+    }
+  }, [id, initialSection]);
 
   const isLast = id >= totalPhases;
 
-  return (
+  // Render above the shell's isolated content stage so the sidebar cannot cover the form.
+  return createPortal(
     <div className="onb-modal-backdrop onb-v2" onClick={onClose}>
       <div className="onb-modal" onClick={(e) => e.stopPropagation()}>
         <div className="onb-modal-header">
@@ -68,6 +80,7 @@ export default function PhaseModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

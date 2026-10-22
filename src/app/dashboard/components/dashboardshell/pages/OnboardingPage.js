@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import "./onboarding/onboarding.css";
@@ -42,7 +42,9 @@ export default function OnboardingPage() {
   const [assignedRm, setAssignedRm] = useState(null);
   const [expandedPhase, setExpandedPhase] = useState(null);
   const [openPhase, setOpenPhase] = useState(null);
+  const [initialSection, setInitialSection] = useState(null);
   const [prerequisitesOpen, setPrerequisitesOpen] = useState(false);
+  const phaseReturnFocus = useRef(null);
 
   useDashboardPageLoading(loading);
 
@@ -60,11 +62,17 @@ export default function OnboardingPage() {
           setOnboarding(data.onboarding || null);
           setProfile(data.profile || null);
           setAssignedRm(data.assignedRm || null);
+          const step = Number(data.onboarding?.currentStep) || 1;
+          setExpandedPhase(Math.min(Math.max(step, 1), PHASES.length));
         } else {
           setOnboardingType("individual");
+          setExpandedPhase(1);
         }
       } catch (err) {
-        if (!cancelled) setOnboardingType("individual");
+        if (!cancelled) {
+          setOnboardingType("individual");
+          setExpandedPhase(1);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -82,14 +90,27 @@ export default function OnboardingPage() {
     setExpandedPhase((current) => (current === id ? null : id));
   };
 
-  const startPhase = (id) => {
+  const startPhase = (id, sectionIndex = null) => {
+    phaseReturnFocus.current = document.activeElement;
     setExpandedPhase(id);
+    setInitialSection(sectionIndex);
+    setOpenPhase(id);
+  };
+
+  const nextPhase = (id) => {
+    phaseReturnFocus.current = null;
+    setExpandedPhase(id);
+    setInitialSection(null);
     setOpenPhase(id);
   };
 
   const closePhase = () => {
     setOpenPhase(null);
-    requestAnimationFrame(() => document.getElementById(`onb-start-phase-${openPhase}`)?.focus());
+    requestAnimationFrame(() => {
+      const trigger = phaseReturnFocus.current;
+      if (trigger?.isConnected && !trigger.closest("[inert]")) trigger.focus();
+      else document.getElementById(`onb-start-phase-${openPhase}`)?.focus();
+    });
   };
 
   if (loading) {
@@ -117,7 +138,7 @@ export default function OnboardingPage() {
   }
 
   const companyName = profile?.companyName || user?.companyName;
-  const currentStep = onboarding?.currentStep || 1;
+  const currentStep = Math.min(Math.max(Number(onboarding?.currentStep) || 1, 1), PHASES.length);
   const completedPhases = new Set((onboarding?.completedSteps || []).map(Number));
   const formSubmitted = ["submitted", "approved"].includes(onboarding?.status);
   // Viewing/starting a phase does not count as submitting it. Prerequisites
@@ -130,13 +151,6 @@ export default function OnboardingPage() {
   return (
     <div className="onb-wrap onb-client-onboarding">
       <div className="onb-container">
-        {/* Brand logo in the bottom-right corner */}
-        <img
-          className="onb-brand-logo"
-          src="/images/cosmosis_logo_dark_dashboard.png"
-          alt="Cosmosis"
-          aria-hidden="true"
-        />
         {/* Onboarding progress card with timeline */}
         <div className="onb-progress-card">
           <h2 className="onb-card-heading">Onboarding Progress</h2>
@@ -177,7 +191,8 @@ export default function OnboardingPage() {
           name={activePhase.name}
           totalPhases={PHASES.length}
           onClose={closePhase}
-          onNext={startPhase}
+          onNext={nextPhase}
+          initialSection={initialSection}
         >
           <ActiveComponent companyName={companyName} />
         </PhaseModal>

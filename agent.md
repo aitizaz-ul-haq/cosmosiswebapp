@@ -4,14 +4,43 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-10-21. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-10-22. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 21 Oct 2026
+## Latest handoff for GitHub Copilot — 22 Oct 2026
+
+- Client Onboarding now follows `public/images/client_dashbaord_new_timeline_view.png`.
+  The progress card uses teal current/completed nodes, purple pending nodes, saved-completion
+  check badges, outlined selected nodes and solid completed/dashed pending connectors.
+  The saved current phase opens initially; phase triggers still toggle the inline panels.
+- Phase details include a description, Contact RM and a scoped solid-teal Start button,
+  a pale phase number, a status-colored section track, subsection labels, dashed guides and
+  staggered bars. Incomplete sections use purple/lavender bars, tracks and hollow dot markers;
+  completed sections use teal/mint bars and check marks based on saved completion.
+  At narrow sizes the phase track scrolls inside its card and subsection bars become stacked
+  full-width rows with their own labels. The decorative number is hidden on phones.
+- Each subsection is a button opening the existing phase form at its matching section heading,
+  scrolling and focusing that heading. Closing returns focus to the initiating subsection or
+  Start button; after Next phase, it returns to the newly selected phase's Start button.
+  Form overlays are portaled to `document.body` so the isolated dashboard stage/sidebar cannot
+  cover them. Form dimensions remain 80vw with a 90vh maximum and existing header/footer sizes.
+- Phase 0 Prerequisites now also portals its overlay to `document.body`, centered across the
+  viewport above the sidebar/header. `onb-prerequisites-backdrop` shares the form overlay's
+  dimming and 6px background blur. Legal document styling and scroll gates retain their rules.
+- Files: `OnboardingPage.js`, `onboarding/{OnboardingTimeline,PhaseDetails,PhaseModal,PrerequisitesModal}.js`
+  and `onboarding/onboarding.css` (relative to dashboard pages). Phase 0's legal reader,
+  RM mail links, saved completion logic and the existing form fields remain connected.
+- Form persistence and independent subsection submission are still absent; subsection status
+  inherits its phase's saved submission state. Local browser checks use intercepted fixtures,
+  without live database writes, email delivery or deployment.
+
+Verification details are recorded in the 22 Oct change-log entry below.
+
+## Previous handoff — 21 Oct 2026
 
 - Clients-page Info dialogs use `mk-client-info-overlay`, sharing the content-stage layout
   below the header/beside the sidebar and a 1200px maximum width. Their height is fixed at
@@ -452,10 +481,10 @@ dispatcher activates → `ongoing`. From `ongoing` the RM can set `on_hold` / `c
 
 ### Client onboarding form (individual only)
 Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6. Clicking phases 1–6 toggles an inline accordion; clicking the open phase closes it, and selecting another shows that phase's own sections.
-- **Phase 0** (Prerequisites, `PrerequisitesModal` + `onboarding/legal/*`): read-only legal documents. **Do not restyle without being asked.**
-- **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`. It follows the RM timeline accordion's 800 ms height/fade animation, with a horizontal line, dotted vertical guides and staggered gradient bars inspired by `public/images/onboarding_detail_timeline.jpg`. Panels stay mounted for reversible transitions; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus.
-- **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal. Next phase updates both the modal and the expanded timeline panel; closing returns keyboard focus to that phase's Start button. Opening/viewing a form does not change submission status.
-- **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Submitted timeline nodes/tracks and subsection bars are green with the RM-style green tick; pending phases are red with dotted red tracks and subsection red crosses. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
+- **Phase 0** (Prerequisites, `PrerequisitesModal` + `onboarding/legal/*`): read-only legal documents. The overlay portals to `document.body` above the full dashboard, centered with the same 6px backdrop blur as the phase forms. Internal reader styling and two-document scroll gates retain their rules. **Do not restyle without being asked.**
+- **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`, following `public/images/client_dashbaord_new_timeline_view.png`: descriptions, subsection labels, a status-colored solid track, dashed vertical guides and staggered bars (purple/lavender when incomplete, teal/mint when complete). The saved current phase opens initially. Panels retain the 800 ms reversible height/fade transition; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus. Narrow layouts stack subsection bars and scroll only the phase track horizontally.
+- **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal from the top. Subsection buttons open the form at the matching heading and focus it. Closing restores the initiating control; Next phase updates the form and inline panel, then closes back to the new phase's Start button. Opening/viewing a form does not change submission status.
+- **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Completed/current timeline nodes are teal, pending nodes purple; completed connectors are solid and pending connectors dashed. Incomplete detail sections use lavender fills and purple text, hollow dot markers, tracks and focus/hover accents; completed sections use mint fills, green ticks and teal tracks. Start Phase stays teal as an action. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
 - **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
 - `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile, assigned RM contact) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
 
@@ -477,7 +506,7 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 - Radii: buttons/inputs **10px**, cards 14–18px, pills fully round. Icons: stroke, 1.8px, `currentColor`, inside a soft-tinted rounded **square tile**.
 
 ### Buttons (`globals.css`, class `dash-action-btn` + one variant)
-`dash-btn-green` (= `dash-btn-green-soft`: light green fill, dark green text), `dash-btn-danger`, `dash-btn-neutral`, `dash-btn-info`, `dash-btn-purple` — all **soft tinted fills with coloured text**; there is **no solid-green dashboard button any more** (deliberate user decision). Sizes come from the `actionBtnStyle` inline object (`padding .4rem .75rem`, weight 600, radius 10px) — do not change table button sizes. Modal buttons use `ModalButton` (`primary` = soft green, `neutral`, `danger`, `info`, `violet`). Pagination: `.generic-table-page-btn` (active = soft green).
+`dash-btn-green` (= `dash-btn-green-soft`: light green fill, dark green text), `dash-btn-danger`, `dash-btn-neutral`, `dash-btn-info`, `dash-btn-purple` — shared buttons use **soft tinted fills with coloured text**. The client onboarding panel's Start Phase button has a **scoped solid-teal override** matching the user's 22 Oct reference; do not extend it to shared/table/modal buttons. Sizes come from the `actionBtnStyle` inline object (`padding .4rem .75rem`, weight 600, radius 10px) — do not change table button sizes. Modal buttons use `ModalButton` (`primary` = soft green, `neutral`, `danger`, `info`, `violet`). Pagination: `.generic-table-page-btn` (active = soft green).
 ### Capsules/pills
 Status colours come from `STATUS_COLORS` in `clientStatusShared.js` (ongoing green, on_hold/approval_pending amber, under_review violet, register/scheduled blue, cancelled red; border = fill). **Phase / progress capsules are slate-soft** (`#eceff7` / `#6d7692`).
 Use `StatusPill` from `modalkit/ModalKit.js` (or dashboard `Badge`, which wraps it) for new
@@ -500,7 +529,7 @@ Clients-page Info uses `mk-client-info-overlay` with a fixed 640px height (viewp
 **Not yet converted** (still old inline-style modals): the generic row-details modal (`pagecomponents/tablemodal.js`) and `LogsPage` filters.
 
 ### 9b. Client onboarding phase modals (1–6) — hard constraint
-Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw; max-height:90vh }`, header 82.8px, footer 71.6px). Restyling is scoped with the class **`.onb-v2`** added to the backdrop in `PhaseModal.js` (blurred backdrop, 18px radius, icon tile, round close). Form look lives in `onboarding.css` ("Form primitives" section): section titles with icon tile, label icon tiles, 10px inputs with green focus ring, custom radios/checkboxes (soft green + dark green tick), bordered cards (`.onb-holder-col`, `.onb-sig-block`), tables with rounded ring (`.onb-table-wrap`; outer cell borders made transparent to keep size identical). `SectionTitle` takes an `icon` prop (icons from `modalkit/Icon.js`). Phase 0 reuses the base `.onb-modal*` classes unchanged (its buttons share `.onb-modal-btn`, which uses the soft-green scheme).
+Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw; max-height:90vh }`, header 82.8px, footer 71.6px). `PhaseModal` portals its overlay to `document.body` above the dashboard stage's stacking isolation; `initialSection` optionally scrolls/focuses the matching `.onb-section-title`. Restyling is scoped with the class **`.onb-v2`** added to the backdrop in `PhaseModal.js` (blurred backdrop, 18px radius, icon tile, round close). Form look lives in `onboarding.css` ("Form primitives" section): section titles with icon tile, label icon tiles, 10px inputs with green focus ring, custom radios/checkboxes (soft green + dark green tick), bordered cards (`.onb-holder-col`, `.onb-sig-block`), tables with rounded ring (`.onb-table-wrap`; outer cell borders made transparent to keep size identical). `SectionTitle` takes an `icon` prop (icons from `modalkit/Icon.js`). Phase 0 retains the base `.onb-modal*` reader classes and soft-green buttons, but now also portals to `document.body`; its `onb-prerequisites-backdrop` shares only the form overlay's dimming/blur.
 
 ## 9c. Login page (`src/app/login`) — redesigned to match `public/images/new_log_screen.png`
 - `page.js` (server) renders `LoginHero` (logo, headline, description, 3 feature icons), `MidSectionRightPart` (glass card), `LoginBottomSection` (Terms/Privacy). Copy comes from `app/data/loginpagedata/loginpagedata.json`.
@@ -515,6 +544,52 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 22 Oct — prerequisites modal positioning and background blur
+- `onboarding/PrerequisitesModal.js` now portals its overlay to `document.body`, matching the
+  form overlays so dashboard stacking isolation cannot place it behind the sidebar/header.
+- Added `onb-prerequisites-backdrop` and shared the form overlay's dimming/6px backdrop blur
+  in `onboarding/onboarding.css`. The card stays centered with its existing 80vw width and
+  90vh maximum; the legal reader, document content, scrolling and navigation retain their rules.
+- Verified body portal, full-viewport overlay/blur, horizontal/vertical centering and native
+  header/body/footer/Close hit tests at 1672×941, 1366×768, collapsed-sidebar laptop, 844×390
+  and 390×844. Both legal scroll gates, Next/Back/read-state retention, final Close, Escape
+  and backdrop dismissal pass; Phase 1 form positioning/blur also passes. No browser runtime
+  exceptions. Full ESLint passes with the existing Profile effect-dependency warning, and an
+  isolated production build passes. Report: `/tmp/cosmosis-prerequisites-browser-report.json`;
+  screenshots: `/tmp/cosmosis-prerequisites-{desktop,landscape,mobile}.png`.
+  Browser client/user data uses fixtures and audit beacons are stubbed; no live database writes.
+
+### 22 Oct — client onboarding timeline redesign
+- Follow-up: incomplete detail sections now use purple/lavender bars, markers, track/dots,
+  phase label, panel tint and hover/focus styling. Completed sections retain green/teal styling;
+  Start Phase remains teal. Status still comes from saved completion, including the current phase.
+  Verified the actual stylesheet in headless Chrome: pending gradient/markers/track are purple,
+  submitted gradient/markers/track remain green, and both Start actions remain teal.
+  Focused component lint and `git diff --check` pass. This follow-up changes CSS only.
+- Implemented `public/images/client_dashbaord_new_timeline_view.png` in the client Onboarding
+  page: teal/purple phase markers, completion badges, phase descriptions/actions/numbers,
+  subsection headings/guides and staggered mint bars. The saved current phase opens initially.
+- Connected all 21 subsection bars to their corresponding form headings with scrolling,
+  heading focus and return focus. Preserved phase toggling, Contact RM, Start/Next/Close,
+  the prerequisites reader, saved completion semantics and all existing form fields.
+- Portaled phase forms above the shell so the sidebar cannot cover their controls, keeping
+  the existing 80vw/90vh dimensions and header/footer rules. Scoped the solid-teal Start button
+  to these panels. Narrow layouts retain visible phase names in a horizontally scrolling
+  track and stack labelled subsection rows. Fixed flex sizing to prevent inner content clipping.
+- Verified `npx eslint src` (zero errors, one existing Profile effect-dependency warning),
+  an isolated production build, and fixture-based Chrome checks at 1672×941, 1366×768,
+  768×1024 and 390×844, plus collapsed sidebar. All 21 form-section links, 60 subsection
+  pointer hit tests, keyboard/return focus, native Start/Next/Close clicks, modal layering
+  and bounds, RM contact/missing contact, legal scroll gates and saved/submitted states pass.
+  Both document and dashboard content-scroller widths fit at every size; no browser runtime exceptions.
+- Report: `/tmp/cosmosis-client-timeline-browser-report.json`; screenshots:
+  `/tmp/cosmosis-client-timeline-{desktop,laptop,tablet,mobile}.png`, corresponding
+  `-nine-sections.png` variants, `-desktop-form.png` and `-mobile-form.png`.
+  Client/user data APIs were intercepted with local fixtures; no live database writes or deployment.
+  The isolated preview used a dummy localhost MongoDB URI; native audit beacons could not
+  connect to that database, so audit persistence was not verified by these UI checks.
+  Form persistence and independent subsection completion remain existing limitations.
 
 ### 21 Oct — compact supervisor Clients rows and single-line actions
 - Restored 55px desktop client rows and reserved a 300px Actions column for all four buttons

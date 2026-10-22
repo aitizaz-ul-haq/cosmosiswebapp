@@ -1,20 +1,26 @@
 "use client";
 
-import { PHASE_SECTIONS, actionBtnStyle } from "../clientStatusShared";
+import { PHASE_SECTIONS } from "../clientStatusShared";
 import Icon from "../modalkit/Icon";
+
+const PHASE_DESCRIPTIONS = {
+  1: "Complete the sections below to provide your personal details and related information.",
+  2: "Provide details about the sources of your wealth and the funds you plan to invest.",
+  3: "Tell us about your finances, investment goals and experience in the sections below.",
+  4: "Complete the sections below to help us understand your approach to investment risk.",
+  5: "Review and provide the signatures required for your onboarding application.",
+  6: "Review the checklist and provide the documents required to complete your application.",
+};
 
 function SubmissionIcon({ submitted }) {
   return (
     <span className={`onb-section-status-icon ${submitted ? "submitted" : "pending"}`} aria-hidden="true">
       <svg viewBox="0 0 12 12" width="10" height="10">
-        <path
-          d={submitted ? "M2.5 6.2l2.2 2.2 4.8-4.8" : "m3.2 3.2 5.6 5.6m0-5.6L3.2 8.8"}
-          fill="none"
-          stroke="#fff"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        {submitted ? (
+          <path d="M2.5 6.2l2.2 2.2 4.8-4.8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        ) : (
+          <circle cx="6" cy="6" r="2" fill="currentColor" />
+        )}
       </svg>
     </span>
   );
@@ -42,13 +48,13 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
             <div>
               <p className="onb-phase-detail-label">Phase {phase.id}</p>
               <h3 className="onb-phase-detail-title">{phase.name}</h3>
+              <p className="onb-phase-detail-description">{PHASE_DESCRIPTIONS[phase.id]}</p>
             </div>
             <div className="onb-phase-detail-heading-end">
               <div className="onb-phase-detail-actions">
                 {rmEmail ? (
                   <a
                     className="dash-action-btn dash-btn-neutral"
-                    style={actionBtnStyle}
                     href={emailHref}
                     tabIndex={expanded ? 0 : -1}
                     title={`Email ${assignedRm.name || "your relationship manager"}`}
@@ -61,7 +67,6 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
                   <button
                     type="button"
                     className="dash-action-btn dash-btn-neutral"
-                    style={actionBtnStyle}
                     disabled
                     title="Your relationship manager's email is not available"
                   >
@@ -73,11 +78,14 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
                   type="button"
                   id={`onb-start-phase-${phase.id}`}
                   className="dash-action-btn dash-btn-green"
-                  style={actionBtnStyle}
                   onClick={() => onStart(phase.id)}
                   tabIndex={expanded ? 0 : -1}
                   data-log-title={`Start Phase ${phase.id} button clicked: ${phase.name}`}
                 >
+                  <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8" fill="currentColor" />
+                    <path d="m8.5 6.5 4.5 3.5-4.5 3.5z" className="onb-start-play" />
+                  </svg>
                   Start Phase {phase.id}
                 </button>
               </div>
@@ -98,24 +106,43 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
             {sections.length === 1 && <span className="onb-phase-section-dot" style={{ left: "100%" }} />}
           </div>
 
-          <ol className="onb-phase-sections">
+          <div className="onb-phase-section-labels" style={{ "--section-count": sections.length }} aria-hidden="true">
+            {sections.map((section, index) => <span key={section}>Subsection {index + 1}</span>)}
+          </div>
+
+          <ol className="onb-phase-sections" style={{ "--section-count": sections.length }}>
+            <li className="onb-phase-guides" aria-hidden="true">
+              {Array.from({ length: sections.length + 1 }, (_, index) => <span key={index} style={{ left: `${index / sections.length * 100}%` }} />)}
+            </li>
             {sections.map((section, index) => {
               const start = sections.length > 1
-                ? 1 + Math.round((index / (sections.length - 1)) * 7)
+                ? 1 + Math.round((index / (sections.length - 1)) * 15)
                 : 1;
               return (
                 <li
                   key={section}
-                  className={`onb-phase-section ${submitted ? "submitted" : "pending"}`}
-                  aria-label={`${section} — ${submitted ? "Submitted" : "Not submitted"}`}
+                  className="onb-phase-section-item"
                   style={{
-                    gridColumn: `${start} / span ${sections.length > 1 ? 5 : 8}`,
+                    gridColumn: sections.length > 1 ? `${start} / span 9` : "1 / -1",
                     gridRow: index + 1,
                     "--section-delay": `${120 + index * 60}ms`,
                   }}
                 >
-                  <SubmissionIcon submitted={submitted} />
-                  <h4>{section}</h4>
+                  <button
+                    type="button"
+                    id={`onb-section-${phase.id}-${index}`}
+                    className={`onb-phase-section ${submitted ? "submitted" : "pending"}`}
+                    onClick={() => onStart(phase.id, index)}
+                    tabIndex={expanded ? 0 : -1}
+                    aria-label={`${section} — ${submitted ? "Submitted" : "Not submitted"}. Open subsection ${index + 1} of phase ${phase.id}`}
+                    data-log-title={`Open onboarding phase ${phase.id} subsection ${index + 1}: ${section}`}
+                  >
+                    <SubmissionIcon submitted={submitted} />
+                    <span className="onb-phase-section-text"><span className="onb-phase-section-mobile-label">Subsection {index + 1}</span>{section}</span>
+                    <svg className="onb-phase-section-chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
                 </li>
               );
             })}
