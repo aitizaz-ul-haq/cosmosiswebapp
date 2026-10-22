@@ -28,14 +28,22 @@ function TickIcon() {
 }
 
 // One submitted phase: tick, number, name, completion time, sub-section count and View button.
-export default function PhaseRow({ submission: s, focusable = true, logLabel, onView }) {
+export default function PhaseRow({ submission: s, focusable = true, logLabel, onView, variant = "default" }) {
+  const staffLayout = variant === "staff";
   return (
-    <div className="sub-phase">
-      <span className="sub-phase-tick" aria-label={s.completed ? "Completed" : "In progress"}>
-        {s.completed ? <TickIcon /> : null}
-      </span>
+    <div className={`sub-phase${staffLayout ? " sub-phase-staff" : ""}`}>
+      {!staffLayout && (
+        <span className="sub-phase-tick" aria-label={s.completed ? "Completed" : "In progress"}>
+          {s.completed ? <TickIcon /> : null}
+        </span>
+      )}
       <span className="sub-phase-num">{s.phase}</span>
       <span className="sub-phase-name">{s.name}</span>
+      {staffLayout && (
+        <span className={`sub-phase-status ${s.completed ? "is-complete" : "is-pending"}`}>
+          {s.completed ? "Completed" : "In progress"}
+        </span>
+      )}
       <span className="sub-phase-when">
         {s.completedAt ? (
           <>

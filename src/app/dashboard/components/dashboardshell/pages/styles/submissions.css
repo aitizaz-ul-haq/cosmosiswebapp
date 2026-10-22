@@ -315,3 +315,731 @@
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
+
+/* Staff submissions: compact client rows with an inset phase table. */
+.submissions-table-page {
+  --sub-ink: #5667ac;
+  --sub-muted: #7b87b9;
+  --sub-teal: #00bfa8;
+}
+
+.submissions-table-page .management-table-heading h1 {
+  color: #4957a7;
+}
+
+.submissions-table-page .management-table-heading {
+  margin-bottom: 19px;
+}
+
+.submissions-table-page .management-table-panel.generic-table-container {
+  min-width: 0;
+  padding: 21px 20px 24px;
+  border-color: #e9edfa;
+  background: #fffffff0;
+}
+
+.submissions-table-page .sub-protected-content {
+  min-width: 0;
+}
+
+.submissions-table-page .sub-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-width: 0;
+  margin-bottom: 21px;
+}
+
+.submissions-table-page .sub-toolbar .management-table-toolbar {
+  flex: 1 1 680px;
+  min-width: 0;
+  max-width: 725px;
+  margin: 0;
+}
+
+.submissions-table-page .sub-toolbar .management-table-filters {
+  width: 100%;
+  gap: 12px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-select {
+  flex-basis: 145px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-select select,
+.submissions-table-page .sub-toolbar .management-filter-search input {
+  height: 38px;
+  border-color: #dfe4f6;
+  border-radius: 8px;
+  background: #fcfcff;
+  font-size: 11px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-select select {
+  padding-left: 15px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-select > svg {
+  top: 11px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-search input {
+  padding-left: 42px;
+}
+
+.submissions-table-page .sub-toolbar .management-filter-search > svg {
+  top: 10px;
+  left: 14px;
+  width: 17px;
+  height: 17px;
+}
+
+.submissions-table-page .sub-pagination {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 22px;
+}
+
+.submissions-table-page .sub-pagination-info {
+  color: #7885b8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.submissions-table-page .sub-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.submissions-table-page .sub-page-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 29px;
+  height: 32px;
+  padding: 5px;
+  border: 1px solid #e6eafa;
+  border-radius: 7px;
+  background: #fff;
+  color: #6172b1;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submissions-table-page .sub-page-button.active {
+  border-color: #00c3ae;
+  background: #e3fbf6;
+  color: #00a891;
+}
+
+.submissions-table-page .sub-page-button.is-prev svg {
+  transform: rotate(90deg);
+}
+
+.submissions-table-page .sub-page-button.is-next svg {
+  transform: rotate(-90deg);
+}
+
+.submissions-table-page button:focus-visible {
+  outline: 2px solid var(--sub-teal);
+  outline-offset: 2px;
+}
+
+.submissions-table-page .sub-page-button:hover:not(:disabled) {
+  background: #f0f6fd;
+}
+
+.submissions-table-page .sub-page-button.active:hover:not(:disabled) {
+  background: #d7f8f0;
+}
+
+.submissions-table-page .sub-page-button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.submissions-table-page .sub-list {
+  min-width: 0;
+}
+
+.submissions-table-page .sub-list-heading,
+.submissions-table-page .sub-acc-head {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.1fr) minmax(260px, 1.18fr) minmax(115px, .62fr) 44px;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.submissions-table-page .sub-list-heading {
+  min-height: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 7px;
+  background: #edf0f8;
+  color: #6473b0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.submissions-table-page .sub-list-heading > :last-child {
+  text-align: center;
+}
+
+.submissions-table-page .sub-acc {
+  position: relative;
+  min-width: 0;
+  border-bottom-color: #e7edfb;
+  background: transparent;
+}
+
+.submissions-table-page .sub-acc.open,
+.submissions-table-page .sub-acc:hover,
+.submissions-table-page .sub-acc.open:hover {
+  background: transparent;
+}
+
+.submissions-table-page .sub-acc:has(.sub-actions-menu) {
+  z-index: 20;
+}
+
+.submissions-table-page .sub-acc-head {
+  min-height: 50px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border-radius: 0;
+  cursor: default;
+}
+
+.submissions-table-page .sub-acc-head:hover {
+  background: #f8fbff;
+}
+
+.submissions-table-page .sub-acc.open .sub-acc-head {
+  min-height: 59px;
+}
+
+.submissions-table-page .sub-acc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.submissions-table-page .sub-acc-chevron {
+  display: inline-flex;
+  flex: 0 0 31px;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background: #f1f4fa;
+  color: #5269b3;
+  transition: background-color .2s ease;
+}
+
+.submissions-table-page .sub-acc-chevron svg {
+  width: 17px;
+  height: 17px;
+  transform: rotate(-90deg);
+  transition: transform .3s ease;
+}
+
+.submissions-table-page .sub-acc.open .sub-acc-chevron {
+  background: #e1faf4;
+  color: #00bba0;
+}
+
+.submissions-table-page .sub-acc.open .sub-acc-chevron svg {
+  transform: rotate(0);
+}
+
+.submissions-table-page .sub-acc-who {
+  gap: 3px;
+}
+
+.submissions-table-page .sub-acc-user {
+  color: #6575b1;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.submissions-table-page .sub-acc-meta {
+  color: #7b88b9;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.submissions-table-page .sub-acc-progress {
+  gap: 7px 20px;
+  min-width: 0;
+}
+
+.submissions-table-page .sub-acc-current {
+  color: #7a86b7;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.submissions-table-page .sub-acc-current strong {
+  color: #6576b0;
+  font-weight: 600;
+}
+
+.submissions-table-page .sub-acc-status {
+  padding: 3px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.submissions-table-page .sub-acc-created {
+  min-width: 0;
+  color: #7a88b9;
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.submissions-table-page .sub-actions {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.submissions-table-page .sub-actions-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 31px;
+  padding: 5px;
+  border: 1px solid #e5eafa;
+  border-radius: 8px;
+  background: #f8faff;
+  color: #6676bd;
+  cursor: pointer;
+}
+
+.submissions-table-page .sub-actions-trigger:hover,
+.submissions-table-page .sub-actions-trigger[aria-expanded="true"] {
+  border-color: #cfdaef;
+  background: #edf2fc;
+}
+
+.submissions-table-page .sub-actions-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  z-index: 25;
+  min-width: 160px;
+  margin: 0;
+  padding: 5px;
+  border: 1px solid #e1e7f6;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 22px #2f3d671f;
+  list-style: none;
+}
+
+.submissions-table-page .sub-actions-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #6073ac;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.submissions-table-page .sub-actions-menu button:hover:not(:disabled) {
+  background: #f1f5fd;
+}
+
+.submissions-table-page .sub-actions-menu button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.submissions-table-page .sub-acc-body,
+.submissions-table-page .sub-acc-inner {
+  min-width: 0;
+}
+
+.submissions-table-page .sub-acc-card {
+  min-width: 0;
+  margin: 0 15px 17px 21px;
+  padding: 11px 13px 7px;
+  border: 1px solid #e3e9fa;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 3px 6px #51618d08;
+}
+
+.submissions-table-page .sub-acc-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  margin-bottom: 11px;
+}
+
+.submissions-table-page .sub-acc-card-header h2 {
+  margin: 0;
+  color: #6575b2;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.submissions-table-page .sub-last-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid #e5eafa;
+  border-radius: 6px;
+  background: #f8faff;
+  color: #7b88b9;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.submissions-table-page .sub-last-activity svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+.submissions-table-page .sub-acc-list {
+  gap: 4px;
+  min-width: 0;
+  padding: 0;
+}
+
+.submissions-table-page .sub-phase-staff {
+  grid-template-columns: 30px minmax(125px, 1.12fr) minmax(90px, 1fr) minmax(140px, 1.75fr) minmax(170px, 1.9fr) 68px;
+  gap: 20px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 12px;
+  border-color: #e6ebfb;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #edf1f9;
+  color: #697ab5;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-name {
+  min-width: 0;
+  color: #6c7cb7;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.submissions-table-page .sub-phase-status {
+  justify-self: start;
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.submissions-table-page .sub-phase-status.is-complete {
+  background: #dffaf2;
+  color: #00ac95;
+}
+
+.submissions-table-page .sub-phase-status.is-pending {
+  background: #ffedc7;
+  color: #c77b00;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-when {
+  min-width: 0;
+  color: #8290bf;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-when .sub-acc-label {
+  font-weight: 400;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-pending {
+  color: #97a0bb;
+}
+
+.submissions-table-page .sub-phase-staff .sub-phase-done {
+  min-width: 0;
+  color: #00bca5;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.submissions-table-page .sub-phase-staff .management-row-action {
+  min-height: 30px;
+  padding: 6px 13px;
+  border-radius: 7px;
+  background: #e2faf4;
+  color: #00b298;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+@media (max-width: 1350px) {
+  .submissions-table-page .sub-list-heading,
+  .submissions-table-page .sub-acc-head {
+    grid-template-columns: minmax(180px, 1.1fr) minmax(210px, 1.18fr) minmax(95px, .62fr) 35px;
+    gap: 15px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+  .submissions-table-page .sub-acc-toggle { gap: 14px; }
+  .submissions-table-page .sub-acc-progress { gap: 6px 10px; }
+  .submissions-table-page .sub-pagination { gap: 12px; }
+  .submissions-table-page .sub-phase-staff { gap: 12px; }
+  .submissions-table-page .sub-acc-card { margin-left: 12px; margin-right: 12px; }
+}
+
+@media (max-width: 1100px) {
+  .submissions-table-page .sub-toolbar { flex-wrap: wrap; gap: 14px; }
+  .submissions-table-page .sub-toolbar .management-table-toolbar { flex-basis: 100%; max-width: none; }
+  .submissions-table-page .sub-pagination { margin-left: auto; }
+  .submissions-table-page .sub-list-heading,
+  .submissions-table-page .sub-acc-head {
+    grid-template-columns: minmax(150px, 1fr) minmax(175px, 1.15fr) minmax(85px, .55fr) 31px;
+    gap: 12px;
+  }
+  .submissions-table-page .sub-acc-toggle { gap: 10px; }
+  .submissions-table-page .sub-phase-staff {
+    grid-template-columns: 30px minmax(0, 1.2fr) minmax(0, 1fr) 68px;
+    gap: 7px 12px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+  .submissions-table-page .sub-phase-staff .sub-phase-num { grid-column: 1; grid-row: 1; }
+  .submissions-table-page .sub-phase-staff .sub-phase-name { grid-column: 2; grid-row: 1; }
+  .submissions-table-page .sub-phase-staff .sub-phase-status { grid-column: 3; grid-row: 1; }
+  .submissions-table-page .sub-phase-staff .management-row-action { grid-column: 4; grid-row: 1; }
+  .submissions-table-page .sub-phase-staff .sub-phase-when { grid-column: 2 / 4; grid-row: 2; }
+  .submissions-table-page .sub-phase-staff .sub-phase-done { grid-column: 2 / 4; grid-row: 3; }
+  .submissions-table-page .sub-phase-staff .sub-phase-done:empty { display: none; }
+}
+
+@media (max-width: 900px) {
+  .submissions-table-page .management-table-panel.generic-table-container { padding: 15px 12px 20px; }
+  .submissions-table-page .sub-toolbar { margin-bottom: 14px; }
+  .submissions-table-page .sub-toolbar .management-filter-select { flex-basis: 110px; }
+  .submissions-table-page .sub-pagination { width: 100%; justify-content: space-between; margin-left: 0; }
+  .submissions-table-page .sub-list-heading { display: none; }
+  .submissions-table-page .sub-acc-head {
+    grid-template-columns: minmax(0, 1fr) 31px;
+    gap: 9px 12px;
+    padding: 12px 5px;
+  }
+  .submissions-table-page .sub-acc-toggle { grid-column: 1; grid-row: 1; }
+  .submissions-table-page .sub-actions { grid-column: 2; grid-row: 1; }
+  .submissions-table-page .sub-acc-progress { grid-column: 1; grid-row: 2; padding-left: 41px; }
+  .submissions-table-page .sub-acc-created { grid-column: 1; grid-row: 3; padding-left: 41px; }
+  .submissions-table-page .sub-acc-created::before { content: "Date created · "; }
+  .submissions-table-page .sub-acc-card { margin: 0 0 14px; padding: 10px 8px 8px; }
+  .submissions-table-page .sub-acc-card-header { align-items: flex-start; flex-wrap: wrap; gap: 7px; }
+  .submissions-table-page .sub-phase-staff {
+    grid-template-columns: 26px minmax(0, 1fr) 60px;
+    gap: 7px 9px;
+    padding: 8px;
+  }
+  .submissions-table-page .sub-phase-staff .sub-phase-num { width: 26px; height: 26px; }
+  .submissions-table-page .sub-phase-staff .sub-phase-name { grid-column: 2; grid-row: 1; }
+  .submissions-table-page .sub-phase-staff .management-row-action { grid-column: 3; grid-row: 1; padding-right: 9px; padding-left: 9px; }
+  .submissions-table-page .sub-phase-staff .sub-phase-status { grid-column: 2 / 4; grid-row: 2; }
+  .submissions-table-page .sub-phase-staff .sub-phase-when { grid-column: 2 / 4; grid-row: 3; }
+  .submissions-table-page .sub-phase-staff .sub-phase-done { grid-column: 2 / 4; grid-row: 4; }
+}
+
+@media (max-width: 480px) {
+  .submissions-table-page .sub-toolbar .management-table-filters { flex-wrap: wrap; gap: 8px; }
+  .submissions-table-page .sub-toolbar .management-filter-select,
+  .submissions-table-page .sub-toolbar .management-filter-search { flex-basis: 100%; }
+  .submissions-table-page .sub-toolbar .management-filter-search input { font-size: 11px; }
+  .submissions-table-page .sub-pagination { flex-wrap: wrap; gap: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submissions-table-page .sub-acc-chevron,
+  .submissions-table-page .sub-acc-chevron svg { transition: none; }
+}
+
+/* Submission details use the available content-stage width and scroll inside. */
+.mk-overlay.mk-submission-overlay {
+  --mk-content-gap: 1.25rem;
+  position: absolute;
+  padding: var(--mk-content-gap);
+}
+
+.mk-submission-overlay .mk-card {
+  min-height: 0;
+  max-width: 1200px;
+  max-height: min(760px, calc(100vh - var(--dashboard-header-height, 60px) - 2 * var(--mk-content-gap)));
+  max-height: min(760px, calc(100dvh - var(--dashboard-header-height, 60px) - 2 * var(--mk-content-gap)));
+}
+
+.mk-submission-overlay .mk-header,
+.mk-submission-overlay .mk-footer {
+  flex-shrink: 0;
+}
+
+.mk-submission-overlay .mk-body {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mk-submission-overlay .sub-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 0 0 auto;
+  align-items: start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.mk-submission-overlay .mk-section {
+  min-width: 0;
+  padding: .9rem 1rem;
+}
+
+.mk-submission-overlay .mk-section-head > div,
+.mk-submission-overlay .mk-detail-label,
+.mk-submission-overlay .mk-detail-label > span,
+.mk-submission-overlay .mk-detail-value {
+  min-width: 0;
+}
+
+.mk-submission-overlay .mk-section-title,
+.mk-submission-overlay .mk-detail-label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.mk-submission-overlay .mk-detail-row {
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+}
+
+.mk-submission-overlay:not(.has-multiple-sections) .mk-card {
+  max-width: 720px;
+}
+
+.mk-submission-overlay:not(.has-multiple-sections) .sub-details-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 1200px) {
+  .mk-submission-overlay .sub-details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .mk-overlay.mk-submission-overlay {
+    --mk-content-gap: .75rem;
+  }
+
+  .mk-submission-overlay .sub-details-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mk-submission-overlay .mk-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: .75rem;
+  }
+
+  .mk-submission-overlay .mk-header > .mk-tile,
+  .mk-submission-overlay .mk-header > .mk-avatar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .mk-submission-overlay .mk-header-text {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .mk-submission-overlay .mk-close {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .mk-submission-overlay .mk-header-actions {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    min-width: 0;
+  }
+}
+
+@media (max-height: 500px) {
+  .mk-overlay.mk-submission-overlay {
+    --mk-content-gap: .75rem;
+  }
+
+  .mk-submission-overlay .mk-header,
+  .mk-submission-overlay .mk-footer {
+    padding-top: .65rem;
+    padding-bottom: .65rem;
+  }
+
+  .mk-submission-overlay .mk-title {
+    font-size: 1.2rem;
+  }
+
+  .mk-submission-overlay .mk-subtitle {
+    font-size: .8rem;
+  }
+}

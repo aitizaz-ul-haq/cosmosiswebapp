@@ -7,11 +7,13 @@ import {
   ModalSection,
   ModalShell,
 } from "../modalkit/ModalKit";
+import "../styles/submissions.css";
 
 export default function SubmissionViewModal({ clientName, submission, onClose, clientActions = false }) {
   return (
     <ModalShell
-      size="md"
+      size="lg"
+      overlayClassName={`mk-submission-overlay${submission.sections.length > 1 ? " has-multiple-sections" : ""}`}
       icon="file"
       title={submission.name}
       subtitle={`${clientName} - Phase ${submission.phase}`}
@@ -43,15 +45,17 @@ export default function SubmissionViewModal({ clientName, submission, onClose, c
         </ModalButton>
       }
     >
-      {submission.sections.map((section) => (
-        <ModalSection key={section.title} icon="file" tone="green" title={section.title}>
-          <DetailList>
-            {section.fields.map((f) => (
-              <DetailRow key={f.label} label={f.label} value={f.value} />
-            ))}
-          </DetailList>
-        </ModalSection>
-      ))}
+      <div className="sub-details-grid">
+        {submission.sections.map((section) => (
+          <ModalSection key={section.title} icon="file" tone="green" title={section.title}>
+            <DetailList>
+              {section.fields.map((f) => (
+                <DetailRow key={f.label} label={f.label} value={f.value} />
+              ))}
+            </DetailList>
+          </ModalSection>
+        ))}
+      </div>
     </ModalShell>
   );
 }
