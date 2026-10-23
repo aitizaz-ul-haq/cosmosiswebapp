@@ -13,6 +13,30 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 
 ## Latest handoff for GitHub Copilot — 23 Oct 2026
 
+- Dark mode now uses dedicated `dashboard-theme/sidebar-dark.webp` and `title-dark.webp`
+  artwork with navy fields and luminous teal/violet waves. The sidebar uses normal blending;
+  hero and management title backgrounds retain their two layers with a transparent first
+  gradient so the artwork is visible. All existing background sizing/placement and light-mode
+  assets remain in use. Eight focused desktop/mobile comparisons pass; see the log below.
+- Dashboard dark mode is available beside Notifications in the top bar for every role,
+  including mobile. The moon/sun toggle exposes its pressed state and remembers the choice
+  in `localStorage` under `cosmosis-dashboard-theme`. Light remains the default.
+- `useDashboardTheme.js` restores the preference after mounting, synchronizes other tabs,
+  and sets `html[data-dashboard-theme]` so portaled dialogs share the palette. Storage errors
+  do not prevent switching. The HTML attribute is removed when the dashboard unmounts.
+- The designs in `public/images/dark mode designs/` guide colors only. Existing typography,
+  geometry, content and controls retain their source rules. Dark styles are split into
+  `styles/dashboard-dark.css` (tokens/shell/common actions), `dashboard-dark-cards.css`
+  (overview/notifications/profile/charts), `dashboard-dark-tables.css` (tables/submissions/
+  onboarding status) and `dashboard-dark-dialogs.css` (dialogs/client onboarding/forms/loaders).
+  All overrides are scoped to the dark HTML attribute, including overlays outside the shell.
+  Full lint and isolated production build pass with the existing Profile warning. Browser
+  verification passes 54 desktop/mobile comparisons and six theme-preference/lifecycle cases;
+  layout, fonts and existing background placement match light mode. Details are in the log.
+- Removed the decorative bottom-right RM page icons at the user's request. The icon layer,
+  wrapper and related CSS are gone; `subcomps/dashboardmenusection.js` and
+  `styles/dashboardshell.css` are restored to their pre-icon versions. RM heading styling
+  and the client Onboarding background/timeline fixes remain in place.
 - All eight RM sidebar pages now use Scheduled Onboarding's primary heading and introductory
   description styling. The shared rules live in `pages/styles/managementtable.css`; the shell's
   `data-role="rm"` scopes DashboardHero, Profile Overview and page-specific table overrides.
@@ -526,6 +550,12 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 ## 9. UI system and conventions (follow these for any new UI)
 
 ### Design tokens
+- Dark mode uses the shared `dashboard-dark*.css` overrides under
+  `html[data-dashboard-theme="dark"]`: navy canvas/surfaces, light text, periwinkle secondary
+  text, and the existing semantic teal/violet/amber/blue/red accents on dark tinted fills.
+  Keep changes color-only; do not copy layout/font differences from the dark reference PNGs.
+  Use the `--dm-*` variables for additional dark styles. Theme scope must include body-portaled
+  dialogs while remaining absent from public/login pages after dashboard unmount.
 - Font: **Poppins** (`var(--font-poppins), Arial, sans-serif`) application-wide, matching the modals. The font variable is defined on `<html>`; headings, controls, navigation and SVG chart text inherit it. Weights 100–900 are loaded by `layout.js`. Do not add separate Arial, serif, Playfair, Geist or monospace UI overrides. Root tokens in `globals.css`: `--sitegreen #21CFB2`, `--sitedark #6D7692` (slate), `--sitewhite`.
 - Dashboard main page headings use `--dashboard-heading-size: 32px` and
   `--dashboard-heading-color: #59638f`, declared on `.dashboard-container`. Keep these values
@@ -579,6 +609,93 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 23 Oct — dark sidebar and title background artwork
+- Replaced dark mode's multiply-darkened sidebar and heavily masked light title image with
+  dedicated dark sibling assets, guided by the supplied references. Built-in imagegen edited
+  the existing backgrounds into navy/teal/violet artwork; no UI, text or logos are baked in.
+- `styles/dashboard-dark.css` selects `sidebar-dark.webp` with normal blending and uses
+  `title-dark.webp` for the management header band. `dashboard-dark-cards.css` selects the same
+  title asset for dashboard heroes. Transparent first gradient layers retain the original
+  second image layer's sizing/position/repeat configuration. Light mode retains the originals.
+- Browser canvas exports produce a 674×1626 sidebar and a 1376×130 title (generated blank
+  title padding removed). The final WebP assets total 165,628 bytes. Original generated PNGs
+  remain in the built-in generation directory; temporary project copies were moved to
+  `/tmp/cosmosis-dark-art-source-zYWyTa`. Provenance, exact prompts and export settings live
+  in `public/images/dashboard-theme/{README,dark-background-prompts}.md`.
+- All eight final focused comparisons pass at 1672×941 and 390×844: RM Dashboard, Clients,
+  Submissions and client Onboarding. Geometry/fonts/background size, position and repeat
+  match light mode; dark images load with expected dimensions, original light URLs remain,
+  and the sidebar uses normal blending. No bright surfaces, errors or document overflow.
+  Visually reviewed desktop Clients and the mobile open drawer; title waves now fill the
+  existing 172px management band. CSS parsing and `git diff --check` pass. This asset/CSS-only
+  follow-up did not repeat the production build or broad theme preference suite.
+- Focused report: `/tmp/cosmosis-dark-background-results.json`; screenshots:
+  `/tmp/cosmosis-dark-mode-desktop-rm-{dashboard,clients}.png` and
+  `/tmp/cosmosis-dark-mode-mobile-navigation-background.png`. Preview uses intercepted
+  fixtures; no live database writes, email or deployment.
+
+### 23 Oct — persistent dashboard dark mode
+- Added a moon/sun toggle immediately after Notifications in the top bar, including phones.
+  Its stable accessible name is `Dark mode`, with `aria-pressed`, a mode-specific tooltip
+  and readable audit title. `DashboardShell` uses `useDashboardTheme.js` and passes the
+  state/action through `DashboardDetailsSection` to `DashboardHeaderSection`.
+- Light is the default; `cosmosis-dashboard-theme` stores the explicit choice locally.
+  The hook restores on client mount, handles storage events/failures and removes the HTML
+  theme attribute when leaving the dashboard. Root-scoped colors also cover body portals.
+- The twelve supplied dark-mode reference PNGs guide a navy palette, light primary text,
+  periwinkle secondary text and semantic teal/violet/amber/blue/red accents. Added four
+  `dashboard-dark*.css` files for shell/common actions, overview/profile/charts, tables/
+  submissions/staff onboarding, and dialogs/client forms/legal readers/loaders. Existing
+  sidebar/logo/background assets receive color adjustments; their layout and cropping stay
+  in the source styles. No new reference-layout elements or corner icons were added.
+- CSS parsing, dark-scope and property audits pass: overrides contain paint properties and
+  theme variables only, without typography, spacing or dimension rules. Original shadows
+  retain their dimensions. Narrow `!important` rules only replace existing inline colors.
+  Primary filter buttons and the scoped solid-teal Start Phase action keep their hierarchy.
+- All 54 fixture-based Chrome comparisons pass at 1672×941 and 390×844. Coverage includes
+  all four home dashboards, all eight RM pages, Add/Edit Client, Scheduled Details, Submissions
+  gate, Superadmin Users/Companies and dialogs, plus client Onboarding, portaled phase form,
+  prerequisites/legal reader and Submissions. Visible layout/font metrics match light mode;
+  eight additional comparisons included background size/position/repeat, preserving the
+  management pages' existing 172px top image band. No major light surfaces, horizontal
+  document overflow or runtime errors were detected. Existing table whitespace warnings remain.
+- Six preference/lifecycle cases pass: default light, persisted dark reload, persisted return
+  to light, cross-tab storage event, switching with storage blocked, and logout attribute
+  cleanup. Visually reviewed RM dashboard/Add Client, client Onboarding and mobile phase form.
+  Report: `/tmp/cosmosis-dark-mode-browser-results.json`; screenshots:
+  `/tmp/cosmosis-dark-mode-{desktop,mobile}-*.png`.
+- Full ESLint passes with the existing Profile hook warning. Final isolated production build
+  passes in `/tmp/cosmosis-dark-build-nfl0i2h0`; all 273 source files match the workspace.
+  The existing `/api/logs` dynamic-render diagnostic remains. Preview/build use dummy env
+  values and intercepted API fixtures, without live database writes, email or deployment.
+
+### 23 Oct — RM page icons in the bottom-right corner
+- **Removed in follow-up at the user's request.** Restored the pre-icon menu-section markup
+  and stylesheet, removing the decoration and its wrapper. Focused ESLint and
+  `git diff --check` pass; both source files match the pre-icon committed versions.
+  The original implementation/verification below is historical and no longer active.
+- Added an RM-only `dashboard-page-frame` around the existing scroll container in
+  `subcomps/dashboardmenusection.js`. Its decorative layer reuses `DashboardShellIcon` with
+  the active page key, exactly matching each page's sidebar SVG.
+- `styles/dashboardshell.css` anchors the layer to the visible page area, clips the icon
+  using a 30% translation on both axes (49% of its rectangle remains visible), and sizes it
+  at 180–240px or 150px on mobile. Color `#00c4b0` matches the selected menu's darker gradient
+  endpoint at 18% opacity. The layer ignores pointer events, is hidden from assistive
+  technology and has no focus target; its z-index stays below dialogs and the shared loader.
+  Other roles keep their previous layout and do not render the icon.
+- Verified all eight RM pages at 1672×941 and 390×844: matching SVG markup, exact clipping,
+  fixed corner position before/after scrolling, hidden overflow and accessibility attributes.
+  Six additional checks cover native corner clicks, password-gate stacking and absence for
+  client/supervisor. The mobile dashboard scrolls 760px while its icon remains fixed; shorter
+  fixture pages need no outer scrolling. No verification/runtime errors or page/document
+  horizontal overflow; existing GenericTable whitespace warnings remain.
+- Visually reviewed desktop Dashboard and mobile Scheduled screenshots. Report:
+  `/tmp/cosmosis-rm-corner-browser-results.json`; screenshots:
+  `/tmp/cosmosis-rm-corner-{desktop,mobile}-{dashboard,scheduled}.png`.
+  Full ESLint and an isolated production build pass with the existing Profile hook warning,
+  Browserslist notice and `/api/logs` dynamic-render diagnostic. Preview/build copies use
+  dummy environment values and browser fixtures; no live database writes or deployment.
 
 ### 23 Oct — standardize all RM page headings and descriptions
 - Scheduled Onboarding's `.management-table-heading` is now the shared typography source

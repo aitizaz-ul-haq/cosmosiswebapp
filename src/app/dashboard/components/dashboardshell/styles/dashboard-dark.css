@@ -1,0 +1,190 @@
+/* Dashboard color overrides only; the light theme remains the default. */
+html[data-dashboard-theme="dark"] {
+  color-scheme: dark;
+  --dm-bg: #08121f;
+  --dm-sidebar: #101d30;
+  --dm-surface: #0c1b29;
+  --dm-raised: #142235;
+  --dm-input: #0e1d2d;
+  --dm-border: #24384e;
+  --dm-text: #eef3ff;
+  --dm-muted: #aabbe0;
+  --dm-subtle: #8194b7;
+  --dm-teal: #00d3b4;
+  --dm-purple: #a879ff;
+  --dm-green-bg: #073a38;
+  --dm-violet-bg: #272044;
+  --dm-slate-bg: #202d43;
+  --dm-blue-bg: #142f50;
+  --dm-amber-bg: #3b2d19;
+  --dm-red-bg: #3f2430;
+  --sitedark: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-container {
+  --dashboard-heading-color: var(--dm-text);
+  --dashboard-ink: var(--dm-text);
+  --dashboard-muted: var(--dm-muted);
+  --dashboard-purple: var(--dm-purple);
+  --dashboard-teal: var(--dm-teal);
+  background: var(--dm-bg);
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-sidebar-section {
+  background-color: var(--dm-sidebar);
+  background-image: url('/images/dashboard-theme/sidebar-dark.webp');
+  background-blend-mode: normal;
+  border-color: var(--dm-border);
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-sidebar-brand img {
+  filter: brightness(1.7);
+}
+
+html[data-dashboard-theme="dark"] .dasboard-header-section {
+  background: var(--dm-surface);
+  border-color: var(--dm-border);
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .dasboard-header-section::before { opacity: .035; }
+
+html[data-dashboard-theme="dark"] .dashboard-menus-section {
+  background-color: var(--dm-bg);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-menus-section.dashboard-management-content {
+  background-color: var(--dm-bg);
+  background-image: linear-gradient(90deg, transparent, transparent), url('/images/dashboard-theme/title-dark.webp');
+}
+
+html[data-dashboard-theme="dark"] .dashboard-menus-bg > *,
+html[data-dashboard-theme="dark"] .dashboard-menus-bg .demo-requests-container {
+  background-color: var(--dm-bg);
+  background-blend-mode: multiply;
+}
+
+html[data-dashboard-theme="dark"] :is(
+  .dashboard-account-trigger, .dashboard-account-name, .dashboard-account-role,
+  .dashboard-account-chevron, .dashboard-sidebar-toggle, .dashboard-sidebar-mobile-close,
+  .dashboard-sidebar-footer, .dashboard-search-icon, .dashboard-header-icon-button,
+  .dashboard-header-search-no-result, .dashboard-notifications-popover p
+) { color: var(--dm-muted); }
+
+html[data-dashboard-theme="dark"] .dashboard-sidebar-footer strong,
+html[data-dashboard-theme="dark"] .dashboard-notifications-popover strong {
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-sidebar-logo-container {
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .menu-options { color: var(--dm-muted); }
+html[data-dashboard-theme="dark"] .menu-options:hover { background: var(--dm-violet-bg); color: var(--dm-text); }
+html[data-dashboard-theme="dark"] .menu-options.active { color: #fff; }
+
+html[data-dashboard-theme="dark"] :is(
+  .dashboard-sidebar-toggle:hover, .dashboard-header-icon-button:hover,
+  .dashboard-account-dropdown button:hover
+) { background: var(--dm-raised); color: var(--dm-text); }
+
+html[data-dashboard-theme="dark"] :is(
+  .dashboard-account-dropdown, .dashboard-header-search-results, .dashboard-notifications-popover
+) {
+  background: var(--dm-surface);
+  border-color: var(--dm-border);
+  box-shadow: 0 10px 30px #0005;
+}
+
+html[data-dashboard-theme="dark"] :is(
+  .dashboard-account-dropdown button, .dashboard-header-search-result-item,
+  .dashboard-account-dropdown-title
+) { color: var(--dm-muted); border-color: var(--dm-border); }
+
+html[data-dashboard-theme="dark"] .dashboard-header-search-results {
+  box-shadow: 0 7px 25px #0005;
+}
+
+html[data-dashboard-theme="dark"] .dashboard-header-search-result-item:hover {
+  background: var(--dm-green-bg);
+  color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-header-search-input {
+  background: var(--dm-input);
+  border-color: var(--dm-border);
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .dashboard-header-search-input::placeholder { color: var(--dm-subtle); }
+html[data-dashboard-theme="dark"] .dashboard-header-search-input:focus { border-color: var(--dm-purple); }
+html[data-dashboard-theme="dark"] .dashboard-notification-dot { border-color: var(--dm-surface); }
+html[data-dashboard-theme="dark"] .dashboard-header-divider { background: var(--dm-border); }
+html[data-dashboard-theme="dark"] .dashboard-notifications-link { color: var(--dm-purple); }
+html[data-dashboard-theme="dark"] .dashboard-header-theme [aria-pressed="true"] { background: var(--dm-green-bg); color: var(--dm-teal); }
+html[data-dashboard-theme="dark"] .dashboard-avatar { background: var(--dm-green-bg); color: #e4fff9; }
+html[data-dashboard-theme="dark"] .dashboard-sidebar-backdrop { background: #020811aa; }
+
+/* Shared actions keep their existing semantic colors in darker tinted surfaces. */
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-btn-green, .dash-btn-green-soft, .management-row-action.is-edit,
+  .management-table-panel .generic-table .dash-btn-green-soft,
+  .generic-table-btn-edit, .submissions-table-page .sub-phase-staff .management-row-action
+):not(.onb-phase-detail-actions .dash-btn-green) { background: var(--dm-green-bg); color: var(--dm-teal); border-color: #14524d; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-btn-neutral, .management-row-action.is-neutral,
+  .management-table-panel .generic-table .dash-btn-neutral, .table-filter-button:not(.is-primary)
+) { background: var(--dm-slate-bg); color: var(--dm-muted); border-color: var(--dm-border); }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-btn-info, .management-row-action.is-info, .generic-table-btn-info
+) { background: var(--dm-blue-bg); color: #82b5ff; border-color: #294d77; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-btn-danger, .management-row-action.is-danger,
+  .management-table-panel .generic-table .dash-btn-danger, .generic-table-btn-delete
+) { background: var(--dm-red-bg); color: #ff91a1; border-color: #603343; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-btn-purple, .management-row-action.is-violet
+) { background: var(--dm-violet-bg); color: var(--dm-purple); border-color: #443568; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .dash-action-btn, .management-row-action, .generic-table-actions button, .table-filter-button
+):hover:not(:disabled) { box-shadow: inset 0 0 0 999px #ffffff08; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .management-table-add, .table-filter-button.is-primary
+) { background: linear-gradient(105deg, #00b99f, #00a991); color: #fff; border-color: #00cbb0; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .management-table-add, .table-filter-button.is-primary
+):hover { background: #00a991; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  .status-pending, .status-on_hold, .status-approval_pending
+) { background-color: var(--dm-amber-bg); color: #ffc36b; }
+html[data-dashboard-theme="dark"] .dashboard-container :is(.status-active, .status-ongoing) { background-color: var(--dm-green-bg); color: var(--dm-teal); }
+html[data-dashboard-theme="dark"] .dashboard-container :is(.status-inactive, .status-cancelled) { background-color: var(--dm-red-bg); color: #ff91a1; }
+
+html[data-dashboard-theme="dark"] .dashboard-container :is(.table-filter-error, .sub-error, .onbs-error) {
+  background: var(--dm-red-bg);
+  border-color: #603343;
+  color: #ffb5c0;
+}
+
+/* These existing page errors and modal labels set their light colors inline. */
+html[data-dashboard-theme="dark"] .dashboard-container :is(
+  [style*="background-color: rgb(254, 226, 226)"], [style*="background-color:#fee2e2"],
+  [style*="background-color: #fee2e2"]
+) {
+  background-color: var(--dm-red-bg) !important;
+  color: #ffb5c0 !important;
+}
+html[data-dashboard-theme="dark"] .mk-progress-row > span[style] {
+  color: var(--dm-muted) !important;
+}

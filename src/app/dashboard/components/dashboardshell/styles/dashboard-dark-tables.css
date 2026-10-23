@@ -1,0 +1,521 @@
+/* Table, submission and staff onboarding colors. Dimensions remain in the page styles. */
+html[data-dashboard-theme="dark"] .management-table-page {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page {
+  --sub-ink: var(--dm-text);
+  --sub-muted: var(--dm-muted);
+  --sub-teal: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .onboarding-status-table-page {
+  --onbs-ink: var(--dm-text);
+  --onbs-muted: var(--dm-muted);
+  --onbs-teal: var(--dm-teal);
+  --onbs-violet: var(--dm-purple);
+}
+
+html[data-dashboard-theme="dark"] .management-table-page .management-table-heading h1,
+html[data-dashboard-theme="dark"] .dashboard-container[data-role="rm"] :is(.management-table-heading h1),
+html[data-dashboard-theme="dark"] .generic-table-heading {
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .management-table-heading p,
+html[data-dashboard-theme="dark"] .dashboard-container[data-role="rm"] :is(.management-table-heading p),
+html[data-dashboard-theme="dark"] .generic-table-description {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .generic-table-container,
+html[data-dashboard-theme="dark"] .management-table-panel.generic-table-container,
+html[data-dashboard-theme="dark"] .submissions-table-page .management-table-panel.generic-table-container {
+  background-color: var(--dm-surface);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .generic-table-container {
+  box-shadow: 0 4px 24px #00000024;
+}
+
+html[data-dashboard-theme="dark"] .management-table-panel.generic-table-container,
+html[data-dashboard-theme="dark"] .submissions-table-page .management-table-panel.generic-table-container {
+  box-shadow: 0 7px 24px #00000024;
+}
+
+html[data-dashboard-theme="dark"] .onboarding-status-table-page .management-table-panel.generic-table-container {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+html[data-dashboard-theme="dark"] .management-table-page :is(.management-filter-select select, .management-filter-search input, .table-filter-field input, .table-filter-field select),
+html[data-dashboard-theme="dark"] .generic-table-filters :is(select, input) {
+  color: var(--dm-text);
+  background-color: var(--dm-input);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .management-table-page :is(.management-filter-search input, .table-filter-field input)::placeholder,
+html[data-dashboard-theme="dark"] .generic-table-filters input::placeholder {
+  color: var(--dm-subtle);
+}
+
+html[data-dashboard-theme="dark"] .management-table-page :is(.management-filter-select > svg, .management-filter-search > svg, .table-filter-field) {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .management-table-page :is(.management-filter-select select, .management-filter-search input, .table-filter-field input, .table-filter-field select):focus {
+  border-color: var(--dm-teal);
+  box-shadow: 0 0 0 3px #00d3b41a;
+}
+
+html[data-dashboard-theme="dark"] .table-filter-button {
+  color: var(--dm-muted);
+  background-color: var(--dm-slate-bg);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .table-filter-button:hover {
+  background-color: var(--dm-raised);
+}
+
+html[data-dashboard-theme="dark"] .table-filter-button.is-primary {
+  color: #ffffff;
+  background-color: #00bca9;
+  border-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .table-filter-button.is-primary:hover {
+  background-image: none;
+  background-color: #00a795;
+}
+
+html[data-dashboard-theme="dark"] .generic-table thead tr,
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table thead tr {
+  color: var(--dm-muted);
+  background-color: var(--dm-raised);
+}
+
+html[data-dashboard-theme="dark"] .generic-table :is(th, td),
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table :is(th, td) {
+  color: var(--dm-text);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .generic-table th,
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table th {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .generic-table tbody tr:hover,
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table tbody tr:hover {
+  background-color: #102b35;
+}
+
+html[data-dashboard-theme="dark"] .supervisor-clients-table .generic-table tbody tr {
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .supervisor-clients-table .generic-table td::before {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] :is(.generic-table-pagination-info, .generic-table-pagination-status, .generic-table-loader),
+html[data-dashboard-theme="dark"] .management-table-panel :is(.generic-table-pagination-info, .generic-table-pagination-status),
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table .generic-table-empty {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .generic-table-page-btn,
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table-page-btn {
+  color: var(--dm-muted);
+  background-color: var(--dm-input);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .generic-table-page-btn:hover:not(:disabled),
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table-page-btn:hover:not(:disabled),
+html[data-dashboard-theme="dark"] .generic-table-page-btn.active,
+html[data-dashboard-theme="dark"] .management-table-panel .generic-table-page-btn.active {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+  border-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-details {
+  color: #8bb9ff;
+  background-color: var(--dm-blue-bg);
+  border-color: var(--dm-blue-bg);
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-details:hover {
+  background-color: #1c3e65;
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-approve {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+  border-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-approve:hover {
+  background-color: #0a4c47;
+  border-color: #0a4c47;
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-reject {
+  color: var(--dm-muted);
+  background-color: var(--dm-slate-bg);
+  border-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-reject:hover {
+  background-color: #2c3d58;
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-delete {
+  color: #ff94aa;
+  background-color: var(--dm-red-bg);
+  border-color: var(--dm-red-bg);
+}
+
+html[data-dashboard-theme="dark"] .generic-btn-delete:hover {
+  background-color: #55303e;
+}
+
+html[data-dashboard-theme="dark"] :is(.status-pending, .status-demo) {
+  color: #ffb548;
+  background-color: var(--dm-amber-bg);
+}
+
+html[data-dashboard-theme="dark"] .status-active {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .status-rejected {
+  color: #ff94aa;
+  background-color: var(--dm-red-bg);
+}
+
+/* Staff and client submission lists. */
+html[data-dashboard-theme="dark"] :is(.sub-list-heading, .sub-phase-list-heading),
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-list-heading {
+  color: var(--dm-muted);
+  background-color: var(--dm-raised);
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-empty, .sub-acc-empty, .sub-phase-when, .sub-acc-meta, .sub-acc-head),
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-acc-meta, .sub-acc-current, .sub-acc-created, .sub-pagination-info),
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-staff .sub-phase-when {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc, .sub-acc.open, .sub-phase),
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-acc, .sub-acc.open, .sub-acc-card, .sub-phase-staff) {
+  background-color: var(--dm-surface);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc:hover, .sub-acc.open:hover),
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-acc:hover, .sub-acc.open:hover, .sub-acc-head:hover),
+html[data-dashboard-theme="dark"] .client-submissions-table-page .sub-phase:hover {
+  background-color: #102b35;
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-acc-card {
+  background-color: var(--dm-input);
+  box-shadow: 0 3px 6px #0000001a;
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc-user, .sub-phase-name),
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-acc-user, .sub-acc-current strong, .sub-acc-card-header h2),
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-staff .sub-phase-name {
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .sub-phase-pending,
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-staff .sub-phase-pending {
+  color: var(--dm-subtle);
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-phase-done, .sub-phase-num),
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-staff .sub-phase-done {
+  color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .sub-phase-tick path[stroke="#17b89b"] {
+  stroke: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .sub-acc-plus {
+  background-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .sub-acc-head:hover .sub-acc-plus {
+  background-color: #0a4c47;
+}
+
+html[data-dashboard-theme="dark"] .sub-acc-plus::before,
+html[data-dashboard-theme="dark"] .sub-acc-plus::after {
+  background-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-acc-chevron, .sub-phase-staff .sub-phase-num) {
+  color: var(--dm-muted);
+  background-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-acc.open .sub-acc-chevron {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-actions-trigger, .sub-last-activity) {
+  color: var(--dm-muted);
+  background-color: var(--dm-input);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-actions-trigger:hover, .sub-actions-trigger[aria-expanded="true"]) {
+  color: var(--dm-text);
+  background-color: var(--dm-raised);
+  border-color: #3d5572;
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-actions-menu {
+  background-color: var(--dm-raised);
+  border-color: var(--dm-border);
+  box-shadow: 0 8px 22px #00000040;
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-actions-menu button {
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-actions-menu button:hover:not(:disabled) {
+  background-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-status.is-complete {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-phase-status.is-pending {
+  color: #ffb548;
+  background-color: var(--dm-amber-bg);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-page-button {
+  color: var(--dm-muted);
+  background-color: var(--dm-input);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page .sub-page-button:hover:not(:disabled) {
+  background-color: var(--dm-raised);
+}
+
+html[data-dashboard-theme="dark"] .submissions-table-page :is(.sub-page-button.active, .sub-page-button.active:hover:not(:disabled)) {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+  border-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .sub-gate-overlay {
+  background-color: #030a16a6;
+}
+
+/* Expandable staff Onboarding Status records and their timeline. */
+html[data-dashboard-theme="dark"] :is(.onbs-toolbar, .onbs-block, .onbs-block.is-open, .onbs-detail, .onbs-empty) {
+  background-color: var(--dm-surface);
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .onbs-block {
+  box-shadow: 0 2px 5px #0000001a;
+}
+
+html[data-dashboard-theme="dark"] .onbs-item:hover {
+  background-color: var(--dm-raised);
+}
+
+html[data-dashboard-theme="dark"] :is(.onbs-expand-icon, .onbs-chevron, .onbs-meta, .onbs-progress-title, .onbs-progress-pct, .onbs-remarks, .onbs-client-details dt, .onbs-empty) {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .onbs-avatar {
+  color: var(--dm-purple);
+  background-color: var(--dm-violet-bg);
+}
+
+html[data-dashboard-theme="dark"] :is(.onbs-type-capsule, .onbs-phase-capsule) {
+  color: var(--dm-muted);
+  background-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-phase-capsule svg {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .open .onbs-progress,
+html[data-dashboard-theme="dark"] :is(.onbs-tabs, .onbs-tl-col) {
+  border-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .onbs-progress-track {
+  background-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .onbs-status-list {
+  background-color: var(--dm-raised);
+  border-color: var(--dm-border);
+  box-shadow: 0 8px 24px #00000040;
+}
+
+html[data-dashboard-theme="dark"] :is(.onbs-status-list button, .onbs-tab, .onbs-tl-phase) {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .onbs-status-list button:is(:hover, :focus-visible, .active) {
+  color: var(--dm-text);
+  background-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tab.active {
+  color: var(--dm-purple);
+  border-bottom-color: var(--dm-purple);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tab:hover {
+  background-color: var(--dm-violet-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-scroll {
+  scrollbar-color: #425575 transparent;
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase::after {
+  background-color: var(--dm-border);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase.done::after {
+  background-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase.current::after {
+  background-image: linear-gradient(90deg, var(--dm-purple), var(--dm-border));
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-number {
+  color: var(--dm-muted);
+  background-color: var(--dm-slate-bg);
+  border-color: var(--dm-surface);
+  box-shadow: 0 0 0 2px var(--dm-surface);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase.done .onbs-tl-number {
+  color: var(--dm-bg);
+  background-color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase.current .onbs-tl-number {
+  color: var(--dm-bg);
+  background-color: var(--dm-purple);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tl-phase.current .onbs-tl-phase-name {
+  color: var(--dm-purple);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tag {
+  color: var(--dm-muted);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tag.done {
+  color: var(--dm-teal);
+  background-color: var(--dm-green-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tag.pending {
+  background-color: var(--dm-slate-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tag.current {
+  color: var(--dm-purple);
+  background-color: var(--dm-violet-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-tick {
+  color: var(--dm-bg);
+}
+
+html[data-dashboard-theme="dark"] .onbs-pending-dot {
+  background-color: var(--dm-input);
+  border-color: var(--dm-subtle);
+}
+
+html[data-dashboard-theme="dark"] .onbs-remarks.muted {
+  color: var(--dm-subtle);
+}
+
+html[data-dashboard-theme="dark"] .onbs-read-more {
+  color: var(--dm-teal);
+}
+
+html[data-dashboard-theme="dark"] .onbs-client-details dd {
+  color: var(--dm-text);
+}
+
+html[data-dashboard-theme="dark"] .onbs-detail .onbs-empty {
+  background-color: transparent;
+}
+
+/* Legacy capsules receive inline STATUS_COLORS values; match only their known paint. */
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="#E3F8F2" i],
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="227, 248, 242"] {
+  color: var(--dm-teal) !important;
+  background-color: var(--dm-green-bg) !important;
+  border-color: var(--dm-green-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="#E6EFFD" i],
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="230, 239, 253"] {
+  color: #8bb9ff !important;
+  background-color: var(--dm-blue-bg) !important;
+  border-color: var(--dm-blue-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="#EFEAFD" i],
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="239, 234, 253"] {
+  color: var(--dm-purple) !important;
+  background-color: var(--dm-violet-bg) !important;
+  border-color: var(--dm-violet-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="#FEF0DC" i],
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="254, 240, 220"] {
+  color: #ffb548 !important;
+  background-color: var(--dm-amber-bg) !important;
+  border-color: var(--dm-amber-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="#FDE8E8" i],
+html[data-dashboard-theme="dark"] :is(.sub-acc-status, .onbs-status-capsule, .generic-table span)[style*="253, 232, 232"] {
+  color: #ff94aa !important;
+  background-color: var(--dm-red-bg) !important;
+  border-color: var(--dm-red-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] .generic-table span[style*="#ECEFF7" i],
+html[data-dashboard-theme="dark"] .generic-table span[style*="236, 239, 247"] {
+  color: var(--dm-muted) !important;
+  background-color: var(--dm-slate-bg) !important;
+  border-color: var(--dm-slate-bg) !important;
+}
+
+html[data-dashboard-theme="dark"] .onbs-status-capsule .onbs-status-dot {
+  background-color: currentColor !important;
+}
