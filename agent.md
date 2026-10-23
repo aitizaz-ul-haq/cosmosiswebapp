@@ -4,14 +4,44 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-10-22. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-10-23. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 22 Oct 2026
+## Latest handoff for GitHub Copilot — 23 Oct 2026
+
+- All eight RM sidebar pages now use Scheduled Onboarding's primary heading and introductory
+  description styling. The shared rules live in `pages/styles/managementtable.css`; the shell's
+  `data-role="rm"` scopes DashboardHero, Profile Overview and page-specific table overrides.
+  Headings use Poppins, 32px, weight 600, `#59638f`, 1.2 line height and -0.8px letter spacing.
+  Descriptions use Poppins, 15px (13px at 760px and below), weight 400, `#7c88b8`, 1.6 line
+  height and full opacity. Card, section and modal titles retain their existing hierarchy.
+  All 24 browser comparisons across the eight pages at 1672px, 1366px and 390px match
+  Scheduled exactly and pass header overflow checks. See the change-log entry for artifacts.
+- Client Onboarding now shares the Submissions page background: pale blue with the soft
+  gradient/title image across the top. `subcomps/dashboardmenusection.js` applies the same
+  `dashboard-management-content` background class to client Onboarding, and its scoped
+  `.onb-container` is transparent so the legacy background image cannot cover it.
+  Focused ESLint and desktop/mobile Chrome background comparisons pass; details are below.
+- Client onboarding timeline detail tags now stay inside their matching subsection columns.
+  Tags, headings and dashed guides share equal column widths; each tag retains its staggered
+  row with an inset for its focus outline. Entry animations move vertically within the column.
+- Narrow columns place the status icon and chevron above the wrapping label. At 1100px and
+  below, labelled full-width rows remain stacked and the desktop column guides are hidden.
+- Files: `onboarding/PhaseDetails.js` and `onboarding/onboarding.css` under dashboard pages.
+  Existing subsection actions and saved submission colors retain their behavior.
+- Verification: all 42 tags (21 subsections in both submission states) pass column/content
+  bounds, heading alignment and native hit checks at eight viewport/sidebar layouts. Four
+  animation samples per tag also stay inside the column. Checks render the actual component
+  and stylesheet with local Poppins fonts in headless Chrome; they do not exercise live API
+  data or form persistence. Report: `/tmp/cosmosis-subsection-browser-results.json`; screenshots:
+  `/tmp/cosmosis-subsection-{desktop,laptop,mobile}.png`. Full ESLint passes with the existing
+  Profile effect-dependency warning, and an isolated production build passes.
+
+## Previous handoff — 22 Oct 2026
 
 - Client Onboarding now follows `public/images/client_dashbaord_new_timeline_view.png`.
   The progress card uses teal current/completed nodes, purple pending nodes, saved-completion
@@ -482,7 +512,7 @@ dispatcher activates → `ongoing`. From `ongoing` the RM can set `on_hold` / `c
 ### Client onboarding form (individual only)
 Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6. Clicking phases 1–6 toggles an inline accordion; clicking the open phase closes it, and selecting another shows that phase's own sections.
 - **Phase 0** (Prerequisites, `PrerequisitesModal` + `onboarding/legal/*`): read-only legal documents. The overlay portals to `document.body` above the full dashboard, centered with the same 6px backdrop blur as the phase forms. Internal reader styling and two-document scroll gates retain their rules. **Do not restyle without being asked.**
-- **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`, following `public/images/client_dashbaord_new_timeline_view.png`: descriptions, subsection labels, a status-colored solid track, dashed vertical guides and staggered bars (purple/lavender when incomplete, teal/mint when complete). The saved current phase opens initially. Panels retain the 800 ms reversible height/fade transition; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus. Narrow layouts stack subsection bars and scroll only the phase track horizontally.
+- **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`, following `public/images/client_dashbaord_new_timeline_view.png`: descriptions, subsection labels, a status-colored solid track, dashed vertical guides and staggered tags confined to their matching equal-width subsection columns (purple/lavender when incomplete, teal/mint when complete). Dense columns put icons above wrapping text. The saved current phase opens initially. Panels retain the 800 ms reversible height/fade transition; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus. At 1100px and below, subsection tags stack as labelled full-width rows without desktop column guides; only the phase track scrolls horizontally.
 - **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal from the top. Subsection buttons open the form at the matching heading and focus it. Closing restores the initiating control; Next phase updates the form and inline panel, then closes back to the new phase's Start button. Opening/viewing a form does not change submission status.
 - **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Completed/current timeline nodes are teal, pending nodes purple; completed connectors are solid and pending connectors dashed. Incomplete detail sections use lavender fills and purple text, hollow dot markers, tracks and focus/hover accents; completed sections use mint fills, green ticks and teal tracks. Start Phase stays teal as an action. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
 - **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
@@ -502,6 +532,11 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
   on desktop and mobile for DashboardHero, TablePageLayout, Profile Overview and Client
   Onboarding (including its Onboarding Progress title). Section/card/modal headings keep
   their existing hierarchy.
+- RM primary headings and introductory descriptions share Scheduled Onboarding's rule in
+  `styles/managementtable.css`. Scope other header variants with the shell's `data-role="rm"`:
+  heading weight 600, line height 1.2, letter spacing -0.8px; description color `#7c88b8`,
+  weight 400, line height 1.6, full opacity, size 15px or 13px at 760px and below. Both inherit
+  Poppins. Keep this shared source instead of adding per-page RM typography overrides.
 - Palette used everywhere (hex, keep consistent): ink `#1a1a1a`; slate `#6d7692`; **soft green** fill `#e3f8f2` / text+icon `#17b89b` / hover `#d3f3ea`; slate-soft `#eceff7` (hover `#e1e5f0`); blue `#e6effd`/`#3a6fd8`; violet `#efeafd`/`#6d4fd8`; amber `#fef0dc`/`#c26a0a`; red `#fde8e8`/`#d03a3a`; card border `#e6e9f1`; divider `#eef0f5`.
 - Radii: buttons/inputs **10px**, cards 14–18px, pills fully round. Icons: stroke, 1.8px, `currentColor`, inside a soft-tinted rounded **square tile**.
 
@@ -544,6 +579,63 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 23 Oct — standardize all RM page headings and descriptions
+- Scheduled Onboarding's `.management-table-heading` is now the shared typography source
+  for all eight RM sidebar pages: Dashboard, Clients, Awaiting Registry, Scheduled,
+  Onboarding Status, Notifications, Submissions and Profile Settings. `DashboardShell`
+  exposes `data-role`, and grouped RM selectors cover hero/profile headers plus table-page
+  overrides, including Onboarding Status and Submissions' former custom title colors.
+- Titles inherit Poppins at 32px/600, `#59638f`, line height 1.2 and letter spacing -0.8px.
+  Descriptions inherit Poppins at 15px/400, `#7c88b8`, line height 1.6, normal letter spacing
+  and full opacity, becoming 13px at 760px and below like Scheduled. Smaller card/section/modal
+  typography retains its hierarchy; other roles' hero/profile overrides retain their styles.
+- Files: `dashboardshell.js` and `pages/styles/managementtable.css` relative to
+  `src/app/dashboard/components/dashboardshell/`. Full ESLint passes with the existing
+  Profile effect-dependency warning. An isolated production build passes in
+  `/tmp/cosmosis-rm-heading-build-ybigktfc` with the existing Browserslist notices and
+  `/api/logs` dynamic-render diagnostic. Preview/build copies exclude local credentials;
+  the browser preview uses intercepted fixtures, without live database writes or deployment.
+- Browser verification covers all eight pages at 1672×941, 1366×768 and 390×844 using native
+  sidebar navigation and the existing Submissions password gate. All 24 comparisons match
+  Scheduled's computed family, size, weight, color, line height, letter spacing and opacity,
+  with no header overflow. Desktop dashboard and mobile profile screenshots were visually
+  reviewed. Report: `/tmp/cosmosis-rm-typography-browser-results.json`; screenshots:
+  `/tmp/cosmosis-rm-typography-{desktop,mobile}-{dashboard,submissions,profile-settings}.png`.
+  Six supervisor/client regression samples also pass, with their hero/profile weights and
+  page-specific colors retained. No browser runtime errors or document overflow; existing
+  GenericTable whitespace warnings remain. All 93 API requests used local fixtures.
+
+### 23 Oct — match client Onboarding and Submissions backgrounds
+- Client Onboarding reuses the shell background class already used by Submissions, so the
+  background color, gradient, title image, size and position come from the same CSS rule.
+  The scoped Onboarding container resets its entire background to transparent, removing
+  its inherited `/images/background.png` layer as well as its former solid color.
+- Files: `subcomps/dashboardmenusection.js` and `pages/onboarding/onboarding.css`, relative
+  to `src/app/dashboard/components/dashboardshell/`. Cards and forms retain their styles.
+- Focused component ESLint and `git diff --check` pass. Chrome comparisons using the actual
+  shell component/styles at 1672px and 390px confirm identical computed backgrounds for
+  Onboarding and Submissions, transparent Onboarding content and no document overflow.
+  Visually checked the desktop result. Report: `/tmp/cosmosis-onboarding-background-results.json`;
+  screenshots: `/tmp/cosmosis-onboarding-background-{desktop,mobile}.png`.
+  This presentation-only follow-up did not rerun the production build or use live API data.
+
+### 23 Oct — confine timeline tags to their subsection columns
+- Replaced the 24-track grid and nine-track tag spans with one equal-width grid column per
+  subsection. Aligned the heading grid with the tag grid and dashed guides, retaining staggered
+  rows and adding an inset so tags and focus outlines stay inside their own columns.
+- Added a 180px container query for readable wrapping in dense columns. Entry motion is now
+  vertical, and stacked layouts hide the desktop guides.
+- Verified all six phase panels in both submission states at 1920, 1672, 1366, 1101, 1100,
+  768 and 390px, plus a collapsed-sidebar 1366px case. All 336 tag bounds/content/hit checks
+  and 1,344 animation-position samples pass with no horizontal document overflow. Visually
+  reviewed desktop and mobile screenshots. This is an isolated rendering of the actual
+  component/styles/fonts; existing form navigation was not re-tested against live data.
+- Full ESLint: zero errors, one existing Profile hook warning. Isolated production build:
+  passed in `/tmp/cosmosis-timeline-build-jhjszjuq`, with existing Browserslist notices and
+  the `/api/logs` dynamic-render diagnostic. Browser report:
+  `/tmp/cosmosis-subsection-browser-results.json`; screenshots:
+  `/tmp/cosmosis-subsection-{desktop,laptop,mobile}.png`. No deployment or database writes.
 
 ### 22 Oct — prerequisites modal positioning and background blur
 - `onboarding/PrerequisitesModal.js` now portals its overlay to `document.body`, matching the

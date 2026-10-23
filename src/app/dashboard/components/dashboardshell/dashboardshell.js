@@ -18,7 +18,7 @@ export default function DashboardShell({ config, onLogout, user, activeMenu, set
   }, [mobileOpen]);
 
   return (
-    <div className={`dashboard-container${collapsed ? " sidebar-is-collapsed" : ""}`}>
+    <div className={`dashboard-container${collapsed ? " sidebar-is-collapsed" : ""}`} data-role={user?.role}>
       {mobileOpen && <button type="button" className="dashboard-sidebar-backdrop" data-log-title="Close navigation" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />}
       <DashboardSideBarSection config={config} user={user} activeMenu={activeMenu} setActiveMenu={navigate} onLogout={onLogout} collapsed={collapsed} onToggle={() => setCollapsed((value) => !value)} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
       <DashboardDetailsSection onLogout={onLogout} user={user} config={config} activeMenu={activeMenu} setActiveMenu={navigate} mobileOpen={mobileOpen} onOpenMobile={() => setMobileOpen(true)}>{children}</DashboardDetailsSection>

@@ -115,15 +115,12 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
               {Array.from({ length: sections.length + 1 }, (_, index) => <span key={index} style={{ left: `${index / sections.length * 100}%` }} />)}
             </li>
             {sections.map((section, index) => {
-              const start = sections.length > 1
-                ? 1 + Math.round((index / (sections.length - 1)) * 15)
-                : 1;
               return (
                 <li
                   key={section}
                   className="onb-phase-section-item"
                   style={{
-                    gridColumn: sections.length > 1 ? `${start} / span 9` : "1 / -1",
+                    gridColumn: index + 1,
                     gridRow: index + 1,
                     "--section-delay": `${120 + index * 60}ms`,
                   }}

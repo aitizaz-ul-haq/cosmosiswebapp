@@ -16,15 +16,27 @@
 }
 
 .management-table-heading { margin-bottom: 27px; }
-.management-table-heading h1 {
+.management-table-heading h1,
+.dashboard-container[data-role="rm"] :is(.management-table-heading h1, .dsh-hero h1, .profile-overview-title) {
   margin: 0 0 4px;
   color: var(--dashboard-heading-color);
   font-size: var(--dashboard-heading-size);
+  font-family: inherit;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -.8px;
 }
-.management-table-heading p { margin: 0; color: #7c88b8; font-size: 15px; line-height: 1.6; }
+.management-table-heading p,
+.dashboard-container[data-role="rm"] :is(.management-table-heading p, .dsh-hero-copy > p, .profile-overview-subtitle) {
+  margin: 0;
+  color: #7c88b8;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: normal;
+  opacity: 1;
+}
 
 .management-table-panel.generic-table-container {
   padding: 25px 22px 26px;
@@ -259,7 +271,8 @@
 @media (max-width: 760px) {
   .management-table-page { padding: 23px 16px 30px; }
   .management-table-heading { margin-bottom: 22px; }
-  .management-table-heading p { font-size: 13px; }
+  .management-table-heading p,
+  .dashboard-container[data-role="rm"] :is(.management-table-heading p, .dsh-hero-copy > p, .profile-overview-subtitle) { font-size: 13px; }
   .management-table-panel.generic-table-container { padding: 18px 16px 22px; border-radius: 14px; }
   .management-table-toolbar { flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
   .management-table-filters { width: 100%; }
