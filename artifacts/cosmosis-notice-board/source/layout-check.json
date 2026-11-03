@@ -1,0 +1,6557 @@
+{
+  "warnings": [],
+  "text": [
+    {
+      "page": 1,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 1,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 1,
+      "text": "The whole Cosmosis system",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 1,
+      "text": "ARCHITECTURE / 01",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 1,
+      "text": "Four roles \u2022 one web application \u2022 one tenant-aware MongoDB data model",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 1,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 1,
+      "text": "src/app/page.js; dashboard/page.js; api/*; lib/mongodb.js; lib/sendCredentialsEmail.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 1,
+      "text": "01 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 1,
+      "text": "Superadmin",
+      "x": 40,
+      "y": 115,
+      "w": 159,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 1,
+      "text": "Companies + platform users",
+      "x": 40,
+      "y": 143.3720703125,
+      "w": 159,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "Supervisor",
+      "x": 241,
+      "y": 115,
+      "w": 159,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 1,
+      "text": "Team + client approvals",
+      "x": 241,
+      "y": 143.3720703125,
+      "w": 159,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "Relationship Manager",
+      "x": 442,
+      "y": 115,
+      "w": 159,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 1,
+      "text": "Client registry + schedules",
+      "x": 442,
+      "y": 143.3720703125,
+      "w": 159,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "Client",
+      "x": 643,
+      "y": 115,
+      "w": 159,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 1,
+      "text": "Own onboarding + profile",
+      "x": 643,
+      "y": 143.3720703125,
+      "w": 159,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "COSMOSIS  /  Next.js 14 + React 18",
+      "x": 184,
+      "y": 245,
+      "w": 474,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 1,
+      "text": "Browser interface",
+      "x": 198,
+      "y": 284,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 1,
+      "text": "Public site \u2022 login \u2022 dashboard",
+      "x": 198,
+      "y": 311.017578125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "Same-origin API",
+      "x": 454,
+      "y": 284,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 1,
+      "text": "Route handlers + shared helpers",
+      "x": 454,
+      "y": 311.017578125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "MongoDB / Mongoose",
+      "x": 40,
+      "y": 428,
+      "w": 211,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 1,
+      "text": "5 model definitions\nIdentity \u2022 clients \u2022 audit \u2022 demo",
+      "x": 40,
+      "y": 457.7255859375,
+      "w": 211,
+      "h": 41.8193359375,
+      "size": 15
+    },
+    {
+      "page": 1,
+      "text": "Gmail SMTP",
+      "x": 315,
+      "y": 428,
+      "w": 211,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 1,
+      "text": "Nodemailer\nCredentials + demo emails",
+      "x": 315,
+      "y": 457.7255859375,
+      "w": 211,
+      "h": 41.8193359375,
+      "size": 15
+    },
+    {
+      "page": 1,
+      "text": "External scheduler",
+      "x": 591,
+      "y": 428,
+      "w": 211,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 1,
+      "text": "Bearer-secret dispatch endpoint\nGET clients = backup trigger",
+      "x": 591,
+      "y": 457.7255859375,
+      "w": 211,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 1,
+      "text": "One codebase; deployment infrastructure and external scheduler configuration are outside this source model.",
+      "x": 28,
+      "y": 535,
+      "w": 786,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 2,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 2,
+      "text": "How the application is assembled",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 2,
+      "text": "ARCHITECTURE / 02",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 2,
+      "text": "Layered runtime view \u2022 feature pages own their fetches \u2022 shared UI keeps the dashboard consistent",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 2,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 2,
+      "text": "layout.js; context/UserContext.js; dashboard/page.js; config.js; pages/*; lib/*; models/*",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 2,
+      "text": "02 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 2,
+      "text": "BROWSER",
+      "x": 41,
+      "y": 120,
+      "w": 119,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 2,
+      "text": "React + CSS",
+      "x": 41,
+      "y": 151,
+      "w": 119,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "UserContext",
+      "x": 189,
+      "y": 128,
+      "w": 168,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Session identity + restore",
+      "x": 189,
+      "y": 155.017578125,
+      "w": 168,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Dashboard router",
+      "x": 401,
+      "y": 128,
+      "w": 168,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Role + active menu \u2192 page",
+      "x": 401,
+      "y": 155.017578125,
+      "w": 168,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Shell + shared UI",
+      "x": 613,
+      "y": 128,
+      "w": 175,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Sidebar \u2022 tables \u2022 modals",
+      "x": 613,
+      "y": 155.017578125,
+      "w": 175,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "fetch + JSON",
+      "x": 452,
+      "y": 202,
+      "w": 155,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "API ROUTES",
+      "x": 41,
+      "y": 245,
+      "w": 120,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 2,
+      "text": "Same origin",
+      "x": 41,
+      "y": 279,
+      "w": 120,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "Identity + admin",
+      "x": 189,
+      "y": 252,
+      "w": 168,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Login \u2022 users \u2022 companies",
+      "x": 189,
+      "y": 279.017578125,
+      "w": 168,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Client lifecycle",
+      "x": 401,
+      "y": 252,
+      "w": 168,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Clients \u2022 registry \u2022 own profile",
+      "x": 401,
+      "y": 279.017578125,
+      "w": 168,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Audit + public demo",
+      "x": 613,
+      "y": 252,
+      "w": 175,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 2,
+      "text": "Log write/read \u2022 request demo",
+      "x": 613,
+      "y": 279.017578125,
+      "w": 175,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "shared functions",
+      "x": 452,
+      "y": 333,
+      "w": 155,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "HELPERS",
+      "x": 41,
+      "y": 376,
+      "w": 120,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 2,
+      "text": "Server modules",
+      "x": 41,
+      "y": 409,
+      "w": 120,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Auth + scopes",
+      "x": 189,
+      "y": 382,
+      "w": 121,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 2,
+      "text": "JWT \u2022 role \u2022 tenant",
+      "x": 189,
+      "y": 407.6640625,
+      "w": 121,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Schedule + crypto",
+      "x": 347,
+      "y": 382,
+      "w": 121,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 2,
+      "text": "UTC \u2022 AES-GCM",
+      "x": 347,
+      "y": 407.6640625,
+      "w": 121,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "SMTP templates",
+      "x": 505,
+      "y": 382,
+      "w": 121,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 2,
+      "text": "Credential email",
+      "x": 505,
+      "y": 407.6640625,
+      "w": 121,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Audit identity",
+      "x": 663,
+      "y": 382,
+      "w": 125,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 2,
+      "text": "Actor + company",
+      "x": 663,
+      "y": 407.6640625,
+      "w": 125,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "Mongoose queries",
+      "x": 452,
+      "y": 453,
+      "w": 155,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 2,
+      "text": "DATA",
+      "x": 41,
+      "y": 497,
+      "w": 120,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 2,
+      "text": "Company",
+      "x": 182,
+      "y": 503,
+      "w": 88,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "User",
+      "x": 291,
+      "y": 503,
+      "w": 78,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "ClientProfile",
+      "x": 390,
+      "y": 503,
+      "w": 137,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "Log",
+      "x": 548,
+      "y": 503,
+      "w": 78,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 2,
+      "text": "DemoRequest",
+      "x": 647,
+      "y": 503,
+      "w": 148,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 3,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 3,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 3,
+      "text": "A session from login to protected data",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 3,
+      "text": "ARCHITECTURE / 03",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 3,
+      "text": "JWT cookie flow \u2022 bcrypt password comparison \u2022 middleware and handler checks",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 3,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 3,
+      "text": "api/login/route.js; api/me/route.js; api/logout/route.js; middleware.js; lib/auth.js; UserContext.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 3,
+      "text": "03 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 3,
+      "text": "Browser",
+      "x": 40,
+      "y": 115,
+      "w": 146,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 3,
+      "text": "UserContext",
+      "x": 40,
+      "y": 143.3720703125,
+      "w": 146,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "Login API",
+      "x": 242,
+      "y": 115,
+      "w": 146,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 3,
+      "text": "POST /api/login",
+      "x": 242,
+      "y": 143.3720703125,
+      "w": 146,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "User store",
+      "x": 444,
+      "y": 115,
+      "w": 146,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 3,
+      "text": "MongoDB / Mongoose",
+      "x": 444,
+      "y": 143.3720703125,
+      "w": 146,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "Guarded APIs",
+      "x": 646,
+      "y": 115,
+      "w": 156,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 3,
+      "text": "Middleware + handler",
+      "x": 646,
+      "y": 143.3720703125,
+      "w": 156,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "1  username + password",
+      "x": 127,
+      "y": 178,
+      "w": 175,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "2  find User + bcrypt",
+      "x": 327,
+      "y": 223,
+      "w": 178,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "Valid + active client?",
+      "x": 327,
+      "y": 261,
+      "w": 178,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "3  signed JWT cookie",
+      "x": 126,
+      "y": 306,
+      "w": 177,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "HttpOnly \u2022 SameSite=Lax \u2022 1 day \u2022 Secure in production",
+      "x": 356,
+      "y": 316,
+      "w": 422,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "4  GET /api/me  \u2192 restore identity; later requests include cookie",
+      "x": 189,
+      "y": 354,
+      "w": 470,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "5  Verify JWT + allowed path\nThen check role / tenant / ownership",
+      "x": 568,
+      "y": 397,
+      "w": 220,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "6  query permitted data",
+      "x": 529,
+      "y": 442,
+      "w": 183,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "7  safe JSON  \u2192  UserContext / feature page",
+      "x": 244,
+      "y": 483,
+      "w": 350,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 3,
+      "text": "Logout: expire cookie \u2192 clear context \u2192 fresh /login document",
+      "x": 123,
+      "y": 522,
+      "w": 596,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 4,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 4,
+      "text": "Who can act, and inside which boundary?",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 4,
+      "text": "ARCHITECTURE / 04",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 4,
+      "text": "Core workflow access model \u2022 shared database \u2022 companyId and actor relationships define scope",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 4,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 4,
+      "text": "models/User.js; api/users; api/companies; api/clients; clients/registry; clients/me; api/logs",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 4,
+      "text": "04 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 4,
+      "text": "Superadmin",
+      "x": 40,
+      "y": 121,
+      "w": 140,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 4,
+      "text": "Platform scope\n\nCompany + user\nadministration\n\nAudit reader",
+      "x": 40,
+      "y": 150,
+      "w": 140,
+      "h": 136.3857421875,
+      "size": 16
+    },
+    {
+      "page": 4,
+      "text": "Company A / tenant",
+      "x": 238,
+      "y": 118,
+      "w": 246,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 4,
+      "text": "Supervisor",
+      "x": 253,
+      "y": 155,
+      "w": 216,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 4,
+      "text": "Primary RM",
+      "x": 253,
+      "y": 217,
+      "w": 84,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Shared RM",
+      "x": 385,
+      "y": 217,
+      "w": 84,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Client",
+      "x": 303,
+      "y": 267,
+      "w": 116,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Company B / tenant",
+      "x": 556,
+      "y": 118,
+      "w": 246,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 4,
+      "text": "Supervisor",
+      "x": 571,
+      "y": 155,
+      "w": 216,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 4,
+      "text": "Primary RM",
+      "x": 571,
+      "y": 217,
+      "w": 84,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Shared RM",
+      "x": 703,
+      "y": 217,
+      "w": 84,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Client",
+      "x": 621,
+      "y": 267,
+      "w": 116,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Solid = primary assignment     Dashed = shared RM relationship     Tenant checks live in API handlers",
+      "x": 28,
+      "y": 311,
+      "w": 786,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Actor",
+      "x": 36,
+      "y": 350,
+      "w": 116,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Data scope",
+      "x": 168,
+      "y": 350,
+      "w": 232,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Core actions / surfaces",
+      "x": 416,
+      "y": 350,
+      "w": 390,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 4,
+      "text": "Superadmin",
+      "x": 36,
+      "y": 389,
+      "w": 116,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Platform / all companies",
+      "x": 168,
+      "y": 389,
+      "w": 232,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Companies \u00b7 supervisors \u00b7 users \u00b7 audit logs",
+      "x": 416,
+      "y": 389,
+      "w": 390,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Supervisor",
+      "x": 36,
+      "y": 428,
+      "w": 116,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Own company",
+      "x": 168,
+      "y": 428,
+      "w": 232,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "RMs \u00b7 clients \u00b7 approve / review \u00b7 assign / share",
+      "x": 416,
+      "y": 428,
+      "w": 390,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "RM",
+      "x": 36,
+      "y": 467,
+      "w": 116,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Assigned + shared clients",
+      "x": 168,
+      "y": 467,
+      "w": 232,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Register \u00b7 schedule \u00b7 status; delete primary only",
+      "x": 416,
+      "y": 467,
+      "w": 390,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Client",
+      "x": 36,
+      "y": 506,
+      "w": 116,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Own profile",
+      "x": 168,
+      "y": 506,
+      "w": 232,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 4,
+      "text": "Read onboarding \u00b7 profile; form save is pending",
+      "x": 416,
+      "y": 506,
+      "w": 390,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 5,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 5,
+      "text": "From routes to helpers to documents",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 5,
+      "text": "ARCHITECTURE / 05",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 5,
+      "text": "Dependency map \u2022 each route combines its guards, business helpers and Mongoose models",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 5,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 5,
+      "text": "src/app/api/**/route.js; lib/auth.js; parseSchedule.js; credentialCrypto.js; enrichLog.js; models/*",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 5,
+      "text": "05 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 5,
+      "text": "API route groups",
+      "x": 33,
+      "y": 108,
+      "w": 237,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 5,
+      "text": "Shared helpers / integrations",
+      "x": 327,
+      "y": 108,
+      "w": 203,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 5,
+      "text": "Mongoose documents",
+      "x": 606,
+      "y": 108,
+      "w": 203,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 5,
+      "text": "Identity + administration",
+      "x": 40,
+      "y": 152,
+      "w": 223,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "/api/login \u00b7 /api/me\n/api/users \u00b7 /api/companies",
+      "x": 40,
+      "y": 180.3720703125,
+      "w": 223,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Auth + scope guards",
+      "x": 334,
+      "y": 152,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 5,
+      "text": "middleware + verifyToken",
+      "x": 334,
+      "y": 179.017578125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "User + Company",
+      "x": 613,
+      "y": 152,
+      "w": 189,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "Identity \u2022 tenancy \u2022 contacts",
+      "x": 613,
+      "y": 180.3720703125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Client lifecycle",
+      "x": 40,
+      "y": 261,
+      "w": 223,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "/api/clients\n/registry \u00b7 /scheduled \u00b7 /me",
+      "x": 40,
+      "y": 289.3720703125,
+      "w": 223,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Lifecycle helpers",
+      "x": 334,
+      "y": 261,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 5,
+      "text": "parseSchedule \u00b7 AES-GCM\ndispatch \u00b7 credentials SMTP",
+      "x": 334,
+      "y": 288.017578125,
+      "w": 189,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "ClientProfile + User",
+      "x": 613,
+      "y": 261,
+      "w": 189,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "Workflow \u2022 schedule\nForm-data schema",
+      "x": 613,
+      "y": 289.3720703125,
+      "w": 189,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Audit trail",
+      "x": 40,
+      "y": 392,
+      "w": 223,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "/api/log \u00b7 /batch \u00b7 /api/logs",
+      "x": 40,
+      "y": 420.3720703125,
+      "w": 223,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Actor enrichment",
+      "x": 334,
+      "y": 392,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 5,
+      "text": "resolveLogIdentity",
+      "x": 334,
+      "y": 419.017578125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Log",
+      "x": 613,
+      "y": 392,
+      "w": 189,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "Actor \u2022 action \u2022 metadata",
+      "x": 613,
+      "y": 420.3720703125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "Public demo requests",
+      "x": 40,
+      "y": 487,
+      "w": 223,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "/api/requestdemo \u00b7 demo-requests",
+      "x": 40,
+      "y": 515.3720703125,
+      "w": 223,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "SMTP mailer",
+      "x": 334,
+      "y": 487,
+      "w": 189,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 5,
+      "text": "Nodemailer / Gmail",
+      "x": 334,
+      "y": 514.017578125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 5,
+      "text": "DemoRequest",
+      "x": 613,
+      "y": 487,
+      "w": 189,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 5,
+      "text": "Public enquiry + status",
+      "x": 613,
+      "y": 515.3720703125,
+      "w": 189,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 6,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 6,
+      "text": "The five-model data map",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 6,
+      "text": "DATABASE / 06",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 6,
+      "text": "ObjectId references + embedded data \u2022 cardinalities describe the source model",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 6,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 6,
+      "text": "src/models/{Company,User,ClientProfile,Log,DemoRequest}.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 6,
+      "text": "06 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 6,
+      "text": "Company",
+      "x": 52,
+      "y": 131,
+      "w": 191,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 6,
+      "text": "_id : ObjectId",
+      "x": 52,
+      "y": 169,
+      "w": 191,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "tenantKey : String \u2022 unique",
+      "x": 52,
+      "y": 192,
+      "w": 191,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "name : String \u2022 unique",
+      "x": 52,
+      "y": 215,
+      "w": 191,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "User",
+      "x": 342,
+      "y": 131,
+      "w": 201,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 6,
+      "text": "_id : ObjectId",
+      "x": 342,
+      "y": 169,
+      "w": 201,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "companyId \u2192 Company",
+      "x": 342,
+      "y": 192,
+      "w": 201,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "role : 4 allowed values",
+      "x": 342,
+      "y": 215,
+      "w": 201,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "ClientProfile",
+      "x": 342,
+      "y": 340,
+      "w": 201,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 6,
+      "text": "userId \u2192 User \u2022 unique",
+      "x": 342,
+      "y": 378,
+      "w": 201,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "companyId \u2192 Company",
+      "x": 342,
+      "y": 401,
+      "w": 201,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "assignedToUserId \u2192 User",
+      "x": 342,
+      "y": 424,
+      "w": 201,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "sharedWithUserIds \u2192 User[]",
+      "x": 342,
+      "y": 447,
+      "w": 201,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "onboarding + embedded groups",
+      "x": 342,
+      "y": 470,
+      "w": 201,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "Log",
+      "x": 637,
+      "y": 131,
+      "w": 151,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 6,
+      "text": "userId \u2192 User ?",
+      "x": 637,
+      "y": 169,
+      "w": 151,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "companyId \u2192 Company ?",
+      "x": 637,
+      "y": 192,
+      "w": 151,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "action : String",
+      "x": 637,
+      "y": 215,
+      "w": 151,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "DemoRequest",
+      "x": 637,
+      "y": 340,
+      "w": 151,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 6,
+      "text": "email : String",
+      "x": 637,
+      "y": 378,
+      "w": 151,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "company : String",
+      "x": 637,
+      "y": 401,
+      "w": 151,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "status : 3 values",
+      "x": 637,
+      "y": 424,
+      "w": 151,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "No ObjectId references",
+      "x": 637,
+      "y": 447,
+      "w": 151,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "1 \u2192 many",
+      "x": 260,
+      "y": 142,
+      "w": 65,
+      "h": 19.396484375,
+      "size": 13
+    },
+    {
+      "page": 6,
+      "text": "1 \u2192 0..1",
+      "x": 448,
+      "y": 271,
+      "w": 69,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "1 \u2192 many",
+      "x": 559,
+      "y": 142,
+      "w": 63,
+      "h": 19.396484375,
+      "size": 13
+    },
+    {
+      "page": 6,
+      "text": "1 \u2192 many",
+      "x": 180,
+      "y": 383,
+      "w": 76,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "Creator / owner /\nshared RMs",
+      "x": 175,
+      "y": 266,
+      "w": 140,
+      "h": 41.8193359375,
+      "size": 15
+    },
+    {
+      "page": 6,
+      "text": "Additional User refs\non ClientProfile",
+      "x": 175,
+      "y": 315,
+      "w": 140,
+      "h": 37.638671875,
+      "size": 13.5
+    },
+    {
+      "page": 6,
+      "text": "Embedded, not separate",
+      "x": 52,
+      "y": 464,
+      "w": 191,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 6,
+      "text": "wealth \u2022 risk \u2022 uploads \u2022 PDF",
+      "x": 52,
+      "y": 493,
+      "w": 191,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "Timestamps on all five models",
+      "x": 334,
+      "y": 514,
+      "w": 239,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 6,
+      "text": "Refs \u2260 database foreign keys",
+      "x": 593,
+      "y": 514,
+      "w": 202,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 6,
+      "text": "? = optional reference",
+      "x": 623,
+      "y": 252,
+      "w": 178,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 6,
+      "text": "User.createdBy \u2192 User\nCompany.createdBy \u2192 User",
+      "x": 622,
+      "y": 280,
+      "w": 177,
+      "h": 42.8955078125,
+      "size": 14
+    },
+    {
+      "page": 7,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 7,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 7,
+      "text": "Identity belongs to a tenant",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 7,
+      "text": "DATABASE / 07",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 7,
+      "text": "One shared MongoDB connection \u2022 companyId scopes tenant data in application routes",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 7,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 7,
+      "text": "src/models/{Company,User}.js \u2022 api/clients/route.js \u2022 lib/mongodb.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 7,
+      "text": "07 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 7,
+      "text": "User : identity + access",
+      "x": 44,
+      "y": 118,
+      "w": 326,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 7,
+      "text": "username : String \u2022 required \u2022 unique",
+      "x": 44,
+      "y": 156,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "passwordHash : String \u2022 required",
+      "x": 44,
+      "y": 179,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "role : superadmin | supervisor | rm | client",
+      "x": 44,
+      "y": 202,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "companyId : ObjectId \u2192 Company",
+      "x": 44,
+      "y": 225,
+      "w": 326,
+      "h": 22.3798828125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "companyName : String ? \u2022 snapshot",
+      "x": 44,
+      "y": 248,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "fullName / email / phone : String ?",
+      "x": 44,
+      "y": 271,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "isActive : Boolean = true",
+      "x": 44,
+      "y": 294,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "createdBy : ObjectId \u2192 User ?",
+      "x": 44,
+      "y": 317,
+      "w": 326,
+      "h": 22.3798828125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "createdAt / updatedAt : Date",
+      "x": 44,
+      "y": 340,
+      "w": 326,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "Company : tenant + organization",
+      "x": 427,
+      "y": 118,
+      "w": 368,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 7,
+      "text": "name : String \u2022 required \u2022 unique",
+      "x": 427,
+      "y": 156,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "tenantKey : String \u2022 required \u2022 unique",
+      "x": 427,
+      "y": 179,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "status : active | suspended = active",
+      "x": 427,
+      "y": 202,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "primaryContact : { fullName, email, phone }",
+      "x": 427,
+      "y": 225,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "address : { line1, line2, city, country, ... }",
+      "x": 427,
+      "y": 248,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "legalName / registrationNumber / taxId : String ?",
+      "x": 427,
+      "y": 271,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "website / logoUrl / notes : String ?",
+      "x": 427,
+      "y": 294,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "createdBy : ObjectId \u2192 User \u2022 required",
+      "x": 427,
+      "y": 317,
+      "w": 368,
+      "h": 22.3798828125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "createdAt / updatedAt : Date",
+      "x": 427,
+      "y": 340,
+      "w": 368,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 7,
+      "text": "Tenant rule",
+      "x": 45,
+      "y": 441,
+      "w": 215,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 7,
+      "text": "Non-superadmin \u2192 companyId required\nSuperadmin \u2192 companyId = null",
+      "x": 45,
+      "y": 470,
+      "w": 215,
+      "h": 44.4296875,
+      "size": 14.5
+    },
+    {
+      "page": 7,
+      "text": "JWT companyId",
+      "x": 312,
+      "y": 446,
+      "w": 115,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 7,
+      "text": "tenant context",
+      "x": 312,
+      "y": 473.017578125,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 7,
+      "text": "Route query",
+      "x": 486,
+      "y": 446,
+      "w": 114,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 7,
+      "text": "companyId filter",
+      "x": 486,
+      "y": 473.017578125,
+      "w": 114,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 7,
+      "text": "Tenant records",
+      "x": 660,
+      "y": 446,
+      "w": 135,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 7,
+      "text": "User / ClientProfile",
+      "x": 660,
+      "y": 473.017578125,
+      "w": 135,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 7,
+      "text": "RM scope adds: assignedToUserId OR sharedWithUserIds",
+      "x": 300,
+      "y": 520,
+      "w": 508,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 8,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 8,
+      "text": "ClientProfile is an embedded aggregate",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 8,
+      "text": "DATABASE / 08",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 8,
+      "text": "One profile per client user \u2022 nested objects carry the account-opening data",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 8,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 8,
+      "text": "src/models/ClientProfile.js \u2022 api/clients/me/route.js \u2022 pages/OnboardingPage.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 8,
+      "text": "08 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 8,
+      "text": "ClientProfile",
+      "x": 49,
+      "y": 111,
+      "w": 107,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 8,
+      "text": "Ownership + workflow",
+      "x": 60,
+      "y": 153,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "userId \u2022 companyId \u2022 assignedToUserId\nstatus \u2022 onboardingType \u2022 onboarding",
+      "x": 60,
+      "y": 180.017578125,
+      "w": 225,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "accountHolders",
+      "x": 326,
+      "y": 153,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "isJoint : Boolean\nholder1 / holder2 : Person",
+      "x": 326,
+      "y": 180.017578125,
+      "w": 225,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "sourceOfWealth",
+      "x": 60,
+      "y": 252,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "5 categories \u00d7 holder1 / holder2 / joint\nEach value : Money",
+      "x": 60,
+      "y": 279.017578125,
+      "w": 225,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "financialProfile",
+      "x": 326,
+      "y": 252,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "netWorth : Money \u2022 employmentStatus\nproposedInvestment \u2022 restrictions",
+      "x": 326,
+      "y": 279.017578125,
+      "w": 225,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "riskProfile",
+      "x": 60,
+      "y": 351,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "questionnaire : 6 answers\ncalculatedScore / calculatedProfile",
+      "x": 60,
+      "y": 378.017578125,
+      "w": 225,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "documents + pdf",
+      "x": 326,
+      "y": 351,
+      "w": 225,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 8,
+      "text": "uploads : Upload[] \u2022 upload flags\npdfUrl : String \u2022 lastGeneratedAt : Date",
+      "x": 326,
+      "y": 378.017578125,
+      "w": 225,
+      "h": 37.638671875,
+      "size": 13.5
+    },
+    {
+      "page": 8,
+      "text": "Person",
+      "x": 619,
+      "y": 125,
+      "w": 176,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 8,
+      "text": "name / contact : String",
+      "x": 619,
+      "y": 163,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "dateOfBirth : Date ?",
+      "x": 619,
+      "y": 186,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "address + declarations",
+      "x": 619,
+      "y": 209,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "Money",
+      "x": 619,
+      "y": 253,
+      "w": 176,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 8,
+      "text": "amount : Number = 0",
+      "x": 619,
+      "y": 291,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "currency : String = GBP",
+      "x": 619,
+      "y": 314,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "Upload",
+      "x": 619,
+      "y": 357,
+      "w": 176,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 8,
+      "text": "label : String",
+      "x": 619,
+      "y": 395,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "url : String",
+      "x": 619,
+      "y": 418,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "uploadedAt : Date",
+      "x": 619,
+      "y": 441,
+      "w": 176,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 8,
+      "text": "Also embedded: investmentServices \u2022 externalAdvisers",
+      "x": 39,
+      "y": 467,
+      "w": 538,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 8,
+      "text": "Schema capacity \u2192 phase forms still need a save API",
+      "x": 46,
+      "y": 520,
+      "w": 524,
+      "h": 23.87109375,
+      "size": 16
+    },
+    {
+      "page": 8,
+      "text": "Embedded schemas use _id: false\nUpload stores a URL, not a file blob",
+      "x": 606,
+      "y": 484,
+      "w": 205,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 9,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 9,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "Two status machines, different meanings",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 9,
+      "text": "DATABASE / 09",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 9,
+      "text": "Record activation is implemented \u2022 form submission states are schema capacity",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 9,
+      "text": "models/ClientProfile.js \u2022 api/clients/{route,registry/route}.js \u2022 lib/dispatchScheduledOnboardings.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 9,
+      "text": "09 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 9,
+      "text": "ClientProfile.status \u2022 operational lifecycle",
+      "x": 38,
+      "y": 113,
+      "w": 342,
+      "h": 19.6337890625,
+      "size": 14.5
+    },
+    {
+      "page": 9,
+      "text": "approval_pending",
+      "x": 45,
+      "y": 166,
+      "w": 131,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 9,
+      "text": "RM creates \u2022 User inactive",
+      "x": 45,
+      "y": 193.017578125,
+      "w": 131,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "under_review",
+      "x": 263,
+      "y": 166,
+      "w": 120,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 9,
+      "text": "Supervisor reviews",
+      "x": 263,
+      "y": 193.017578125,
+      "w": 120,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "register",
+      "x": 470,
+      "y": 166,
+      "w": 116,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 9,
+      "text": "Approved by supervisor",
+      "x": 470,
+      "y": 194.3720703125,
+      "w": 116,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "ongoing",
+      "x": 678,
+      "y": 166,
+      "w": 117,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 9,
+      "text": "Register now \u2022 active",
+      "x": 678,
+      "y": 194.3720703125,
+      "w": 117,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "review",
+      "x": 191,
+      "y": 167,
+      "w": 56,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "approve",
+      "x": 397,
+      "y": 167,
+      "w": 59,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "now",
+      "x": 605,
+      "y": 167,
+      "w": 50,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "approval may skip review",
+      "x": 239,
+      "y": 245,
+      "w": 190,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "scheduled",
+      "x": 470,
+      "y": 286,
+      "w": 116,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 9,
+      "text": "User remains inactive",
+      "x": 470,
+      "y": 314.3720703125,
+      "w": 116,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "later",
+      "x": 532,
+      "y": 239,
+      "w": 49,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "due \u2192 email \u2192 active",
+      "x": 624,
+      "y": 277,
+      "w": 173,
+      "h": 20.142578125,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "ongoing \u2194 on_hold / cancelled",
+      "x": 569,
+      "y": 365,
+      "w": 239,
+      "h": 22.3798828125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "Schedule field",
+      "x": 41,
+      "y": 292,
+      "w": 165,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "Type / behavior",
+      "x": 222,
+      "y": 292,
+      "w": 175,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "scheduledRegistrationAt",
+      "x": 41,
+      "y": 320,
+      "w": 165,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "Date \u2022 due timestamp",
+      "x": 222,
+      "y": 320,
+      "w": 175,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "scheduledTimeZone",
+      "x": 41,
+      "y": 348,
+      "w": 165,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "String \u2022 IANA zone",
+      "x": 222,
+      "y": 348,
+      "w": 175,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "scheduledCredentialsEnc",
+      "x": 41,
+      "y": 376,
+      "w": 165,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "String \u2022 AES-GCM",
+      "x": 222,
+      "y": 376,
+      "w": 175,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 9,
+      "text": "Success clears secret; failure returns to scheduled",
+      "x": 38,
+      "y": 409,
+      "w": 378,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 9,
+      "text": "onboarding.status \u2022 separate form lifecycle",
+      "x": 50,
+      "y": 457,
+      "w": 317,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 9,
+      "text": "not_started",
+      "x": 52,
+      "y": 498,
+      "w": 119,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "in_progress",
+      "x": 196,
+      "y": 498,
+      "w": 119,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "submitted",
+      "x": 340,
+      "y": 498,
+      "w": 119,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "approved",
+      "x": 484,
+      "y": 498,
+      "w": 119,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "rejected + reason",
+      "x": 628,
+      "y": 498,
+      "w": 158,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 9,
+      "text": "Enum values only \u2022 phase forms currently have no persistence endpoint",
+      "x": 34,
+      "y": 440,
+      "w": 773,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 10,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 10,
+      "text": "Events, leads & the query index map",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 10,
+      "text": "DATABASE / 10",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 10,
+      "text": "Declared schema indexes \u2022 live database indexes and retention were not inspected",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 10,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 10,
+      "text": "models/{Log,DemoRequest,User,Company,ClientProfile}.js \u2022 api/{logs,requestdemo}/route.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 10,
+      "text": "10 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 10,
+      "text": "Log : activity event",
+      "x": 45,
+      "y": 119,
+      "w": 215,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 10,
+      "text": "action : String \u2022 required",
+      "x": 45,
+      "y": 157,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "userId \u2192 User ? \u2022 role = guest",
+      "x": 45,
+      "y": 180,
+      "w": 215,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "companyId \u2192 Company ?",
+      "x": 45,
+      "y": 203,
+      "w": 215,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "name / username : String ?",
+      "x": 45,
+      "y": 226,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "companyName : String ?",
+      "x": 45,
+      "y": 249,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "actionTitle : String ?",
+      "x": 45,
+      "y": 272,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "metadata : Object = {}",
+      "x": 45,
+      "y": 295,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "ip / userAgent : String ?",
+      "x": 45,
+      "y": 318,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "DemoRequest : lead",
+      "x": 308,
+      "y": 119,
+      "w": 215,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 10,
+      "text": "firstname / lastname : String",
+      "x": 308,
+      "y": 157,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "email / phone : String",
+      "x": 308,
+      "y": 180,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "message : String",
+      "x": 308,
+      "y": 203,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "company : String ?",
+      "x": 308,
+      "y": 226,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "role : supervisor | rm | client | other",
+      "x": 308,
+      "y": 249,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "status : pending / approved / rejected",
+      "x": 308,
+      "y": 272,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "subscriptionStatus : 4 values",
+      "x": 308,
+      "y": 295,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "No User / Company reference",
+      "x": 308,
+      "y": 318,
+      "w": 215,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "Indexes \u2192 access patterns",
+      "x": 570,
+      "y": 119,
+      "w": 225,
+      "h": 28.34765625,
+      "size": 19
+    },
+    {
+      "page": 10,
+      "text": "User",
+      "x": 571,
+      "y": 156,
+      "w": 221,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 10,
+      "text": "username UNIQUE\ncompanyId + role + companyName",
+      "x": 571,
+      "y": 178,
+      "w": 221,
+      "h": 37.638671875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "Company",
+      "x": 571,
+      "y": 217.638671875,
+      "w": 221,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 10,
+      "text": "name UNIQUE \u2022 tenantKey UNIQUE",
+      "x": 571,
+      "y": 239.638671875,
+      "w": 221,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "ClientProfile",
+      "x": 571,
+      "y": 259.91796875,
+      "w": 221,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 10,
+      "text": "userId UNIQUE\ncompanyId + assignedToUserId\ncompanyId + onboarding.status\ncompanyId + createdByUserId",
+      "x": 571,
+      "y": 281.91796875,
+      "w": 221,
+      "h": 76.357421875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "Log",
+      "x": 571,
+      "y": 360.275390625,
+      "w": 221,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 10,
+      "text": "createdAt \u2193\ncompanyName + createdAt \u2193\nusername + createdAt \u2193",
+      "x": 571,
+      "y": 382.275390625,
+      "w": 221,
+      "h": 62.587890625,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "POST /api/log + /batch",
+      "x": 45,
+      "y": 393,
+      "w": 215,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 10,
+      "text": "Identity enriched on write",
+      "x": 45,
+      "y": 420.017578125,
+      "w": 215,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "POST /api/requestdemo",
+      "x": 308,
+      "y": 393,
+      "w": 215,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 10,
+      "text": "Public intake \u2192 pending lead",
+      "x": 308,
+      "y": 420.017578125,
+      "w": 215,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "Only superadmin reads logs",
+      "x": 38,
+      "y": 476,
+      "w": 229,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 10,
+      "text": "No custom lead index declared",
+      "x": 301,
+      "y": 476,
+      "w": 229,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "Integrity lives in routes",
+      "x": 570,
+      "y": 475,
+      "w": 225,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 10,
+      "text": "Tenant + RM checks \u2022 no FK cascade\nUser + profile writes are separate",
+      "x": 570,
+      "y": 504,
+      "w": 225,
+      "h": 37.638671875,
+      "size": 13.5
+    },
+    {
+      "page": 10,
+      "text": "Every model: _id + createdAt + updatedAt",
+      "x": 34,
+      "y": 518,
+      "w": 501,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 11,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 11,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "The client record lifecycle",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 11,
+      "text": "CORE WORKFLOWS / 11",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 11,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 11,
+      "text": "api/clients/route.js \u2022 api/clients/registry/route.js \u2022 lib/dispatchScheduledOnboardings.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 11,
+      "text": "11 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 11,
+      "text": "Create client",
+      "x": 40,
+      "y": 126,
+      "w": 124,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 11,
+      "text": "RM action\nInactive User",
+      "x": 40,
+      "y": 154.3720703125,
+      "w": 124,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "approval_pending",
+      "x": 223,
+      "y": 126,
+      "w": 142,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 11,
+      "text": "Await supervisor",
+      "x": 223,
+      "y": 154.3720703125,
+      "w": 142,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 11,
+      "text": "under_review",
+      "x": 444,
+      "y": 126,
+      "w": 142,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 11,
+      "text": "Supervisor review",
+      "x": 444,
+      "y": 154.3720703125,
+      "w": 142,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 11,
+      "text": "review",
+      "x": 378,
+      "y": 127,
+      "w": 52,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "register",
+      "x": 223,
+      "y": 284,
+      "w": 142,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 11,
+      "text": "Approved; await RM\napprovedAt + approver",
+      "x": 223,
+      "y": 313.7255859375,
+      "w": 142,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "approve",
+      "x": 299,
+      "y": 229,
+      "w": 78,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "approve",
+      "x": 389,
+      "y": 211,
+      "w": 78,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "ongoing",
+      "x": 452,
+      "y": 284,
+      "w": 137,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 11,
+      "text": "Registered + active\nregisteredAt recorded",
+      "x": 452,
+      "y": 315.080078125,
+      "w": 137,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "now",
+      "x": 382,
+      "y": 292,
+      "w": 51,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "scheduled",
+      "x": 223,
+      "y": 440,
+      "w": 142,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 11,
+      "text": "UTC due date stored\nUser remains inactive",
+      "x": 223,
+      "y": 469.7255859375,
+      "w": 142,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "schedule",
+      "x": 302,
+      "y": 384,
+      "w": 83,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "due + email",
+      "x": 397,
+      "y": 448,
+      "w": 102,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 11,
+      "text": "on_hold",
+      "x": 672,
+      "y": 265,
+      "w": 129,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 11,
+      "text": "Engaged status",
+      "x": 672,
+      "y": 294.7255859375,
+      "w": 129,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "cancelled",
+      "x": 672,
+      "y": 385,
+      "w": 129,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 11,
+      "text": "Engaged status",
+      "x": 672,
+      "y": 414.7255859375,
+      "w": 129,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "Who acts?",
+      "x": 643,
+      "y": 129,
+      "w": 158,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 11,
+      "text": "RM: create + register\nSupervisor: approve/review",
+      "x": 643,
+      "y": 158,
+      "w": 158,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "Two status fields",
+      "x": 40,
+      "y": 257,
+      "w": 126,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 11,
+      "text": "Record lifecycle \u2260\nform completion.\nSee database board 09.",
+      "x": 40,
+      "y": 286,
+      "w": 126,
+      "h": 59.1083984375,
+      "size": 14
+    },
+    {
+      "page": 11,
+      "text": "Register now",
+      "x": 643,
+      "y": 490,
+      "w": 158,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 11,
+      "text": "Email may fail after activation.",
+      "x": 643,
+      "y": 519,
+      "w": 158,
+      "h": 17.330078125,
+      "size": 12.8
+    },
+    {
+      "page": 11,
+      "text": "Shown: RM-created path. Supervisor direct creation can start in an engaged state.",
+      "x": 28,
+      "y": 533,
+      "w": 565,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 12,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 12,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 12,
+      "text": "Schedule \u2192 dispatch \u2192 activate",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 40.2841796875,
+      "size": 27
+    },
+    {
+      "page": 12,
+      "text": "CORE WORKFLOWS / 12",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 12,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 12,
+      "text": "scheduling/timeUtils.js \u2022 lib/{parseSchedule,credentialCrypto,dispatchScheduledOnboardings}.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 12,
+      "text": "12 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 12,
+      "text": "1 \u00b7 Choose local time",
+      "x": 40,
+      "y": 125,
+      "w": 149,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 12,
+      "text": "Country + city\nLocal date + time\nIANA time zone",
+      "x": 40,
+      "y": 154.7255859375,
+      "w": 149,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 12,
+      "text": "2 \u00b7 Validate UTC",
+      "x": 244,
+      "y": 125,
+      "w": 149,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 12,
+      "text": "Convert to UTC instant\nReject invalid/DST gap\nRequire future schedule",
+      "x": 244,
+      "y": 154.7255859375,
+      "w": 149,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "3 \u00b7 Store safely",
+      "x": 448,
+      "y": 125,
+      "w": 149,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 12,
+      "text": "User: bcrypt hash\nProfile: AES-GCM copy\nstatus = scheduled",
+      "x": 448,
+      "y": 154.7255859375,
+      "w": 149,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "4 \u00b7 Hold login",
+      "x": 652,
+      "y": 125,
+      "w": 149,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 12,
+      "text": "User.isActive = false\nUntil dispatch succeeds",
+      "x": 652,
+      "y": 154.7255859375,
+      "w": 149,
+      "h": 41.8193359375,
+      "size": 15
+    },
+    {
+      "page": 12,
+      "text": "Dispatch trigger",
+      "x": 40,
+      "y": 305,
+      "w": 149,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 12,
+      "text": "External cron: secret\nOR clients-list GET\nNo internal timer",
+      "x": 40,
+      "y": 333.3720703125,
+      "w": 149,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "Atomic due claim",
+      "x": 244,
+      "y": 305,
+      "w": 149,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 12,
+      "text": "scheduled + due \u2264 now\nfindOneAndUpdate\n\u2192 ongoing",
+      "x": 244,
+      "y": 333.3720703125,
+      "w": 149,
+      "h": 63.22265625,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "Decrypt + send",
+      "x": 448,
+      "y": 305,
+      "w": 149,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 12,
+      "text": "Temporary password\nGmail SMTP email\nLogin link + RM contact",
+      "x": 448,
+      "y": 333.3720703125,
+      "w": 149,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "Success",
+      "x": 652,
+      "y": 305,
+      "w": 149,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 12,
+      "text": "Activate User\nClear encrypted copy\nClear schedule fields",
+      "x": 652,
+      "y": 334.7255859375,
+      "w": 149,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 12,
+      "text": "wait until due",
+      "x": 382,
+      "y": 246,
+      "w": 119,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 12,
+      "text": "Failure \u2192 retry",
+      "x": 448,
+      "y": 468,
+      "w": 149,
+      "h": 26.8564453125,
+      "size": 18
+    },
+    {
+      "page": 12,
+      "text": "Restore scheduled\nRetry on next invocation",
+      "x": 448,
+      "y": 498.8564453125,
+      "w": 149,
+      "h": 37.638671875,
+      "size": 13.5
+    },
+    {
+      "page": 12,
+      "text": "on error",
+      "x": 526,
+      "y": 423,
+      "w": 76,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 12,
+      "text": "Integration boundary",
+      "x": 40,
+      "y": 465,
+      "w": 292,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 12,
+      "text": "External cron setup is not verified.\nAtomic claim is not an exactly-once delivery guarantee.",
+      "x": 40,
+      "y": 494,
+      "w": 292,
+      "h": 39.0322265625,
+      "size": 14
+    },
+    {
+      "page": 12,
+      "text": "UTC stored \u00b7 local time displayed",
+      "x": 645,
+      "y": 453,
+      "w": 163,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 12,
+      "text": "Temporary secret: select:false",
+      "x": 645,
+      "y": 492,
+      "w": 163,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 13,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 13,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 13,
+      "text": "The individual onboarding journey",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 13,
+      "text": "CORE WORKFLOWS / 13",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 13,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 13,
+      "text": "pages/clientStatusShared.js \u2022 pages/OnboardingPage.js \u2022 onboarding/phases/*.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 13,
+      "text": "13 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 13,
+      "text": "0 \u00b7 Prerequisites",
+      "x": 40,
+      "y": 116,
+      "w": 762,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 13,
+      "text": "Charges & Regulatory Information   +   Terms & Conditions   \u2192   scroll-gated reader; no stored read flag",
+      "x": 40,
+      "y": 145.7255859375,
+      "w": 762,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "1 \u00b7 Personal details",
+      "x": 40,
+      "y": 204,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Account holders \u00b7 NCI\nNon-US declaration\nServices \u00b7 advisers \u00b7 news",
+      "x": 40,
+      "y": 235.080078125,
+      "w": 222,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "1",
+      "x": 239,
+      "y": 198.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "2 \u00b7 Source of wealth",
+      "x": 310,
+      "y": 204,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Employment \u00b7 inheritance/gift\nBusiness/property sale\nOther wealth",
+      "x": 310,
+      "y": 235.080078125,
+      "w": 222,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "2",
+      "x": 509,
+      "y": 198.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "3 \u00b7 Financial profile",
+      "x": 580,
+      "y": 204,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Portfolio \u00b7 employment\nAssets \u00b7 liabilities \u00b7 net worth\nIncome \u00b7 spend \u00b7 dependents\nKnowledge & experience",
+      "x": 580,
+      "y": 235.080078125,
+      "w": 222,
+      "h": 84.8388671875,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "3",
+      "x": 779,
+      "y": 198.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "4 \u00b7 Risk profile",
+      "x": 40,
+      "y": 361,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Risk questionnaire\nInvestment strategy\nNon-standard investments",
+      "x": 40,
+      "y": 392.080078125,
+      "w": 222,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "4",
+      "x": 239,
+      "y": 355.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "5 \u00b7 Signature",
+      "x": 310,
+      "y": 361,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Signature form UI\nNo dedicated signature field\nin the current schema",
+      "x": 310,
+      "y": 392.080078125,
+      "w": 222,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "5",
+      "x": 509,
+      "y": 355.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "6 \u00b7 Documentation",
+      "x": 580,
+      "y": 361,
+      "w": 222,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 13,
+      "text": "Documentation checklist\nUpload URL metadata exists\nUpload pipeline pending",
+      "x": 580,
+      "y": 392.080078125,
+      "w": 222,
+      "h": 63.3291015625,
+      "size": 15
+    },
+    {
+      "page": 13,
+      "text": "6",
+      "x": 779,
+      "y": 355.86,
+      "w": 26,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "Current UI: open \u2192 fill \u2192 Next / Close",
+      "x": 33,
+      "y": 510,
+      "w": 290,
+      "h": 20.8876953125,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "Form saving + submitting still pending",
+      "x": 350,
+      "y": 510,
+      "w": 293,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 13,
+      "text": "Individual only\nOther types: coming soon",
+      "x": 664,
+      "y": 506,
+      "w": 150,
+      "h": 36.2431640625,
+      "size": 13
+    },
+    {
+      "page": 14,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 14,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 14,
+      "text": "Audit clicks and client activity",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 14,
+      "text": "CORE WORKFLOWS / 14",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 14,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 14,
+      "text": "ActionLogger.js \u2022 lib/{logger,enrichLog,logUIAction}.js \u2022 api/log* \u2022 pages/dashboard/data.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 14,
+      "text": "14 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 14,
+      "text": "A \u00b7 Persisted UI interaction log",
+      "x": 45,
+      "y": 107,
+      "w": 240,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 14,
+      "text": "Meaningful click",
+      "x": 57,
+      "y": 156,
+      "w": 136,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "ActionLogger\nReadable action title\nPath + UI context",
+      "x": 57,
+      "y": 184.3720703125,
+      "w": 136,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 14,
+      "text": "Browser buffer",
+      "x": 259,
+      "y": 156,
+      "w": 136,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "Flush at 10 events\nOR 5 seconds\nUnload beacon",
+      "x": 259,
+      "y": 184.3720703125,
+      "w": 136,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 14,
+      "text": "Server enrichment",
+      "x": 461,
+      "y": 156,
+      "w": 136,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "/api/log/batch\nActor + tenant from User\n/api/log: single event",
+      "x": 461,
+      "y": 184.3720703125,
+      "w": 136,
+      "h": 59.1083984375,
+      "size": 14
+    },
+    {
+      "page": 14,
+      "text": "Log model",
+      "x": 663,
+      "y": 156,
+      "w": 121,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "Stored audit entry\nSuperadmin reader\n/api/logs filters",
+      "x": 663,
+      "y": 184.3720703125,
+      "w": 121,
+      "h": 59.1083984375,
+      "size": 14
+    },
+    {
+      "page": 14,
+      "text": "Explicit UI actions can also go directly to /api/log.",
+      "x": 45,
+      "y": 271,
+      "w": 470,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 14,
+      "text": "UI audit \u2260 complete backend transaction audit",
+      "x": 505,
+      "y": 270,
+      "w": 286,
+      "h": 17.0595703125,
+      "size": 12.6
+    },
+    {
+      "page": 14,
+      "text": "B \u00b7 Derived activity feed",
+      "x": 45,
+      "y": 339,
+      "w": 191,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 14,
+      "text": "Scoped /api/clients",
+      "x": 57,
+      "y": 388,
+      "w": 178,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "createdAt\nonboarding.submittedAt\nonboarding.approvedAt",
+      "x": 57,
+      "y": 416.3720703125,
+      "w": 178,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 14,
+      "text": "Build dated activities",
+      "x": 311,
+      "y": 388,
+      "w": 178,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "Creation / submission / approval\nSort from record timestamps\nNo event collection",
+      "x": 311,
+      "y": 416.3720703125,
+      "w": 178,
+      "h": 59.1083984375,
+      "size": 14
+    },
+    {
+      "page": 14,
+      "text": "RM notifications + dashboard",
+      "x": 565,
+      "y": 388,
+      "w": 219,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 14,
+      "text": "Dated activity cards\nDerived again from client records\nNo persisted unread counter",
+      "x": 565,
+      "y": 416.3720703125,
+      "w": 219,
+      "h": 61.2216796875,
+      "size": 14.5
+    },
+    {
+      "page": 14,
+      "text": "Separate paths: interaction logs describe clicks; activity cards describe client-record milestones.",
+      "x": 45,
+      "y": 506,
+      "w": 751,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 15,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 15,
+      "text": "Where each screen gets its evidence",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 15,
+      "text": "CORE WORKFLOWS / 15",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 15,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 15,
+      "text": "role dashboard pages \u2022 dashboard/data.js \u2022 submissions/dummySubmissions.js \u2022 ReportsPage.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 15,
+      "text": "15 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 15,
+      "text": "Screen / feature",
+      "x": 36,
+      "y": 121,
+      "w": 172,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 15,
+      "text": "Input",
+      "x": 224,
+      "y": 121,
+      "w": 231,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 15,
+      "text": "Visual result",
+      "x": 471,
+      "y": 121,
+      "w": 204,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 15,
+      "text": "Current state",
+      "x": 691,
+      "y": 121,
+      "w": 115,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 15,
+      "text": "RM / Supervisor",
+      "x": 36,
+      "y": 159,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "/api/clients + /api/users",
+      "x": 224,
+      "y": 159,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Counts \u00b7 pipeline \u00b7 team",
+      "x": 471,
+      "y": 159,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Connected",
+      "x": 691,
+      "y": 159,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Superadmin",
+      "x": 36,
+      "y": 197,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Companies \u00b7 users \u00b7 clients \u00b7 logs",
+      "x": 224,
+      "y": 197,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Totals \u00b7 companies \u00b7 audit",
+      "x": 471,
+      "y": 197,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Connected",
+      "x": 691,
+      "y": 197,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Client dashboard",
+      "x": 36,
+      "y": 235,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "GET /api/clients/me",
+      "x": 224,
+      "y": 235,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Own saved state + uploads",
+      "x": 471,
+      "y": 235,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Connected",
+      "x": 691,
+      "y": 235,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "RM notifications",
+      "x": 36,
+      "y": 273,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Client milestone timestamps",
+      "x": 224,
+      "y": 273,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Dated activity cards",
+      "x": 471,
+      "y": 273,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Derived",
+      "x": 691,
+      "y": 273,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Profile completion",
+      "x": 36,
+      "y": 311,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Ten personal fields counted",
+      "x": 224,
+      "y": 311,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Estimated percentage",
+      "x": 471,
+      "y": 311,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Derived",
+      "x": 691,
+      "y": 311,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Submissions",
+      "x": 36,
+      "y": 349,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "buildDummySubmissions()",
+      "x": 224,
+      "y": 349,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Sample phase fields + dates",
+      "x": 471,
+      "y": 349,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Sample UI",
+      "x": 691,
+      "y": 349,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Phase forms",
+      "x": 36,
+      "y": 387,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Form inputs in the browser",
+      "x": 224,
+      "y": 387,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Next / Close navigation",
+      "x": 471,
+      "y": 387,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Save pending",
+      "x": 691,
+      "y": 387,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Reports / health",
+      "x": 36,
+      "y": 425,
+      "w": 172,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "No reporting / monitoring API",
+      "x": 224,
+      "y": 425,
+      "w": 231,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Empty rows / unavailable",
+      "x": 471,
+      "y": 425,
+      "w": 204,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Placeholder",
+      "x": 691,
+      "y": 425,
+      "w": 115,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 15,
+      "text": "Stored record \u2192 derived view",
+      "x": 40,
+      "y": 496,
+      "w": 226,
+      "h": 26.8564453125,
+      "size": 18
+    },
+    {
+      "page": 15,
+      "text": "Charts summarize existing API records.",
+      "x": 40,
+      "y": 526.8564453125,
+      "w": 226,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 15,
+      "text": "Future write path",
+      "x": 308,
+      "y": 496,
+      "w": 226,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 15,
+      "text": "Form fields exist; saving is not wired.",
+      "x": 308,
+      "y": 524.3720703125,
+      "w": 226,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 15,
+      "text": "Current-state source snapshot",
+      "x": 576,
+      "y": 496,
+      "w": 226,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 15,
+      "text": "Deployment and live data not inspected.",
+      "x": 576,
+      "y": 524.3720703125,
+      "w": 226,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 16,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 16,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "The dashboard, taken apart",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 16,
+      "text": "UI DESIGN / 16",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 16,
+      "text": "A shared shell surrounds every role-specific workspace \u2022 source-based UI schematic",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 16,
+      "text": "dashboard/{page.js,config.js}; dashboardshell/{dashboardshell.js,subcomps/*}",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 16,
+      "text": "16 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 16,
+      "text": "COSMOSIS",
+      "x": 42,
+      "y": 126,
+      "w": 96,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 16,
+      "text": "RM",
+      "x": 37,
+      "y": 166.86,
+      "w": 26,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 16,
+      "text": "Your account",
+      "x": 70,
+      "y": 165,
+      "w": 68,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "Dashboard",
+      "x": 59,
+      "y": 209,
+      "w": 75,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "Clients",
+      "x": 59,
+      "y": 243,
+      "w": 75,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "Registry",
+      "x": 59,
+      "y": 277,
+      "w": 75,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "Scheduled",
+      "x": 59,
+      "y": 311,
+      "w": 75,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "Onboarding",
+      "x": 59,
+      "y": 345,
+      "w": 75,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "Navigation",
+      "x": 41,
+      "y": 388,
+      "w": 95,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 16,
+      "text": "Search your workspace\u2026",
+      "x": 172,
+      "y": 124,
+      "w": 164,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 16,
+      "text": "\u263e",
+      "x": 413,
+      "y": 125.2,
+      "w": 20,
+      "h": 13.96875,
+      "size": 12
+    },
+    {
+      "page": 16,
+      "text": "!",
+      "x": 444,
+      "y": 125.2,
+      "w": 20,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 16,
+      "text": "RM",
+      "x": 478,
+      "y": 123.64,
+      "w": 24,
+      "h": 14.8935546875,
+      "size": 11
+    },
+    {
+      "page": 16,
+      "text": "Role dashboard",
+      "x": 166,
+      "y": 172,
+      "w": 260,
+      "h": 31.1416015625,
+      "size": 23
+    },
+    {
+      "page": 16,
+      "text": "Shared layout \u2022 role-specific records",
+      "x": 166,
+      "y": 202,
+      "w": 300,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "Clients",
+      "x": 172,
+      "y": 278,
+      "w": 91,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 16,
+      "text": "In progress",
+      "x": 288,
+      "y": 278,
+      "w": 91,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 16,
+      "text": "Completed",
+      "x": 404,
+      "y": 278,
+      "w": 91,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 16,
+      "text": "Charts + activity",
+      "x": 174,
+      "y": 322,
+      "w": 184,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "Quick actions",
+      "x": 399,
+      "y": 323,
+      "w": 94,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "Open workspace",
+      "x": 404,
+      "y": 353,
+      "w": 87,
+      "h": 14.8935546875,
+      "size": 11
+    },
+    {
+      "page": 16,
+      "text": "Open workspace",
+      "x": 404,
+      "y": 378,
+      "w": 87,
+      "h": 14.8935546875,
+      "size": 11
+    },
+    {
+      "page": 16,
+      "text": "262 px sidebar",
+      "x": 47,
+      "y": 449,
+      "w": 135,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "60 px header",
+      "x": 215,
+      "y": 449,
+      "w": 120,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "Scrollable stage",
+      "x": 367,
+      "y": 449,
+      "w": 138,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 16,
+      "text": "DashboardPage",
+      "x": 558,
+      "y": 117,
+      "w": 244,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 16,
+      "text": "user + activeMenu + role config",
+      "x": 558,
+      "y": 144.017578125,
+      "w": 244,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "DashboardShell",
+      "x": 558,
+      "y": 195,
+      "w": 244,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 16,
+      "text": "sidebar + header + content",
+      "x": 558,
+      "y": 222.017578125,
+      "w": 244,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "DashboardMenuSection",
+      "x": 558,
+      "y": 273,
+      "w": 244,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 16,
+      "text": "background + page boundary",
+      "x": 558,
+      "y": 300.017578125,
+      "w": 244,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "DashboardPageLoading",
+      "x": 558,
+      "y": 351,
+      "w": 244,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 16,
+      "text": "readiness + inert content",
+      "x": 558,
+      "y": 378.017578125,
+      "w": 244,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "Role-specific page",
+      "x": 558,
+      "y": 429,
+      "w": 244,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 16,
+      "text": "dashboard / table / onboarding",
+      "x": 558,
+      "y": 456.017578125,
+      "w": 244,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 16,
+      "text": "One layout, four workspaces",
+      "x": 44,
+      "y": 505,
+      "w": 453,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 16,
+      "text": "API routes enforce permissions",
+      "x": 560,
+      "y": 515,
+      "w": 240,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 17,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 17,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 17,
+      "text": "The Cosmosis color & component recipe",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 17,
+      "text": "UI DESIGN / 17",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 17,
+      "text": "Exact app swatches + bright presentation notes \u2022 handwriting is used for these printed boards",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 17,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 17,
+      "text": "globals.css; dashboardshell/styles/{dashboardshell,dashboard-dark}.css; pages/clientStatusShared.js",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 17,
+      "text": "17 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 17,
+      "text": "Brand mint",
+      "x": 31,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#21CFB2",
+      "x": 31,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Dashboard teal",
+      "x": 130,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#00C6B0",
+      "x": 130,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Dashboard purple",
+      "x": 229,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#8046FF",
+      "x": 229,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Heading slate",
+      "x": 328,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#59638F",
+      "x": 328,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Main ink",
+      "x": 427,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#090943",
+      "x": 427,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Muted slate",
+      "x": 526,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#737FAE",
+      "x": 526,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Page mist",
+      "x": 625,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#F7FAFF",
+      "x": 625,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Sidebar lilac",
+      "x": 724,
+      "y": 181,
+      "w": 88,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "#EFEDFF",
+      "x": 724,
+      "y": 219,
+      "w": 88,
+      "h": 18.279296875,
+      "size": 13.5
+    },
+    {
+      "page": 17,
+      "text": "Status color carries meaning",
+      "x": 30,
+      "y": 256,
+      "w": 420,
+      "h": 29.7880859375,
+      "size": 22
+    },
+    {
+      "page": 17,
+      "text": "Approval pending",
+      "x": 35,
+      "y": 304,
+      "w": 136,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "#FEF0DC / #C26A0A",
+      "x": 28,
+      "y": 344,
+      "w": 150,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 17,
+      "text": "Under review",
+      "x": 193,
+      "y": 304,
+      "w": 136,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "#EFEAFD / #6D4FD8",
+      "x": 186,
+      "y": 344,
+      "w": 150,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 17,
+      "text": "Awaiting registry",
+      "x": 351,
+      "y": 304,
+      "w": 136,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "#E6EFFD / #3A6FD8",
+      "x": 344,
+      "y": 344,
+      "w": 150,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 17,
+      "text": "In progress",
+      "x": 509,
+      "y": 304,
+      "w": 136,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "#E3F8F2 / #17B89B",
+      "x": 502,
+      "y": 344,
+      "w": 150,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 17,
+      "text": "Cancelled",
+      "x": 667,
+      "y": 304,
+      "w": 136,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "#FDE8E8 / #C63B3B",
+      "x": 660,
+      "y": 344,
+      "w": 150,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 17,
+      "text": "Shape tokens",
+      "x": 42,
+      "y": 398,
+      "w": 216,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 17,
+      "text": "Button",
+      "x": 50,
+      "y": 446,
+      "w": 63,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "Dialog card",
+      "x": 144,
+      "y": 446,
+      "w": 102,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "Buttons / inputs: 10 px radius",
+      "x": 43,
+      "y": 492,
+      "w": 216,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "Modal card: 18 px radius",
+      "x": 43,
+      "y": 515,
+      "w": 216,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 17,
+      "text": "Font roles",
+      "x": 304,
+      "y": 402,
+      "w": 221,
+      "h": 28.43359375,
+      "size": 21
+    },
+    {
+      "page": 17,
+      "text": "App: Poppins\nHeadings: 32 px\nPrint boards: Patrick Hand",
+      "x": 304,
+      "y": 431,
+      "w": 221,
+      "h": 75.9970703125,
+      "size": 18
+    },
+    {
+      "page": 17,
+      "text": "Dark theme accents",
+      "x": 572,
+      "y": 400,
+      "w": 226,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 17,
+      "text": "Teal",
+      "x": 579,
+      "y": 448,
+      "w": 85,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "Purple",
+      "x": 692,
+      "y": 448,
+      "w": 85,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "Surface #0C1B29",
+      "x": 572,
+      "y": 489,
+      "w": 226,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 17,
+      "text": "Text #EEF3FF",
+      "x": 572,
+      "y": 514,
+      "w": 226,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 18,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 18,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "Reusable pieces: tables & dialogs",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 18,
+      "text": "UI DESIGN / 18",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 18,
+      "text": "Exploded component models \u2022 data and columns are supplied by each management page",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 18,
+      "text": "pages/{GenericTable.js,pagecomponents/*,modalkit/ModalKit.js,modalkit/modalkit.css}",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 18,
+      "text": "18 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 18,
+      "text": "Management table",
+      "x": 45,
+      "y": 108,
+      "w": 128,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "TablePageLayout",
+      "x": 56,
+      "y": 144,
+      "w": 319,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 18,
+      "text": "ManagementTableToolbar",
+      "x": 56,
+      "y": 205,
+      "w": 320,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 18,
+      "text": "Field",
+      "x": 60,
+      "y": 232,
+      "w": 60,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 18,
+      "text": "Search / filter",
+      "x": 140,
+      "y": 232,
+      "w": 135,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 18,
+      "text": "+ Add",
+      "x": 295,
+      "y": 232,
+      "w": 75,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 18,
+      "text": "GenericTableThead + Tbody",
+      "x": 56,
+      "y": 283,
+      "w": 318,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 18,
+      "text": "Name",
+      "x": 63,
+      "y": 313,
+      "w": 94,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 18,
+      "text": "Status",
+      "x": 173,
+      "y": 313,
+      "w": 84,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 18,
+      "text": "Actions",
+      "x": 273,
+      "y": 313,
+      "w": 94,
+      "h": 16.92578125,
+      "size": 12.5
+    },
+    {
+      "page": 18,
+      "text": "Client",
+      "x": 63,
+      "y": 341,
+      "w": 94,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 18,
+      "text": "In progress",
+      "x": 173,
+      "y": 341,
+      "w": 84,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 18,
+      "text": "Info / Edit",
+      "x": 273,
+      "y": 341,
+      "w": 94,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 18,
+      "text": "ManagementTablePagination",
+      "x": 56,
+      "y": 387,
+      "w": 319,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 18,
+      "text": "TanStack row model \u2022 8 rows / page",
+      "x": 56,
+      "y": 414.017578125,
+      "w": 319,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 18,
+      "text": "Record source \u2192 data + columns",
+      "x": 42,
+      "y": 494,
+      "w": 349,
+      "h": 26.8564453125,
+      "size": 18
+    },
+    {
+      "page": 18,
+      "text": "action",
+      "x": 410,
+      "y": 299,
+      "w": 39,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 18,
+      "text": "ModalKit",
+      "x": 468,
+      "y": 108,
+      "w": 72,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "i",
+      "x": 489,
+      "y": 165.42,
+      "w": 22,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 18,
+      "text": "ModalShell header",
+      "x": 521,
+      "y": 157,
+      "w": 215,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 18,
+      "text": "icon + title + badges + Close",
+      "x": 521,
+      "y": 186,
+      "w": 243,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "Scrollable body",
+      "x": 493,
+      "y": 237,
+      "w": 279,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 18,
+      "text": "ModalSection \u2192 DetailRow",
+      "x": 503,
+      "y": 282,
+      "w": 261,
+      "h": 23.87109375,
+      "size": 16
+    },
+    {
+      "page": 18,
+      "text": "ModalField \u2192 input / select",
+      "x": 503,
+      "y": 326,
+      "w": 261,
+      "h": 23.87109375,
+      "size": 16
+    },
+    {
+      "page": 18,
+      "text": "Cancel",
+      "x": 589,
+      "y": 394,
+      "w": 69,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "Primary",
+      "x": 678,
+      "y": 394,
+      "w": 90,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 18,
+      "text": "View = read \u2022 form = edit",
+      "x": 463,
+      "y": 494,
+      "w": 337,
+      "h": 28.43359375,
+      "size": 21
+    },
+    {
+      "page": 18,
+      "text": "Backdrop: dim + blur 6 px",
+      "x": 468,
+      "y": 460,
+      "w": 329,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 19,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 19,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 19,
+      "text": "Onboarding: interaction & focus model",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 19,
+      "text": "UI DESIGN / 19",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 19,
+      "text": "How a client enters, explores and leaves a form \u2022 individual account UI",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 19,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 19,
+      "text": "pages/{OnboardingPage.js,onboarding/{OnboardingTimeline,PhaseDetails,PhaseModal}.js,onboarding/onboarding.css}",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 19,
+      "text": "19 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 19,
+      "text": "Phase button (1\u20136)",
+      "x": 40,
+      "y": 116,
+      "w": 196,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "expand / collapse details",
+      "x": 40,
+      "y": 144.3720703125,
+      "w": 196,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 19,
+      "text": "PhaseDetails",
+      "x": 305,
+      "y": 116,
+      "w": 223,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "Start + subsection buttons",
+      "x": 305,
+      "y": 144.3720703125,
+      "w": 223,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 19,
+      "text": "PhaseModal",
+      "x": 596,
+      "y": 116,
+      "w": 206,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "portal \u2192 document.body",
+      "x": 596,
+      "y": 144.3720703125,
+      "w": 206,
+      "h": 22.3798828125,
+      "size": 15
+    },
+    {
+      "page": 19,
+      "text": "Dashboard content stage",
+      "x": 45,
+      "y": 208,
+      "w": 177,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 19,
+      "text": "OnboardingTimeline",
+      "x": 56,
+      "y": 248,
+      "w": 380,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "1",
+      "x": 63,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "2",
+      "x": 127,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "3",
+      "x": 191,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "4",
+      "x": 255,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "5",
+      "x": 319,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "6",
+      "x": 383,
+      "y": 290.3,
+      "w": 30,
+      "h": 21.6640625,
+      "size": 16
+    },
+    {
+      "page": 19,
+      "text": "PhaseDetails \u2192 subsection",
+      "x": 68,
+      "y": 347,
+      "w": 359,
+      "h": 25.3642578125,
+      "size": 17
+    },
+    {
+      "page": 19,
+      "text": "Open section",
+      "x": 74,
+      "y": 379,
+      "w": 100,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 19,
+      "text": "Open section",
+      "x": 194,
+      "y": 379,
+      "w": 100,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 19,
+      "text": "Open section",
+      "x": 314,
+      "y": 379,
+      "w": 100,
+      "h": 15.5712890625,
+      "size": 11.5
+    },
+    {
+      "page": 19,
+      "text": "Phase header + Close",
+      "x": 532,
+      "y": 237,
+      "w": 258,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "Requested section heading",
+      "x": 532,
+      "y": 292,
+      "w": 258,
+      "h": 23.017578125,
+      "size": 17
+    },
+    {
+      "page": 19,
+      "text": "scroll to heading\nfocus heading \u2022 body scrolls",
+      "x": 532,
+      "y": 326,
+      "w": 258,
+      "h": 41.8193359375,
+      "size": 15
+    },
+    {
+      "page": 19,
+      "text": "Close          Next phase \u2192",
+      "x": 532,
+      "y": 399,
+      "w": 258,
+      "h": 25.3642578125,
+      "size": 17
+    },
+    {
+      "page": 19,
+      "text": "Close restores the initiating button\u2019s focus",
+      "x": 271,
+      "y": 470,
+      "w": 512,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 19,
+      "text": "Subsection action \u2192 heading focus",
+      "x": 40,
+      "y": 505,
+      "w": 359,
+      "h": 26.8564453125,
+      "size": 18
+    },
+    {
+      "page": 19,
+      "text": "Next changes the open phase",
+      "x": 442,
+      "y": 505,
+      "w": 358,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 20,
+      "text": "C",
+      "x": 31,
+      "y": 21,
+      "w": 26,
+      "h": 44.681640625,
+      "size": 33
+    },
+    {
+      "page": 20,
+      "text": "COSMOSIS",
+      "x": 71,
+      "y": 20,
+      "w": 210,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 20,
+      "text": "One interface, many viewing conditions",
+      "x": 70,
+      "y": 36,
+      "w": 690,
+      "h": 36.5576171875,
+      "size": 27
+    },
+    {
+      "page": 20,
+      "text": "UI DESIGN / 20",
+      "x": 644,
+      "y": 20,
+      "w": 171,
+      "h": 16.248046875,
+      "size": 12
+    },
+    {
+      "page": 20,
+      "text": "Theme changes colors \u2022 responsive rules reflow space \u2022 source-based miniature wireframes",
+      "x": 29,
+      "y": 75,
+      "w": 785,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 20,
+      "text": "SOURCE MODEL \u2022 03 NOV 2026",
+      "x": 29,
+      "y": 566,
+      "w": 185,
+      "h": 8.73046875,
+      "size": 7.5
+    },
+    {
+      "page": 20,
+      "text": "dashboardshell/{useDashboardTheme.js,styles/dashboard-dark*.css,styles/dashboardshell.css}; pages/styles/managementtable.css",
+      "x": 215,
+      "y": 566,
+      "w": 548,
+      "h": 8.2646484375,
+      "size": 7.1
+    },
+    {
+      "page": 20,
+      "text": "20 / 20",
+      "x": 770,
+      "y": 565,
+      "w": 44,
+      "h": 12.185546875,
+      "size": 9
+    },
+    {
+      "page": 20,
+      "text": "C",
+      "x": 51,
+      "y": 121,
+      "w": 27,
+      "h": 32.49609375,
+      "size": 24
+    },
+    {
+      "page": 20,
+      "text": "Workspace",
+      "x": 113,
+      "y": 155,
+      "w": 275,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 20,
+      "text": "C",
+      "x": 462,
+      "y": 121,
+      "w": 27,
+      "h": 32.49609375,
+      "size": 24
+    },
+    {
+      "page": 20,
+      "text": "Workspace",
+      "x": 524,
+      "y": 155,
+      "w": 275,
+      "h": 27.080078125,
+      "size": 20
+    },
+    {
+      "page": 20,
+      "text": "Light: default",
+      "x": 50,
+      "y": 347,
+      "w": 156,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 20,
+      "text": "Dark: remembered",
+      "x": 462,
+      "y": 347,
+      "w": 166,
+      "h": 17.6015625,
+      "size": 13
+    },
+    {
+      "page": 20,
+      "text": "Theme button",
+      "x": 40,
+      "y": 397,
+      "w": 135,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 20,
+      "text": "toggle light / dark",
+      "x": 40,
+      "y": 426.7255859375,
+      "w": 135,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 20,
+      "text": "useDashboardTheme",
+      "x": 229,
+      "y": 397,
+      "w": 156,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 20,
+      "text": "state + storage event",
+      "x": 229,
+      "y": 425.3720703125,
+      "w": 156,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 20,
+      "text": "localStorage",
+      "x": 440,
+      "y": 397,
+      "w": 159,
+      "h": 25.7255859375,
+      "size": 19
+    },
+    {
+      "page": 20,
+      "text": "save + restore choice",
+      "x": 440,
+      "y": 426.7255859375,
+      "w": 159,
+      "h": 20.3095703125,
+      "size": 15
+    },
+    {
+      "page": 20,
+      "text": "HTML attribute",
+      "x": 652,
+      "y": 397,
+      "w": 150,
+      "h": 24.3720703125,
+      "size": 18
+    },
+    {
+      "page": 20,
+      "text": "data-dashboard-theme",
+      "x": 652,
+      "y": 425.3720703125,
+      "w": 150,
+      "h": 18.9560546875,
+      "size": 14
+    },
+    {
+      "page": 20,
+      "text": "Responsive rules",
+      "x": 42,
+      "y": 490,
+      "w": 171,
+      "h": 28.43359375,
+      "size": 21
+    },
+    {
+      "page": 20,
+      "text": "262 px \u2192 80 px\nsidebar collapse",
+      "x": 222,
+      "y": 489,
+      "w": 175,
+      "h": 46.8154296875,
+      "size": 16
+    },
+    {
+      "page": 20,
+      "text": "\u2264760 px\nslide-out navigation",
+      "x": 421,
+      "y": 489,
+      "w": 175,
+      "h": 44.6083984375,
+      "size": 16
+    },
+    {
+      "page": 20,
+      "text": "\u22641100 px\nlabelled table records",
+      "x": 620,
+      "y": 489,
+      "w": 176,
+      "h": 44.6083984375,
+      "size": 16
+    }
+  ]
+}

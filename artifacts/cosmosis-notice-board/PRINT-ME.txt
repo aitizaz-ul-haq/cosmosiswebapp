@@ -1,0 +1,43 @@
+COSMOSIS NOTICE-BOARD PACK
+20 diagram boards | A4 landscape | 3 November 2026
+
+PRINT
+- Open Cosmosis-complete-notice-board-A4-20-pages.pdf for all 20 boards.
+- Paper: A4. Orientation: landscape. Scale: actual size / 100%.
+- Print in color, single-sided, one PDF page per sheet.
+- For a notice board, 120-160 gsm matte paper is a useful option.
+- The content has printer margins; edge-to-edge printing is unnecessary.
+
+FIVE-PAGE SETS
+01 application architecture: boards 01-05
+02 database schemas: boards 06-10
+03 core workflows: boards 11-15
+04 UI design: boards 16-20
+
+ABOUT THE BOARDS
+- Based on source at git f47128d; no live database or deployed environment inspected.
+- Bright notes are presentation colors; app colors are identified on board 17.
+- Patrick Hand is the embedded presentation font. The application's font is Poppins.
+- Schema capacity, sample submission data and incomplete form-saving paths are labelled.
+- Models and UI wireframes are diagrams, not screenshots.
+- All diagrams and text are vector artwork, with selectable text and PDF bookmarks.
+
+EDITABLE SOURCE
+source/build.py regenerates all five PDFs using Python 3, pycairo, PyGObject,
+Pango/PangoCairo and fontconfig. These libraries were already installed on this machine.
+Run from the repository root:
+python3 artifacts/cosmosis-notice-board/source/build.py
+Or, from this folder / the extracted ZIP folder:
+python3 source/build.py
+
+Bundled font: Patrick Hand (Google Fonts), SIL Open Font License 1.1.
+The original license is in source/fonts/OFL.txt.
+https://github.com/google/fonts/tree/main/ofl/patrickhand
+
+CHECKS
+- All 20 boards rendered and visually reviewed.
+- Text layout and page bounds: zero warnings.
+- Page counts and A4 geometry checked using pdfinfo.
+- Embedded fonts checked using pdffonts.
+- Cross-review corrected arrow connections and field/component names.
+- Application code, credentials and database records were not changed.

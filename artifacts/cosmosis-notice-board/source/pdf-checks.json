@@ -1,0 +1,37 @@
+[
+  {
+    "file": "Cosmosis-01-application-architecture-A4.pdf",
+    "pages": 5,
+    "A4_landscape": true,
+    "fonts_embedded": true,
+    "bytes": 123749
+  },
+  {
+    "file": "Cosmosis-02-database-schemas-A4.pdf",
+    "pages": 5,
+    "A4_landscape": true,
+    "fonts_embedded": true,
+    "bytes": 128166
+  },
+  {
+    "file": "Cosmosis-03-core-workflows-A4.pdf",
+    "pages": 5,
+    "A4_landscape": true,
+    "fonts_embedded": true,
+    "bytes": 122388
+  },
+  {
+    "file": "Cosmosis-04-ui-design-A4.pdf",
+    "pages": 5,
+    "A4_landscape": true,
+    "fonts_embedded": true,
+    "bytes": 131015
+  },
+  {
+    "file": "Cosmosis-complete-notice-board-A4-20-pages.pdf",
+    "pages": 20,
+    "A4_landscape": true,
+    "fonts_embedded": true,
+    "bytes": 410803
+  }
+]
