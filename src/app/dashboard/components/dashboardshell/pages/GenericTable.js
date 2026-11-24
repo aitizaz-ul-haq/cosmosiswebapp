@@ -11,6 +11,7 @@ import ManagementTablePagination from "./pagecomponents/ManagementTablePaginatio
 import TablePageLayout from "./pagecomponents/TablePageLayout";
 import { AddCompanyModal, AddUserModal } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
+import { getRoleLabel } from "@/lib/roles";
 
 export default function GenericTable({
   title = "Table",
@@ -26,6 +27,7 @@ export default function GenericTable({
   disableRowModal = false,
   onAddRM,
   onAddClient,
+  onAddTeam,
   hideDefaultFilter = false,
   filtersSlot = null,
 }) {
@@ -208,7 +210,7 @@ export default function GenericTable({
     }
     // 🔒 Audit log: user created (store the created entry, never the password)
     logUIAction("record_created", {
-      title: `Created user: ${result?.user?.fullName || userForm.fullName} (${userForm.role})`,
+      title: `Created user: ${result?.user?.fullName || userForm.fullName} (${getRoleLabel(userForm.role)})`,
       entityType: "user",
       entity: {
         id: result?.user?._id || null,
@@ -248,7 +250,9 @@ export default function GenericTable({
       const value = column?.accessorFn
         ? column.accessorFn(row, index)
         : field.split(".").reduce((current, key) => current?.[key], row);
-      const text = value instanceof Date ? value.toISOString() : String(value ?? "");
+      const text = field === "role"
+        ? getRoleLabel(value)
+        : value instanceof Date ? value.toISOString() : String(value ?? "");
       return text.toLowerCase().includes(query);
     }));
   }, [data, columns, filterField, filterValue, searchableFields]);
@@ -271,11 +275,13 @@ export default function GenericTable({
     ? { onClick: () => setShowAddCompanyModal(true), label: "Add Company", logTitle: "New Company button clicked" }
     : title === "Users"
       ? { onClick: () => setShowAddUserModal(true), label: "Add User", logTitle: "New User button clicked" }
-      : onAddRM
-        ? { onClick: onAddRM, label: "Add RM", logTitle: "New RM button clicked" }
-        : onAddClient
-          ? { onClick: onAddClient, label: "Add Client", logTitle: "New Client button clicked" }
-          : null;
+      : onAddTeam
+        ? { onClick: onAddTeam, label: "Add Team", logTitle: "Add Team button clicked" }
+        : onAddRM
+          ? { onClick: onAddRM, label: "Add Investment Manager", logTitle: "New Investment Manager button clicked" }
+          : onAddClient
+            ? { onClick: onAddClient, label: "Add Client", logTitle: "New Client button clicked" }
+            : null;
 
   return (
     <>

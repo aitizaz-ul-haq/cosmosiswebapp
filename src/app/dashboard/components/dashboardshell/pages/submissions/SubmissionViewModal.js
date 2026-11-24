@@ -25,9 +25,9 @@ export default function SubmissionViewModal({ clientName, submission, onClose, c
             <ModalButton
               variant="neutral"
               icon="send"
-              data-log-title={`Notify RM clicked: Phase ${submission.phase}`}
+              data-log-title={`Notify Investment Manager clicked: Phase ${submission.phase}`}
             >
-              Notify RM
+              Notify Investment Manager
             </ModalButton>
             <ModalButton
               variant="primary"

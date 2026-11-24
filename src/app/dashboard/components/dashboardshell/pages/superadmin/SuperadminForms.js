@@ -146,8 +146,8 @@ export function UserFormFields({ form, onChange, companies = [], mode = "create"
             onChange={onChange(passwordKey)}
           />
           <ModalSelect label="Role" icon="shield" required value={form.role} onChange={onChange("role")}>
-            <option value="supervisor">Supervisor</option>
-            <option value="rm">Relationship Manager</option>
+            <option value="supervisor">Compliance Officer</option>
+            <option value="rm">Investment Manager</option>
             <option value="client">Client</option>
           </ModalSelect>
           <ModalSelect

@@ -31,6 +31,7 @@ const ROLE_RULES = {
     "/api/users",
     "/api/companies",
     "/api/clients",
+    "/api/teams",
     "/api/me",
     "/api/logout",
     "/api/verify-password",

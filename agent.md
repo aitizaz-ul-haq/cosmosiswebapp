@@ -4,14 +4,56 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-10-23. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-11-24. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 23 Oct 2026
+## Latest handoff for GitHub Copilot — 24 Nov 2026
+
+- Pending Approvals' Details modal now opts into `ClientInfoModal`'s `wideDetails` variant:
+  a 1280px desktop maximum, two four-row information cards with intrinsic label minimums,
+  stacked cards at1100px and below, and existing mobile detail rows. Only this variant portals
+  to body so the wider card stays above the sidebar. Remarks retain their existing styles;
+  other callers retain the standard 720px dialog. Verification is in the latest change-log entry.
+- Compliance Officers now have **Teams** directly below **Investment Managers**. `TeamsPage.js`
+  provides a searchable table, Add/Edit/View dialogs, password-confirmed deletion, **Email Team
+  Leader**, and **Send message to team**. The latter opens the officer's email application with
+  the leader and every member addressed; it does not send automatically or create in-app chat.
+- Teams **View** uses the shared blue `management-row-action is-info` style, matching other
+  tables' Info buttons in light and dark mode, including hover states.
+- Teams use `src/models/Team.js` and `/api/teams` (GET/POST/PATCH/DELETE). Only role `supervisor`
+  can manage teams, scoped to its JWT company. Each team has one leader and at least one
+  distinct member, chosen from active same-company `rm` users. Editing can reassign the leader
+  and add/remove members; team membership never changes `User.role` or client ownership.
+- Team names are unique within the company after trimming, Unicode normalization and lowercasing.
+  APIs validate assignment IDs, reject tenant overrides, and preserve IDs for unavailable
+  accounts while omitting their contact data. UI blocks incomplete group emails and asks for
+  account repair. Add/Edit/View/Delete dialogs portal to the body for correct stacking.
+- New files: `src/models/Team.js`, `src/lib/teamValidation.js`, `src/app/api/teams/route.js`,
+  dashboard `pages/TeamsPage.js` and `pages/styles/teams.css`. Integration adds Teams navigation,
+  icon, table Add action, middleware prefix and `isActive` in the existing safe users list.
+  `GET /api/users?role=rm` retains managers with missing optional email/phone details so they
+  remain available for assignment; other user lists retain their existing completeness filter.
+  Delete confirmations block dismissal/repeated submission while pending, surface operation errors,
+  and retain the dialog for retry. Teams dialogs confine keyboard focus and make the background inert.
+- Displayed designations are **Investment Manager** and **Compliance Officer** across dashboard
+  navigation, profiles, user/manager administration, client workflow labels, CSV exports,
+  onboarding contact actions, public/demo copy, login help and HTML/plain-text emails.
+- `src/lib/roles.js` centralizes `getRoleLabel` and `formatRoleText`. Role tables, filters,
+  generic details, fallback greetings and account identities display the new names; historic
+  audit titles are formatted when rendered without rewriting their records.
+- Persisted role codes remain `rm` and `supervisor`, and menu IDs remain `rms` and
+  `supervisors`. JWTs, schema enums, authorization, tenant/ownership checks, CSS selectors,
+  API request/response fields (including `assignedRm` and `rmRemarks`) and user data retain
+  their existing contracts. No account migration is needed. Use the helpers whenever a
+  stored role is shown to a user; never rename the stored codes as a copy change.
+- Earlier handoffs and change-log entries retain the role names used at that time.
+- Verification results and layout adjustments are recorded in the 24 Nov change-log entry.
+
+## Previous handoff — 23 Oct 2026
 
 - Dark mode now uses dedicated `dashboard-theme/sidebar-dark.webp` and `title-dark.webp`
   artwork with navy fields and luminous teal/violet waves. The sidebar uses normal blending;
@@ -366,13 +408,15 @@ the user's next instruction and preserve the existing phase/modal constraints in
 ## 1. What the product is
 
 **Cosmosis** is a multi-tenant digital **client onboarding** platform for wealth-management firms
-(the main tenant is "Nemesis"). Relationship Managers (RMs) create clients, a supervisor approves
-them, the RM registers them (credentials are emailed immediately or at a scheduled time), and the
+(the main tenant is "Nemesis"). Investment Managers create clients, a Compliance Officer approves
+them, the Investment Manager registers them (credentials are emailed immediately or at a scheduled time), and the
 client then completes a 6-phase onboarding form. A public marketing site, a login page and a
 role-based dashboard live in the same Next.js app.
 
 Roles (`User.role`): `superadmin`, `supervisor`, `rm`, `client`. Every non-superadmin user belongs to
-one `Company` (tenant). Data is scoped by `companyId`.
+one `Company` (tenant). Data is scoped by `companyId`. Display `rm` as **Investment Manager**
+and `supervisor` as **Compliance Officer** using `lib/roles.js`; these stable internal codes
+also remain in the technical examples below.
 
 ## 2. Stack and how to run
 
@@ -439,13 +483,16 @@ Class-name prefixes (keep using them): `dsh-` role home dashboards, `dash-` glob
 - **Company** — `name`, `legalName`, `tenantKey` (unique slug), `status` (active/suspended), contact,
   address, registration/tax/website, branding (`logoUrl`…).
 - **ClientProfile** — one per client user (`userId` unique). Key fields:
-  - Tenancy/ownership: `companyId`, `companyName`, `createdByUserId`, `assignedToUserId` (the RM), `isShared`, `sharedWithUserIds`, `createdByNameSnapshot`.
+  - Tenancy/ownership: `companyId`, `companyName`, `createdByUserId`, `assignedToUserId` (the Investment Manager), `isShared`, `sharedWithUserIds`, `createdByNameSnapshot`.
   - `status` (workflow, see §8): `approval_pending → under_review → register → scheduled → ongoing | on_hold | cancelled` (default `ongoing`).
   - Scheduling: `scheduledRegistrationAt` (Date, UTC), `scheduledCountry`, `scheduledCity`, `scheduledTimeZone` (IANA), `scheduledCredentialsEnc` (**`select:false`**, AES-GCM), `registeredAt`, `approvedAt`, `approvedByUserId`.
   - `onboardingType`: `individual | joint | corporate | trust`. Only **individual** has a form.
   - `onboarding`: `{ status (not_started|in_progress|submitted|approved|rejected), currentStep (1–6), completedSteps[], progress 0–100, submittedAt, approvedAt, rejectedAt, rejectionReason }`.
   - Large sub-documents for the form data (`accountHolders`, `investmentServices`, `externalAdvisers`, `sourceOfWealth`, `financialProfile`, `riskProfile`, signature, documents…). **The client form does not write to these yet** (§11).
   - `rmRemarks`.
+- **Team** — `companyId`, `name`, normalized `nameKey`, exactly one `leaderUserId`, distinct
+  nonempty `memberUserIds` (excluding leader), `createdByUserId`, timestamps. Unique index on
+  `{companyId, nameKey}`; all assigned users must be active Investment Managers in that tenant.
 - **Log** — audit trail: `userId`, `role`, denormalised `name/username/companyId/companyName`, `action`, `actionTitle`, `metadata`, `ip`, `userAgent`. Indexed by time/company/user.
 - **DemoRequest** — requests from the public "request a demo" form *(not reviewed in detail)*.
 
@@ -469,7 +516,7 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 - Everything else under `/dashboard/*` and `/api/*` needs a valid `token`; missing/invalid → redirect to `/login`.
 - `ROLE_RULES` = allowed **path prefixes per role** (non-matching → JSON 403):
   - superadmin: `/dashboard, /api/companies, /api/users, /api/clients, /api/log, /api/logs, /api/demo-requests, /api/demo-users, /api/me, /api/logout, /api/verify-password`
-  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/me, /api/logout, /api/verify-password, /api/log`
+  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/teams, /api/me, /api/logout, /api/verify-password, /api/log`
   - rm: `/dashboard, /api/users, /api/clients, /api/me, /api/logout, /api/verify-password, /api/log`
   - client: `/dashboard, /api/me, /api/clients/me, /api/logout, /api/log`
 - **When you add an API route, add its prefix to `ROLE_RULES` or it will 403.** Handlers must still do their own fine-grained role/tenant checks.
@@ -480,12 +527,13 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 |---|---|---|
 | `login`, `logout`, `me` (GET/PATCH profile), `me/change-password`, `verify-password` | | `verify-password` checks the logged-in user's password (used by delete confirmations and the Submissions gate) |
 | `register` | POST | **Public + takes `role` from the body — see §11 (critical)** |
-| `users` | POST GET PATCH DELETE | Manage supervisors/RMs/users within tenant rules (superadmin→supervisors, supervisor→RMs…) |
+| `users` | POST GET PATCH DELETE | Manage Compliance Officers/Investment Managers/users within tenant rules (superadmin→Compliance Officers, Compliance Officer→Investment Managers…) |
+| `teams` | GET POST PATCH DELETE | Compliance Officer only, scoped to JWT tenant; create/edit name, leader and members; `?id=` for PATCH/DELETE; safe manager contact projections; duplicate company name409 |
 | `companies`, `companies/[id]/users` | POST GET PATCH DELETE / GET DELETE | superadmin only |
-| `clients` | GET POST PATCH DELETE | Core client list + lifecycle. PATCH `action: "approve"` → `register`; `action: "review"` → `under_review`; `{status}` for ongoing/on_hold/cancelled; RMs may only change status of their own engaged clients. GET also runs `dispatchScheduledOnboardings()` as a backup trigger |
-| `clients/registry` | POST PATCH | RM only. POST registers a client now, or `action:"schedule"` (stores encrypted password + schedule, `isActive=false`); PATCH edits basic details before registration |
-| `clients/scheduled` | GET PATCH | RM only. GET decrypts credentials for the details modal; PATCH re-schedules |
-| `clients/me` | GET | **client only**: own profile + onboarding + `assignedRm: { name, email } \| null` from the assigned RM in the same tenant (safe contact projection only) |
+| `clients` | GET POST PATCH DELETE | Core client list + lifecycle. PATCH `action: "approve"` → `register`; `action: "review"` → `under_review`; `{status}` for ongoing/on_hold/cancelled; Investment Managers may only change status of their own engaged clients. GET also runs `dispatchScheduledOnboardings()` as a backup trigger |
+| `clients/registry` | POST PATCH | Investment Manager only. POST registers a client now, or `action:"schedule"` (stores encrypted password + schedule, `isActive=false`); PATCH edits basic details before registration |
+| `clients/scheduled` | GET PATCH | Investment Manager only. GET decrypts credentials for the details modal; PATCH re-schedules |
+| `clients/me` | GET | **client only**: own profile + onboarding + `assignedRm: { name, email } \| null` from the assigned Investment Manager in the same tenant (safe contact projection only) |
 | `cron/dispatch-scheduled` | GET | Needs `Authorization: Bearer <CRON_SECRET>`; sends all due scheduled onboardings |
 | `log`, `log/batch`, `logs` | POST / POST / GET | Write audit entries; `logs` GET is superadmin only |
 | `demo-requests`, `demo-users`, `requestdemo`, `contact` | | Public-site/demo machinery *(not reviewed in detail)*. `demo-users` returns password hashes (superadmin only via middleware). `contact` is not in `PUBLIC_PATHS`, so anonymous calls are redirected — nothing in the UI calls it |
@@ -498,12 +546,12 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
   component, add it to `getPageMap`, add a menu entry in `config.js`.
 - **`config.js`** sidebar per role:
   - superadmin: dashboard, companies, supervisors, users, logs, reports, profile
-  - supervisor: dashboard, rms, clients, onboardingstatus, approvals, underreview, reports, submissions, profile
+  - supervisor: dashboard, rms, teams, clients, onboardingstatus, approvals, underreview, reports, submissions, profile
   - rm: dashboard, clients, registry, scheduled, onboardingstatus, notifications, submissions, profile
   - client: **dashboard, onboarding, submissions, profile**
-- **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
+- **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `TeamsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
-- **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for the RM menu.
+- **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for the Investment Manager menu.
 - **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side (`PAGE_SIZE` 8 on list pages).
 - **Page loading**: `loading/DashboardPageLoading.js` wraps the keyed destination in the content
   stage; `useDashboardPageLoading` registers pending page data. The logo stays visible for at
@@ -521,30 +569,40 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 ## 8. Core workflows
 
 ### Client lifecycle (`ClientProfile.status`)
-`approval_pending` (created by RM/supervisor) → **supervisor** `review` → `under_review` → **supervisor** `approve` → `register` ("Awaiting registry", RM) →
-RM registers: **now** → `ongoing` + `isActive=true` + credentials email; **scheduled** → `scheduled` + `isActive=false` + encrypted password stored →
-dispatcher activates → `ongoing`. From `ongoing` the RM can set `on_hold` / `cancelled` (and back). RMs cannot touch `approval_pending/under_review/register/scheduled`.
+`approval_pending` (created by Investment Manager/Compliance Officer) → **Compliance Officer** `review` → `under_review` → **Compliance Officer** `approve` → `register` ("Awaiting registry", Investment Manager) →
+Investment Manager registers: **now** → `ongoing` + `isActive=true` + credentials email; **scheduled** → `scheduled` + `isActive=false` + encrypted password stored →
+dispatcher activates → `ongoing`. From `ongoing` the Investment Manager can set `on_hold` / `cancelled` (and back). Investment Managers cannot touch `approval_pending/under_review/register/scheduled`.
 "Verify" in Approvals just opens `https://www.nemesisam.com/` in a new tab.
 
 ### Scheduled onboarding (credentials emailed at a chosen local time)
-1. RM picks country + city (European list in `scheduling/europeLocations.js`, each city → IANA zone), date, time. `timeUtils.zonedTimeToUtc` converts to a UTC instant (rejects non-existent DST times). The UI shows AM/PM + the RM's own time before confirming.
+1. Investment Manager picks country + city (European list in `scheduling/europeLocations.js`, each city → IANA zone), date, time. `timeUtils.zonedTimeToUtc` converts to a UTC instant (rejects non-existent DST times). The UI shows AM/PM + the Investment Manager's own time before confirming.
 2. `POST /api/clients/registry {action:"schedule"}` stores `scheduledRegistrationAt` (UTC), place, zone and the AES-encrypted password; client stays `isActive=false`.
-3. **Nothing in the Next.js process wakes up by itself.** Delivery is triggered by (a) an **external cron** calling `GET /api/cron/dispatch-scheduled` with the bearer secret every minute, and (b) as a backup, every `GET /api/clients` (any supervisor/RM/superadmin loading the list).
+3. **Nothing in the Next.js process wakes up by itself.** Delivery is triggered by (a) an **external cron** calling `GET /api/cron/dispatch-scheduled` with the bearer secret every minute, and (b) as a backup, every `GET /api/clients` (any Compliance Officer/Investment Manager/superadmin loading the list).
 4. `dispatchScheduledOnboardings` atomically claims due profiles (`findOneAndUpdate` scheduled→ongoing), decrypts the password, emails the client, sets `isActive=true`, wipes the stored secret/schedule. On failure it flips the profile back to `scheduled` for retry.
 5. Deployment plan: **Vercel Hobby** (cron limited to daily) ⇒ use **cron-job.org** (free, every minute, header `Authorization: Bearer <CRON_SECRET>`). The app has **not been deployed yet**; set the env vars in §2 first. Local test: loop `curl` against `localhost:3000/api/cron/dispatch-scheduled`.
+
+### Team management
+Compliance Officer sidebar → **Teams** → **Add Team**. Enter the name, select one team leader,
+and use repeatable **Team Member** dropdowns/**Add Team Member** for members. The leader is
+included separately and cannot also be a member. Edit supports renaming, leader reassignment
+and membership changes; View lists names/emails. Deletion removes only the team record after
+the existing password check. **Email Team Leader** opens one addressed email; **Send message
+to team** opens one group email with unique leader/member addresses. Missing/deactivated
+accounts or missing/invalid email addresses disable incomplete email actions and are shown
+for repair. No automatic messages are sent. Teams are grouping records, not new user roles.
 
 ### Client onboarding form (individual only)
 Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6. Clicking phases 1–6 toggles an inline accordion; clicking the open phase closes it, and selecting another shows that phase's own sections.
 - **Phase 0** (Prerequisites, `PrerequisitesModal` + `onboarding/legal/*`): read-only legal documents. The overlay portals to `document.body` above the full dashboard, centered with the same 6px backdrop blur as the phase forms. Internal reader styling and two-document scroll gates retain their rules. **Do not restyle without being asked.**
 - **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`, following `public/images/client_dashbaord_new_timeline_view.png`: descriptions, subsection labels, a status-colored solid track, dashed vertical guides and staggered tags confined to their matching equal-width subsection columns (purple/lavender when incomplete, teal/mint when complete). Dense columns put icons above wrapping text. The saved current phase opens initially. Panels retain the 800 ms reversible height/fade transition; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus. At 1100px and below, subsection tags stack as labelled full-width rows without desktop column guides; only the phase track scrolls horizontally.
-- **Panel actions** (top-right, before the pale phase number): **Contact RM** opens a `mailto:` compose link addressed to the assigned RM, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal from the top. Subsection buttons open the form at the matching heading and focus it. Closing restores the initiating control; Next phase updates the form and inline panel, then closes back to the new phase's Start button. Opening/viewing a form does not change submission status.
+- **Panel actions** (top-right, before the pale phase number): **Contact Investment Manager** opens a `mailto:` compose link addressed to the assigned Investment Manager, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal from the top. Subsection buttons open the form at the matching heading and focus it. Closing restores the initiating control; Next phase updates the form and inline panel, then closes back to the new phase's Start button. Opening/viewing a form does not change submission status.
 - **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Completed/current timeline nodes are teal, pending nodes purple; completed connectors are solid and pending connectors dashed. Incomplete detail sections use lavender fills and purple text, hollow dot markers, tracks and focus/hover accents; completed sections use mint fills, green ticks and teal tracks. Start Phase stays teal as an action. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
 - **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
-- `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile, assigned RM contact) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
+- `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile, assigned Investment Manager contact) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
 
 ### Submissions (UI-only for now)
-`SubmissionsPage` (RM + supervisor): password gate (`PasswordGate` → `/api/verify-password`, asked on every open; **client-side gate only**) → paginated accordion of engaged clients (ongoing/on_hold/cancelled) → per-phase rows (`PhaseRow`) → `SubmissionViewModal`.
-`ClientSubmissionsPage` (client): only the client's own phase rows (no accordion/filters/gate) with **Notify RM** and **Edit** placeholder buttons in the modal (no behaviour yet).
+`SubmissionsPage` (Investment Manager + Compliance Officer): password gate (`PasswordGate` → `/api/verify-password`, asked on every open; **client-side gate only**) → paginated accordion of engaged clients (ongoing/on_hold/cancelled) → per-phase rows (`PhaseRow`) → `SubmissionViewModal`.
+`ClientSubmissionsPage` (client): only the client's own phase rows (no accordion/filters/gate) with **Notify Investment Manager** and **Edit** placeholder buttons in the modal (no behaviour yet).
 **All submission data is generated by `submissions/dummySubmissions.js`** (phases below the client's `currentStep` = completed; the current phase = partial). Replace with real data once the form persists.
 
 ## 9. UI system and conventions (follow these for any new UI)
@@ -562,11 +620,11 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
   on desktop and mobile for DashboardHero, TablePageLayout, Profile Overview and Client
   Onboarding (including its Onboarding Progress title). Section/card/modal headings keep
   their existing hierarchy.
-- RM primary headings and introductory descriptions share Scheduled Onboarding's rule in
+- Investment Manager primary headings and introductory descriptions share Scheduled Onboarding's rule in
   `styles/managementtable.css`. Scope other header variants with the shell's `data-role="rm"`:
   heading weight 600, line height 1.2, letter spacing -0.8px; description color `#7c88b8`,
   weight 400, line height 1.6, full opacity, size 15px or 13px at 760px and below. Both inherit
-  Poppins. Keep this shared source instead of adding per-page RM typography overrides.
+  Poppins. Keep this shared source instead of adding per-page Investment Manager typography overrides.
 - Palette used everywhere (hex, keep consistent): ink `#1a1a1a`; slate `#6d7692`; **soft green** fill `#e3f8f2` / text+icon `#17b89b` / hover `#d3f3ea`; slate-soft `#eceff7` (hover `#e1e5f0`); blue `#e6effd`/`#3a6fd8`; violet `#efeafd`/`#6d4fd8`; amber `#fef0dc`/`#c26a0a`; red `#fde8e8`/`#d03a3a`; card border `#e6e9f1`; divider `#eef0f5`.
 - Radii: buttons/inputs **10px**, cards 14–18px, pills fully round. Icons: stroke, 1.8px, `currentColor`, inside a soft-tinted rounded **square tile**.
 
@@ -583,8 +641,8 @@ badge color overrides.
 
 ### 9a. Modal kit (`dashboardshell/pages/modalkit/`)
 `ModalKit.js` (read its header comment for the design rules), `modalkit.css`, `Icon.js` (stroke icon set — add icons here). Components: `ModalShell` (props `icon|avatar, title, badges, subtitle, onClose, footer, size sm|md|lg, as/wrapperProps` for forms, `iconTone`, `headerActions`, `overlayClassName`), `ModalSection`, `ModalGrid`, `DetailList/DetailRow`, `Stat`, `StatusPill` + `STATUS_TONES`, `ModalButton`, `ModalField/ModalInput/ModalSelect/ModalTextarea/ModalPasswordInput` (these now forward `required` to the native element), `CopyButton`, `initialsOf`. Escape closes, body scroll is locked, backdrop is blurred.
-Design references: `public/images/example_modal_1..5.png` (1 scheduled details, 2/3 client info, 4 edit RM form, 5 add client form).
-Converted to the kit: `ClientInfoModal`, `ScheduledDetailsModal`, `DeleteConfirmModal`, Add/Edit/Info modals in `ClientsPage`, `RegistryPage` modals, `ScheduleOnboardingModal` (+`SearchableSelect`), `RMsPage` Add/Edit, `ApprovalsPage`/`UnderReviewPage` footers, `ProfilePage` edit modals, `PasswordGate`, `SubmissionViewModal`, and superadmin Add/Edit Company, Add/Edit User and Edit Supervisor (`superadmin/SuperadminForms.js`, `CompaniesPage`, `UserPage`, `SupervisorPage`).
+Design references: `public/images/example_modal_1..5.png` (1 scheduled details, 2/3 client info, 4 edit Investment Manager form, 5 add client form).
+Converted to the kit: `ClientInfoModal`, `ScheduledDetailsModal`, `DeleteConfirmModal`, Add/Edit/Info modals in `ClientsPage`, `RegistryPage` modals, `ScheduleOnboardingModal` (+`SearchableSelect`), `RMsPage` Add/Edit, `ApprovalsPage`/`UnderReviewPage` footers, `ProfilePage` edit modals, `PasswordGate`, `SubmissionViewModal`, and superadmin Add/Edit Company, Add/Edit User and Edit Compliance Officer (`superadmin/SuperadminForms.js`, `CompaniesPage`, `UserPage`, `SupervisorPage`).
 Company Add/Edit uses `overlayClassName="mk-company-overlay"` and `mk-company-fields` to fit the
 content stage beneath the top bar. Scheduled details uses `mk-scheduled-details-overlay`,
 sharing the 1200px width/positioning while capping height at 640px (company remains 760px).
@@ -601,7 +659,7 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 - Layout is drawn on the **1672×941 design canvas**: `.login-container { --u: min(100vw/1672, 100vh/941) }` and every position/size is `calc(N * var(--u))`; the stage is centred **without `transform`** (a transformed ancestor breaks `position:fixed` toasts). Below 900px it switches to a stacked layout with `--u: .95px`.
 - Background: `public/images/login-bg.webp` (optimised from the supplied `login back ground.png`, which can be deleted). Card uses `backdrop-filter` glass.
 - Form: `MidSectionLoginFormSection` keeps the original procedure (3 s min loader, success → `/dashboard`, `logUIAction("login_success"|"login_failed")`, toasts). New: labelled fields with leading icons, show/hide-password toggle (`LoginIcon`), gradient Log In button with arrow.
-- **Intentionally removed**: "Remember me" and "Forgot password?" / reset form (RMs change passwords for users). Do **not** re-add unless asked.
+- **Intentionally removed**: "Remember me" and "Forgot password?" / reset form (Investment Managers change passwords for users). Do **not** re-add unless asked.
 - Toasts: one component `notifs/logintoast.js` (`success` green, `warning` yellow for failed login, `info` blue for "unable to login"): tinted fill, dark outline, dark text, square icon tile; rendered in a fixed top-right `.login-toasts` stack outside the glass card.
 
 ---
@@ -609,6 +667,86 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 24 Nov — Teams View button color
+
+- Changed the View button in `pages/TeamsPage.js` from `is-neutral` to the shared `is-info`
+  variant used by Clients Info. Existing light/dark colors and hover rules now apply.
+- Verification: focused TeamsPage ESLint and `git diff --check` pass. This class-only change
+  uses existing styles; no new CSS or behavior changes.
+
+### 24 Nov — Compliance Officer Teams
+
+- Added **Teams** immediately below **Investment Managers** in the Compliance Officer sidebar,
+  with a matching icon, navigation search entry, management-page background and **Add Team**.
+  The table searches team name, leader or members, and provides **Email Team Leader**, Edit,
+  View and password-confirmed Delete. Teams are saved in MongoDB as company-scoped records.
+- Add/Edit dialogs have Team Name, one Team Leader dropdown and repeatable Team Member
+  dropdowns with **Add Team Member**/remove controls. Only active same-company Investment
+  Managers are eligible; leader/member overlap and duplicate members are excluded. Editing
+  supports leader reassignment, renaming and membership changes, retaining forms on errors.
+- View lists the leader and every member's name/email. **Send message to team** opens the
+  officer's email app with all unique leader/member addresses and an encoded team subject,
+  as explicitly requested. Leader email is a separate mailto action. Missing/invalid email or
+  unavailable accounts block incomplete group emails with an explanation; no email is sent
+  automatically. Participant roles and client ownership are unaffected by team assignment.
+- New model/API/validation: `src/models/Team.js`, `src/lib/teamValidation.js`,
+  `src/app/api/teams/route.js`. Only authenticated `supervisor` can access, scoped to its JWT
+  company; strict form/ID/assignment validation, one leader plus >=1 distinct member, safe
+  contact projections and unique normalized company/team-name index. `PATCH?id=` allows
+  partial edits, `DELETE?id=` returns 404 for missing/foreign records, duplicate names return 409.
+- New UI: `pages/TeamsPage.js`, `pages/styles/teams.css`. Dialogs portal to body, trap keyboard
+  focus, make the background inert and restore matching row-action focus after table remounts.
+  Responsive records below 1250px retain all actions; notices and modals support dark mode.
+- Shared integrations: dashboard config/page/menu/icon, GenericTable `onAddTeam`, toolbar
+  placeholder, middleware `/api/teams` for Compliance Officers. Users-list projection now
+  includes `isActive`; `role=rm` lists preserve managers with optional missing email/phone.
+  Existing other user-list completeness behavior remains. DeleteConfirmModal blocks dismissal
+  and duplicate submissions while pending, disables password edits and reports server errors.
+- Verification: final isolated production build and full lint pass with the existing Profile
+  hook-dependency warning and existing `/api/logs` static-analysis diagnostic; diff check passes.
+  **85/85** actual Teams handler/helper/schema checks with real JWT/NextResponse and mocked DB,
+  plus **12/12** actual users-list handler checks pass. Scripts/reports:
+  `/tmp/cosmosis-teams-api-test.cjs`, `/tmp/cosmosis-teams-api-results.json`,
+  `/tmp/cosmosis-team-manager-users-test.cjs`, `/tmp/cosmosis-team-manager-users-results.json`.
+- Final Chrome report `/tmp/cosmosis-teams-browser-results.json`: **34 cases, zero failures,
+  runtime exceptions or console errors**, at 1366×941 and 390×844. Covers eligibility, single
+  leader/dynamic member rows, create/search/view/edit/reload/delete, failed save/delete retries,
+  password failures, pending-delete close/double-submit guards, mailto recipients, focus
+  confinement/return, loading recovery, empty/no-manager states and dark details. Screenshots
+  `/tmp/cosmosis-teams-*.png`. APIs used intercepted test records; no live DB writes, external
+  mail application launch, email delivery or deployment. Temporary preview server was stopped.
+
+### 24 Nov — Investment Manager and Compliance Officer designations
+
+- Replaced displayed Relationship Manager/RM/RMs and Supervisor/Supervisors designations
+  throughout dashboard headers/sidebar/search, management forms/tables/profiles, client
+  assignments/remarks/approval guidance, onboarding contact/notify/report actions, CSV labels,
+  login guidance, public/demo content, legal-reader contact copy and HTML/plain-text emails.
+- Added `src/lib/roles.js` (`ROLE_LABELS`, `getRoleLabel`, `formatRoleText`). Shared account
+  identity, role columns, generic details and role filtering display/search full names.
+  Historic log/action titles are translated only for display; stored audit records are intact.
+  Dashboard loader announcements now use the configured page label instead of menu IDs.
+- Existing `rm`/`supervisor` schema values, JWTs, permission/tenant/ownership rules, menu IDs,
+  API fields and CSS/component identifiers remain compatible. No data migration was performed
+  or needed. Creation forms still submit those existing role values under the new labels.
+- Longer account-role text wraps within its sidebar identity column; the account trigger
+  grows from its existing 53px minimum so full names cannot overlap the chevron.
+- Relevant files: `src/lib/roles.js`; dashboard `config.js`, shared shell/table/identity
+  components and affected pages; `styles/dashboardshell.css`; registration email builder;
+  user/client/demo API copy; public demo form, homepage JSON and login help notice.
+- Verification: full `npm run lint` and isolated production build pass. The existing Profile
+  effect-dependency warning remains; build also reports existing Browserslist and dynamic
+  `/api/logs` static-analysis diagnostics while completing successfully. Role-label/helper
+  and email/marketing assertions pass; review confirms authorization logic and schemas are
+  unchanged. `git diff --check` passes.
+- Final browser report: `/tmp/cosmosis-role-browser-results.json`, **35 cases, zero failures,
+  runtime exceptions or console errors**. Real compiled app/middleware rendered all four roles
+  at 1366×941 and 390×844, plus client onboarding at 1150px. Checks cover full account/sidebar
+  names, profiles, both role-name searches, Add User labels with original submitted codes,
+  manager/client creation labels, expanded onboarding status and client contact action.
+  Screenshots are `/tmp/cosmosis-role-*.png`. APIs were intercepted with fixtures; no live
+  database writes, email delivery or deployment occurred. Preview used an isolated temp copy.
 
 ### 23 Oct — dark sidebar and title background artwork
 - Replaced dark mode's multiply-darkened sidebar and heavily masked light title image with
@@ -924,7 +1062,7 @@ treating historical work as uncommitted.
 **Functional gaps**
 - Client onboarding forms (phases 1–6) are **not persisted** — no save/submit API, `onboarding.currentStep/completedSteps` never advance, so Submissions shows dummy data.
 - Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
-- Submissions client buttons **Notify RM** and **Edit** are placeholders (planned: email/in-app notification to the RM; Edit → open the phase form).
+- Submissions client buttons **Notify Investment Manager** and **Edit** are placeholders (planned: email/in-app notification to the Investment Manager; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
 - The generic row-details modal and Logs filters still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.

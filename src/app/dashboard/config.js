@@ -1,7 +1,7 @@
 // src/app/dashboard/configs.js
 export const dashboardConfigs = {
   superadmin: {
-    header: { logoText: "Superadmin", searchPlaceholder: "Search companies, supervisors, users, reports..." },
+    header: { logoText: "Superadmin", searchPlaceholder: "Search companies, compliance officers, users, reports..." },
     sidebar: {
       menu: [
         {
@@ -26,7 +26,7 @@ export const dashboardConfigs = {
         },
         {
           key: "supervisors",
-          label: "Supervisors",
+          label: "Compliance Officers",
           iconlink: "/images/manager.png",
         },
         {
@@ -55,7 +55,7 @@ export const dashboardConfigs = {
     },
   },
   supervisor: {
-    header: { logoText: "Supervisor", searchPlaceholder: "Search clients, relationship managers, submissions, reports..." },
+    header: { logoText: "Compliance Officer", searchPlaceholder: "Search clients, investment managers, teams, submissions, reports..." },
     sidebar: {
       menu: [
         {
@@ -65,8 +65,13 @@ export const dashboardConfigs = {
         },
         {
           key: "rms",
-          label: "RMs",
+          label: "Investment Managers",
           iconlink: "/images/Relationshipmanager.png",
+        },
+        {
+          key: "teams",
+          label: "Teams",
+          iconlink: "/images/multiple-users-silhouette.png",
         },
         {
           key: "clients",
@@ -107,7 +112,7 @@ export const dashboardConfigs = {
     },
   },
   rm: {
-    header: { logoText: "Relationship Manager", searchPlaceholder: "Search clients, onboarding, submissions, reports..." },
+    header: { logoText: "Investment Manager", searchPlaceholder: "Search clients, onboarding, submissions, reports..." },
     sidebar: {
       menu: [
         {

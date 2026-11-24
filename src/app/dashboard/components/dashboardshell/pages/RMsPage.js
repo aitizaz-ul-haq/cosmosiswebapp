@@ -7,18 +7,18 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 import { logUIAction } from "@/lib/logUIAction";
 import { Icon, ModalButton, ModalGrid, ModalInput, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
 
-// Shared Add / Edit RM form (example_modal_4). Submit/close behaviour is owned by the page.
+// Shared Add / Edit Investment Manager form (example_modal_4). Submit/close behaviour is owned by the page.
 function RMFormModal({ mode, form, onChange, onSubmit, onClose }) {
   const isEdit = mode === "edit";
-  const closeLogTitle = isEdit ? "Closed Edit RM form" : "Closed Add RM form";
+  const closeLogTitle = isEdit ? "Closed Edit Investment Manager form" : "Closed Add Investment Manager form";
   return (
     <ModalShell
       icon={isEdit ? "userEdit" : "userPlus"}
-      title={isEdit ? "Edit RM" : "Add RM"}
+      title={isEdit ? "Edit Investment Manager" : "Add Investment Manager"}
       subtitle={
         isEdit
-          ? "Update the relationship manager's details below."
-          : "Enter the relationship manager's details below."
+          ? "Update the investment manager's details below."
+          : "Enter the investment manager's details below."
       }
       onClose={onClose}
       closeLogTitle={closeLogTitle}
@@ -51,7 +51,7 @@ function RMFormModal({ mode, form, onChange, onSubmit, onClose }) {
           required
           icon="users"
           placeholder="Full Name"
-          hint="Enter the relationship manager's full name."
+          hint="Enter the investment manager's full name."
           value={form.fullName}
           onChange={onChange("fullName")}
         />
@@ -138,7 +138,7 @@ export default function RMsPage() {
     setRms((prev) => prev.filter((u) => u._id !== id));
     // 🔒 Audit log: RM deleted (store the removed entry)
     logUIAction("record_deleted", {
-      title: `Deleted RM: ${target?.fullName || target?.username || id}`,
+      title: `Deleted Investment Manager: ${target?.fullName || target?.username || id}`,
       entityType: "rm",
       entity: {
         id,
@@ -168,7 +168,7 @@ export default function RMsPage() {
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          throw new Error(data?.error || "Failed to fetch RMs");
+          throw new Error(data?.error || "Failed to fetch investment managers");
         }
         if (isMounted) {
           const filteredRMs = (data.users || []).filter(
@@ -179,7 +179,7 @@ export default function RMsPage() {
       } catch (err) {
         if (isMounted) {
           setRms([]);
-          setError(err?.message || "Failed to fetch RMs");
+          setError(err?.message || "Failed to fetch investment managers");
         }
       } finally {
         if (isMounted) {
@@ -238,7 +238,7 @@ export default function RMsPage() {
     });
     const result = await res.json().catch(() => ({}));
     if (!res.ok) {
-      window.alert(result?.error || "Failed to create RM");
+      window.alert(result?.error || "Failed to create investment manager");
       return;
     }
     if (result?.user) {
@@ -246,7 +246,7 @@ export default function RMsPage() {
     }
     // 🔒 Audit log: RM created (store the created entry, never the password)
     logUIAction("record_created", {
-      title: `Created RM: ${result?.user?.fullName || addForm.fullName}`,
+      title: `Created Investment Manager: ${result?.user?.fullName || addForm.fullName}`,
       entityType: "rm",
       entity: {
         id: result?.user?._id || null,
@@ -290,7 +290,7 @@ export default function RMsPage() {
     });
     const result = await res.json().catch(() => ({}));
     if (!res.ok) {
-      window.alert(result?.error || "Failed to update RM");
+      window.alert(result?.error || "Failed to update investment manager");
       return;
     }
     if (result?.user?._id) {
@@ -301,7 +301,7 @@ export default function RMsPage() {
     }
     // 🔒 Audit log: RM edited (store the updated entry)
     logUIAction("record_updated", {
-      title: `Edited RM: ${result?.user?.fullName || editForm.fullName}`,
+      title: `Edited Investment Manager: ${result?.user?.fullName || editForm.fullName}`,
       entityType: "rm",
       entity: {
         id: editUserId,
@@ -315,8 +315,8 @@ export default function RMsPage() {
     setEditUserId(null);
   };
 
-  const tableTitle = "Relationship Managers";
-  const tableDescription = "Manage your company’s relationship managers. Search, filter, and update their accounts.";
+  const tableTitle = "Investment Managers";
+  const tableDescription = "Manage your company’s investment managers. Search, filter, and update their accounts.";
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
@@ -332,7 +332,7 @@ export default function RMsPage() {
             type="button"
             onClick={() => handleEmail(row?.original?.email)}
             title="Send email now"
-            data-log-title={`Email RM button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
+            data-log-title={`Email Investment Manager button clicked: ${row?.original?.fullName || row?.original?.email || row?.original?._id}`}
             className="management-row-action is-neutral"
           >
             <Icon name="mail" size={16} />
@@ -341,8 +341,8 @@ export default function RMsPage() {
           <button
             type="button"
             onClick={() => openEditModal(row?.original)}
-            title="Edit RM details"
-            data-log-title={`Edit RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
+            title="Edit Investment Manager details"
+            data-log-title={`Edit Investment Manager button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             className="management-row-action is-edit"
           >
             <Icon name="pencil" size={16} />
@@ -351,8 +351,8 @@ export default function RMsPage() {
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
-            title="Delete RM"
-            data-log-title={`Delete RM button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
+            title="Delete Investment Manager"
+            data-log-title={`Delete Investment Manager button clicked: ${row?.original?.fullName || row?.original?.username || row?.original?._id}`}
             className="management-row-action is-danger"
           >
             <Icon name="trash" size={16} />
@@ -430,8 +430,8 @@ export default function RMsPage() {
         open={!!deleteTarget}
         itemLabel={
           deleteTarget
-            ? `RM "${deleteTarget.fullName || deleteTarget.username || ""}"`
-            : "this RM"
+            ? `Investment Manager "${deleteTarget.fullName || deleteTarget.username || ""}"`
+            : "this investment manager"
         }
         onCancel={() => setDeleteTarget(null)}
         onConfirm={async () => {

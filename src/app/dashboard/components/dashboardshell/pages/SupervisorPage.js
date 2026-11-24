@@ -6,6 +6,7 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 import { Icon, ModalButton, ModalShell } from "./modalkit/ModalKit";
 import { UserFormFields } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
+import { getRoleLabel } from "@/lib/roles";
 
 export default function SupervisorsPage() {
   const [users, setUsers] = useState([]);
@@ -38,7 +39,7 @@ export default function SupervisorsPage() {
     setUsers((prev) => prev.filter((u) => u._id !== id));
     // 🔒 Audit log: supervisor deleted (store the removed entry)
     logUIAction("record_deleted", {
-      title: `Deleted supervisor: ${target?.fullName || target?.username || id}`,
+      title: `Deleted compliance officer: ${target?.fullName || target?.username || id}`,
       entityType: "supervisor",
       entity: {
         id,
@@ -148,7 +149,7 @@ export default function SupervisorsPage() {
     setEditUserId(null);
     // 🔒 Audit log: supervisor edited (store the updated entry)
     logUIAction("record_updated", {
-      title: `Edited supervisor: ${result?.user?.fullName || editForm.fullName}`,
+      title: `Edited compliance officer: ${result?.user?.fullName || editForm.fullName}`,
       entityType: "supervisor",
       entity: {
         id: editUserId,
@@ -160,14 +161,14 @@ export default function SupervisorsPage() {
     });
   };
 
-  const tableTitle = "Supervisors";
-  const tableDescription = "All supervisors information is displayed here.";
+  const tableTitle = "Compliance Officers";
+  const tableDescription = "All compliance officers are displayed here.";
 
   const columns = [
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "email", header: "Email" },
     { accessorKey: "companyName", header: "Company" },
-    { accessorKey: "role", header: "Role" },
+    { accessorKey: "role", header: "Role", cell: ({ getValue }) => getRoleLabel(getValue()) },
     {
       id: "actions",
       header: "Actions",
@@ -185,7 +186,7 @@ export default function SupervisorsPage() {
           <button
             type="button"
             onClick={() => openEditModal(row?.original)}
-            title="Edit supervisor details"
+            title="Edit compliance officer details"
             className="management-row-action is-edit"
           >
             <Icon name="pencil" size={16} />
@@ -194,7 +195,7 @@ export default function SupervisorsPage() {
           <button
             type="button"
             onClick={() => handleDelete(row?.original?._id)}
-            title="Delete supervisor"
+            title="Delete compliance officer"
             className="management-row-action is-danger"
           >
             <Icon name="trash" size={16} />
@@ -237,10 +238,10 @@ export default function SupervisorsPage() {
           as="form"
           wrapperProps={{ onSubmit: handleEditSubmit }}
           icon="userEdit"
-          title="Edit Supervisor"
-          subtitle="Update the supervisor's account details and access."
+          title="Edit Compliance Officer"
+          subtitle="Update the compliance officer's account details and access."
           onClose={closeEditModal}
-          closeLogTitle="Closed Edit Supervisor form"
+          closeLogTitle="Closed Edit Compliance Officer form"
           size="lg"
           dismissOnOverlay={false}
           footer={
@@ -267,8 +268,8 @@ export default function SupervisorsPage() {
         open={!!deleteTarget}
         itemLabel={
           deleteTarget
-            ? `supervisor "${deleteTarget.fullName || deleteTarget.username || ""}"`
-            : "this supervisor"
+            ? `compliance officer "${deleteTarget.fullName || deleteTarget.username || ""}"`
+            : "this compliance officer"
         }
         onCancel={() => setDeleteTarget(null)}
         onConfirm={async () => {

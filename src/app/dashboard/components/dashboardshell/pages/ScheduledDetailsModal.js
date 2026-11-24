@@ -141,7 +141,7 @@ export default function ScheduledDetailsModal({ client, onClose, onScheduleChang
                   }
                 />
                 <DetailRow label="Onboarding type" value={onboardingTypeLabel(client.onboardingType)} />
-                <DetailRow label="RM name" value={client.assignedToName} />
+                <DetailRow label="Investment Manager name" value={client.assignedToName} />
                 <DetailRow label="Shared with" value={(client.sharedWithNames || []).join(", ")} />
                 <DetailRow label="Assigned by" value={client.assignedByName} />
               </DetailList>
@@ -173,7 +173,7 @@ export default function ScheduledDetailsModal({ client, onClose, onScheduleChang
               )}
             </ModalSection>
 
-            <ModalSection icon="file" tone="slate" title="RM remarks">
+            <ModalSection icon="file" tone="slate" title="Investment Manager remarks">
               <div className="mk-panel">
                 <p className="mk-panel-text">{client.rmRemarks || "No remarks added."}</p>
               </div>

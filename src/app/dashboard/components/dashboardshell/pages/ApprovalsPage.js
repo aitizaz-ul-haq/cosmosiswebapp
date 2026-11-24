@@ -222,7 +222,7 @@ export default function ApprovalsPage() {
 
       <GenericTable
         title="Approvals"
-        description="Clients added by your RMs that are waiting for your approval are displayed here."
+        description="Clients added by your Investment Managers that are waiting for your approval are displayed here."
         data={clients}
         columns={columns}
         filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}
@@ -233,6 +233,7 @@ export default function ApprovalsPage() {
 
       <ClientInfoModal
         client={infoClient}
+        wideDetails
         onClose={() => setInfoClient(null)}
         footerActions={
           infoClient ? (

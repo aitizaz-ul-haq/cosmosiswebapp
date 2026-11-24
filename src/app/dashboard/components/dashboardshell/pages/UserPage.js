@@ -6,6 +6,7 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 import { Icon, ModalButton, ModalShell } from "./modalkit/ModalKit";
 import { UserFormFields } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
+import { getRoleLabel } from "@/lib/roles";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -143,7 +144,7 @@ export default function UserPage() {
     }
     // 🔒 Audit log: user edited (store the updated entry, never the password)
     logUIAction("record_updated", {
-      title: `Edited user: ${result?.user?.fullName || editForm.fullName} (${editForm.role})`,
+      title: `Edited user: ${result?.user?.fullName || editForm.fullName} (${getRoleLabel(editForm.role)})`,
       entityType: "user",
       entity: {
         id: editUserId,
@@ -165,7 +166,7 @@ export default function UserPage() {
     { accessorKey: "fullName", header: "Name" },
     { accessorKey: "email", header: "Email" },
     { accessorKey: "companyName", header: "Company" },
-    { accessorKey: "role", header: "Role" },
+    { accessorKey: "role", header: "Role", cell: ({ getValue }) => getRoleLabel(getValue()) },
     {
       id: "actions",
       header: "Actions",

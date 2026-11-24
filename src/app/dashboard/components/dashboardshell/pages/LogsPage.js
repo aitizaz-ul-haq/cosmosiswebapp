@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GenericTable from "./GenericTable";
+import { formatRoleText } from "@/lib/roles";
 
 // Human readable label for a log row's action column
 function actionLabel(row) {
@@ -18,10 +19,10 @@ function actionLabel(row) {
   }
   // UI button clicks
   if (a === "button_click") {
-    return row?.actionTitle ? `Clicked: ${row.actionTitle}` : "Clicked a control";
+    return row?.actionTitle ? `Clicked: ${formatRoleText(row.actionTitle)}` : "Clicked a control";
   }
   // Functional actions (create / edit / delete) store a full description in actionTitle
-  if (row?.actionTitle) return row.actionTitle;
+  if (row?.actionTitle) return formatRoleText(row.actionTitle);
   return a || "—";
 }
 

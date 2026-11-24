@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { STATUS_LABELS, onboardingTypeLabel } from "./clientStatusShared";
 import {
   DetailList,
@@ -16,7 +17,7 @@ import {
 
 // Read-only client details (example_modal_3). Callers can pass their own footer buttons
 // (built with ModalButton) and extra rows that appear in an "Additional details" card.
-export default function ClientInfoModal({ client, onClose, footerActions, extraRows = [] }) {
+export default function ClientInfoModal({ client, onClose, footerActions, extraRows = [], wideDetails = false }) {
   if (!client) return null;
 
   const name = client.fullName || client.username || "Client details";
@@ -24,7 +25,7 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
   const statusLabel = STATUS_LABELS[statusKey] || statusKey;
   const logName = client.fullName || client.email;
 
-  return (
+  const modal = (
     <ModalShell
       avatar={initialsOf(name)}
       title={name}
@@ -37,6 +38,7 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
       onClose={onClose}
       closeLogTitle={`Close Client Info modal: ${logName}`}
       size="md"
+      overlayClassName={wideDetails ? "mk-approval-details-overlay" : ""}
       footer={
         footerActions || (
           <ModalButton
@@ -50,7 +52,7 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
         )
       }
     >
-      <ModalGrid>
+      <ModalGrid className={wideDetails ? "mk-approval-details-grid" : ""}>
         <ModalSection>
           <DetailList>
             <DetailRow tile tone="blue" icon="user" label="Full name" value={client.fullName} />
@@ -75,7 +77,7 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
               label="Onboarding type"
               value={onboardingTypeLabel(client.onboardingType)}
             />
-            <DetailRow tile tone="blue" icon="briefcase" label="RM name" value={client.assignedToName} />
+            <DetailRow tile tone="blue" icon="briefcase" label="Investment Manager name" value={client.assignedToName} />
             <DetailRow
               tile
               tone="green"
@@ -93,7 +95,7 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
           <span className="mk-tile mk-tile-sm tone-violet" aria-hidden="true">
             <Icon name="file" size={17} />
           </span>
-          <h3 className="mk-section-title">RM remarks</h3>
+          <h3 className="mk-section-title">Investment Manager remarks</h3>
         </div>
         <p className="mk-panel-text">{client.rmRemarks || "No remarks added."}</p>
       </div>
@@ -121,4 +123,6 @@ export default function ClientInfoModal({ client, onClose, footerActions, extraR
       </ModalSection>
     </ModalShell>
   );
+
+  return wideDetails && typeof document !== "undefined" ? createPortal(modal, document.body) : modal;
 }

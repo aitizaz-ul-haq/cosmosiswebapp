@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getRoleLabel } from "@/lib/roles";
 
 export default function EightSectionContactForm() {
   const [formData, setFormData] = useState({
@@ -150,8 +151,8 @@ export default function EightSectionContactForm() {
                 required
               >
                 <option value="">Select a role</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="rm">Relationship Manager</option>
+                <option value="supervisor">{getRoleLabel("supervisor")}</option>
+                <option value="rm">{getRoleLabel("rm")}</option>
                 <option value="client">Client</option>
                 <option value="other">Other</option>
               </select>

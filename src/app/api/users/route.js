@@ -64,14 +64,14 @@ export async function POST(req) {
   } else if (tokenUser.role === "supervisor") {
     if (role !== "rm") {
       return NextResponse.json(
-        { error: "Supervisors can only create RMs" },
+        { error: "Compliance Officers can only create Investment Managers" },
         { status: 403 }
       );
     }
   } else if (tokenUser.role === "rm") {
     if (role !== "client") {
       return NextResponse.json(
-        { error: "RMs can only create clients" },
+        { error: "Investment Managers can only create clients" },
         { status: 403 }
       );
     }
@@ -140,7 +140,7 @@ export async function POST(req) {
         }).select("_id");
         if (!assignedUser) {
           return NextResponse.json(
-            { error: "Assigned RM not found for this company" },
+            { error: "Assigned Investment Manager not found for this company" },
             { status: 404 }
           );
         }
@@ -223,7 +223,7 @@ export async function GET(req) {
     }
 
     const users = await User.find(query)
-      .select("username fullName email phone role companyId companyName")
+      .select("username fullName email phone role companyId companyName isActive")
       .populate("companyId", "name")
       .lean();
 
@@ -241,7 +241,9 @@ export async function GET(req) {
       };
     });
 
-    const filteredUsers = normalizedUsers.filter(
+    // Team assignment includes eligible managers even when optional contact
+    // details need to be completed; email actions handle those gaps explicitly.
+    const filteredUsers = roleFilter === "rm" ? normalizedUsers : normalizedUsers.filter(
       (user) => user.fullName && user.email && user.phone
     );
 

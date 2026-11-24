@@ -80,7 +80,7 @@ export function buildClientRegistrationEmail({
           <h1 style="margin:20px 0 20px;font-family:${FONT};font-size:35px;line-height:1.2;font-weight:500;color:${C.ink};">Welcome to Cosmosis</h1>
 
           <p style="${p}">Dear ${esc(fullName || "")},</p>
-          <p style="${p}">We are pleased to inform you that your client account with <strong style="font-weight:600;color:${C.ink};">${esc(company)}</strong> has been successfully registered by your designated Relationship Manager (RM).</p>
+          <p style="${p}">We are pleased to inform you that your client account with <strong style="font-weight:600;color:${C.ink};">${esc(company)}</strong> has been successfully registered by your designated Investment Manager.</p>
           <p style="${p}">As part of our client onboarding process, you are invited to complete your onboarding through <strong style="font-weight:600;color:${C.ink};">Cosmosis</strong>, our secure digital client onboarding platform designed to provide a streamlined, efficient and convenient experience.</p>
 
           <!-- Credentials -->
@@ -108,8 +108,8 @@ export function buildClientRegistrationEmail({
             </td></tr>
           </table>
 
-          <!-- RM -->
-          <h2 style="margin:28px 0 12px;font-family:${FONT};font-size:22px;font-weight:500;color:${C.ink};">Your Relationship Manager</h2>
+          <!-- Investment Manager -->
+          <h2 style="margin:28px 0 12px;font-family:${FONT};font-size:22px;font-weight:500;color:${C.ink};">Your Investment Manager</h2>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid ${C.line};border-radius:10px;">
             <tr><td style="padding:18px 22px;">
               ${label("Name")}
@@ -123,7 +123,7 @@ export function buildClientRegistrationEmail({
             </td></tr>
           </table>
 
-          <p style="${p}">Should you experience any difficulties accessing your account or require assistance during the onboarding process, please contact your designated Relationship Manager using the email address provided above.</p>
+          <p style="${p}">Should you experience any difficulties accessing your account or require assistance during the onboarding process, please contact your designated Investment Manager using the email address provided above.</p>
           <p style="${p}">We look forward to providing you with a smooth and efficient onboarding experience through Cosmosis.</p>
 
           <p style="margin:28px 0 0;font-family:${FONT};font-size:16px;line-height:1.7;color:${C.body};">Kind regards,<br>
@@ -148,7 +148,7 @@ export function buildClientRegistrationEmail({
     "",
     `Dear ${fullName || ""},`,
     "",
-    `We are pleased to inform you that your client account with ${company} has been successfully registered by your designated Relationship Manager (RM).`,
+    `We are pleased to inform you that your client account with ${company} has been successfully registered by your designated Investment Manager.`,
     "",
     "As part of our client onboarding process, you are invited to complete your onboarding through Cosmosis, our secure digital client onboarding platform designed to provide a streamlined, efficient and convenient experience.",
     "",
@@ -159,11 +159,11 @@ export function buildClientRegistrationEmail({
     "",
     "Important security step: Please change your temporary password immediately after your first login to help protect your account.",
     "",
-    "Your Relationship Manager",
+    "Your Investment Manager",
     `- Name: ${rmName || ""}`,
     `- Email: ${rmEmail || ""}`,
     "",
-    "Should you experience any difficulties accessing your account or require assistance during the onboarding process, please contact your designated Relationship Manager using the email address provided above.",
+    "Should you experience any difficulties accessing your account or require assistance during the onboarding process, please contact your designated Investment Manager using the email address provided above.",
     "",
     "We look forward to providing you with a smooth and efficient onboarding experience through Cosmosis.",
     "",

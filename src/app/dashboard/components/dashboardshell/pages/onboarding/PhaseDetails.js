@@ -57,21 +57,21 @@ export default function PhaseDetails({ phase, expanded, submitted, assignedRm, o
                     className="dash-action-btn dash-btn-neutral"
                     href={emailHref}
                     tabIndex={expanded ? 0 : -1}
-                    title={`Email ${assignedRm.name || "your relationship manager"}`}
-                    data-log-title={`Contact RM from onboarding phase ${phase.id}: ${phase.name}`}
+                    title={`Email ${assignedRm.name || "your Investment Manager"}`}
+                    data-log-title={`Contact Investment Manager from onboarding phase ${phase.id}: ${phase.name}`}
                   >
                     <Icon name="mail" size={16} />
-                    Contact RM
+                    Contact Investment Manager
                   </a>
                 ) : (
                   <button
                     type="button"
                     className="dash-action-btn dash-btn-neutral"
                     disabled
-                    title="Your relationship manager's email is not available"
+                    title="Your Investment Manager's email is not available"
                   >
                     <Icon name="mail" size={16} />
-                    Contact RM
+                    Contact Investment Manager
                   </button>
                 )}
                 <button

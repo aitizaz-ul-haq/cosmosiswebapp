@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 // import GenericTable from "./shared/GenericTable";
 import GenericTable from "./GenericTable";
 import { StatusPill } from "./modalkit/ModalKit";
+import { getRoleLabel } from "@/lib/roles";
 
 export default function DemoRequestsTable() {
   const [requests, setRequests] = useState([]);
@@ -45,7 +46,7 @@ export default function DemoRequestsTable() {
     { accessorKey: "lastname", header: "Last Name" },
     { accessorKey: "email", header: "Email" },
     { accessorKey: "company", header: "Company" },
-    { accessorKey: "role", header: "Role" },
+    { accessorKey: "role", header: "Role", cell: ({ getValue }) => getRoleLabel(getValue()) },
     {
       accessorKey: "status",
       header: "Status",

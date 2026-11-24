@@ -378,7 +378,7 @@ export async function POST(req) {
       }).select("_id fullName username");
       if (!assignedToUserSnapshot) {
         return NextResponse.json(
-          { error: "Assigned RM not found for this company" },
+          { error: "Assigned Investment Manager not found for this company" },
           { status: 404 }
         );
       }
@@ -652,7 +652,7 @@ export async function PATCH(req) {
 
   // RMs may only change the status of their own onboarding clients
   if (isRm && (!hasStatus || assignedToUserId || hasOnboardingType || hasShared)) {
-    return NextResponse.json({ error: "RMs can only change client status" }, { status: 403 });
+    return NextResponse.json({ error: "Investment Managers can only change client status" }, { status: 403 });
   }
   // At least one updatable field must be present
   if (!assignedToUserId && !hasStatus && !hasOnboardingType && !hasShared) {
@@ -707,7 +707,7 @@ export async function PATCH(req) {
 
       if (!assignedUser) {
         return NextResponse.json(
-          { error: "Assigned RM not found for this company" },
+          { error: "Assigned Investment Manager not found for this company" },
           { status: 404 }
         );
       }

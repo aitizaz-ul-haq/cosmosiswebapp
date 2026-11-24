@@ -1,3 +1,5 @@
+import { getRoleLabel } from "@/lib/roles";
+
 export default function ModalDetailsSection({actions, data}) {
   // Define keys to hide
   const hiddenKeys = ["_id", "__v", "updatedAt"];
@@ -9,7 +11,9 @@ export default function ModalDetailsSection({actions, data}) {
         .map((key) => (
           <p key={key}>
             <b>{key}:</b>{" "}
-            {key.toLowerCase().includes("date")
+            {key === "role"
+              ? getRoleLabel(data[key])
+              : key.toLowerCase().includes("date")
               ? new Date(data[key]).toLocaleString()
               : data[key]?.toString()}
           </p>

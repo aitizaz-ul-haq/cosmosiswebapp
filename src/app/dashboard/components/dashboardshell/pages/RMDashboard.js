@@ -52,7 +52,7 @@ export default function RMDashboard() {
 
   return (
     <div className="dashboard-page dsh-page--rm" aria-busy={loading}>
-      <DashboardHero title="Relationship Manager Dashboard" subtitle="Manage your client relationships, track onboarding progress, and stay on top of key activities." tagline={<>Stronger Relationships.<br />Smoother Onboarding.</>} />
+      <DashboardHero title="Investment Manager Dashboard" subtitle="Manage your client relationships, track onboarding progress, and stay on top of key activities." tagline={<>Stronger Relationships.<br />Smoother Onboarding.</>} />
       {error && <div className="dsh-error" role="alert">{error}</div>}
       <div className="dsh-stats">
         <StatCard label="Total Clients" value={value(clients.length)} icon="users" tone="violet" trend={totalClientTrend} description={totalClientTrend == null ? "Assigned to you" : "vs last month"} />

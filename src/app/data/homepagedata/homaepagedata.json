@@ -1,7 +1,7 @@
 {
   "herosection": {
     "herobottomsectiontextbold": " secure, multi-tenant onboarding platform for asset managers",
-    "herobottomsectiontext": " “and their partners — empowering RMs, simplifying validation, and guiding clients through a seamless, step-by-step journey.”",
+    "herobottomsectiontext": " “and their partners — empowering Investment Managers, simplifying validation, and guiding clients through a seamless, step-by-step journey.”",
     "herotitlesize": {
       "320px": "31px",
       "360px": "42px",
@@ -46,12 +46,12 @@
   "homepagesecondsection": {
     "tagtitle": "Who We Are & What We Do",
     "largeheadingleftpart": "Redefine client onboarding through precision, structure, and intelligent control",
-    "firstsectionparaone": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling RMs to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency.",
-    "secondsectionparatwo": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling RMs to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency."
+    "firstsectionparaone": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling Investment Managers to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency.",
+    "secondsectionparatwo": "Built for scale and compliance, Cosmosis digitizes and automates the entire onboarding lifecycle — enabling Investment Managers to manage complex workflows, validate client data, and securely handle documentation with role-based precision. Whether you're part of a parent company, a subsidiary, or a third-party firm, Cosmosis creates an intelligent framework that ensures visibility, control, and harmony across every client interaction — all while upholding the highest standards of regulatory compliance, data security, and operational efficiency."
   },
   "homepagethirdsection": {
     "headerheading": "Features That Flow With You",
-    "headerdescription": "A secure, multi-tenant onboarding platform for asset managers and their partners — empowering RMs, simplifying validation, and guiding clients through a seamless, step-by-step journey.",
+    "headerdescription": "A secure, multi-tenant onboarding platform for asset managers and their partners — empowering Investment Managers, simplifying validation, and guiding clients through a seamless, step-by-step journey.",
     "headerleftimage": {
       "alt": "cosmosis features header image",
       "width": "307",
@@ -59,7 +59,7 @@
       "iconlink": "/images/header-left-image.png",
       "title": "Multi-Step Onboarding",
       "gridcardtitle": "Multi-Step Onboarding",
-      "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+      "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
     },
     "thirdsectiongridcards": [
       {
@@ -70,7 +70,7 @@
         "iconlink": "/images/multisteponboarding.png",
         "title": "Multi-Step Onboarding",
         "gridcardtitle": "Multi-Step Onboarding",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "2",
@@ -80,7 +80,7 @@
         "iconlink": "/images/subscriptionmodel.png",
         "title": "Future Subscription Model",
         "gridcardtitle": "Future Subscription Model",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "3",
@@ -90,7 +90,7 @@
         "iconlink": "/images/secureformvalidation.png",
         "title": "Secure Document Validation",
         "gridcardtitle": "Secure Document Validation",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "4",
@@ -100,7 +100,7 @@
         "iconlink": "/images/stepbystep-process.png",
         "title": "Step-by-Step Approval Process",
         "gridcardtitle": "Step-by-Step Approval Process",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "5",
@@ -110,7 +110,7 @@
         "iconlink": "/images/document-generation.png",
         "title": "Step-by-Step Approval Process",
         "gridcardtitle": "Step-by-Step Approval Process",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "6",
@@ -120,7 +120,7 @@
         "iconlink": "/images/role-based-access.png",
         "title": "Role-Based Access",
         "gridcardtitle": "Role-Based Access",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       },
       {
         "id": "7",
@@ -130,14 +130,14 @@
         "iconlink": "/images/multi-company.png",
         "title": "Multi-Company Architecture",
         "gridcardtitle": "Multi-Company Architecture",
-        "gridcarddescription": "Personalized dashboards for Relationship Managers to track client progress and stats."
+        "gridcarddescription": "Personalized dashboards for Investment Managers to track client progress and stats."
       }
     ]
   },
   "homepagefourthsection": {
     "leftsectiontagtitle": "Benefits of Cosmosis",
     "leftsectionheading": "Designed to Empower, Built to Deliver Results",
-    "leftsectionpara": "Cosmosis transforms client onboarding into a streamlined, intelligent experience for asset management firms, their RMs, and their clients. By automating manual steps, reducing errors, and centralizing control, Cosmosis frees teams to focus on what matters most: building relationships and delivering value. Whether you're overseeing operations or managing individual client journeys, Cosmosis provides the structure, visibility, and reliability needed to drive success.",
+    "leftsectionpara": "Cosmosis transforms client onboarding into a streamlined, intelligent experience for asset management firms, their Investment Managers, and their clients. By automating manual steps, reducing errors, and centralizing control, Cosmosis frees teams to focus on what matters most: building relationships and delivering value. Whether you're overseeing operations or managing individual client journeys, Cosmosis provides the structure, visibility, and reliability needed to drive success.",
     "leftsectionbenefitspoint": [
       {
         "id": "1",
@@ -145,7 +145,7 @@
       },
       {
         "id": "2",
-        "pointtext": "Full visibility and control for Relationship Managers"
+        "pointtext": "Full visibility and control for Investment Managers"
       },
       {
         "id": "3",
@@ -170,7 +170,7 @@
   },
   "homepagefifthsection": {
     "fifthsectionheading": "Your Onboarding Process, Perfected",
-    "fifthsectiondescription": "A guided, step-by-step onboarding experience designed for clarity, control, and collaboration — from initial invitation to final approval. Each stage is structured to ensure secure data collection, RM validation, and a smooth journey for every client.",
+    "fifthsectiondescription": "A guided, step-by-step onboarding experience designed for clarity, control, and collaboration — from initial invitation to final approval. Each stage is structured to ensure secure data collection, Investment Manager validation, and a smooth journey for every client.",
     "fifthsectionheaderimage": {
       "width": "182",
       "height": "271",
@@ -186,8 +186,8 @@
         "imagelink": "/images/poin1.png",
         "title": "first process",
         "alt": "numeric icon",
-        "pointsheading": "RM Initiates Onboarding",
-        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+        "pointsheading": "Investment Manager Initiates Onboarding",
+        "pointsparagraph": "Investment Managers start the onboarding process by creating a new client profile and assigning access."
       },
       {
         "id": "1",
@@ -195,8 +195,8 @@
         "height": "123",
         "imagelink": "/images/point2.png",
         "title": "first process",
-        "pointsheading": "RM Initiates Onboarding",
-        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+        "pointsheading": "Investment Manager Initiates Onboarding",
+        "pointsparagraph": "Investment Managers start the onboarding process by creating a new client profile and assigning access."
       },
       {
         "id": "1",
@@ -204,8 +204,8 @@
         "height": "123",
         "imagelink": "/images/point3.png",
         "title": "first process",
-        "pointsheading": "RM Initiates Onboarding",
-        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+        "pointsheading": "Investment Manager Initiates Onboarding",
+        "pointsparagraph": "Investment Managers start the onboarding process by creating a new client profile and assigning access."
       },
       {
         "id": "1",
@@ -213,8 +213,8 @@
         "height": "123",
         "imagelink": "/images/point4.png",
         "title": "first process",
-        "pointsheading": "RM Initiates Onboarding",
-        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+        "pointsheading": "Investment Manager Initiates Onboarding",
+        "pointsparagraph": "Investment Managers start the onboarding process by creating a new client profile and assigning access."
       },
       {
         "id": "1",
@@ -222,8 +222,8 @@
         "height": "123",
         "imagelink": "/images/point5.png",
         "title": "first process",
-        "pointsheading": "RM Initiates Onboarding",
-        "pointsparagraph": "Relationship Managers start the onboarding process by creating a new client profile and assigning access."
+        "pointsheading": "Investment Manager Initiates Onboarding",
+        "pointsparagraph": "Investment Managers start the onboarding process by creating a new client profile and assigning access."
       }
     ]
   },
@@ -264,12 +264,12 @@
   "homepagesevensection": {
     "leftsectiontagtitle": "Trusted by Teams",
     "leftsectionheading": "What Our Teams Are Saying",
-    "leftsectionpara": "From relationship managers to compliance leads, our users share how Cosmosis has transformed the way they onboard clients — delivering structure, control, and confidence at every step.",
+    "leftsectionpara": "From Investment Managers to compliance leads, our users share how Cosmosis has transformed the way they onboard clients — delivering structure, control, and confidence at every step.",
     "rightsectiongridstripdata": [
       {
         "id": "1",
         "reviewtext": "“This platform has completely streamlined how we onboard clients. The step-by-step process and real-time validation have brought structure and efficiency we were missing.”",
-        "reviewer": "— Ali Raza, RM Lead, Crescent Asset Management",
+        "reviewer": "— Ali Raza, Investment Manager Lead, Crescent Asset Management",
         "alt": "fourth section middle image",
         "width": "42",
         "height": "42",
@@ -289,7 +289,7 @@
       {
         "id": "3",
         "reviewtext": "“The dashboards are intuitive and powerful. I can track every client’s progress and documentation in one place — no more chasing email threads.”",
-        "reviewer": "— Omar Khan, Senior Relationship Manager, Orion Capital",
+        "reviewer": "— Omar Khan, Senior Investment Manager, Orion Capital",
         "alt": "fourth section middle image",
         "width": "42",
         "height": "42",
@@ -324,7 +324,7 @@
       },
       {
         "id": "3",
-        "demoline": "Deliver a Seamless, Transparent Experience for RMs and Clients",
+        "demoline": "Deliver a Seamless, Transparent Experience for Investment Managers and Clients",
         "alt": "fourth section middle image",
         "width": "41",
         "height": "41",

@@ -42,12 +42,12 @@ export default function SupervisorDashboard() {
           }),
           fetch(`/api/users?role=rm&companyId=${company}`, options).then(async (response) => {
             const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || "Failed to load relationship managers");
+            if (!response.ok) throw new Error(data.error || "Failed to load investment managers");
             return data.users || [];
           }),
           fetch(`/api/users?role=rm&companyId=${company}&count=true`, options).then(async (response) => {
             const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || "Failed to load relationship manager count");
+            if (!response.ok) throw new Error(data.error || "Failed to load investment manager count");
             return data.count || 0;
           }),
         ]);
@@ -85,7 +85,7 @@ export default function SupervisorDashboard() {
     const assigned = managerClients(clients, manager);
     return {
       id: String(manager._id || manager.id),
-      name: manager.fullName || manager.username || "Relationship Manager",
+      name: manager.fullName || manager.username || "Investment Manager",
       total: assigned.length,
       clients: assigned.filter((client) => withinPeriod(client.createdAt, performancePeriod)).length,
       completed: assigned.filter((client) => clientCompleted(client) && withinPeriod(client.onboarding?.approvedAt, performancePeriod)).length,
@@ -95,10 +95,10 @@ export default function SupervisorDashboard() {
 
   return (
     <div className="dashboard-page dsh-page--supervisor" aria-busy={loading}>
-      <DashboardHero title="Supervisor Dashboard" subtitle="Monitor your team, review client onboarding progress, and manage approvals." tagline={<>Efficient Oversight.<br />Successful Onboardings.</>} />
+      <DashboardHero title="Compliance Officer Dashboard" subtitle="Monitor your team, review client onboarding progress, and manage approvals." tagline={<>Efficient Oversight.<br />Successful Onboardings.</>} />
       {error && <div className="dsh-error" role="alert">{error}</div>}
       <div className="dsh-stats">
-        <StatCard label="Relationship Managers" value={value(rmCount, available.managers)} icon="users" tone="violet" description="Across your team" />
+        <StatCard label="Investment Managers" value={value(rmCount, available.managers)} icon="users" tone="violet" description="Across your team" />
         <StatCard label="Active Clients" value={value(activeClients.length)} icon="users" tone="green" trend={activeClientTrend} description={activeClientTrend == null ? "Across your company" : "vs last month"} />
         <StatCard label="Completed Onboardings" value={value(completed.length)} icon="check" tone="green" trend={completedTrend} description={completedTrend == null ? "Approved applications" : "vs last month"} />
         <StatCard label="In-Progress Onboardings" value={value(inProgress.length)} icon="file" tone="slate" description="Currently onboarding" />
@@ -118,10 +118,10 @@ export default function SupervisorDashboard() {
 
       <div className="dsh-row-bottom dsh-grid dsh-grid--supervisor-bottom">
         <Panel title="Recent Submissions" icon="file" action={viewAll("submissions", "View all submissions")}>
-          <ActivityTable columns={[{ key: "date", label: "Date & Time", render: (date) => formatDate(date, true) }, { key: "name", label: "Client Name" }, { key: "company", label: "Company" }, { key: "manager", label: "Assigned RM" }, { key: "stage", label: "Stage" }, { key: "status", label: "Status", render: (status, row) => <Badge tone={row.tone}>{status}</Badge> }]} rows={submissions.slice(0, 5)} emptyMessage={loading ? "Loading submissions…" : "No applications have been submitted yet."} />
+          <ActivityTable columns={[{ key: "date", label: "Date & Time", render: (date) => formatDate(date, true) }, { key: "name", label: "Client Name" }, { key: "company", label: "Company" }, { key: "manager", label: "Assigned Investment Manager" }, { key: "stage", label: "Stage" }, { key: "status", label: "Status", render: (status, row) => <Badge tone={row.tone}>{status}</Badge> }]} rows={submissions.slice(0, 5)} emptyMessage={loading ? "Loading submissions…" : "No applications have been submitted yet."} />
         </Panel>
-        <Panel title="Relationship Manager Performance" icon="users" action={<select className="dsh-select" aria-label="Relationship manager performance period" value={performancePeriod} onChange={(event) => setPerformancePeriod(event.target.value)}><option value="this_month">This Month</option><option value="last_month">Last Month</option><option value="all">All Time</option></select>}>
-          <div className="dsh-performance-table"><ActivityTable columns={[{ key: "name", label: "Relationship Manager", render: (name, row, index) => <div className="dsh-manager-cell"><Avatar name={name} tone={index % 2 ? "violet" : "green"} /><div><strong>{name}</strong><span>{row.total} client{row.total === 1 ? "" : "s"}</span></div></div> }, { key: "clients", label: "Clients", render: (count) => <strong className="dsh-performance-number">{count}</strong> }, { key: "completed", label: "Completed", render: (count) => <strong className="dsh-performance-number">{count}</strong> }, { key: "inProgress", label: "In Progress", render: (count) => <strong className="dsh-performance-number">{count}</strong> }]} rows={performanceRows} emptyMessage={loading ? "Loading relationship managers…" : "No relationship managers have been added yet."} /></div>
+        <Panel title="Investment Manager Performance" icon="users" action={<select className="dsh-select" aria-label="Investment manager performance period" value={performancePeriod} onChange={(event) => setPerformancePeriod(event.target.value)}><option value="this_month">This Month</option><option value="last_month">Last Month</option><option value="all">All Time</option></select>}>
+          <div className="dsh-performance-table"><ActivityTable columns={[{ key: "name", label: "Investment Manager", render: (name, row, index) => <div className="dsh-manager-cell"><Avatar name={name} tone={index % 2 ? "violet" : "green"} /><div><strong>{name}</strong><span>{row.total} client{row.total === 1 ? "" : "s"}</span></div></div> }, { key: "clients", label: "Clients", render: (count) => <strong className="dsh-performance-number">{count}</strong> }, { key: "completed", label: "Completed", render: (count) => <strong className="dsh-performance-number">{count}</strong> }, { key: "inProgress", label: "In Progress", render: (count) => <strong className="dsh-performance-number">{count}</strong> }]} rows={performanceRows} emptyMessage={loading ? "Loading investment managers…" : "No investment managers have been added yet."} /></div>
         </Panel>
       </div>
     </div>

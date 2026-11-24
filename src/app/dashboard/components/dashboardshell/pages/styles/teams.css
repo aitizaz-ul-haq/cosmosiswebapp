@@ -1,0 +1,55 @@
+.teams-page .generic-table { width: 100%; min-width: 0; table-layout: fixed; }
+.teams-page .generic-table th:nth-child(1) { width: 18%; }
+.teams-page .generic-table th:nth-child(2) { width: 18%; }
+.teams-page .generic-table th:nth-child(3) { width: 22%; }
+.teams-page .generic-table th:nth-child(4) { width: 42%; }
+.teams-page .generic-table td { overflow: hidden; }
+.teams-page .generic-table td.table-action-cell { overflow: visible; }
+.teams-cell-text { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.teams-row-actions { flex-wrap: wrap; gap: 8px; }
+.teams-row-actions .management-row-action { flex-shrink: 0; text-decoration: none; }
+.teams-modal-overlay a.mk-btn { text-decoration: none; }
+.teams-row-actions .management-row-action:disabled { opacity: .55; cursor: not-allowed; }
+.teams-member-fields { display: flex; flex-direction: column; gap: 16px; }
+.teams-member-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; }
+.teams-member-field > .mk-btn { min-height: 46px; margin-bottom: 0; padding: 10px 13px; }
+.teams-members-section { margin-top: 20px; }
+.teams-add-member { margin-top: 18px; }
+.teams-error { margin: 0 0 16px; padding: 12px 14px; border: 1px solid #ffdce3; border-radius: 10px; background: #fff0f3; color: #a43c52; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.teams-notice { margin: 0 0 16px; padding: 12px 14px; border: 1px solid #e3e8f4; border-radius: 10px; background: #f6f7fb; color: #6573a3; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.teams-page-notice { margin: 20px 26px 0; }
+.teams-page-notice > .teams-error { margin-bottom: 10px; }
+.teams-member-list { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.teams-member-list li { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-bottom: 12px; border-bottom: 1px solid var(--mk-line); overflow-wrap: anywhere; }
+.teams-member-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.teams-member-list strong { font-size: 14px; font-weight: 500; color: var(--mk-ink); }
+.teams-member-list span { font-size: 13px; color: var(--mk-slate); }
+.teams-modal-overlay .mk-detail-value { overflow-wrap: anywhere; }
+html[data-dashboard-theme="dark"] .teams-error { background: var(--dm-red-bg); border-color: var(--dm-border); color: #ff91a1; }
+html[data-dashboard-theme="dark"] .teams-notice { background: var(--dm-raised); border-color: var(--dm-border); color: var(--dm-muted); }
+
+@media (max-width: 1250px) {
+  .teams-page .generic-table { display: block; min-width: 0; }
+  .teams-page .generic-table thead { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .teams-page .generic-table tbody { display: block; }
+  .teams-page .generic-table tbody tr { display: block; margin-bottom: 14px; padding: 12px 14px; border: 1px solid #e9edf8; border-radius: 10px; }
+  .teams-page .generic-table td { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: start; gap: 12px; width: 100%; min-width: 0; height: auto; padding: 10px 0; white-space: normal; overflow: visible; }
+  .teams-page .generic-table td::before { color: #6573a3; font-weight: 600; }
+  .teams-page .generic-table td:nth-child(1):not(.generic-table-empty)::before { content: "Team Name"; }
+  .teams-page .generic-table td:nth-child(2)::before { content: "Team Leader"; }
+  .teams-page .generic-table td:nth-child(3)::before { content: "Team Members"; }
+  .teams-page .generic-table td:nth-child(4)::before { content: "Actions"; }
+  .teams-page .generic-table td:last-child { border-bottom: 0; }
+  .teams-page .generic-table td.table-action-cell { grid-template-columns: minmax(0, 1fr); }
+  .teams-page .generic-table td.generic-table-empty { display: block; padding: 2rem 0; }
+  .teams-cell-text { white-space: normal; overflow-wrap: anywhere; }
+  html[data-dashboard-theme="dark"] .teams-page .generic-table tbody tr { border-color: var(--dm-border); }
+  html[data-dashboard-theme="dark"] .teams-page .generic-table td::before { color: var(--dm-muted); }
+}
+
+@media (max-width: 480px) {
+  .teams-modal-overlay .mk-footer { flex-wrap: wrap; }
+  .teams-modal-overlay .mk-footer .mk-btn { white-space: normal; }
+  .teams-page-notice { margin-right: 16px; margin-left: 16px; }
+  .teams-page .generic-table td { grid-template-columns: 95px minmax(0, 1fr); gap: 8px; }
+}

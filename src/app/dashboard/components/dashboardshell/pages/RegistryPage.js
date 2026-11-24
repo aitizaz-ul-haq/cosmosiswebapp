@@ -309,7 +309,7 @@ export default function RegistryPage() {
 
       <GenericTable
         title="Awaiting Registry"
-        description="Clients approved by your supervisor and ready to be registered are displayed here."
+        description="Clients approved by your Compliance Officer and ready to be registered are displayed here."
         data={clients}
         columns={columns}
         filterableFields={columns.filter((col) => col.accessorKey).map((col) => col.accessorKey)}
@@ -499,7 +499,7 @@ export default function RegistryPage() {
             </ModalSelect>
           </ModalGrid>
           <ModalTextarea
-            label="RM Remarks"
+            label="Investment Manager Remarks"
             icon="file"
             placeholder="Notes about this client"
             value={editForm.rmRemarks}

@@ -1,9 +1,11 @@
+import { getRoleLabel } from "@/lib/roles";
+
 export function getDisplayName(user) {
   return user?.fullName?.trim() || user?.name?.trim() || user?.username || "My account";
 }
 
 export function getDisplayRole(role = "") {
-  return { rm: "Relationship Manager", superadmin: "superadmin", supervisor: "supervisor", client: "client" }[role] || role;
+  return getRoleLabel(role);
 }
 
 export function getInitials(user) {

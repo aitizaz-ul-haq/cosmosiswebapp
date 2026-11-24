@@ -65,7 +65,7 @@ function FormPassword({ label, hint, id, required, ...inputProps }) {
   );
 }
 
-// "Shared client" checkbox with the list of other RMs to share with.
+// "Shared client" checkbox with the list of other Investment Managers to share with.
 function SharePanel({ form, rmUsers, onSharedChange, onToggleRm }) {
   const others = rmUsers.filter((rm) => String(rm._id) !== String(form.assignedToUserId));
   return (
@@ -76,12 +76,12 @@ function SharePanel({ form, rmUsers, onSharedChange, onToggleRm }) {
           checked={form.isShared}
           onChange={(e) => onSharedChange(e.target.checked)}
         />
-        Shared client (assign to additional RMs)
+        Shared client (assign to additional Investment Managers)
       </label>
       {form.isShared && (
         <div className="mk-check-list">
           {others.length === 0 ? (
-            <span className="mk-hint">No other RMs available to share with.</span>
+            <span className="mk-hint">No other Investment Managers available to share with.</span>
           ) : (
             others.map((rm) => (
               <label key={rm._id} className="mk-check">
@@ -249,9 +249,9 @@ export default function ClientsPage() {
 
   // Human-readable descriptions for status hover tooltips
   const STATUS_DESCRIPTIONS = {
-    approval_pending: "Waiting for supervisor approval",
-    under_review: "Being reviewed by the supervisor",
-    register: "Approved - ready to be registered by the RM",
+    approval_pending: "Waiting for Compliance Officer approval",
+    under_review: "Being reviewed by the Compliance Officer",
+    register: "Approved - ready to be registered by the Investment Manager",
     scheduled: "Credentials will be sent to the client at the scheduled time",
     ongoing: "Current onboarding status is In progress",
     on_hold: "Current onboarding status is On hold",
@@ -396,7 +396,7 @@ export default function ClientsPage() {
     setEditForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Toggle an RM in the shared list for the Add or Edit form
+  // Toggle an Investment Manager in the shared list for the Add or Edit form
   const toggleSharedRm = (setForm) => (rmId) => {
     setForm((prev) => {
       const current = Array.isArray(prev.sharedWithUserIds) ? prev.sharedWithUserIds : [];
@@ -858,13 +858,13 @@ export default function ClientsPage() {
             </FormSelect>
             {canAssignRm && (
               <FormSelect
-                label="Assign RM"
+                label="Assign Investment Manager"
                 icon="briefcase"
                 value={addForm.assignedToUserId}
                 onChange={handleAddChange("assignedToUserId")}
                 required
               >
-                <option value="">Select RM</option>
+                <option value="">Select Investment Manager</option>
                 {rmUsers.map((rm) => (
                   <option key={rm._id} value={rm._id}>
                     {rm.fullName || rm.username}
@@ -894,7 +894,7 @@ export default function ClientsPage() {
           </ModalGrid>
           {isRm && (
             <ModalTextarea
-              label="RM Remarks"
+              label="Investment Manager Remarks"
               icon="file"
               placeholder="Add any relevant remarks about this client..."
               hint="Include any important background information, notes, or context."
@@ -992,12 +992,12 @@ export default function ClientsPage() {
             )}
             {canAssignRm && (
               <FormSelect
-                label="Assigned RM"
+                label="Assigned Investment Manager"
                 icon="briefcase"
                 value={editForm.assignedToUserId}
                 onChange={handleEditChange("assignedToUserId")}
               >
-                <option value="">Reassign RM (optional)</option>
+                <option value="">Reassign Investment Manager (optional)</option>
                 {rmUsers.map((rm) => (
                   <option key={rm._id} value={rm._id}>
                     {rm.fullName || rm.username}
@@ -1186,7 +1186,7 @@ export default function ClientsPage() {
             description="Notes and record details."
           >
             <DetailList>
-              <DetailRow icon="file" label="RM remarks" value={infoClient?.rmRemarks} />
+              <DetailRow icon="file" label="Investment Manager remarks" value={infoClient?.rmRemarks} />
               <DetailRow
                 icon="calendar"
                 label="Created"

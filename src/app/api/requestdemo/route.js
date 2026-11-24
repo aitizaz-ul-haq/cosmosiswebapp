@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { connectToDatabase } from "@/lib/mongodb";
 import DemoRequest from "@/models/DemoRequest";
+import { getRoleLabel } from "@/lib/roles";
 
 export async function POST(req) {
   try {
@@ -62,7 +63,7 @@ export async function POST(req) {
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
         <p><b>Company:</b> ${company || "N/A"}</p>
-        <p><b>Role:</b> ${role}</p>
+        <p><b>Role:</b> ${getRoleLabel(role)}</p>
         <p><b>Message:</b> ${message}</p>
       `,
     };

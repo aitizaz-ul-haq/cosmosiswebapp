@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ModalButton, ModalPasswordInput, ModalShell } from "./modalkit/ModalKit";
 
 /**
@@ -21,6 +21,7 @@ export default function DeleteConfirmModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const pending = useRef(false);
 
   if (!open) return null;
 
@@ -31,16 +32,19 @@ export default function DeleteConfirmModal({
   };
 
   const handleCancel = () => {
+    if (pending.current) return;
     reset();
     onCancel?.();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (pending.current) return;
     if (!password) {
       setError("Please enter your password.");
       return;
     }
+    pending.current = true;
     setSubmitting(true);
     setError("");
     try {
@@ -53,13 +57,14 @@ export default function DeleteConfirmModal({
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data?.success) {
         setError(data?.error || "Incorrect password");
-        setSubmitting(false);
         return;
       }
       await onConfirm?.();
       reset();
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError(err?.message || "Something went wrong. Please try again.");
+    } finally {
+      pending.current = false;
       setSubmitting(false);
     }
   };
@@ -72,6 +77,7 @@ export default function DeleteConfirmModal({
       title={`Do you want to delete ${itemLabel}?`}
       subtitle="Enter your password to confirm this action."
       onClose={handleCancel}
+      dismissOnOverlay={!submitting}
       overlayClassName="mk-overlay-top"
       as="form"
       wrapperProps={{ onSubmit: handleSubmit }}
@@ -94,6 +100,7 @@ export default function DeleteConfirmModal({
     >
       <ModalPasswordInput
         autoFocus
+        disabled={submitting}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Your password"

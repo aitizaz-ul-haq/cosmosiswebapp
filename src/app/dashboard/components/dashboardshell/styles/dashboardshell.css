@@ -121,9 +121,9 @@
 }
 .dashboard-account-identity { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .dashboard-account-name { display: block; overflow: hidden; max-width: 180px; text-overflow: ellipsis; white-space: nowrap; }
-.dashboard-account-role { color: #7382ad; font-size: 14px; font-weight: 400; white-space: nowrap; }
+.dashboard-account-role { color: #7382ad; font-size: 14px; font-weight: 400; white-space: normal; overflow-wrap: break-word; }
 .dashboard-account-chevron { flex: 0 0 auto; margin-left: 0; }
-.dashboard-sidebar-account .dashboard-account-trigger { width: 100%; gap: 12px; padding: 0 7px; height: 53px; }
+.dashboard-sidebar-account .dashboard-account-trigger { width: 100%; gap: 12px; padding: 0 7px; min-height: 53px; height: auto; }
 .dashboard-sidebar-account .dashboard-avatar { width: 51px; height: 51px; background: linear-gradient(135deg,#00d5bb,#00baa5); color: white; font-size: 18px; font-weight: 400; border: 1px solid #00dac1; }
 .dashboard-sidebar-account .dashboard-account-identity { flex: 1; }
 .dashboard-sidebar-account .dashboard-account-name { max-width: 147px; }

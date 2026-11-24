@@ -70,7 +70,7 @@ export async function PATCH(req) {
       await transporter.sendMail({
         from: `"Cosmosis Team" <${process.env.SMTP_USER}>`,
         to: demoReq.email,
-        subject: "✅ Demo Request Approved - Your Supervisor Account",
+        subject: "✅ Demo Request Approved - Your Compliance Officer Account",
         html: `
           <h2>Hello ${demoReq.firstname},</h2>
           <p>Your demo request has been <b>approved</b>.</p>

@@ -887,7 +887,7 @@ export function buildTerms(b) {
     sh("Complaints"),
     c(
       "28.3",
-      `If you have any complaint, you are requested in the first instance to contact your Relationship Manager. Alternatively you can contact ${b.complaintContact}.`
+      `If you have any complaint, you are requested in the first instance to contact your Investment Manager. Alternatively you can contact ${b.complaintContact}.`
     ),
     c(
       "28.4",

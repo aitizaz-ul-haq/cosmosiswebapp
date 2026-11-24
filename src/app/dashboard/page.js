@@ -3,11 +3,13 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { dashboardConfigs } from "./config";
 import { logUIAction } from "@/lib/logUIAction";
+import { getRoleLabel } from "@/lib/roles";
 import { useUser } from "../context/UserContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import ActionLogger from "./components/ActionLogger";
 import RMsPage from "./components/dashboardshell/pages/RMsPage";
+import TeamsPage from "./components/dashboardshell/pages/TeamsPage";
 import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
@@ -71,6 +73,7 @@ const getPageMap = (userRole, setActiveMenu) => {
   if (userRole === "supervisor") {
     return {
       ...baseMap,
+      teams: <TeamsPage />,
       dashboard: <SupervisorDashboard />,
     };
   }
@@ -166,7 +169,7 @@ function Dashboard() {
     >
       {/* 🔒 Tracks every button/menu interaction in the dashboard for the audit log */}
       <ActionLogger context="dashboard" />
-      {getPageMap(user.role, setActiveMenu)[activeMenu] || <div>Welcome {user.role}!</div>}
+      {getPageMap(user.role, setActiveMenu)[activeMenu] || <div>Welcome {getRoleLabel(user.role)}!</div>}
     </DashboardShell>
   );
 }

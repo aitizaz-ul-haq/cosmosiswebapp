@@ -17,12 +17,13 @@ export default function ManagementTableToolbar({
   const dateFilter = filterField.toLowerCase().includes("date");
   const placeholders = {
     Companies: "Search companies by name, contact, email, or phone...",
-    Supervisors: "Search supervisors by name, email, company, or role...",
+    "Compliance Officers": "Search compliance officers by name, email, company, or role...",
     Users: "Search users by name, email, company, or role...",
     Clients: columns.some((column) => column.accessorKey === "phone")
       ? "Search clients by name, phone, or assignment..."
       : "Search clients by name or assignment...",
-    "Relationship Managers": "Search relationship managers by name, email, phone, or company...",
+    "Investment Managers": "Search investment managers by name, email, phone, or company...",
+    Teams: "Search teams by name, leader, or members...",
   };
 
   if (hideDefaultFilter && !customFilters && !onAdd) return null;

@@ -33,7 +33,7 @@ const FILTERABLE_FIELDS = ["fullName", "created", "rmRemarks", "status", "phase"
 const FILTER_COLUMNS = [
   { accessorKey: "fullName", header: "Client" },
   { accessorKey: "created", header: "Created" },
-  { accessorKey: "rmRemarks", header: "RM remarks" },
+  { accessorKey: "rmRemarks", header: "Investment Manager remarks" },
   { accessorKey: "status", header: "Status" },
   { accessorKey: "phase", header: "Phase" },
 ];
@@ -271,7 +271,7 @@ function ClientDetails({ row }) {
       "Onboarding type",
       onboardingTypeLabel(row.client.onboardingType || "individual"),
     ],
-    ["Relationship manager", row.client.assignedToName],
+    ["Investment Manager", row.client.assignedToName],
     ["Shared with", (row.client.sharedWithNames || []).join(", ")],
     ["Company", row.client.companyName],
     ["Assigned by", row.client.assignedByName],
@@ -374,7 +374,7 @@ function TimelineDetail({ row, closing, panelId }) {
                 <ClientDetails row={row} />
               ) : (
                 <div className="onbs-remarks-panel">
-                  <h3>RM Remarks</h3>
+                  <h3>Investment Manager Remarks</h3>
                   <Remarks text={row.rmRemarks} />
                 </div>
               )
@@ -537,7 +537,7 @@ function ClientRow({
             <span className="onbs-meta">
               {expanded ? "Added " : ""}{row.created}
               <span aria-hidden="true"> · </span>
-              RM: {row.client.assignedToName || fallbackRM || "Unassigned"}
+              Investment Manager: {row.client.assignedToName || fallbackRM || "Unassigned"}
             </span>
           </span>
         </button>
@@ -597,10 +597,10 @@ function ClientRow({
                     type="button"
                     className="management-row-action is-neutral"
                     disabled
-                    title="RM notifications are not available yet"
+                    title="Investment Manager notifications are not available yet"
                   >
                     <Icon name="mail" size={15} />
-                    Notify RM
+                    Notify Investment Manager
                   </button>
                   <button
                     type="button"
@@ -631,10 +631,10 @@ function ClientRow({
                     type="button"
                     className="management-row-action is-danger"
                     disabled
-                    title="Supervisor reporting is not available yet"
+                    title="Compliance Officer reporting is not available yet"
                   >
                     <Icon name="file" size={15} />
-                    Report Supervisor
+                    Report Compliance Officer
                   </button>
                 </>
               )}

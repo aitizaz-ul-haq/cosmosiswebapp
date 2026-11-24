@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatRoleText, getRoleLabel } from "@/lib/roles";
 import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import { ActionList, ActivityTable, Badge, DashboardHero, Icon, Panel, StackedBarChart, StatCard } from "./dashboard/DashboardUI";
 
@@ -17,7 +18,7 @@ function actionLabel(row) {
   if (row.action === "login_success") return "User Login";
   if (row.action === "login_failed") return "Login Failed";
   if (row.action === "logout") return "User Logout";
-  return row.actionTitle || (row.action || "Activity").replace(/_/g, " ");
+  return formatRoleText(row.actionTitle || (row.action || "Activity").replace(/_/g, " "));
 }
 
 function formatDate(value) {
@@ -64,7 +65,7 @@ export default function SuperAdminDashboard() {
     }
     const requests = [
       { label: "Company totals", url: "/api/companies?count=true", apply: (data) => setCounts((previous) => ({ ...previous, companies: Number(data.count) || 0 })) },
-      { label: "Supervisor totals", url: "/api/users?role=supervisor&count=true", apply: (data) => setCounts((previous) => ({ ...previous, supervisors: Number(data.count) || 0 })) },
+      { label: "Compliance officer totals", url: "/api/users?role=supervisor&count=true", apply: (data) => setCounts((previous) => ({ ...previous, supervisors: Number(data.count) || 0 })) },
       { label: "User totals", url: "/api/users?count=true", apply: (data) => setCounts((previous) => ({ ...previous, users: Number(data.count) || 0 })) },
       { label: "Companies", url: "/api/companies", apply: (data) => setCompanies(Array.isArray(data.companies) ? data.companies : []) },
       { label: "Onboardings", url: "/api/clients", apply: (data) => setClients(Array.isArray(data.clients) ? data.clients : []) },
@@ -100,7 +101,7 @@ export default function SuperAdminDashboard() {
       {errors.length > 0 && <div className="dsh-error" role="alert">Unable to load: {errors.join(", ")}. Refresh to try again.</div>}
       <div className="dsh-stats">
         <StatCard label="Total Companies" value={showCount(counts.companies)} icon="building" description="Registered on the platform" />
-        <StatCard label="Supervisors" value={showCount(counts.supervisors)} icon="users" description="Across all companies" />
+        <StatCard label="Compliance Officers" value={showCount(counts.supervisors)} icon="users" description="Across all companies" />
         <StatCard label="Total Users" value={showCount(counts.users)} icon="users" tone="teal" description="Across all platform roles" />
         <StatCard label="In-Progress Onboardings" value={showCount(ongoingCount)} icon="document" tone="slate" description="Currently completing onboarding" />
       </div>
@@ -120,7 +121,7 @@ export default function SuperAdminDashboard() {
         </Panel>
         <Panel title="Quick Actions" icon="lightning"><ActionList items={[
           { title: "Add New Company", description: "Register a new company to the platform", icon: "building", tone: "teal", onClick: () => goTo("companies") },
-          { title: "Invite Supervisor", description: "Create a new supervisor account", icon: "userPlus", tone: "violet", onClick: () => goTo("supervisors") },
+          { title: "Invite Compliance Officer", description: "Create a new compliance officer account", icon: "userPlus", tone: "violet", onClick: () => goTo("supervisors") },
           { title: "View Platform Logs", description: "Check system activity and audit logs", icon: "document", tone: "slate", onClick: () => goTo("logs") },
           { title: "Generate Report", description: "View platform reporting", icon: "chart", tone: "violet", onClick: () => goTo("reports") },
         ]} /></Panel>
@@ -131,8 +132,8 @@ export default function SuperAdminDashboard() {
           <ActivityTable columns={[
             { key: "createdAt", label: "Date & Time", render: formatDate },
             { key: "action", label: "Activity", render: (_value, row) => actionLabel(row) },
-            { key: "entity", label: "Entity", render: (_value, row) => row.metadata?.entity || row.role || "Platform" },
-            { key: "details", label: "Details", render: (_value, row) => row.actionTitle || actionLabel(row) },
+            { key: "entity", label: "Entity", render: (_value, row) => getRoleLabel(typeof row.metadata?.entity === "string" ? row.metadata.entity : row.metadata?.entityType || row.role) || "Platform" },
+            { key: "details", label: "Details", render: (_value, row) => formatRoleText(row.actionTitle || actionLabel(row)) },
             { key: "username", label: "User", render: (value, row) => value || row.name || "—" },
             { key: "status", label: "Status", render: (_value, row) => <Badge tone={row.action === "login_failed" ? "red" : "teal"}>{row.action === "login_failed" ? "Failed" : "Recorded"}</Badge> },
           ]} rows={logs} emptyMessage={loading ? "Loading platform activity…" : errors.includes("Platform activity") ? "Platform activity is unavailable." : "No platform activity has been recorded yet."} />

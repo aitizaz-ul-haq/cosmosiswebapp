@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { getRoleLabel } from "@/lib/roles";
 import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import CosmosisLoader from "./loading/CosmosisLoader";
 import { ModalButton, ModalGrid, ModalInput, ModalShell } from "./modalkit/ModalKit";
@@ -290,17 +291,6 @@ export default function ProfilePage() {
     return <div className="profile-page-container">Failed to load profile information</div>;
   }
 
-  // Format role for display
-  const formatRole = (role) => {
-    const roleMap = {
-      superadmin: "Super Admin",
-      supervisor: "Supervisor",
-      rm: "Relationship Manager",
-      client: "Client",
-    };
-    return roleMap[role] || role;
-  };
-
   // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -345,7 +335,7 @@ export default function ProfilePage() {
           </div>
           <div className="profile-stat-body">
             <span className="profile-stat-label">Role</span>
-            <span className="profile-stat-value">{formatRole(userDetails.role)}</span>
+            <span className="profile-stat-value">{getRoleLabel(userDetails.role)}</span>
           </div>
         </div>
 
@@ -432,7 +422,7 @@ export default function ProfilePage() {
             <InfoRow label="Company" value={userDetails.companyName || "—"} />
           </div>
           <div className="profile-card-col">
-            <InfoRow label="Role" value={formatRole(userDetails.role)} />
+            <InfoRow label="Role" value={getRoleLabel(userDetails.role)} />
             <InfoRow label="Email" value={userDetails.email} />
             <InfoRow
               label="Status"
