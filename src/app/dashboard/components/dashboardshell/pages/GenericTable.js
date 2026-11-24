@@ -12,6 +12,8 @@ import TablePageLayout from "./pagecomponents/TablePageLayout";
 import { AddCompanyModal, AddUserModal } from "./superadmin/SuperadminForms";
 import { logUIAction } from "@/lib/logUIAction";
 import { getRoleLabel } from "@/lib/roles";
+import { useUser } from "@/app/context/UserContext";
+import { getDashboardPageSize } from "@/lib/dashboardPagination";
 
 export default function GenericTable({
   title = "Table",
@@ -31,13 +33,17 @@ export default function GenericTable({
   hideDefaultFilter = false,
   filtersSlot = null,
 }) {
-  const PAGE_SIZE = 8;
+  const { user } = useUser();
+  const pageSize = getDashboardPageSize(user?.role);
   const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: PAGE_SIZE,
+    pageSize,
   });
+  useEffect(() => {
+    setPagination({ pageIndex: 0, pageSize });
+  }, [pageSize]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);

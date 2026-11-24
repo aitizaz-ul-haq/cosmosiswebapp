@@ -55,7 +55,7 @@ export const dashboardConfigs = {
     },
   },
   supervisor: {
-    header: { logoText: "Compliance Officer", searchPlaceholder: "Search clients, investment managers, teams, submissions, reports..." },
+    header: { logoText: "Compliance Officer", searchPlaceholder: "Search clients, teams, submitted information, documents, reports..." },
     sidebar: {
       menu: [
         {
@@ -99,8 +99,18 @@ export const dashboardConfigs = {
           iconlink: "/images/report.png",
         },
         {
+          key: "notifications",
+          label: "Notifications",
+          iconlink: "/images/bell-filled-white.svg",
+        },
+        {
           key: "submissions",
-          label: "Submissions",
+          label: "Submitted Information",
+          iconlink: "/images/file.png",
+        },
+        {
+          key: "documents",
+          label: "Submitted Documents",
           iconlink: "/images/file.png",
         },
         {

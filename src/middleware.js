@@ -32,6 +32,7 @@ const ROLE_RULES = {
     "/api/companies",
     "/api/clients",
     "/api/teams",
+    "/api/client-documents",
     "/api/me",
     "/api/logout",
     "/api/verify-password",
@@ -50,6 +51,9 @@ const ROLE_RULES = {
     "/dashboard",
     "/api/me",
     "/api/clients/me",
+    "/api/client-documents/mine",
+    "/api/client-documents/upload",
+    "/api/client-documents/file",
     "/api/logout",
     "/api/log"
   ], // only own dashboard

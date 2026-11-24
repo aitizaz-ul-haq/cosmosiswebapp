@@ -25,7 +25,7 @@ export default function DashboardHeaderSection({ onLogout, user, config, setActi
       <div className="dashboard-header-actions">
         <div className="dashboard-header-notifications" ref={notificationsRef}>
           <button type="button" className="dashboard-header-icon-button" aria-label="Notifications" aria-expanded={notificationsOpen} aria-controls="dashboard-notifications-popover" onClick={() => setNotificationsOpen((value) => !value)} data-log-title="Notifications"><DashboardShellIcon name="notifications" /><span className="dashboard-notification-dot" /></button>
-          {notificationsOpen && <div id="dashboard-notifications-popover" className="dashboard-notifications-popover"><strong>Notifications</strong>{user?.role === "rm" ? <button type="button" className="dashboard-notifications-link" data-log-title="View recent client activity" onClick={() => { setActiveMenu?.("notifications"); setNotificationsOpen(false); }}>View recent client activity</button> : <p>Your account notifications will appear here.</p>}</div>}
+          {notificationsOpen && <div id="dashboard-notifications-popover" className="dashboard-notifications-popover"><strong>Notifications</strong>{["rm", "supervisor"].includes(user?.role) ? <button type="button" className="dashboard-notifications-link" data-log-title="View recent client activity" onClick={() => { setActiveMenu?.("notifications"); setNotificationsOpen(false); }}>View recent client activity</button> : <p>Your account notifications will appear here.</p>}</div>}
         </div>
         <div className="dashboard-header-theme">
           <button

@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { getDashboardPageSize } from "@/lib/dashboardPagination";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import TablePageLayout from "./pagecomponents/TablePageLayout";
 import ManagementTablePagination from "./pagecomponents/ManagementTablePagination";
@@ -16,7 +17,6 @@ import {
 import "./styles/generictable.css";
 import "./styles/onboardingstatus.css";
 
-const PAGE_SIZE = 8;
 const CLOSE_MS = 800;
 // Phase 0 is read-only documents, so it has no entry in PHASE_CONFIG.
 const TIMELINE_PHASES = [{ phase: 0, name: "Prerequisites" }, ...PHASE_CONFIG];
@@ -609,7 +609,7 @@ function ClientRow({
                     data-log-title={`Submissions button clicked (timeline): ${row.fullName}`}
                   >
                     <Icon name="file" size={15} />
-                    Submissions
+                    Submitted Information
                   </button>
                 </>
               ) : (
@@ -686,6 +686,7 @@ function ClientRow({
 
 export default function OnboardingStatusPage({ onNavigate }) {
   const { user } = useUser();
+  const pageSize = getDashboardPageSize(user?.role);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -786,11 +787,15 @@ export default function OnboardingStatusPage({ onNavigate }) {
 
   useEffect(() => {
     setPageIndex(0);
-  }, [filterField, filterValue, statusFilter, phaseFilter]);
+  }, [filterField, filterValue, statusFilter, phaseFilter, pageSize, user?.id, user?._id, user?.companyId]);
 
-  const pageCount = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const currentIndex = Math.min(pageIndex, pageCount - 1);
-  const pageRows = filteredRows.slice(currentIndex * PAGE_SIZE, (currentIndex + 1) * PAGE_SIZE);
+  const pageRows = filteredRows.slice(currentIndex * pageSize, (currentIndex + 1) * pageSize);
+
+  useEffect(() => {
+    setPageIndex((previous) => Math.min(previous, pageCount - 1));
+  }, [pageCount]);
 
   return (
     <TablePageLayout
@@ -840,7 +845,7 @@ export default function OnboardingStatusPage({ onNavigate }) {
 
       {!loading && (
         <ManagementTablePagination
-          pagination={{ pageIndex: currentIndex, pageSize: PAGE_SIZE }}
+          pagination={{ pageIndex: currentIndex, pageSize }}
           total={filteredRows.length}
           onPageChange={setPageIndex}
         />

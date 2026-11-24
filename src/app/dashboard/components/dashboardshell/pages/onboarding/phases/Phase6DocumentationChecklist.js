@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionTitle, Note, CheckRow, TextArea } from "../fields";
+import ClientDocumentUploads from "../ClientDocumentUploads";
 
 export default function Phase6DocumentationChecklist() {
   return (
@@ -28,6 +29,8 @@ export default function Phase6DocumentationChecklist() {
           name="docs.utilityBill"
         />
       </div>
+
+      <ClientDocumentUploads />
 
       <div className="onb-notes-field">
         <TextArea

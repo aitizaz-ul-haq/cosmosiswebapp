@@ -26,6 +26,7 @@ import OnboardingPage from "./components/dashboardshell/pages/OnboardingPage";
 import OnboardingStatusPage from "./components/dashboardshell/pages/OnboardingStatusPage";
 import SupervisorsPage from "./components/dashboardshell/pages/SupervisorPage";
 import SubmissionsPage from "./components/dashboardshell/pages/SubmissionsPage";
+import SubmittedDocumentsPage from "./components/dashboardshell/pages/SubmittedDocumentsPage";
 import ClientSubmissionsPage from "./components/dashboardshell/pages/ClientSubmissionsPage";
 import ClientDashboard from "./components/dashboardshell/pages/ClientDashboard";
 import SupervisorDashboard from "./components/dashboardshell/pages/SupervisorDashboard";
@@ -74,6 +75,7 @@ const getPageMap = (userRole, setActiveMenu) => {
     return {
       ...baseMap,
       teams: <TeamsPage />,
+      documents: <SubmittedDocumentsPage />,
       dashboard: <SupervisorDashboard />,
     };
   }

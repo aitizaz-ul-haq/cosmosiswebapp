@@ -2,7 +2,7 @@ import DashboardPageLoading from "../pages/loading/DashboardPageLoading";
 import { dashboardConfigs } from "../../../config";
 
 export default function DashboardMenuSection({ activeMenu, userRole, children }) {
-  const tableMenus = ["companies", "supervisors", "users", "clients", "rms", "teams", "registry", "scheduled", "approvals", "underreview", "onboardingstatus", "submissions", "reports", "logs", "demo users", "requesteddemonstration"];
+  const tableMenus = ["companies", "supervisors", "users", "clients", "rms", "teams", "registry", "scheduled", "approvals", "underreview", "onboardingstatus", "submissions", "documents", "reports", "logs", "demo users", "requesteddemonstration"];
   const managementPage = tableMenus.includes(activeMenu) || (userRole === "superadmin" && activeMenu === "notifications");
   const sharedPageBackground = managementPage || (userRole === "client" && activeMenu === "onboarding");
   const brandedPage = !managementPage && !["dashboard", "profile", "onboarding", "notifications"].includes(activeMenu);

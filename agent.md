@@ -13,11 +13,24 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 
 ## Latest handoff for GitHub Copilot — 24 Nov 2026
 
-- Pending Approvals' Details modal now opts into `ClientInfoModal`'s `wideDetails` variant:
-  a 1280px desktop maximum, two four-row information cards with intrinsic label minimums,
-  stacked cards at1100px and below, and existing mobile detail rows. Only this variant portals
-  to body so the wider card stays above the sidebar. Remarks retain their existing styles;
-  other callers retain the standard 720px dialog. Verification is in the latest change-log entry.
+- All nine Compliance Officer list destinations use **10 records per page**: Investment
+  Managers, Teams, Clients, Onboarding Status, Pending Approvals, Under Review, Reports,
+  Notifications and Submissions. `src/lib/dashboardPagination.js` owns the role-specific size:
+  `supervisor` gets 10; other roles retain 8 on paginated tables/client lists.
+- GenericTable's row model and footer use the shared policy, as do the two custom client
+  accordions. Compliance Officer Notifications now slices the full activity list into pages
+  of 10 with the existing pagination controls; Investment Manager Notifications retains its
+  full list. Filters/user/page-size changes reset the relevant page; data shrink clamps indexes.
+  Reports still has no report data source and displays the existing empty state under this rule.
+- Pending Approvals and Under Review Details now use `ClientInfoModal`'s `wideDetails`
+  variant: a 1280px desktop maximum, two four-row information cards with intrinsic label
+  minimums, stacked cards at 1100px and below, and existing mobile detail rows. This variant
+  portals to body so the wider card stays above the sidebar. Remarks retain their existing
+  styles; other callers retain the standard 720px dialog. Verification is in the latest log.
+- Compliance Officers now have **Notifications** in the sidebar after Reports and a working
+  **View recent client activity** link in the header bell menu. The existing Notifications
+  page derives recorded client activity from company-scoped `/api/clients`, matching the
+  Investment Manager view with company-wide subtitle/scope. No new notification API was needed.
 - Compliance Officers now have **Teams** directly below **Investment Managers**. `TeamsPage.js`
   provides a searchable table, Add/Edit/View dialogs, password-confirmed deletion, **Email Team
   Leader**, and **Send message to team**. The latter opens the officer's email application with
@@ -546,13 +559,13 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
   component, add it to `getPageMap`, add a menu entry in `config.js`.
 - **`config.js`** sidebar per role:
   - superadmin: dashboard, companies, supervisors, users, logs, reports, profile
-  - supervisor: dashboard, rms, teams, clients, onboardingstatus, approvals, underreview, reports, submissions, profile
+  - supervisor: dashboard, rms, teams, clients, onboardingstatus, approvals, underreview, reports, notifications, submissions, profile
   - rm: dashboard, clients, registry, scheduled, onboardingstatus, notifications, submissions, profile
   - client: **dashboard, onboarding, submissions, profile**
 - **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `TeamsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
-- **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for the Investment Manager menu.
-- **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side (`PAGE_SIZE` 8 on list pages).
+- **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for Investment Manager and Compliance Officer menus.
+- **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side. `getDashboardPageSize` (`lib/dashboardPagination.js`) sets Compliance Officer (`supervisor`) pages to 10 records and other paginated roles to 8. Compliance Officer Notifications paginates activity; Investment Manager Notifications retains its full list.
 - **Page loading**: `loading/DashboardPageLoading.js` wraps the keyed destination in the content
   stage; `useDashboardPageLoading` registers pending page data. The logo stays visible for at
   least 1200ms and as long as registered data is pending. The content is inert while covered.
@@ -643,6 +656,9 @@ badge color overrides.
 `ModalKit.js` (read its header comment for the design rules), `modalkit.css`, `Icon.js` (stroke icon set — add icons here). Components: `ModalShell` (props `icon|avatar, title, badges, subtitle, onClose, footer, size sm|md|lg, as/wrapperProps` for forms, `iconTone`, `headerActions`, `overlayClassName`), `ModalSection`, `ModalGrid`, `DetailList/DetailRow`, `Stat`, `StatusPill` + `STATUS_TONES`, `ModalButton`, `ModalField/ModalInput/ModalSelect/ModalTextarea/ModalPasswordInput` (these now forward `required` to the native element), `CopyButton`, `initialsOf`. Escape closes, body scroll is locked, backdrop is blurred.
 Design references: `public/images/example_modal_1..5.png` (1 scheduled details, 2/3 client info, 4 edit Investment Manager form, 5 add client form).
 Converted to the kit: `ClientInfoModal`, `ScheduledDetailsModal`, `DeleteConfirmModal`, Add/Edit/Info modals in `ClientsPage`, `RegistryPage` modals, `ScheduleOnboardingModal` (+`SearchableSelect`), `RMsPage` Add/Edit, `ApprovalsPage`/`UnderReviewPage` footers, `ProfilePage` edit modals, `PasswordGate`, `SubmissionViewModal`, and superadmin Add/Edit Company, Add/Edit User and Edit Compliance Officer (`superadmin/SuperadminForms.js`, `CompaniesPage`, `UserPage`, `SupervisorPage`).
+Pending Approvals and Under Review opt into `ClientInfoModal wideDetails`: 1280px maximum,
+body-portaled overlay, intrinsic minimum label columns in the two information cards, and
+stacking at 1100px. Remarks styling and other ClientInfoModal callers retain their defaults.
 Company Add/Edit uses `overlayClassName="mk-company-overlay"` and `mk-company-fields` to fit the
 content stage beneath the top bar. Scheduled details uses `mk-scheduled-details-overlay`,
 sharing the 1200px width/positioning while capping height at 640px (company remains 760px).
@@ -667,6 +683,57 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ## 10. Change log — what was done in the last four days
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
+
+### 24 Nov — 10 records per Compliance Officer page
+
+- Centralized the page-size policy in `src/lib/dashboardPagination.js`: role `supervisor`
+  uses 10 records; other paginated roles keep 8. `GenericTable` reads this policy for both
+  its TanStack row model and footer, covering Investment Managers, Teams, Clients, Pending
+  Approvals, Under Review and Reports. Its page resets when the role's size changes.
+- Updated the separate Onboarding Status and Submissions accordions to use the same policy
+  for slices, page counts, displayed ranges and controls. SubmissionsPagination receives its
+  size explicitly. Filters and identity/page-size changes reset pages; data shrink clamps
+  page indexes so a removed last page cannot leave a blank view.
+- Compliance Officer Notifications now paginates the entire recorded client-activity list,
+  10 events at a time, using ManagementTablePagination. Loading/errors clear stale events
+  and totals. Investment Manager Notifications continues showing its complete list.
+- Reports still has its existing empty data source; its shared table is configured for the
+  10-record policy when report data is added. No placeholder records or report API were added.
+- Verification: full lint, isolated production build and diff check pass with the existing
+  Profile dependency warning and `/api/logs` static-analysis diagnostic. Browser report
+  `/tmp/cosmosis-compliance-pagination-browser-results.json`: **14 cases pass, zero runtime
+  or console errors**. Eight populated officer lists with 23 test records split **10/10/3**
+  with correct ranges, page indicators, boundary buttons, no overlap/missing records, and
+  filter resets where search is available. Reports' empty state, three Investment Manager
+  8/8/7 regressions and mobile Teams/Notifications pass. A focused Pending Approvals recheck
+  uses the existing page heading in `/tmp/cosmosis-compliance-pagination-approvals-recheck-results.json`.
+  APIs were intercepted with fixtures; no live data mutations or deployment. Preview stopped.
+
+### 24 Nov — wider approval/review details and Compliance Officer Notifications
+
+- Pending Approvals and Under Review now opt into `ClientInfoModal wideDetails`, using a
+  1280px desktop maximum so the eight entries in the two information cards have room on
+  single lines. Labels use intrinsic minimum widths so Investment Manager name cannot overlap
+  its value. The two cards stack at 1100px and below; existing mobile label/value stacking
+  and wrapping for unusually long values remain available. Remarks styles/content are unchanged.
+- The wide variant portals to `document.body`, keeping the wider card above the sidebar.
+  Other ClientInfoModal callers retain their default size. Changes live in `ClientInfoModal.js`,
+  `ApprovalsPage.js`, `UnderReviewPage.js` and `modalkit/modalkit.css`; the tablet grid override
+  uses `.mk-grid.mk-approval-details-grid` so later `.mk-cols-2` rules cannot override it.
+- Added Compliance Officer Notifications after Reports in `dashboard/config.js`. The header
+  bell now links to recent activity for both Investment Managers and Compliance Officers.
+  Existing `NotificationsPage.js` shows company-wide client activity for Compliance Officers
+  from their scoped `/api/clients` response, with a company-specific subtitle; no API changes.
+- Verification: focused ESLint, full isolated production build and `git diff --check` pass.
+  Existing Profile hook warning and `/api/logs` static-analysis diagnostic remain unchanged.
+  Browser report `/tmp/cosmosis-approvals-width-browser-results.json`: **9 cases, zero failures,
+  runtime exceptions or console errors**. Four Pending Approvals sizes (1672/1366/1024/390px),
+  three Under Review sizes (1366/1024/390px), and desktop/mobile Notifications sidebar/page/bell
+  navigation pass. All eight sample labels/values stay on one text line without clipping or
+  overlap; tablet cards stack, mobile stays within viewport, and remarks retain font/wrapping.
+  Screenshots `/tmp/cosmosis-approvals-1672-details-width.png` and
+  `/tmp/cosmosis-approvals-mobile-details-width.png`. Checks use mocked APIs with real compiled
+  UI/middleware, no live data mutations or deployment. Isolated preview server was stopped.
 
 ### 24 Nov — Teams View button color
 

@@ -15,6 +15,7 @@ export default function DashboardShellIcon({ name, size = 22, ...props }) {
     registry: <><path d="M9 3h10v14M14 7h4M14 10h4"/><circle cx="9" cy="14" r="8"/><path d="M9 10v4l3 2M3 4l3 2M2 7l4-1"/></>,
     document: <><path d="M6 2h8l5 5v15H6Z"/><path d="M14 2v6h5M9 12h7m-7 4h7"/></>,
     submissions: <><path d="M7 3h9l5 5v13H7M16 3v6h5M10 12h7m-7 4h7"/><path d="M3 7v14h10"/></>,
+    documents: <><path d="M5 2h9l5 5v15H5Z"/><path d="M14 2v6h5M8 12h8M8 16h5"/><circle cx="17.5" cy="18" r="3.5"/><path d="m20 20.5 2 2"/></>,
     reports: <><path d="M6 2h8l5 5v15H6Z"/><path d="M14 2v6h5M9 12h7m-7 4h7"/></>,
     logs: <><circle cx="12" cy="12" r="9"/><path d="M12 5v7l4 2"/></>,
     notifications: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M9 20h6m-4-18h2"/></>,

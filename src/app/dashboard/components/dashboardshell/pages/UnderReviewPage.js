@@ -204,6 +204,7 @@ export default function UnderReviewPage() {
 
       <ClientInfoModal
         client={infoClient}
+        wideDetails
         onClose={() => setInfoClient(null)}
         footerActions={
           infoClient ? (

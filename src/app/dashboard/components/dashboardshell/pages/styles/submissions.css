@@ -303,17 +303,22 @@
   }
 }
 
-/* Password gate: blurs the whole page until verified (the window itself is the modal kit) */
-.sub-gate-overlay {
+/* One modal-kit overlay, portaled to body so the gate centers in the viewport. */
+.mk-overlay.sub-gate-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.35);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  z-index: 1200;
+}
+
+.sub-gate-overlay .mk-card {
+  max-height: calc(100dvh - 3rem);
+}
+
+.sub-gate-fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 /* Staff submissions: compact client rows with an inset phase table. */

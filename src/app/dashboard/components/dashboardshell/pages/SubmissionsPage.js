@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useUser } from "@/app/context/UserContext";
+import { getDashboardPageSize } from "@/lib/dashboardPagination";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import TablePageLayout from "./pagecomponents/TablePageLayout";
 import ManagementTableToolbar from "./pagecomponents/ManagementTableToolbar";
@@ -14,7 +15,6 @@ import PhaseRow, { formatCompletedAt } from "./submissions/PhaseRow";
 import "./styles/generictable.css";
 import "./styles/submissions.css";
 
-const PAGE_SIZE = 8;
 // Same clients as the Onboarding status page: those actively going through onboarding.
 const ENGAGED_STATUSES = new Set(["ongoing", "on_hold", "cancelled"]);
 const FILTERABLE_FIELDS = ["username", "status", "phase"];
@@ -240,13 +240,13 @@ function SubmissionAccordion({ row, open, onToggle, onView }) {
   );
 }
 
-function SubmissionsPagination({ pageIndex, total, onPageChange }) {
-  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+function SubmissionsPagination({ pageIndex, pageSize, total, onPageChange }) {
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const visibleCount = Math.min(5, pageCount);
   const start = Math.max(0, Math.min(pageIndex - Math.floor(visibleCount / 2), pageCount - visibleCount));
   const pages = Array.from({ length: visibleCount }, (_, index) => start + index);
-  const firstRow = total === 0 ? 0 : pageIndex * PAGE_SIZE + 1;
-  const lastRow = Math.min(total, (pageIndex + 1) * PAGE_SIZE);
+  const firstRow = total === 0 ? 0 : pageIndex * pageSize + 1;
+  const lastRow = Math.min(total, (pageIndex + 1) * pageSize);
 
   return (
     <div className="sub-pagination">
@@ -289,6 +289,9 @@ function SubmissionsPagination({ pageIndex, total, onPageChange }) {
 
 export default function SubmissionsPage() {
   const { user } = useUser();
+  const pageSize = getDashboardPageSize(user?.role);
+  const isComplianceOfficer = user?.role === "supervisor";
+  const sectionTitle = isComplianceOfficer ? "Submitted Information" : "Submissions";
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -347,7 +350,7 @@ export default function SubmissionsPage() {
 
   useEffect(() => {
     setPageIndex(0);
-  }, [filterField, filterValue]);
+  }, [filterField, filterValue, pageSize, user?.id, user?._id, user?.companyId]);
 
   const toggle = (id) =>
     setOpenIds((prev) => {
@@ -357,32 +360,37 @@ export default function SubmissionsPage() {
       return next;
     });
 
-  const pageCount = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const currentIndex = Math.min(pageIndex, pageCount - 1);
-  const pageRows = filteredRows.slice(currentIndex * PAGE_SIZE, (currentIndex + 1) * PAGE_SIZE);
+  const pageRows = filteredRows.slice(currentIndex * pageSize, (currentIndex + 1) * pageSize);
+
+  useEffect(() => {
+    setPageIndex((previous) => Math.min(previous, pageCount - 1));
+  }, [pageCount]);
 
   return (
     <TablePageLayout
-      title="Submissions"
-      description="Here you can view all the phases that have been submitted by your clients."
+      title={sectionTitle}
+      description={isComplianceOfficer ? "Review the onboarding information submitted by your company’s clients." : "Here you can view all the phases that have been submitted by your clients."}
       className="submissions-table-page"
       loading={unlocked && loading}
     >
       <div className="sub-protected-content" aria-hidden={!unlocked} inert={!unlocked ? "" : undefined}>
         <div className="sub-toolbar">
           <ManagementTableToolbar
-            title="Submissions"
+            title={sectionTitle}
             columns={FILTER_COLUMNS}
             filterField={filterField}
             setFilterField={setFilterField}
             filterValue={filterValue}
             setFilterValue={setFilterValue}
             filterableFields={FILTERABLE_FIELDS}
-            searchPlaceholder="Search submissions by client, status, or phase..."
+            searchPlaceholder={isComplianceOfficer ? "Search submitted information by client, status, or phase..." : "Search submissions by client, status, or phase..."}
           />
           {unlocked && !loading && (
             <SubmissionsPagination
               pageIndex={currentIndex}
+              pageSize={pageSize}
               total={filteredRows.length}
               onPageChange={setPageIndex}
             />

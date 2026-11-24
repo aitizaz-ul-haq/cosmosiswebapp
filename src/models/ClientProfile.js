@@ -94,8 +94,19 @@ const AdviserSchema = new mongoose.Schema(
 
 const UploadSchema = new mongoose.Schema(
   {
+    uploadId: { type: String, trim: true, default: "" },
+    sha256: { type: String, trim: true, default: "" },
     label: { type: String, trim: true, default: "" },
     url: { type: String, trim: true, default: "" },
+    originalName: { type: String, trim: true, default: "" },
+    mimeType: { type: String, trim: true, lowercase: true, default: "" },
+    sizeBytes: {
+      type: Number,
+      default: null,
+      min: 0,
+      validate: { validator: (value) => value === null || Number.isSafeInteger(value), message: "Document size must be a nonnegative whole number of bytes." },
+    },
+    storageId: { type: mongoose.Schema.Types.ObjectId, default: null },
     uploadedAt: { type: Date, default: Date.now },
   },
   { _id: false }
