@@ -27,17 +27,6 @@
   margin: 0;
 }
 
-.settings-theme-options { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0 1.5rem 1.5rem; }
-.settings-theme-option { display: flex; flex: 1 1 210px; align-items: center; gap: .8rem; min-width: 0; padding: 1rem; border: 1px solid #e6e9f1; border-radius: 10px; background: #f6f7fb; color: #6d7692; font: inherit; font-size: .9rem; text-align: left; cursor: pointer; }
-.settings-theme-option svg { flex-shrink: 0; }
-.settings-theme-option:hover { border-color: #17b89b; }
-.settings-theme-option[aria-pressed="true"] { border-color: #17b89b; background: #e3f8f2; color: #138b78; }
-.settings-theme-selected { margin-left: auto; font-size: .75rem; font-weight: 600; }
-html[data-dashboard-theme="dark"] .settings-theme-option { border-color: var(--dm-border); background: var(--dm-raised); color: var(--dm-muted); }
-html[data-dashboard-theme="dark"] .settings-theme-option:hover,
-html[data-dashboard-theme="dark"] .settings-theme-option[aria-pressed="true"] { border-color: var(--dm-teal); }
-html[data-dashboard-theme="dark"] .settings-theme-option[aria-pressed="true"] { background: var(--dm-green-bg); color: var(--dm-teal); }
-
 /* ---------- Stat cards ---------- */
 .profile-stats {
   display: grid;

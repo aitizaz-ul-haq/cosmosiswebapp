@@ -6,14 +6,12 @@ import { getRoleLabel } from "@/lib/roles";
 import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import CosmosisLoader from "./loading/CosmosisLoader";
 import { ModalButton, ModalGrid, ModalInput, ModalShell } from "./modalkit/ModalKit";
-import { useDashboardThemeControls } from "../useDashboardTheme";
-import DashboardShellIcon from "../subcomps/microcomps/dashboardshellicon";
+import SettingsSections from "./SettingsSections";
 import "./styles/managementtable.css";
 import "./styles/profilepage.css";
 
 export default function ProfilePage({ settings = false }) {
   const { user } = useUser();
-  const themeControls = useDashboardThemeControls();
   const [userDetails, setUserDetails] = useState(null);
   const [companyDetails, setCompanyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -308,8 +306,89 @@ export default function ProfilePage({ settings = false }) {
   const isSupervisorOrRm =
     userDetails.role === "supervisor" || userDetails.role === "rm";
 
+  const securityForm = (
+    <form className="profile-security-form" onSubmit={handlePasswordSubmit}>
+      <div className="profile-security-grid">
+        <div className="profile-form-group">
+          <label htmlFor="currentPassword" className="profile-form-label">
+            Current Password
+          </label>
+          <div className="profile-password-input-wrapper">
+            <input
+              type={showCurrentPassword ? "text" : "password"}
+              id="currentPassword"
+              name="currentPassword"
+              value={passwordForm.currentPassword}
+              onChange={handlePasswordChange}
+              className={`profile-form-input ${passwordErrors.currentPassword ? "error" : ""}`}
+              placeholder="Enter your current password"
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className="profile-password-toggle"
+              aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
+              aria-pressed={showCurrentPassword}
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+            >
+              {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
+            </button>
+          </div>
+          {passwordErrors.currentPassword && (
+            <span className="profile-field-error">{passwordErrors.currentPassword}</span>
+          )}
+        </div>
+
+        <div className="profile-form-group">
+          <label htmlFor="newPassword" className="profile-form-label">
+            New Password
+          </label>
+          <div className="profile-password-input-wrapper">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              id="newPassword"
+              name="newPassword"
+              value={passwordForm.newPassword}
+              onChange={handlePasswordChange}
+              className={`profile-form-input ${passwordErrors.newPassword ? "error" : ""}`}
+              placeholder="Enter your new password"
+              autoComplete="new-password"
+            />
+            <button
+              type="button"
+              className="profile-password-toggle"
+              aria-label={showNewPassword ? "Hide new password" : "Show new password"}
+              aria-pressed={showNewPassword}
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+            </button>
+          </div>
+          {passwordErrors.newPassword && (
+            <span className="profile-field-error">{passwordErrors.newPassword}</span>
+          )}
+        </div>
+      </div>
+
+      <div className="profile-security-footer">
+        <button type="submit" className="profile-primary-btn" disabled={submitting}>
+          <LockIcon />
+          {submitting ? "Changing Password..." : "Change Password"}
+        </button>
+        <div className="profile-security-info">
+          <InfoBadgeIcon />
+          <span>Use a strong password and keep your login credentials secure.</span>
+        </div>
+      </div>
+
+      {message.text && (
+        <div className={`profile-message ${message.type}`}>{message.text}</div>
+      )}
+    </form>
+  );
+
   return (
-    <div className="profile-page-container">
+    <div className={`profile-page-container${settings ? " settings-page-container" : ""}`}>
       {/* Header */}
       <div className={settings ? "management-table-heading" : "profile-overview-header"}>
         <h1 className={settings ? undefined : "profile-overview-title"}>{settings ? "Settings" : "Profile Overview"}</h1>
@@ -320,252 +399,166 @@ export default function ProfilePage({ settings = false }) {
         </p>
       </div>
 
-      {settings && themeControls && (
-        <section className="profile-card" aria-labelledby="settings-appearance-title">
-          <div className="profile-card-header">
-            <span className="profile-card-icon"><DashboardShellIcon name="settings" /></span>
-            <div>
-              <h2 className="profile-card-title" id="settings-appearance-title">Appearance</h2>
-              <p className="profile-card-subtitle">Choose how your dashboard looks. Your preference is saved in this browser.</p>
+      {settings ? (
+        <SettingsSections
+          userDetails={userDetails}
+          companyDetails={companyDetails}
+          formatDate={formatDate}
+          securityForm={securityForm}
+          onEditPersonal={() => setShowEditModal(true)}
+          onEditCompany={() => setShowCompanyEditModal(true)}
+        />
+      ) : (
+        <>
+          {/* Stat cards */}
+          <div className="profile-stats">
+            <div className="profile-stat-card">
+              <div className="profile-stat-icon">
+                <ShieldIcon />
+              </div>
+              <div className="profile-stat-body">
+                <span className="profile-stat-label">Account Status</span>
+                <span className="profile-stat-value">
+                  {userDetails.isActive ? "Active" : "Inactive"}
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="settings-theme-options" role="group" aria-label="Dashboard appearance">
-            {[{ theme: "light", icon: "sun", label: "Light mode" }, { theme: "dark", icon: "moon", label: "Dark mode" }].map((option) => (
-              <button
-                type="button"
-                className="settings-theme-option"
-                key={option.theme}
-                aria-pressed={themeControls.theme === option.theme}
-                data-log-title={`Settings: ${option.label}`}
-                onClick={() => themeControls.setTheme(option.theme)}
-              >
-                <DashboardShellIcon name={option.icon} size={24} />
-                <span>{option.label}</span>
-                {themeControls.theme === option.theme && <span className="settings-theme-selected" aria-hidden="true">Selected</span>}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
 
-      {/* Stat cards */}
-      <div className="profile-stats">
-        <div className="profile-stat-card">
-          <div className="profile-stat-icon">
-            <ShieldIcon />
-          </div>
-          <div className="profile-stat-body">
-            <span className="profile-stat-label">Account Status</span>
-            <span className="profile-stat-value">
-              {userDetails.isActive ? "Active" : "Inactive"}
-            </span>
-          </div>
-        </div>
-
-        <div className="profile-stat-card">
-          <div className="profile-stat-icon">
-            <UserIcon />
-          </div>
-          <div className="profile-stat-body">
-            <span className="profile-stat-label">Role</span>
-            <span className="profile-stat-value">{getRoleLabel(userDetails.role)}</span>
-          </div>
-        </div>
-
-        <div className="profile-stat-card">
-          <div className="profile-stat-icon">
-            <BuildingIcon />
-          </div>
-          <div className="profile-stat-body">
-            <span className="profile-stat-label">Company</span>
-            <span className="profile-stat-value">
-              {userDetails.companyName || "—"}
-            </span>
-          </div>
-        </div>
-
-        <div className="profile-stat-card">
-          <div className="profile-stat-icon">
-            <CalendarIcon />
-          </div>
-          <div className="profile-stat-body">
-            <span className="profile-stat-label">Member Since</span>
-            <span className="profile-stat-value">
-              {formatDate(userDetails.createdAt) || "—"}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Company Information card - Only for Supervisors and RMs */}
-      {isSupervisorOrRm && companyDetails && (
-        <div className="profile-card">
-          <div className="profile-card-header">
-            <span className="profile-card-icon">
-              <BuildingIcon />
-            </span>
-            <h2 className="profile-card-title">Company Information</h2>
-          </div>
-
-          <div className="profile-card-grid">
-            <div className="profile-card-col">
-              <InfoRow label="Company Name" value={companyDetails.name} />
-              <InfoRow label="Legal Name" value={companyDetails.legalName} />
-              <InfoRow label="Website" value={companyDetails.website} />
-              <InfoRow label="Registration No." value={companyDetails.registrationNumber} />
+            <div className="profile-stat-card">
+              <div className="profile-stat-icon">
+                <UserIcon />
+              </div>
+              <div className="profile-stat-body">
+                <span className="profile-stat-label">Role</span>
+                <span className="profile-stat-value">{getRoleLabel(userDetails.role)}</span>
+              </div>
             </div>
-            <div className="profile-card-col">
-              <InfoRow label="Tax ID" value={companyDetails.taxId} />
-              <InfoRow label="Status" value={companyDetails.status} />
-              {companyDetails.primaryContact?.fullName && (
-                <InfoRow label="Contact Name" value={companyDetails.primaryContact.fullName} />
-              )}
-              {companyDetails.primaryContact?.email && (
-                <InfoRow label="Contact Email" value={companyDetails.primaryContact.email} />
-              )}
+
+            <div className="profile-stat-card">
+              <div className="profile-stat-icon">
+                <BuildingIcon />
+              </div>
+              <div className="profile-stat-body">
+                <span className="profile-stat-label">Company</span>
+                <span className="profile-stat-value">
+                  {userDetails.companyName || "—"}
+                </span>
+              </div>
+            </div>
+
+            <div className="profile-stat-card">
+              <div className="profile-stat-icon">
+                <CalendarIcon />
+              </div>
+              <div className="profile-stat-body">
+                <span className="profile-stat-label">Member Since</span>
+                <span className="profile-stat-value">
+                  {formatDate(userDetails.createdAt) || "—"}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="profile-card-footer">
-            <button
-              className="profile-primary-btn profile-primary-btn-wide"
-              onClick={() => setShowCompanyEditModal(true)}
-            >
-              <EditIcon />
-              Edit Info
-            </button>
-          </div>
-        </div>
-      )}
+          {/* Company Information card - Only for Supervisors and RMs */}
+          {isSupervisorOrRm && companyDetails && (
+            <div className="profile-card">
+              <div className="profile-card-header">
+                <span className="profile-card-icon">
+                  <BuildingIcon />
+                </span>
+                <h2 className="profile-card-title">Company Information</h2>
+              </div>
 
-      {/* Personal Information card */}
-      <div className="profile-card">
-        <div className="profile-card-header">
-          <span className="profile-card-icon">
-            <UserIcon />
-          </span>
-          <h2 className="profile-card-title">Personal Information</h2>
-        </div>
+              <div className="profile-card-grid">
+                <div className="profile-card-col">
+                  <InfoRow label="Company Name" value={companyDetails.name} />
+                  <InfoRow label="Legal Name" value={companyDetails.legalName} />
+                  <InfoRow label="Website" value={companyDetails.website} />
+                  <InfoRow label="Registration No." value={companyDetails.registrationNumber} />
+                </div>
+                <div className="profile-card-col">
+                  <InfoRow label="Tax ID" value={companyDetails.taxId} />
+                  <InfoRow label="Status" value={companyDetails.status} />
+                  {companyDetails.primaryContact?.fullName && (
+                    <InfoRow label="Contact Name" value={companyDetails.primaryContact.fullName} />
+                  )}
+                  {companyDetails.primaryContact?.email && (
+                    <InfoRow label="Contact Email" value={companyDetails.primaryContact.email} />
+                  )}
+                </div>
+              </div>
 
-        <div className="profile-card-grid">
-          <div className="profile-card-col">
-            <InfoRow label="Username" value={userDetails.username} />
-            <InfoRow label="Full Name" value={userDetails.fullName} />
-            <InfoRow label="Phone" value={userDetails.phone} />
-            <InfoRow label="Company" value={userDetails.companyName || "—"} />
-          </div>
-          <div className="profile-card-col">
-            <InfoRow label="Role" value={getRoleLabel(userDetails.role)} />
-            <InfoRow label="Email" value={userDetails.email} />
-            <InfoRow
-              label="Status"
-              value={userDetails.isActive ? "Active" : "Inactive"}
-            />
-            <InfoRow
-              label="Account Created"
-              value={formatDate(userDetails.createdAt) || "—"}
-            />
-          </div>
-        </div>
-
-        <div className="profile-card-footer">
-          <button
-            className="profile-primary-btn profile-primary-btn-wide"
-            onClick={() => setShowEditModal(true)}
-          >
-            <EditIcon />
-            Edit Profile
-          </button>
-        </div>
-      </div>
-
-      {/* Security Settings card */}
-      <div className="profile-card">
-        <div className="profile-card-header">
-          <span className="profile-card-icon">
-            <LockIcon />
-          </span>
-          <div>
-            <h2 className="profile-card-title">Security Settings</h2>
-            <p className="profile-card-subtitle">
-              Update your password to help keep your account secure.
-            </p>
-          </div>
-        </div>
-
-        <form className="profile-security-form" onSubmit={handlePasswordSubmit}>
-          <div className="profile-security-grid">
-            <div className="profile-form-group">
-              <label htmlFor="currentPassword" className="profile-form-label">
-                Current Password
-              </label>
-              <div className="profile-password-input-wrapper">
-                <input
-                  type={showCurrentPassword ? "text" : "password"}
-                  id="currentPassword"
-                  name="currentPassword"
-                  value={passwordForm.currentPassword}
-                  onChange={handlePasswordChange}
-                  className={`profile-form-input ${passwordErrors.currentPassword ? "error" : ""}`}
-                  placeholder="Enter your current password"
-                />
+              <div className="profile-card-footer">
                 <button
-                  type="button"
-                  className="profile-password-toggle"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="profile-primary-btn profile-primary-btn-wide"
+                  onClick={() => setShowCompanyEditModal(true)}
                 >
-                  {showCurrentPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  <EditIcon />
+                  Edit Info
                 </button>
               </div>
-              {passwordErrors.currentPassword && (
-                <span className="profile-field-error">{passwordErrors.currentPassword}</span>
-              )}
             </div>
-
-            <div className="profile-form-group">
-              <label htmlFor="newPassword" className="profile-form-label">
-                New Password
-              </label>
-              <div className="profile-password-input-wrapper">
-                <input
-                  type={showNewPassword ? "text" : "password"}
-                  id="newPassword"
-                  name="newPassword"
-                  value={passwordForm.newPassword}
-                  onChange={handlePasswordChange}
-                  className={`profile-form-input ${passwordErrors.newPassword ? "error" : ""}`}
-                  placeholder="Enter your new password"
-                />
-                <button
-                  type="button"
-                  className="profile-password-toggle"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                >
-                  {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
-              </div>
-              {passwordErrors.newPassword && (
-                <span className="profile-field-error">{passwordErrors.newPassword}</span>
-              )}
-            </div>
-          </div>
-
-          <div className="profile-security-footer">
-            <button type="submit" className="profile-primary-btn" disabled={submitting}>
-              <LockIcon />
-              {submitting ? "Changing Password..." : "Change Password"}
-            </button>
-            <div className="profile-security-info">
-              <InfoBadgeIcon />
-              <span>Use a strong password and keep your login credentials secure.</span>
-            </div>
-          </div>
-
-          {message.text && (
-            <div className={`profile-message ${message.type}`}>{message.text}</div>
           )}
-        </form>
-      </div>
+
+          {/* Personal Information card */}
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <span className="profile-card-icon">
+                <UserIcon />
+              </span>
+              <h2 className="profile-card-title">Personal Information</h2>
+            </div>
+
+            <div className="profile-card-grid">
+              <div className="profile-card-col">
+                <InfoRow label="Username" value={userDetails.username} />
+                <InfoRow label="Full Name" value={userDetails.fullName} />
+                <InfoRow label="Phone" value={userDetails.phone} />
+                <InfoRow label="Company" value={userDetails.companyName || "—"} />
+              </div>
+              <div className="profile-card-col">
+                <InfoRow label="Role" value={getRoleLabel(userDetails.role)} />
+                <InfoRow label="Email" value={userDetails.email} />
+                <InfoRow
+                  label="Status"
+                  value={userDetails.isActive ? "Active" : "Inactive"}
+                />
+                <InfoRow
+                  label="Account Created"
+                  value={formatDate(userDetails.createdAt) || "—"}
+                />
+              </div>
+            </div>
+
+            <div className="profile-card-footer">
+              <button
+                className="profile-primary-btn profile-primary-btn-wide"
+                onClick={() => setShowEditModal(true)}
+              >
+                <EditIcon />
+                Edit Profile
+              </button>
+            </div>
+          </div>
+
+          {/* Security Settings card */}
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <span className="profile-card-icon">
+                <LockIcon />
+              </span>
+              <div>
+                <h2 className="profile-card-title">Security Settings</h2>
+                <p className="profile-card-subtitle">
+                  Update your password to help keep your account secure.
+                </p>
+              </div>
+            </div>
+
+            {securityForm}
+          </div>
+        </>
+      )}
 
       {/* Edit Info Modal */}
       {showEditModal && (

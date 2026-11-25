@@ -126,15 +126,19 @@ export function submissionRows(clients) {
 export function clientEvents(clients) {
   return clients.flatMap((client) => {
     const id = clientId(client), name = clientName(client), events = [];
+    const subject = { profileId: id, userName: name, username: client.username || "", userEmail: client.email || "" };
     if (validDate(client.createdAt)) events.push({
+      ...subject, eventType: "created",
       id: `${id}-created`, name, date: client.createdAt, title: "New client added", activity: "Client Added",
       description: `${name} was added to your client list`, details: "Client onboarding created", status: "Assigned", tone: "green", icon: "users", menu: "clients",
     });
     if (validDate(client.onboarding?.submittedAt)) events.push({
+      ...subject, eventType: "submitted",
       id: `${id}-submitted`, name, date: client.onboarding.submittedAt, title: "Application submitted", activity: "Submission",
       description: `${name} submitted their onboarding application`, details: "Application submitted for review", status: "Under Review", tone: "violet", icon: "file", menu: "submissions",
     });
     if (validDate(client.onboarding?.approvedAt)) events.push({
+      ...subject, eventType: "approved",
       id: `${id}-approved`, name, date: client.onboarding.approvedAt, title: "Onboarding completed", activity: "Approval",
       description: `${name}'s onboarding was approved`, details: "Onboarding application approved", status: "Completed", tone: "green", icon: "checkCircle", menu: "onboardingstatus",
     });

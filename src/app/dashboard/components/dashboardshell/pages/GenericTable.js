@@ -32,6 +32,7 @@ export default function GenericTable({
   onAddTeam,
   hideDefaultFilter = false,
   filtersSlot = null,
+  resetPaginationKey,
 }) {
   const { user } = useUser();
   const pageSize = getDashboardPageSize(user?.role);
@@ -265,7 +266,7 @@ export default function GenericTable({
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [filterField, filterValue, filteredData.length]);
+  }, [filterField, filterValue, filteredData.length, resetPaginationKey]);
 
   // Table setup
   const table = useReactTable({

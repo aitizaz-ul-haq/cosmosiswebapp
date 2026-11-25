@@ -13,6 +13,39 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 
 ## Latest handoff for GitHub Copilot — 25 Nov 2026
 
+- Compliance Officer **Notifications** is now a standard table with **Title, Description,
+  Date, Status (Read/Unread), Open** and the shared 10-record footer. Search covers titles,
+  descriptions, dates and affected users; the Status dropdown combines All/Unread/Read with
+  search. Open replaces the navigation arrow and shows a small details dialog with title,
+  full description, date/time, affected user/email, current recipient and confirmed status.
+- Opening an unread event saves a per-account read receipt through `/api/notification-reads`;
+  only successful matching responses update Read. Read state persists in MongoDB across visits
+  and is isolated by user/company. Failed loads show Retry without guessing statuses; failed
+  marking leaves Unread and offers Retry in the dialog. Stale event retry reloads source data.
+  `NotificationDetailsModal.js` portals to body with focus trapping/restoration and responsive
+  light/dark styling. Investment Manager activity and superadmin notifications retain their views.
+- `NotificationRead`, `lib/notificationReads.js` and the new GET/PATCH route store/validate a
+  canonical profile ID + event kind + source timestamp key. New event timestamps start Unread;
+  idempotent writes preserve first read time. Server checks actor, tenant, source event date and
+  accessible client scope. Existing `clientEvents` only gains subject/event metadata; its older
+  IDs, descriptions, sorting and activity destinations retain their contracts. GenericTable's
+  optional `resetPaginationKey` resets custom-filter pages; other callers retain existing behavior.
+- Settings accordions now open and close with reversible 320ms height and opacity
+  transitions. A zero-to-one fractional grid row handles each panel's natural height;
+  padding lives inside the clipped inner wrapper so closed panels leave no gap. Closed
+  content becomes inert/aria-hidden immediately, and visibility hides after the closing
+  animation. Reduced-motion users get immediate transitions.
+- Compliance Officer Settings now starts with four compact summary cards in one horizontal
+  row: **Account Status, Role, Company, Member Since**. Narrow screens scroll this row locally
+  rather than stacking the cards or widening the page. Below them, **Security, Appearance,
+  Personal Information, Company Information** are phone-style accordions, initially closed
+  with one section open at a time. Personal/company headings have compact sibling Edit
+  buttons opening the existing dialogs; missing company data leaves a notice/disabled Edit.
+- `SettingsSections.js` and `styles/settings.css` own this layout. Security receives the
+  existing password form from `ProfilePage`; Appearance uses one accessible Dark mode switch
+  tied to the shell's persisted theme. Personal/company values stay read-only until Edit.
+  The summary prefers the live company name so edits appear immediately. Other roles retain
+  their existing Profile card presentation; the shared main Settings heading remains in use.
 - Help's Back to top label is **14px**. The magnifying-glass control above it now enables a
   real circular **2× text-reading lens**, replacing the earlier cursor-only implementation.
   The lens follows the pointer over Help and magnifies the actual content underneath, while
@@ -36,8 +69,8 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 - Compliance Officer **Profile** is now **Settings**, with a gear icon in both themes.
   The internal menu key remains `profile`, preserving existing header/account links and URLs.
   `SettingsPage` reuses `ProfilePage settings`: personal/company editing and password changes
-  remain available, and an Appearance card provides sun **Light mode** and moon **Dark mode**
-  choices. Both icons also appear in the officer's header. Header and Settings share the
+  remain available, and the Appearance accordion provides a **Dark mode** toggle between
+  sun/light and moon/dark labels. Both icons also appear in the officer's header. Header and Settings share the
   shell's existing persisted theme through `DashboardThemeContext`; other roles retain their
   existing Profile labels and header toggle. Account menus also say Settings for officers.
 - **Help** appears directly below Settings for Compliance Officers. `HelpPage.js`,
@@ -557,6 +590,9 @@ Class-name prefixes (keep using them): `dsh-` role home dashboards, `dash-` glob
 - **Team** — `companyId`, `name`, normalized `nameKey`, exactly one `leaderUserId`, distinct
   nonempty `memberUserIds` (excluding leader), `createdByUserId`, timestamps. Unique index on
   `{companyId, nameKey}`; all assigned users must be active Investment Managers in that tenant.
+- **NotificationRead** — immutable `companyId`, reader `userId`, `profileId`, event kind
+  (`created|submitted|approved`), source `eventDate`, canonical `key` and first `readAt`.
+  Unique `{companyId,userId,key}` index isolates read state; another index supports latest reads.
 - **Log** — audit trail: `userId`, `role`, denormalised `name/username/companyId/companyName`, `action`, `actionTitle`, `metadata`, `ip`, `userAgent`. Indexed by time/company/user.
 - **DemoRequest** — requests from the public "request a demo" form *(not reviewed in detail)*.
 
@@ -580,8 +616,8 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 - Everything else under `/dashboard/*` and `/api/*` needs a valid `token`; missing/invalid → redirect to `/login`.
 - `ROLE_RULES` = allowed **path prefixes per role** (non-matching → JSON 403):
   - superadmin: `/dashboard, /api/companies, /api/users, /api/clients, /api/log, /api/logs, /api/demo-requests, /api/demo-users, /api/me, /api/logout, /api/verify-password`
-  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/teams, /api/client-documents, /api/me, /api/logout, /api/verify-password, /api/log`
-  - rm: `/dashboard, /api/users, /api/clients, /api/me, /api/logout, /api/verify-password, /api/log`
+  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/teams, /api/client-documents, /api/notification-reads, /api/me, /api/logout, /api/verify-password, /api/log`
+  - rm: `/dashboard, /api/users, /api/clients, /api/notification-reads, /api/me, /api/logout, /api/verify-password, /api/log`
   - client: `/dashboard, /api/me, /api/clients/me, /api/client-documents/mine, /api/client-documents/upload, /api/client-documents/file, /api/logout, /api/log`
 - **When you add an API route, add its prefix to `ROLE_RULES` or it will 403.** Handlers must still do their own fine-grained role/tenant checks.
 
@@ -593,6 +629,7 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 | `register` | POST | **Public + takes `role` from the body — see §11 (critical)** |
 | `users` | POST GET PATCH DELETE | Manage Compliance Officers/Investment Managers/users within tenant rules (superadmin→Compliance Officers, Compliance Officer→Investment Managers…) |
 | `teams` | GET POST PATCH DELETE | Compliance Officer only, scoped to JWT tenant; create/edit name, leader and members; `?id=` for PATCH/DELETE; safe manager contact projections; duplicate company name409 |
+| `notification-reads` | GET PATCH | Compliance Officer/Investment Manager account+company-scoped receipts. PATCH validates `{profileId,eventType,eventDate}` against the accessible current source event and idempotently records first read time; stale timestamps409. |
 | `companies`, `companies/[id]/users` | POST GET PATCH DELETE / GET DELETE | superadmin only |
 | `clients` | GET POST PATCH DELETE | Core client list + lifecycle. PATCH `action: "approve"` → `register`; `action: "review"` → `under_review`; `{status}` for ongoing/on_hold/cancelled; Investment Managers may only change status of their own engaged clients. GET also runs `dispatchScheduledOnboardings()` as a backup trigger |
 | `clients/registry` | POST PATCH | Investment Manager only. POST registers a client now, or `action:"schedule"` (stores encrypted password + schedule, `isActive=false`); PATCH edits basic details before registration |
@@ -617,6 +654,10 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 - **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `SubmittedDocumentsPage` (document storage/review/viewer), `SettingsPage` (officer settings via `ProfilePage`), `HelpPage` (searchable officer guide), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `TeamsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
 - **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for Investment Manager and Compliance Officer menus.
+- **Notifications**: officers use the searchable standard table and persisted per-account read
+  receipts; Investment Managers retain the activity list. Events still come from client
+  creation, application submission and onboarding approval timestamps, not a separate inbox
+  delivery system. Opening officer details marks that event read after server confirmation.
 - **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side. `getDashboardPageSize` (`lib/dashboardPagination.js`) sets Compliance Officer (`supervisor`) pages to 10 records and other paginated roles to 8. Compliance Officer Notifications paginates activity; Investment Manager Notifications retains its full list.
 - **Page loading**: `loading/DashboardPageLoading.js` wraps the keyed destination in the content
   stage; `useDashboardPageLoading` registers pending page data. The logo stays visible for at
@@ -743,6 +784,82 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ---
 
 ## 10. Change log — what was done in the last four days
+
+### 25 Nov — Notifications table, details dialog and persisted read status
+
+- Replaced the officer's activity list/arrows with GenericTable columns Title, Description,
+  Date, Read/Unread Status and Open, search and a combined read-status dropdown. Standard
+  pagination stays below the table at 10 records/page; custom filters reset page selection
+  through GenericTable's optional `resetPaginationKey`. The menu now uses the management
+  page background. Responsive record layouts preserve full mobile descriptions.
+- Added `NotificationDetailsModal.js` and `styles/notifications.css`: small details with
+  title/full description/date-time/affected user/email/current recipient/status, pending/error
+  feedback and Retry, body portal, focus trap, and correct return to the same Open control or
+  Search if filtering removes that row. Closing uses Close, X, Escape or backdrop.
+- Added `NotificationRead`, `lib/notificationReads.js`, GET/PATCH `/api/notification-reads` and
+  middleware prefixes for supervisors/RMs. Canonical source-date keys and a unique tenant/
+  account/event index preserve first read time, handle duplicate simultaneous opens, isolate
+  accounts and treat later event dates as new unread activity. PATCH checks accessible client
+  and actual source date; requests reject forged tenant/user fields. UI updates Read only
+  after successful server confirmation, supports retry, and aborts on account/navigation changes.
+- Added subject/type metadata to `clientEvents` without changing its legacy output contract,
+  and updated Help. Existing Investment Manager/superadmin Notifications presentation remains.
+- Verification: full-source ESLint passes with the existing Profile hook warning; source
+  review and diff checks pass. The backend audit passes **67** actual helper/model/route checks
+  using mocked auth/MongoDB (`/tmp/cosmosis-notification-read-checks.cjs`). Final isolated
+  production build passes with the existing `/api/logs` dynamic-render diagnostic. **13/13**
+  browser cases pass with zero runtime exceptions: 19-event pagination, combined search/status
+  filters, full modal fields, confirmed read persistence/account isolation, failed load/save
+  retry, row removal/focus restoration, native keyboard/modal dismissal, mobile light/dark
+  bounds, pending-request navigation and legacy role views. Report:
+  `/tmp/cosmosis-notifications-browser-results.json`; screenshots:
+  `/tmp/cosmosis-compliance-notifications-*.png` and
+  `/tmp/cosmosis-compliance-notification-details-*.png`. All browser/API data operations were
+  intercepted or mocked; no live database writes, email delivery or deployment occurred.
+### 25 Nov — Smooth Settings accordion opening and closing
+
+- `SettingsSections.js` keeps accordion regions mounted for reversible open/close animation,
+  replacing immediate `hidden` removal with expanded state, `aria-hidden` and `inert`. Closed
+  controls leave keyboard/accessibility navigation immediately while the visual panel closes.
+- `styles/settings.css` animates a 0fr↔1fr grid row over 320ms with opacity easing, natural
+  content height and delayed closed visibility. A min-height-zero clipped inner wrapper holds
+  a separate padded content wrapper, including mobile spacing, so collapsed panels have no
+  residual height. Rapid toggles reverse the transition; reduced-motion users get no animation.
+- Verification: focused ESLint and diff whitespace checks pass; independent source review
+  found no issues. **3/3** targeted browser cases pass with zero runtime errors: opening and
+  closing each show 16 desktop/17 mobile intermediate height frames; final closed height is
+  zero. Rapid reversal, section switching, immediate closed/closing focus exclusion, dynamic
+  Security result content and immediate reduced-motion endpoints pass. Report:
+  `/tmp/cosmosis-settings-motion-browser-results.json`; screenshots:
+  `/tmp/cosmosis-compliance-settings-motion-{desktop-light,mobile-dark}.png`.
+
+### 25 Nov — Settings summary row and phone-style accordions
+
+- Added `SettingsSections.js` and `styles/settings.css`. Four compact summary cards precede
+  all settings controls in the requested order. They stay on one row, with local horizontal
+  scrolling on small screens. Page padding follows shared management-page breakpoints.
+- Added initially collapsed, single-open Security, Appearance, Personal Information and
+  Company Information rows. Native buttons expose expanded state and label hidden panels;
+  closed controls are excluded from focus. Personal/company Edit buttons sit alongside the
+  heading and open the existing dialogs without nesting buttons or toggling the accordion.
+- Appearance has one accessible light/dark switch using `DashboardThemeContext`; header
+  controls, saved preference and portaled dialogs share it. Information fields wrap, missing
+  company data displays an unavailable state, and live company names update after editing.
+- `ProfilePage.js` reuses its existing password form in the Security panel; its validation,
+  request payload and personal/company edit dialogs retain their handlers. Other roles keep
+  the existing Profile layout. Password eye controls now have accessible labels/pressed state
+  and fields identify current/new password autocomplete. Removed the superseded appearance
+  button styles from `profilepage.css` and updated the searchable Help guide.
+- Verification: full-source ESLint passes with the existing Profile hook-dependency warning;
+  diff whitespace checks and isolated production build pass (existing `/api/logs` dynamic
+  diagnostic). Independent source review found no issues. **13/13** browser cases pass with
+  zero runtime exceptions: desktop/mobile light/dark card row/order/local scroll, accordion
+  defaults/order/keyboard/single-open/hidden focus, shared switch/header/persistence, mocked
+  personal/company cancel/save with updated company summary, password validation/API error/
+  success/show-hide, mobile expanded panels/Edit modal bounds, and RM/client/superadmin
+  Profile smoke checks. Report: `/tmp/cosmosis-settings-sections-browser-results.json`;
+  screenshots use `/tmp/cosmosis-compliance-settings-sections-*.png`. Requests were intercepted
+  fixtures, with no live account/company/password writes, email delivery or deployment.
 
 ### 25 Nov — Actual circular Help text magnifier
 
@@ -1317,7 +1434,7 @@ treating historical work as uncommitted.
 - Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
 - Submissions client buttons **Notify Investment Manager** and **Edit** are placeholders (planned: email/in-app notification to the Investment Manager; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
-- The generic row-details modal and Logs filters still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
+- The generic row-details modal and Logs filters still use the old look (§9a). RM Notifications remains a recorded activity list. Compliance Officer Read/Unread state now persists per account; separate message generation, inbox delivery and push notifications are still absent.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.
 - `OnboardingStatusPage`: phase capsules use slate `#eceff7` / `#6d7692`; In progress uses green `#e3f8f2` / `#17b89b`. Awaiting-registry and Scheduled share blue.
 - JSON file name typo `homaepagedata.json`. Current full-source lint has one existing warning (Profile hook dependency), zero errors.
