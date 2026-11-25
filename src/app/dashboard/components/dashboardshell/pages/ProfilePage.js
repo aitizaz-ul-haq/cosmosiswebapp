@@ -6,10 +6,14 @@ import { getRoleLabel } from "@/lib/roles";
 import { useDashboardPageLoading } from "./loading/DashboardPageLoading";
 import CosmosisLoader from "./loading/CosmosisLoader";
 import { ModalButton, ModalGrid, ModalInput, ModalShell } from "./modalkit/ModalKit";
+import { useDashboardThemeControls } from "../useDashboardTheme";
+import DashboardShellIcon from "../subcomps/microcomps/dashboardshellicon";
+import "./styles/managementtable.css";
 import "./styles/profilepage.css";
 
-export default function ProfilePage() {
+export default function ProfilePage({ settings = false }) {
   const { user } = useUser();
+  const themeControls = useDashboardThemeControls();
   const [userDetails, setUserDetails] = useState(null);
   const [companyDetails, setCompanyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -307,13 +311,42 @@ export default function ProfilePage() {
   return (
     <div className="profile-page-container">
       {/* Header */}
-      <div className="profile-overview-header">
-        <h1 className="profile-overview-title">Profile Overview</h1>
-        <p className="profile-overview-subtitle">
-          Review and manage your personal details, account information, and
-          security settings from one place.
+      <div className={settings ? "management-table-heading" : "profile-overview-header"}>
+        <h1 className={settings ? undefined : "profile-overview-title"}>{settings ? "Settings" : "Profile Overview"}</h1>
+        <p className={settings ? undefined : "profile-overview-subtitle"}>
+          {settings
+            ? "Manage your personal details, account information, security, and appearance from one place."
+            : "Review and manage your personal details, account information, and security settings from one place."}
         </p>
       </div>
+
+      {settings && themeControls && (
+        <section className="profile-card" aria-labelledby="settings-appearance-title">
+          <div className="profile-card-header">
+            <span className="profile-card-icon"><DashboardShellIcon name="settings" /></span>
+            <div>
+              <h2 className="profile-card-title" id="settings-appearance-title">Appearance</h2>
+              <p className="profile-card-subtitle">Choose how your dashboard looks. Your preference is saved in this browser.</p>
+            </div>
+          </div>
+          <div className="settings-theme-options" role="group" aria-label="Dashboard appearance">
+            {[{ theme: "light", icon: "sun", label: "Light mode" }, { theme: "dark", icon: "moon", label: "Dark mode" }].map((option) => (
+              <button
+                type="button"
+                className="settings-theme-option"
+                key={option.theme}
+                aria-pressed={themeControls.theme === option.theme}
+                data-log-title={`Settings: ${option.label}`}
+                onClick={() => themeControls.setTheme(option.theme)}
+              >
+                <DashboardShellIcon name={option.icon} size={24} />
+                <span>{option.label}</span>
+                {themeControls.theme === option.theme && <span className="settings-theme-selected" aria-hidden="true">Selected</span>}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Stat cards */}
       <div className="profile-stats">

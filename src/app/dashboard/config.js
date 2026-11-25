@@ -115,9 +115,11 @@ export const dashboardConfigs = {
         },
         {
           key: "profile",
-          label: "Profile",
-          iconlink: "/images/profile-user.png",
+          label: "Settings",
+          icon: "settings",
+          iconlink: "/images/settings.png",
         },
+        { key: "help", label: "Help", icon: "help" },
       ],
     },
   },

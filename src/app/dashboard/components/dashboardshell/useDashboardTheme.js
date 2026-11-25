@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+
+export const DashboardThemeContext = createContext(null);
+export const useDashboardThemeControls = () => useContext(DashboardThemeContext);
 
 const STORAGE_KEY = "cosmosis-dashboard-theme";
 
@@ -42,5 +45,5 @@ export default function useDashboardTheme() {
     setTheme((current) => current === "dark" ? "light" : "dark");
   }, []);
 
-  return { theme, toggleTheme };
+  return { theme, toggleTheme, setTheme };
 }

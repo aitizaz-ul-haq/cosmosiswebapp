@@ -23,6 +23,7 @@ export default function DashboardShellIcon({ name, size = 22, ...props }) {
     sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></>,
     settings: <><path d="m9 3 .8-2h4.4l.8 2 2 .9 2.1-.4 2.2 3.8L20 9l.2 2.3 1.5 1.6-2.2 3.8-2.1-.3-2 .9-.8 2h-4.4l-.8-2-2-.9-2.1.3-2.2-3.8L4.5 11l.2-2.3-1.4-1.7 2.2-3.8 2.1.4Z" transform="translate(0 1) scale(.98)"/><circle cx="12" cy="11" r="3"/></>,
     search: <><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>,
+    help: <><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1.1.7-1.7 1.1-1.7 2.7M12 17h.01"/></>,
     chevron: <path d="m8 10 4 4 4-4"/>,
     left: <path d="m14 6-6 6 6 6"/>,
     menu: <path d="M3 6h18M3 12h18M3 18h18"/>,

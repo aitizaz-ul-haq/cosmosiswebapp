@@ -6,6 +6,7 @@ import { getDashboardPageSize } from "@/lib/dashboardPagination";
 import GenericTableLoader from "./pagecomponents/generictablecomps/generictableloader";
 import TablePageLayout from "./pagecomponents/TablePageLayout";
 import ManagementTableToolbar from "./pagecomponents/ManagementTableToolbar";
+import ManagementTablePagination from "./pagecomponents/ManagementTablePagination";
 import Icon from "./modalkit/Icon";
 import { STATUS_COLORS, STATUS_LABELS, getPhaseConfig } from "./clientStatusShared";
 import { buildDummySubmissions } from "./submissions/dummySubmissions";
@@ -287,7 +288,7 @@ function SubmissionsPagination({ pageIndex, pageSize, total, onPageChange }) {
   );
 }
 
-export default function SubmissionsPage() {
+export default function SubmissionsPage({ onCancel }) {
   const { user } = useUser();
   const pageSize = getDashboardPageSize(user?.role);
   const isComplianceOfficer = user?.role === "supervisor";
@@ -387,7 +388,7 @@ export default function SubmissionsPage() {
             filterableFields={FILTERABLE_FIELDS}
             searchPlaceholder={isComplianceOfficer ? "Search submitted information by client, status, or phase..." : "Search submissions by client, status, or phase..."}
           />
-          {unlocked && !loading && (
+          {!isComplianceOfficer && unlocked && !loading && (
             <SubmissionsPagination
               pageIndex={currentIndex}
               pageSize={pageSize}
@@ -421,6 +422,13 @@ export default function SubmissionsPage() {
           </div>
         )}
 
+        {isComplianceOfficer && unlocked && !loading && (
+          <ManagementTablePagination
+            pagination={{ pageIndex: currentIndex, pageSize }}
+            total={filteredRows.length}
+            onPageChange={setPageIndex}
+          />
+        )}
       </div>
 
       {viewing ? (
@@ -431,7 +439,7 @@ export default function SubmissionsPage() {
         />
       ) : null}
 
-      {!unlocked ? <PasswordGate onVerified={() => setUnlocked(true)} /> : null}
+      {!unlocked ? <PasswordGate onVerified={() => setUnlocked(true)} onCancel={onCancel} sectionLabel={sectionTitle} /> : null}
     </TablePageLayout>
   );
 }

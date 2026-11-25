@@ -4,14 +4,65 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-11-24. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-11-25. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 24 Nov 2026
+## Latest handoff for GitHub Copilot — 25 Nov 2026
+
+- Help's Back to top label is **14px**. The magnifying-glass control above it now enables a
+  real circular **2× text-reading lens**, replacing the earlier cursor-only implementation.
+  The lens follows the pointer over Help and magnifies the actual content underneath, while
+  the original page retains its layout. Click the control again or press Escape to disable
+  it; leaving Help also clears it. The control exposes `aria-pressed` and an active outline.
+- Help now shows a circular **Back to top** button at the bottom-right after scrolling down
+  more than 240px. It smoothly scrolls the actual dashboard content container to the top and
+  focuses the Help heading; reduced-motion users get an immediate return. Theme-aware colors,
+  mobile/safe-area positioning and extra bottom padding keep the final content accessible.
+- Compliance Officer Settings now uses the shared `management-table-heading` for its title
+  and introductory description, matching other pages' typography, colors, spacing and mobile
+  sizing in both themes. `ProfilePage settings` omits the legacy profile header/title/subtitle
+  classes; other roles' Profile presentation retains those classes.
+- Onboarding Status's main title now inherits the shared `--dashboard-heading-color`
+  (`#59638f` in light mode), matching other page titles. Removed the page-specific navy h1
+  override from `styles/onboardingstatus.css`; existing dark heading rules still apply.
+- Compliance Officer Submitted Information now uses the shared `ManagementTablePagination`
+  footer below the client list, matching other tables' position, record count, page controls,
+  responsive layout and light/dark styles. It retains 10 clients per page and existing filter
+  resets/clamping. The Investment Manager's Submissions toolbar retains its existing pager.
+- Compliance Officer **Profile** is now **Settings**, with a gear icon in both themes.
+  The internal menu key remains `profile`, preserving existing header/account links and URLs.
+  `SettingsPage` reuses `ProfilePage settings`: personal/company editing and password changes
+  remain available, and an Appearance card provides sun **Light mode** and moon **Dark mode**
+  choices. Both icons also appear in the officer's header. Header and Settings share the
+  shell's existing persisted theme through `DashboardThemeContext`; other roles retain their
+  existing Profile labels and header toggle. Account menus also say Settings for officers.
+- **Help** appears directly below Settings for Compliance Officers. `HelpPage.js`,
+  `complianceHelpContent.js` and `styles/help.css` document all 13 destinations, their
+  functions, actions, dialog contents and data fields. Search matches section/function/action/
+  field descriptions, supports multiple terms, result counts, clear and no-results states.
+  The section list jumps to a focused heading; Open section navigates to the actual page.
+  Reports and generated submission data limitations are stated in the guide.
+- Submitted Information and Submitted Documents password prompts now portal into the current
+  `.dashboard-page-view` and center within `.dashboard-content-stage`, below the header and
+  beside the sidebar. They use a page-scoped nonmodal dialog; the shell stays usable while
+  protected page controls remain inert. Cancel, Close and Escape return to Dashboard.
+  Cancelling/unmounting aborts password verification; reopening requires verification again.
+- The existing Submitted Documents flow is implemented: persisted Phase 6 client uploads,
+  company-scoped document counts/storage, Review Documents radio selection, Document Viewer,
+  Open Document and back/close navigation. PDFs from the private file endpoint now have a HEAD
+  availability/type check plus loading/error/Retry Preview. Text previews now read a bounded
+  stream (200,000 displayed characters), indicate truncation and offer Retry Preview.
+- Document files are stored in MongoDB GridFS with tenant/profile/user metadata. The existing
+  `/api/client-documents` officer list, `/mine` client list, `/upload` client POST and
+  `/file/[id]` GET/HEAD routes have role/tenant/ownership checks. Ordinary onboarding form
+  fields still lack persistence; document uploads are the implemented exception.
+- Verification details and remaining limits are recorded in the 25 Nov change-log entry.
+
+## Previous handoff — 24 Nov 2026
 
 - All nine Compliance Officer list destinations use **10 records per page**: Investment
   Managers, Teams, Clients, Onboarding Status, Pending Approvals, Under Review, Reports,
@@ -501,7 +552,7 @@ Class-name prefixes (keep using them): `dsh-` role home dashboards, `dash-` glob
   - Scheduling: `scheduledRegistrationAt` (Date, UTC), `scheduledCountry`, `scheduledCity`, `scheduledTimeZone` (IANA), `scheduledCredentialsEnc` (**`select:false`**, AES-GCM), `registeredAt`, `approvedAt`, `approvedByUserId`.
   - `onboardingType`: `individual | joint | corporate | trust`. Only **individual** has a form.
   - `onboarding`: `{ status (not_started|in_progress|submitted|approved|rejected), currentStep (1–6), completedSteps[], progress 0–100, submittedAt, approvedAt, rejectedAt, rejectionReason }`.
-  - Large sub-documents for the form data (`accountHolders`, `investmentServices`, `externalAdvisers`, `sourceOfWealth`, `financialProfile`, `riskProfile`, signature, documents…). **The client form does not write to these yet** (§11).
+  - Large sub-documents for the form data (`accountHolders`, `investmentServices`, `externalAdvisers`, `sourceOfWealth`, `financialProfile`, `riskProfile`, signature, documents…). **Ordinary form fields are not written yet** (§11); Phase 6 uploads persist under `documents.uploads`.
   - `rmRemarks`.
 - **Team** — `companyId`, `name`, normalized `nameKey`, exactly one `leaderUserId`, distinct
   nonempty `memberUserIds` (excluding leader), `createdByUserId`, timestamps. Unique index on
@@ -529,9 +580,9 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 - Everything else under `/dashboard/*` and `/api/*` needs a valid `token`; missing/invalid → redirect to `/login`.
 - `ROLE_RULES` = allowed **path prefixes per role** (non-matching → JSON 403):
   - superadmin: `/dashboard, /api/companies, /api/users, /api/clients, /api/log, /api/logs, /api/demo-requests, /api/demo-users, /api/me, /api/logout, /api/verify-password`
-  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/teams, /api/me, /api/logout, /api/verify-password, /api/log`
+  - supervisor: `/dashboard, /api/users, /api/companies, /api/clients, /api/teams, /api/client-documents, /api/me, /api/logout, /api/verify-password, /api/log`
   - rm: `/dashboard, /api/users, /api/clients, /api/me, /api/logout, /api/verify-password, /api/log`
-  - client: `/dashboard, /api/me, /api/clients/me, /api/logout, /api/log`
+  - client: `/dashboard, /api/me, /api/clients/me, /api/client-documents/mine, /api/client-documents/upload, /api/client-documents/file, /api/logout, /api/log`
 - **When you add an API route, add its prefix to `ROLE_RULES` or it will 403.** Handlers must still do their own fine-grained role/tenant checks.
 
 ### API surface (`src/app/api/**/route.js`)
@@ -547,6 +598,7 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
 | `clients/registry` | POST PATCH | Investment Manager only. POST registers a client now, or `action:"schedule"` (stores encrypted password + schedule, `isActive=false`); PATCH edits basic details before registration |
 | `clients/scheduled` | GET PATCH | Investment Manager only. GET decrypts credentials for the details modal; PATCH re-schedules |
 | `clients/me` | GET | **client only**: own profile + onboarding + `assignedRm: { name, email } \| null` from the assigned Investment Manager in the same tenant (safe contact projection only) |
+| `client-documents`, `client-documents/mine`, `client-documents/upload`, `client-documents/file/[id]` | GET / GET / POST / GET+HEAD | Officer company-scoped list, client's own list/upload, private GridFS file streaming with role/tenant/profile/ownership checks and byte ranges. Client uploads require active ongoing onboarding; validated file types/size and idempotent upload IDs. |
 | `cron/dispatch-scheduled` | GET | Needs `Authorization: Bearer <CRON_SECRET>`; sends all due scheduled onboardings |
 | `log`, `log/batch`, `logs` | POST / POST / GET | Write audit entries; `logs` GET is superadmin only |
 | `demo-requests`, `demo-users`, `requestdemo`, `contact` | | Public-site/demo machinery *(not reviewed in detail)*. `demo-users` returns password hashes (superadmin only via middleware). `contact` is not in `PUBLIC_PATHS`, so anonymous calls are redirected — nothing in the UI calls it |
@@ -559,10 +611,10 @@ All models use `mongoose.models.X || mongoose.model(...)`. DB connection is cach
   component, add it to `getPageMap`, add a menu entry in `config.js`.
 - **`config.js`** sidebar per role:
   - superadmin: dashboard, companies, supervisors, users, logs, reports, profile
-  - supervisor: dashboard, rms, teams, clients, onboardingstatus, approvals, underreview, reports, notifications, submissions, profile
+  - supervisor: dashboard, rms, teams, clients, onboardingstatus, approvals, underreview, reports, notifications, submissions, documents, profile (Settings), help
   - rm: dashboard, clients, registry, scheduled, onboardingstatus, notifications, submissions, profile
   - client: **dashboard, onboarding, submissions, profile**
-- **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `TeamsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
+- **Pages** (`dashboardshell/pages/`): `ClientsPage` (create/edit/info/delete clients), `ApprovalsPage` (approve/review/verify), `UnderReviewPage`, `RegistryPage` (awaiting registry: register now / schedule / edit), `ScheduledPage` + `ScheduledDetailsModal`, `OnboardingStatusPage` (expandable rows + timeline), `SubmissionsPage` (accordion, password gate), `SubmittedDocumentsPage` (document storage/review/viewer), `SettingsPage` (officer settings via `ProfilePage`), `HelpPage` (searchable officer guide), `ClientSubmissionsPage`, `ClientDashboard`, `OnboardingPage` (client phase timeline), `RMsPage`, `TeamsPage`, `SupervisorPage`, `UserPage`, `CompaniesPage`, `LogsPage`, `ProfilePage`, `ReportsPage`, role home dashboards (`RMDashboard`, `SupervisorDashboard`, `SuperAdminDashboard`), `GenericTable` + `pagecomponents/` (header, filter, thead/tbody, modal).
 - **Shared logic**: `clientStatusShared.js` — `STATUS_LABELS`, `STATUS_COLORS`, `PHASE_CONFIG` (6 phases → 20/35/50/65/80/100 %), `PHASE_SECTIONS`, `getPhaseConfig`, `actionBtnStyle`, `ClientStatusBadge`, legacy modal style objects. `modalkit/` — see §9a.
 - **Home dashboard UI**: `pages/dashboard/DashboardUI.js`, `dashboard-ui.css` and `data.js` — shared `dsh-` primitives and real client activity/phase aggregations; each role page still owns its API fetches. `NotificationsPage` reuses the activity derivation for Investment Manager and Compliance Officer menus.
 - **Data fetching pattern**: each page `fetch("/api/...", { credentials: "include" })` in `useEffect`; no global store besides `UserContext`. Pagination/filtering is client-side. `getDashboardPageSize` (`lib/dashboardPagination.js`) sets Compliance Officer (`supervisor`) pages to 10 records and other paginated roles to 8. Compliance Officer Notifications paginates activity; Investment Manager Notifications retains its full list.
@@ -610,13 +662,23 @@ Client sidebar → **Onboarding** (`OnboardingPage`): a timeline of Phase 0–6.
 - **Phases 1–6**: `onboarding/PhaseDetails.js` displays the selected phase's subheadings from `PHASE_SECTIONS`, following `public/images/client_dashbaord_new_timeline_view.png`: descriptions, subsection labels, a status-colored solid track, dashed vertical guides and staggered tags confined to their matching equal-width subsection columns (purple/lavender when incomplete, teal/mint when complete). Dense columns put icons above wrapping text. The saved current phase opens initially. Panels retain the 800 ms reversible height/fade transition; reduced-motion users get immediate transitions. Phase buttons have `aria-expanded`, `aria-controls`, focus styles and `data-log-title`; collapsed panels are inert and their action controls are excluded from keyboard focus. At 1100px and below, subsection tags stack as labelled full-width rows without desktop column guides; only the phase track scrolls horizontally.
 - **Panel actions** (top-right, before the pale phase number): **Contact Investment Manager** opens a `mailto:` compose link addressed to the assigned Investment Manager, with a phase-specific subject (disabled if no email); **Start Phase N** opens that phase's existing full form modal from the top. Subsection buttons open the form at the matching heading and focus it. Closing restores the initiating control; Next phase updates the form and inline panel, then closes back to the new phase's Start button. Opening/viewing a form does not change submission status.
 - **Submission colours**: `completedSteps` or whole-form status `submitted|approved` determines submitted phases; `currentStep` alone does not. Completed/current timeline nodes are teal, pending nodes purple; completed connectors are solid and pending connectors dashed. Incomplete detail sections use lavender fills and purple text, hollow dot markers, tracks and focus/hover accents; completed sections use mint fills, green ticks and teal tracks. Start Phase stays teal as an action. There is no subsection submission state in the model yet, so all subheadings inherit their phase's status. Phase 0 has no persisted read state; completed form phases are treated as evidence the prerequisites were read.
-- **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Inputs are **uncontrolled** (`name` attributes only) — nothing is saved or sent to the API yet.
+- **Phase forms** (`PhaseModal` + `phases/Phase1..6*.js`) cover Personal Details, Source of Wealth, Financial Profile, Risk Profile, Signature and Documentation Checklist. They use primitives in `onboarding/fields.js` (`Field`, `TextArea`, `SelectField`, `CountrySelect`, `ChoiceGroup`, `CheckRow`, `YesNo`, `SectionTitle`, `Note`). Ordinary inputs are **uncontrolled** (`name` attributes only) and are not saved. Phase 6's `ClientDocumentUploads` is the exception: its private document uploads are persisted through the document API.
 - `OnboardingPage` loads `/api/clients/me` (type, onboarding, profile, assigned Investment Manager contact) and uses `onboarding.currentStep` for the highlighted node. Non-individual types show a "coming soon" message.
 
 ### Submissions (UI-only for now)
 `SubmissionsPage` (Investment Manager + Compliance Officer): password gate (`PasswordGate` → `/api/verify-password`, asked on every open; **client-side gate only**) → paginated accordion of engaged clients (ongoing/on_hold/cancelled) → per-phase rows (`PhaseRow`) → `SubmissionViewModal`.
 `ClientSubmissionsPage` (client): only the client's own phase rows (no accordion/filters/gate) with **Notify Investment Manager** and **Edit** placeholder buttons in the modal (no behaviour yet).
 **All submission data is generated by `submissions/dummySubmissions.js`** (phases below the client's `currentStep` = completed; the current phase = partial). Replace with real data once the form persists.
+
+### Submitted Documents (persisted uploads)
+`SubmittedDocumentsPage` is Compliance Officer only: fresh page-scoped password gate →
+company client table (Client Name, Documents Uploaded, Total Storage Used) → Review Documents
+selection → Document Viewer. Counts and byte totals come from persisted upload records;
+unknown legacy sizes are labelled rather than assumed zero. File metadata includes original
+name, MIME type, bytes and uploaded time. Safe images, private PDFs and plain text can preview;
+Open Document handles other supported links/types. Viewer Close returns to the selection;
+Review Close returns to the table. The officer view has no upload/edit/delete actions.
+Client uploads are available in Phase 6, separate from the unpersisted form fields above.
 
 ## 9. UI system and conventions (follow these for any new UI)
 
@@ -681,6 +743,130 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ---
 
 ## 10. Change log — what was done in the last four days
+
+### 25 Nov — Actual circular Help text magnifier
+
+- Replaced the cursor-only implementation with `HelpMagnifier.js` and
+  `styles/help-magnifier.css`: a real 200px circular lens displays the Help content under the
+  pointer at **2×**, preserving the source's wrapping, typography and theme. A sanitized,
+  inert, aria-hidden DOM copy is clipped inside a body portal. Duplicate IDs/ARIA/form
+  references and floating controls are removed from the copy; it cannot receive clicks or
+  keyboard focus. The original page layout stays unchanged.
+- Pointer/scroll updates use animation-frame transforms. Source resizing, search changes and
+  theme changes refresh the copy. The lens stays within the visible content area and hides
+  over interactive controls or outside Help. Touch contact samples text above the finger;
+  lifting hides it. The existing button, second click and Escape control enable/disable;
+  toggling/navigation clean up the copy, listeners, observers and pending frames.
+- `HelpPage.js` now labels the control Text magnifier and mounts the component with the page
+  source ref/search version. Removed the custom SVG cursor CSS and corrected the searchable
+  Help guide to describe real magnification.
+- Verification: full-source ESLint passes with the existing Profile effect warning; isolated
+  production build passes (existing `/api/logs` dynamic-render diagnostic). Independent source
+  review found no issues. **5/5** targeted browser cases pass with zero runtime exceptions:
+  source/copy glyph bounds measure exactly 2× with 0px center error in desktop light/dark and
+  mobile dark; scrolling/search/theme refresh, native controls/focus, accessibility exclusion,
+  toggles/Escape/navigation cleanup and native touch contact/lift pass. Report:
+  `/tmp/cosmosis-help-lens-browser-results.json`; screenshots:
+  `/tmp/cosmosis-compliance-actual-help-lens-{desktop-light,desktop-dark,mobile-dark,mobile-touch}.png`.
+
+### 25 Nov — Larger Help label and magnifier cursor control
+
+- The cursor-only magnifier described in this historical entry was replaced by the actual
+  reading lens above after the user clarified the intended behavior.
+- Increased Back to top text from 11px to 14px and adjusted its arrow/line spacing to fit
+  desktop and mobile circles. Help's floating controls now share a fixed stack with a second
+  circular search/magnifying-glass button above Back to top. The magnifier stays available
+  at the top of the page, while Back to top retains its scroll threshold and smooth action.
+- `HelpPage.js` toggles a Help-scoped custom SVG cursor with `aria-pressed`, a selected outline
+  and Escape-to-exit; unmounting removes its key listener and active page class. The header,
+  sidebar and floating buttons retain normal cursors. This changes the cursor icon only,
+  without enlarging page contents. The guide documents that behavior.
+- `styles/help.css` keeps both controls circular with existing theme colors and safe-area
+  placement, and increases bottom padding to accommodate the stack. Focused ESLint and diff
+  whitespace checks pass. **3/3** targeted browser cases pass, with zero runtime exceptions:
+  desktop light/mobile dark label/circle bounds, vertical button ordering, custom cursor
+  scope, click/second-click/Enter/Escape toggling, smooth Back to top/focus and key-listener
+  cleanup on navigation. Report: `/tmp/cosmosis-help-magnifier-browser-results.json`;
+  screenshots: `/tmp/cosmosis-compliance-help-magnifier-{desktop-light,mobile-dark}.png`.
+
+### 25 Nov — Help Back to top button
+
+- Added a circular, labelled Back to top control in `HelpPage.js`, fixed to the bottom-right
+  after the dashboard's `.dashboard-menus-section` scrolls more than 240px. It scrolls that
+  content container smoothly to zero and focuses the Help heading without jumping; reduced
+  motion selects immediate scrolling. The passive scroll listener is removed on unmount.
+- `styles/help.css` supplies light/dark colors from existing Help variables, desktop/mobile
+  circle sizes, safe-area offsets and bottom padding so the last article remains readable.
+  `complianceHelpContent.js` documents the new control as a searchable Help function.
+- Verification: focused Help/content ESLint and diff whitespace checks pass. **5/5** targeted
+  browser cases pass with zero runtime exceptions: desktop/mobile light/dark circle bounds,
+  visible label/arrow, mouse/Enter activation, intermediate smooth-scroll positions, immediate
+  reduced-motion return, Help heading focus, hidden state at the top and listener cleanup on
+  navigation. Report: `/tmp/cosmosis-help-top-browser-results.json`; screenshots:
+  `/tmp/cosmosis-compliance-help-back-top-{desktop,mobile}-{light,dark}.png`.
+
+### 25 Nov — Settings title and description styling
+
+- `ProfilePage.js` explicitly imports `styles/managementtable.css` and uses its shared
+  `management-table-heading` header when rendering Settings. The title now has the standard
+  32px/600-weight gray/slate styling, line height, letter spacing and margin; the description
+  uses the standard color, full opacity, 15px desktop/13px mobile size and 1.6 line height.
+  Shared theme rules supply the dark palette. Other Profile headers retain their classes.
+- Verification: focused ESLint passes with the existing Profile hook-dependency warning,
+  diff whitespace checks pass, and the shared light/dark/mobile heading cascade was reviewed.
+  No account controls, data or persistence behavior changed.
+
+### 25 Nov — Onboarding Status title color
+
+- Removed the `.onboarding-status-table-page .management-table-heading h1` navy override
+  from `pages/styles/onboardingstatus.css`. The heading now uses the same shared gray/slate
+  token as other light-mode page titles; the existing dark-mode heading rule remains in use.
+- Verification: checked the shared heading/token and dark-mode cascade and passed diff
+  whitespace checks. This is a CSS-only correction; no runtime or data behavior changed.
+
+### 25 Nov — Submitted Information pagination footer
+
+- Moved the Compliance Officer pager from the top-right search toolbar to the bottom of the
+  client list in `SubmissionsPage.js`, reusing `ManagementTablePagination` and the standard
+  table footer styles. Counts, page selection, First/Prev/Next/Last, empty-result behavior,
+  10-client pages and search resets use the existing pagination state. The footer stays hidden
+  while locked/loading. Investment Manager Submissions retains its current toolbar pager.
+- Verification: focused ESLint and diff whitespace checks pass; source review confirms the
+  footer follows the list/empty state inside the same table panel as other tables. No API,
+  data or stylesheet changes were required.
+
+### 25 Nov — Compliance Officer Settings, Help and protected pages
+
+- Renamed the officer's Profile destination to Settings and added matching gear/Help SVGs.
+  Settings and the header provide both sun/light and moon/dark controls, using the same theme
+  state/localStorage preference. Other roles retain their existing profile presentation.
+- Added searchable Help for every officer destination, including function headings, dialog
+  fields/actions, page-opening links, keyboard-friendly section jumps, result counts and
+  clear/no-results states. The guide identifies Reports and sample submission limitations.
+- Repositioned both password gates into the content stage. Cancel, Close and Escape return
+  to Dashboard; cancellation aborts pending verification. Sidebar/header remain accessible,
+  and entering either section again creates a fresh locked gate.
+- Audited the existing document upload/list/private-file/review/viewer implementation.
+  Added PDF preflight/loading/failure/retry and text preview retry with bounded streaming.
+  Corrected this handoff's stale claim that no onboarding data is persisted: Phase 6 document
+  uploads are already stored in GridFS; other form fields and phase submissions are not.
+- Verification: full source ESLint passes (zero errors, the existing `ProfilePage`
+  hook-dependency warning); the final isolated production build passes. The build retains
+  the existing `/api/logs` dynamic-render diagnostic while completing successfully.
+- Browser verification passes **25/25 cases**, with zero runtime exceptions: all 13 Help
+  destinations and 61 function/data descriptions, modal/action/field search, no-results/reset,
+  index focus and section links; both Settings/header themes and persisted preference; ten
+  desktop/collapsed/mobile/landscape gate layouts in light/dark mode, stage bounds/centering,
+  initial input focus, Cancel→Dashboard, wrong/correct password, reopening lock, X/Escape,
+  sidebar navigation and pending-verification abort; document list Retry, selection/image/
+  Open Document/back/focus, escaped text, PDF HEAD failure/retry/iframe and unavailable file
+  fallbacks. Report: `/tmp/cosmosis-compliance-browser-results.json`; screenshots use
+  `/tmp/cosmosis-compliance-{settings-desktop,help-*,gate-*,viewer-*}.png`.
+- `/tmp/cosmosis-document-audit.cjs` additionally passes 44 actual helper/route checks using
+  mocked DB/GridFS/auth dependencies (normalization, URL safety, MIME/size limits, byte ranges
+  and scoped file GET/HEAD). These checks did not connect to MongoDB or perform real GridFS
+  writes. All browser data and file responses were intercepted fixtures; no live database
+  writes, email delivery or deployment were performed.
 
 Commits are all titled "added changes", so this is reconstructed from the diffs.
 
@@ -1127,14 +1313,14 @@ treating historical work as uncommitted.
 5. `middleware.js` uses prefix matching (`/api/log` also matches `/api/logs`; handlers re-check roles).
 
 **Functional gaps**
-- Client onboarding forms (phases 1–6) are **not persisted** — no save/submit API, `onboarding.currentStep/completedSteps` never advance, so Submissions shows dummy data.
+- Ordinary client onboarding form fields (phases 1–6) are **not persisted** — no phase save/submit API, `onboarding.currentStep/completedSteps` never advance, so Submissions shows dummy data. Phase 6 document uploads already persist through the private GridFS document API.
 - Subsection submission status is not tracked independently; each phase's subheadings currently share its recorded submission status.
 - Submissions client buttons **Notify Investment Manager** and **Edit** are placeholders (planned: email/in-app notification to the Investment Manager; Edit → open the phase form).
 - Only `individual` onboarding exists; joint/corporate/trust show "coming soon".
 - The generic row-details modal and Logs filters still use the old look (§9a). RM Notifications now derives recorded client activity; persisted unread notifications and delivery are still missing.
 - Scheduled emails need the external cron (§8) — without it they are only sent when someone loads the client list. Not deployed yet.
 - `OnboardingStatusPage`: phase capsules use slate `#eceff7` / `#6d7692`; In progress uses green `#e3f8f2` / `#17b89b`. Awaiting-registry and Scheduled share blue.
-- JSON file name typo `homaepagedata.json`. `lint` has two existing warnings (Onboarding image / Profile hook dependency), zero errors.
+- JSON file name typo `homaepagedata.json`. Current full-source lint has one existing warning (Profile hook dependency), zero errors.
 - Generated reports and system health/compliance/session metrics have no backend; home dashboards link existing report navigation and show unavailable health values.
 
 **User-requested upcoming work (recorded 16 Oct; implement when directed)**

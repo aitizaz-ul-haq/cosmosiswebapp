@@ -14,6 +14,8 @@ import UserPage from "./components/dashboardshell/pages/UserPage";
 import LogsPage from "./components/dashboardshell/pages/LogsPage";
 import ReportsPage from "./components/dashboardshell/pages/ReportsPage";
 import ProfilePage from "./components/dashboardshell/pages/ProfilePage";
+import SettingsPage from "./components/dashboardshell/pages/SettingsPage";
+import HelpPage from "./components/dashboardshell/pages/HelpPage";
 import DashboardShell from "./components/dashboardshell/dashboardshell";
 import ClientsPage from "./components/dashboardshell/pages/ClientsPage";
 import RegistryPage from "./components/dashboardshell/pages/RegistryPage";
@@ -57,7 +59,7 @@ const getPageMap = (userRole, setActiveMenu) => {
     companies: <CompaniesPage />,
     onboarding: <OnboardingPage />,
     supervisors: <SupervisorsPage />,
-    submissions: <SubmissionsPage />,
+    submissions: <SubmissionsPage onCancel={() => setActiveMenu("dashboard")} />,
     onboardingstatus: <OnboardingStatusPage onNavigate={setActiveMenu} />,
     underreview: <UnderReviewPage />,
     notifications: <NotificationsPage />,
@@ -75,7 +77,9 @@ const getPageMap = (userRole, setActiveMenu) => {
     return {
       ...baseMap,
       teams: <TeamsPage />,
-      documents: <SubmittedDocumentsPage />,
+      documents: <SubmittedDocumentsPage onCancel={() => setActiveMenu("dashboard")} />,
+      profile: <SettingsPage />,
+      help: <HelpPage onNavigate={setActiveMenu} />,
       dashboard: <SupervisorDashboard />,
     };
   }

@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import DashboardHeaderSearchBar from "./microcomps/dashboardheadersearchbar";
 import DashboardAccountMenu from "./microcomps/dashboardaccountmenu";
 import DashboardShellIcon from "./microcomps/dashboardshellicon";
+import { useDashboardThemeControls } from "../useDashboardTheme";
 
 export default function DashboardHeaderSection({ onLogout, user, config, setActiveMenu, mobileOpen, onOpenMobile, theme, onToggleTheme }) {
+  const themeControls = useDashboardThemeControls();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef(null);
   useEffect(() => {
@@ -27,7 +29,21 @@ export default function DashboardHeaderSection({ onLogout, user, config, setActi
           <button type="button" className="dashboard-header-icon-button" aria-label="Notifications" aria-expanded={notificationsOpen} aria-controls="dashboard-notifications-popover" onClick={() => setNotificationsOpen((value) => !value)} data-log-title="Notifications"><DashboardShellIcon name="notifications" /><span className="dashboard-notification-dot" /></button>
           {notificationsOpen && <div id="dashboard-notifications-popover" className="dashboard-notifications-popover"><strong>Notifications</strong>{["rm", "supervisor"].includes(user?.role) ? <button type="button" className="dashboard-notifications-link" data-log-title="View recent client activity" onClick={() => { setActiveMenu?.("notifications"); setNotificationsOpen(false); }}>View recent client activity</button> : <p>Your account notifications will appear here.</p>}</div>}
         </div>
-        <div className="dashboard-header-theme">
+        <div className="dashboard-header-theme" role="group" aria-label="Dashboard theme">
+          {user?.role === "supervisor" ? ["light", "dark"].map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              className="dashboard-header-icon-button"
+              aria-label={mode === "light" ? "Light mode" : "Dark mode"}
+              title={mode === "light" ? "Light mode" : "Dark mode"}
+              aria-pressed={theme === mode}
+              onClick={() => themeControls?.setTheme(mode)}
+              data-log-title={`Switch to ${mode} mode`}
+            >
+              <DashboardShellIcon name={mode === "light" ? "sun" : "moon"} />
+            </button>
+          )) : (
           <button
             type="button"
             className="dashboard-header-icon-button"
@@ -39,8 +55,9 @@ export default function DashboardHeaderSection({ onLogout, user, config, setActi
           >
             <DashboardShellIcon name={theme === "dark" ? "sun" : "moon"} />
           </button>
+          )}
         </div>
-        <button type="button" className="dashboard-header-icon-button" aria-label="Profile settings" title="Profile settings" onClick={() => setActiveMenu?.("profile")} data-log-title="Settings"><DashboardShellIcon name="settings" /></button>
+        <button type="button" className="dashboard-header-icon-button" aria-label={user?.role === "supervisor" ? "Settings" : "Profile settings"} title={user?.role === "supervisor" ? "Settings" : "Profile settings"} onClick={() => setActiveMenu?.("profile")} data-log-title="Settings"><DashboardShellIcon name="settings" /></button>
         <span className="dashboard-header-divider" />
         <DashboardAccountMenu user={user} onLogout={onLogout} setActiveMenu={setActiveMenu} />
       </div>

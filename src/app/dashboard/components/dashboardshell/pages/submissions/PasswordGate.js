@@ -6,7 +6,7 @@ import { ModalButton, ModalPasswordInput, ModalShell } from "../modalkit/ModalKi
 import "../styles/submissions.css";
 
 // Each protected section mounts a fresh gate; verification is never cached.
-export default function PasswordGate({ onVerified }) {
+export default function PasswordGate({ onVerified, onCancel, sectionLabel = "this section" }) {
   const descriptionId = useId();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,49 +15,33 @@ export default function PasswordGate({ onVerified }) {
   const mounted = useRef(false);
   const request = useRef(null);
   const dialogRef = useRef(null);
+  const anchorRef = useRef(null);
+  const [portalTarget, setPortalTarget] = useState(null);
   const returnFocus = useRef(typeof document !== "undefined" ? document.activeElement : null);
 
   useEffect(() => {
+    setPortalTarget(anchorRef.current?.closest(".dashboard-page-view") || anchorRef.current?.parentElement);
+  }, []);
+
+  useEffect(() => {
+    if (!portalTarget) return undefined;
     mounted.current = true;
     const dialog = dialogRef.current;
     const previousFocus = returnFocus.current;
-    const main = document.querySelector("main.site-main");
-    const previousInert = main?.inert;
-    if (main) main.inert = true;
-    const focusableElements = () => [...dialog.querySelectorAll('button, input, select, textarea, a[href], [tabindex]')]
-      .filter((element) => !element.matches(":disabled") && element.tabIndex >= 0 && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== "hidden");
-    const focusFirst = () => (focusableElements()[0] || dialog).focus({ preventScroll: true });
-    const keepFocusInside = (event) => {
-      if (!dialog.contains(event.target)) focusFirst();
-    };
-    const handleTab = (event) => {
-      if (event.key !== "Tab") return;
-      const elements = focusableElements();
-      const first = elements[0];
-      const last = elements[elements.length - 1];
-      if (!first) {
-        event.preventDefault();
-        dialog.focus({ preventScroll: true });
-      } else if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", handleTab, true);
-    document.addEventListener("focusin", keepFocusInside, true);
-    if (!dialog.contains(document.activeElement)) focusFirst();
+    // This dialog belongs to the content page; sidebar/header navigation stays available.
+    if (!dialog.closest("[inert]")) dialog.querySelector("input")?.focus({ preventScroll: true });
     return () => {
       mounted.current = false;
       request.current?.abort();
-      document.removeEventListener("keydown", handleTab, true);
-      document.removeEventListener("focusin", keepFocusInside, true);
-      if (main) main.inert = previousInert;
       if (previousFocus?.isConnected && !previousFocus.closest("[inert]")) previousFocus.focus({ preventScroll: true });
     };
-  }, []);
+  }, [portalTarget]);
+
+  const handleCancel = () => {
+    request.current?.abort();
+    setPassword("");
+    onCancel?.();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,7 +65,7 @@ export default function PasswordGate({ onVerified }) {
         body: JSON.stringify({ password }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!mounted.current) return;
+      if (!mounted.current || controller.signal.aborted) return;
       if (!res.ok || !data?.success) {
         setError(data?.error || "Incorrect password");
         return;
@@ -100,19 +84,23 @@ export default function PasswordGate({ onVerified }) {
     }
   };
 
-  if (typeof document === "undefined") return null;
-
-  return createPortal(
+  return <>
+    <span ref={anchorRef} hidden />
+    {portalTarget && createPortal(
       <ModalShell
         size="sm"
         icon="lock"
         title="Password required"
-        subtitle={<span id={descriptionId}>To access this section, please enter your password.</span>}
+        subtitle={<span id={descriptionId}>To access {sectionLabel}, please enter your password.</span>}
+        onClose={onCancel ? handleCancel : undefined}
+        closeLogTitle="Cancel section password and return to Dashboard"
         dismissOnOverlay={false}
         overlayClassName="sub-gate-overlay"
         as="form"
-        wrapperProps={{ onSubmit: handleSubmit, ref: dialogRef, tabIndex: -1, "aria-busy": submitting, "aria-describedby": descriptionId }}
+        wrapperProps={{ onSubmit: handleSubmit, ref: dialogRef, tabIndex: -1, "aria-busy": submitting, "aria-describedby": descriptionId, "aria-modal": false }}
         footer={
+          <>
+          <ModalButton type="button" variant="neutral" onClick={handleCancel} data-log-title="Cancel section password and return to Dashboard">Cancel</ModalButton>
           <ModalButton
             type="submit"
             variant="primary"
@@ -121,6 +109,7 @@ export default function PasswordGate({ onVerified }) {
           >
             {submitting ? "Verifying…" : "Enter"}
           </ModalButton>
+          </>
         }
       >
         <fieldset className="sub-gate-fields" disabled={submitting} aria-live="polite">
@@ -139,6 +128,7 @@ export default function PasswordGate({ onVerified }) {
           />
         </fieldset>
       </ModalShell>,
-    document.body
-  );
+    portalTarget
+    )}
+  </>;
 }

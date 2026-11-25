@@ -221,6 +221,8 @@
 .dashboard-header-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 12px; }
 .dashboard-header-icon-button { position: relative; display: flex; align-items: center; justify-content: center; width: 35px; height: 37px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: #292c7d; cursor: pointer; }
 .dashboard-header-icon-button:hover { background: #f0edff; }
+.dashboard-header-theme { display: flex; gap: 2px; }
+.dashboard-header-theme [aria-pressed="true"] { background: #e3f8f2; color: #138b78; }
 .dashboard-notification-dot { position: absolute; top: 4px; right: 6px; width: 9px; height: 9px; border: 1px solid white; border-radius: 50%; background: #8145ff; }
 .dashboard-header-divider { width: 1px; height: 29px; margin: 0 14px 0 7px; background: #e1e7f7; }
 .dashboard-header-notifications { position: relative; }

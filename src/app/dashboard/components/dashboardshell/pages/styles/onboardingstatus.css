@@ -10,10 +10,6 @@
   margin-bottom: 12px;
 }
 
-.onboarding-status-table-page .management-table-heading h1 {
-  color: var(--onbs-ink);
-}
-
 .onboarding-status-table-page .management-table-panel.generic-table-container {
   min-width: 0;
   padding: 0;

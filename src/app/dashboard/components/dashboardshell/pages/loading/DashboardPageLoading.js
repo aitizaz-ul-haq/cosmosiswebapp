@@ -69,7 +69,8 @@ export default function DashboardPageLoading({ children, pageLabel = "page" }) {
     // A password gate may mount while the page is inert; focus it once it is revealed.
     if (wasLoading.current && !loading) {
       const dialog = contentRef.current?.querySelector('[role="dialog"]');
-      const field = dialog?.querySelector('input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])');
+      const field = dialog?.querySelector('input:not([disabled]), select:not([disabled]), textarea:not([disabled])')
+        || dialog?.querySelector('button:not([disabled])');
       const previous = previousFocus.current;
       const canRestore = previous?.isConnected && contentRef.current?.contains(previous) && (!dialog || dialog.contains(previous));
       (canRestore ? previous : field)?.focus({ preventScroll: true });

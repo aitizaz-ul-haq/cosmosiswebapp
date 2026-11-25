@@ -66,6 +66,7 @@ function TextDocumentPreview({ url }) {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [truncated, setTruncated] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -77,7 +78,24 @@ function TextDocumentPreview({ url }) {
         const sameOrigin = new URL(url, window.location.origin).origin === window.location.origin;
         const response = await fetch(url, { signal: controller.signal, credentials: sameOrigin ? "include" : "omit", cache: "no-store" });
         if (!response.ok) throw new Error("Preview unavailable");
-        const content = await response.text();
+        // Read only the displayed part of a text file. Legacy document links can
+        // point to files larger than the current upload limit.
+        const reader = response.body?.getReader();
+        let content = "";
+        if (reader) {
+          const decoder = new TextDecoder();
+          try {
+            while (content.length <= TEXT_PREVIEW_LIMIT) {
+              const { value, done } = await reader.read();
+              if (done) { content += decoder.decode(); break; }
+              content += decoder.decode(value, { stream: true });
+            }
+          } finally {
+            await reader.cancel().catch(() => {});
+          }
+        } else {
+          content = await response.text();
+        }
         if (!controller.signal.aborted) {
           setText(content.slice(0, TEXT_PREVIEW_LIMIT));
           setTruncated(content.length > TEXT_PREVIEW_LIMIT);
@@ -90,13 +108,38 @@ function TextDocumentPreview({ url }) {
     };
     load();
     return () => controller.abort();
-  }, [url]);
+  }, [url, attempt]);
   if (loading) return <p className="submitted-documents-preview-message" role="status">Loading document…</p>;
-  if (failed) return <p className="submitted-documents-preview-message" role="status">This document could not be previewed. Use Open Document to view it in a new tab.</p>;
+  if (failed) return <div className="submitted-documents-preview-message"><p role="alert">This document could not be previewed. Retry or use Open Document to view it in a new tab.</p><ModalButton icon="clock" onClick={() => setAttempt((value) => value + 1)} data-log-title="Retry submitted text preview">Retry Preview</ModalButton></div>;
   return <>
     <pre className="submitted-documents-text-preview" tabIndex={0} aria-label="Document text">{text || "This text document is empty."}</pre>
     {truncated && <p className="submitted-documents-help">The preview shows the first {TEXT_PREVIEW_LIMIT.toLocaleString()} characters. Open Document to read the full file.</p>}
   </>;
+}
+
+function PdfDocumentPreview({ url, name }) {
+  const [status, setStatus] = useState("loading");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setStatus("loading");
+    const check = async () => {
+      try {
+        // Check the authenticated file endpoint before embedding it, so a
+        // removed file or an expired session does not become a blank viewer.
+        const response = await fetch(url, { method: "HEAD", credentials: "include", cache: "no-store", signal: controller.signal });
+        if (!response.ok || response.headers.get("content-type")?.split(";", 1)[0] !== "application/pdf") throw new Error("Preview unavailable");
+        if (!controller.signal.aborted) setStatus("ready");
+      } catch (error) {
+        if (!controller.signal.aborted) setStatus("failed");
+      }
+    };
+    check();
+    return () => controller.abort();
+  }, [url, attempt]);
+  if (status === "loading") return <p className="submitted-documents-preview-message" role="status">Loading PDF preview…</p>;
+  if (status === "failed") return <div className="submitted-documents-preview-message"><p role="alert">This PDF could not be previewed. Retry or use Open Document to view it in a new tab.</p><ModalButton icon="clock" onClick={() => setAttempt((value) => value + 1)} data-log-title="Retry submitted PDF preview">Retry Preview</ModalButton></div>;
+  return <div className="submitted-documents-preview"><iframe title={`PDF document: ${name}`} src={url} referrerPolicy="no-referrer" tabIndex={-1} onError={() => setStatus("failed")} /></div>;
 }
 
 function DocumentViewerModal({ client, document, onClose }) {
@@ -120,7 +163,7 @@ function DocumentViewerModal({ client, document, onClose }) {
     >
       <div className="submitted-documents-file-meta"><span>{document.mimeType || "File type unavailable"}</span><span>{formatBytes(document.sizeBytes)}</span><span>{uploadDate(document.uploadedAt)}</span></div>
       {!url ? <p className="submitted-documents-notice" role="status">This document is unavailable. Its stored file link is missing or cannot be opened safely.</p>
-        : privatePdf ? <div className="submitted-documents-preview"><iframe title={`PDF document: ${document.name}`} src={url} referrerPolicy="no-referrer" tabIndex={-1} /></div>
+        : privatePdf ? <PdfDocumentPreview url={url} name={document.name} />
           : preview === "image" && !imageFailed ? <div className="submitted-documents-preview submitted-documents-image-preview"><Image src={url} alt={document.name || "Submitted document"} width={1200} height={1600} unoptimized onError={() => setImageFailed(true)} referrerPolicy="no-referrer" /></div>
             : preview === "text" ? <TextDocumentPreview url={url} />
               : <p className="submitted-documents-preview-message" role="status">{imageFailed ? "This image could not be previewed." : "An inline preview is not available for this file type."} Use Open Document to view it in a new tab.</p>}
@@ -168,7 +211,7 @@ function DocumentReviewModal({ client, selectedId, onSelect, onView, onClose }) 
   );
 }
 
-export default function SubmittedDocumentsPage() {
+export default function SubmittedDocumentsPage({ onCancel }) {
   const { user } = useUser();
   const identity = `${user?.role || ""}:${user?.companyId || ""}:${user?.id || user?._id || ""}`;
   const [verifiedFor, setVerifiedFor] = useState(null);
@@ -269,7 +312,7 @@ export default function SubmittedDocumentsPage() {
       {unlocked && error && <div className="submitted-documents-load-error"><p role="alert">{error}</p><ModalButton icon="clock" onClick={() => setLoadVersion((value) => value + 1)} data-log-title="Retry submitted documents">Retry</ModalButton></div>}
       <GenericTable title="Submitted Documents" description="Review your clients’ uploaded documents and the storage they use." className="submitted-documents-page" data={unlocked ? clients : []} columns={columns} filterableFields={["clientName", "documentCount", "storage"]} loading={unlocked && loading} disableRowModal />
     </div>
-    {!unlocked && <PasswordGate onVerified={() => setVerifiedFor(identity)} />}
+    {!unlocked && <PasswordGate onVerified={() => setVerifiedFor(identity)} onCancel={onCancel} sectionLabel="Submitted Documents" />}
     {reviewClient && !viewedDocument && <DocumentReviewModal client={reviewClient} selectedId={selectedId} onSelect={setSelectedId} onView={openDocument} onClose={closeReview} />}
     {reviewClient && viewedDocument && <DocumentViewerModal key={viewedDocument.id} client={reviewClient} document={viewedDocument} onClose={() => setViewingId(null)} />}
   </>;

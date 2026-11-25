@@ -1,4 +1,5 @@
-// CompaniesPage.js
+import ProfilePage from "./ProfilePage";
+
 export default function SettingsPage() {
-  return <div>System Settings here</div>;
+  return <ProfilePage settings />;
 }

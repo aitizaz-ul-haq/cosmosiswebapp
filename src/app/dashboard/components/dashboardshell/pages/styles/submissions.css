@@ -303,15 +303,16 @@
   }
 }
 
-/* One modal-kit overlay, portaled to body so the gate centers in the viewport. */
+/* The gate is centered inside the content stage, leaving the sidebar/header available. */
 .mk-overlay.sub-gate-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 1200;
+  z-index: 1000;
+  padding: 1.25rem;
 }
 
 .sub-gate-overlay .mk-card {
-  max-height: calc(100dvh - 3rem);
+  max-height: calc(100% - 2.5rem);
 }
 
 .sub-gate-fields {

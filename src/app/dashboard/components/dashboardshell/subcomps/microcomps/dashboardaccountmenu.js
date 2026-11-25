@@ -39,7 +39,7 @@ export default function DashboardAccountMenu({ user, onLogout, setActiveMenu, si
       </button>
       {open && <div className="dashboard-account-dropdown">
         <p className="dashboard-account-dropdown-title">{getDisplayName(user)}</p>
-        <button type="button" onClick={() => select(() => setActiveMenu?.("profile"))} data-log-title="Profile"><DashboardShellIcon name="profile" size={18} />My Profile</button>
+        <button type="button" onClick={() => select(() => setActiveMenu?.("profile"))} data-log-title={user?.role === "supervisor" ? "Settings" : "Profile"}><DashboardShellIcon name={user?.role === "supervisor" ? "settings" : "profile"} size={18} />{user?.role === "supervisor" ? "Settings" : "My Profile"}</button>
         <button type="button" onClick={() => select(onLogout)} data-log-title="Logout"><DashboardShellIcon name="logout" size={18} />Log Out</button>
       </div>}
     </div>

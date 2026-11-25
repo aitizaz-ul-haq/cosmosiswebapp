@@ -4,8 +4,8 @@ import { dashboardConfigs } from "../../../config";
 export default function DashboardMenuSection({ activeMenu, userRole, children }) {
   const tableMenus = ["companies", "supervisors", "users", "clients", "rms", "teams", "registry", "scheduled", "approvals", "underreview", "onboardingstatus", "submissions", "documents", "reports", "logs", "demo users", "requesteddemonstration"];
   const managementPage = tableMenus.includes(activeMenu) || (userRole === "superadmin" && activeMenu === "notifications");
-  const sharedPageBackground = managementPage || (userRole === "client" && activeMenu === "onboarding");
-  const brandedPage = !managementPage && !["dashboard", "profile", "onboarding", "notifications"].includes(activeMenu);
+  const sharedPageBackground = managementPage || activeMenu === "help" || (userRole === "client" && activeMenu === "onboarding");
+  const brandedPage = !managementPage && !["dashboard", "profile", "help", "onboarding", "notifications"].includes(activeMenu);
   const pageLabel = dashboardConfigs[userRole]?.sidebar.menu.find((menu) => menu.key === activeMenu)?.label || activeMenu || "dashboard";
   return (
     <DashboardPageLoading key={`${userRole}:${activeMenu}`} pageLabel={pageLabel}>
