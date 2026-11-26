@@ -156,8 +156,8 @@ function ComplianceNotifications({ user }) {
       resetPaginationKey={`${statusFilter}:${search}`}
       filtersSlot={<>
         <div className="notifications-filters">
-          <label className="notifications-filter notifications-status-filter"><span>Status</span><select aria-label="Filter notifications by read status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} data-log-title="Filter notification read status"><option value="all">All notifications</option><option value="unread">Unread</option><option value="read">Read</option></select></label>
-          <label className="notifications-filter notifications-search-filter"><span>Search</span><input type="search" aria-label="Search notifications" placeholder="Search title, description, date or user…" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
+          <label className="notifications-filter notifications-status-filter"><select aria-label="Filter notifications by read status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} data-log-title="Filter notification read status"><option value="all">All notifications</option><option value="unread">Unread</option><option value="read">Read</option></select></label>
+          <label className="notifications-filter notifications-search-filter"><input type="search" aria-label="Search notifications" placeholder="Search title, description, date or user…" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
         </div>
         {loadError && <div className="notifications-load-error"><p role="alert">{loadError}</p><ModalButton icon="clock" onClick={() => setLoadVersion((version) => version + 1)} data-log-title="Retry loading notifications">Retry</ModalButton></div>}
       </>}

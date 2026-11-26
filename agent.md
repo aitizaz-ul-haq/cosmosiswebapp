@@ -13,6 +13,9 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 
 ## Latest handoff for GitHub Copilot — 26 Nov 2026
 
+- Notifications filters omit the visible Status/Search titles while retaining accessible
+  control names. The search uses Clients' filter sizing: an 840px maximum row with matching
+  select widths/gaps and mobile stacking at 400px. Search/filter behavior remains in place.
 - Compliance Officer Notifications loading again uses effect-local active guards, matching
   the earlier dashboard cleanup fix. Its two GETs finish in the background after navigation,
   retry or Strict Mode cleanup; obsolete successes, errors and loading updates are ignored.
@@ -791,6 +794,18 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ---
 
 ## 10. Change log — what was done in the last four days
+
+### 26 Nov — Compact Notifications filters matching Clients search width
+
+- Removed the visible Status and Search spans from `NotificationsPage.js`, retaining the
+  select/input `aria-label`s. `styles/notifications.css` now matches Clients' filter row cap,
+  gap, select/search flex sizing and responsive breakpoints; the desktop search is 656px
+  when the row reaches its 840px cap. Existing native controls, themes and filtering remain.
+- Verification: focused component ESLint and `git diff --check` pass. Headless Chrome
+  measurements of both filter layouts using the actual stylesheets match at eight viewport
+  widths (1672, 1366, 1100, 760, 600, 401, 400 and 390px), including stacked controls.
+  Report: `/tmp/cosmosis-notifications-filter-width-results.json`. These are isolated CSS
+  layout checks; no live API/database operations or deployment occurred.
 
 ### 26 Nov — Notifications loader cleanup AbortError
 
