@@ -14,14 +14,17 @@ export default function ManagementTableToolbar({
   customFilters = null,
 }) {
   const fields = filterableFields.filter(Boolean);
-  const dateFilter = filterField.toLowerCase().includes("date");
+  const selectedColumn = columns.find((column) => (column.accessorKey || column.id) === filterField);
+  const dateFilter = (selectedColumn?.meta?.filterInputType || (filterField.toLowerCase().includes("date") ? "date" : "search")) === "date";
   const placeholders = {
     Companies: "Search companies by name, contact, email, or phone...",
     "Compliance Officers": "Search compliance officers by name, email, company, or role...",
     Users: "Search users by name, email, company, or role...",
-    Clients: columns.some((column) => column.accessorKey === "phone")
-      ? "Search clients by name, phone, or assignment..."
-      : "Search clients by name or assignment...",
+    Clients: fields.includes("onboardingType")
+      ? "Search clients by name, status, progress, type, or assignment..."
+      : columns.some((column) => column.accessorKey === "phone")
+        ? "Search clients by name, phone, or assignment..."
+        : "Search clients by name or assignment...",
     "Investment Managers": "Search investment managers by name, email, phone, or company...",
     Teams: "Search teams by name, leader, or members...",
   };
@@ -50,7 +53,7 @@ export default function ManagementTableToolbar({
               aria-label={`Search ${title.toLowerCase()}`}
               value={filterValue}
               onChange={(event) => setFilterValue(event.target.value)}
-              placeholder={dateFilter ? "Select date" : searchPlaceholder || placeholders[title] || `Search ${title.toLowerCase()}...`}
+              placeholder={dateFilter ? "Select date" : filterField !== "all" ? `Search ${String(selectedColumn?.header || filterField).toLowerCase()}...` : searchPlaceholder || placeholders[title] || `Search ${title.toLowerCase()}...`}
             />
           </div>
         </div>

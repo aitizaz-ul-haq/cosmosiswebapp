@@ -13,6 +13,25 @@ the latest handoff and change log current so GitHub Copilot or another agent can
 
 ## Latest handoff for GitHub Copilot — 26 Nov 2026
 
+- Compliance Officer table field selectors now derive every displayed data column, including
+  computed columns. Clients offers Name, Status, Progress, Onboarding Type, Assigned To,
+  Shared With and Assigned By; Progress matches both percentage and phase text. Pending
+  Approvals and Under Review now include Status and Onboarding Type. Action buttons remain
+  outside search choices; other roles retain their explicit field lists.
+- Submitted Information adds Date created to its officer filters and broad search. Notifications
+  adds All Fields/Title/Description/Date/Status search alongside its Read/Unread dropdown.
+  Formatted dates use text search; optional column metadata preserves Notifications' broader
+  user/email/date search without widening selected-column matches. Help describes these controls.
+  Onboarding Status keeps the simplified status/phase/search toolbar requested earlier.
+- Compliance Officer Clients now gives all seven data columns equal widths, including
+  Onboarding Type, with a separate 300px Actions column. A desktop minimum width keeps
+  headings and progress badges readable; long status labels wrap inside their badges.
+  Constrained desktop layouts scroll inside the existing table region. At 1100px and
+  below, the existing labelled card layout remains.
+- Onboarding Status removes the All Fields selector and its state. Search always covers
+  client name, created date, remarks, status and phase, alongside the existing status/phase
+  dropdowns. The desktop controls occupy at most 840px like other table filters; search
+  moves below the two dropdowns at 700px and all controls stack at 420px.
 - Notifications filters omit the visible Status/Search titles while retaining accessible
   control names. The search uses Clients' filter sizing: an 840px maximum row with matching
   select widths/gaps and mobile stacking at 400px. Search/filter behavior remains in place.
@@ -794,6 +813,69 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 ---
 
 ## 10. Change log — what was done in the last four days
+
+### 26 Nov — Complete Compliance Officer column filters
+
+- `GenericTable.js` derives supervisor field choices from all accessor-key/function columns,
+  rather than accepting callers' incomplete raw-field lists. Investment Managers, Teams,
+  Clients, Pending Approvals, Under Review, Reports and Submitted Documents now expose every
+  respective data column; Actions/Open are controls and remain excluded. Other roles' field
+  lists retain their existing behavior. Clients' Progress accessor matches its percentage
+  and phase display; empty Shared With and Teams member values match their displayed labels.
+- `ManagementTableToolbar.js` uses the selected column's name in the search hint and honors
+  `meta.filterInputType` for readable date text. Reports marks Created Date as text-searchable.
+  `SubmissionsPage.js` adds Date created for officers only, matching the displayed date string.
+- `NotificationsPage.js` reuses the shared column selector/search with its Read/Unread filter.
+  Its scoped CSS keeps the combined controls within 840px, wraps below 600px and stacks at
+  400px. The shared table supports optional `matchAllSearchTerms` for its existing multi-term
+  search and `meta.searchValue` for extra All Fields terms, while selected columns stay scoped
+  to their own displayed values. Existing read receipts, retry, dialogs and loading remain.
+- `complianceHelpContent.js` documents all column choices, dates and combined Notifications
+  filters; it also removes the stale claim that Onboarding Status has a field selector.
+  Dashboard preview tables and Onboarding Status's simplified toolbar retain their layouts.
+- Verification: 62 assertions against actual transformed GenericTable/toolbar and actual
+  Clients/Teams/Documents/Reports columns pass, including every data-field match, computed
+  accessors, broad/selected search isolation, optional multi-term matching and other-role
+  compatibility. Eight Submitted Information checks also pass. Harness:
+  `/tmp/cosmosis-supervisor-filters-check.cjs`. Compilation of all eight changed JavaScript
+  files, Notifications CSS parsing and `git diff --check` pass. Notifications browser layout
+  verification did not complete: native Chrome encountered sandbox EPERM and the optional
+  escalation was aborted. No browser results are claimed for this filter change; no live
+  API/database behavior, production build or deployment was exercised.
+
+### 26 Nov — Even Compliance Officer Clients column spacing
+
+- `styles/managementtable.css` replaces the separate Status/Progress/Onboarding Type widths
+  with equal shares of the table width remaining after the 300px Actions column. The scoped
+  supervisor table has a 1280px desktop minimum so narrow content columns do not crowd the
+  Onboarding Type heading or progress badges; the existing focusable table region provides
+  local horizontal scrolling when needed. Rows have a 60px minimum height so long status
+  labels can wrap fully inside their badges; row actions remain on one line.
+- The existing labelled card layout at 1100px and below resets the desktop minimum width.
+  Investment Manager tables and shared table components retain their existing layout.
+- Verification: PostCSS parsing and `git diff --check` pass. Headless Chrome with the actual
+  Clients column renderers, shared table components, source CSS and Poppins fonts passes at
+  1672px, 1366px and a true 390px iframe. Data columns measure equally (144.56px at 1672px,
+  140px at 1366px); the Onboarding Type heading, status/progress badges and all actions fit.
+  The desktop status cells use 5px vertical padding so wrapped badges fit compact rows.
+  At 1672px all actions are visible without horizontal scrolling; at 1366px scrolling stays
+  inside the table panel. Mobile cards have no page overflow. Screenshot:
+  `/tmp/cosmosis-supervisor-clients-columns.png`; measurements:
+  `/tmp/cosmosis-supervisor-clients-layout-results.json`. These were isolated layout checks;
+  no live API/database behavior, production build or deployment was exercised.
+
+### 26 Nov — Remove Onboarding Status field selector and compact search
+
+- `OnboardingStatusPage.js` removes All Fields, its options, props and state. Search uses
+  the original five fields directly; status/phase filtering and pagination resets remain.
+- `styles/onboardingstatus.css` limits the desktop control group to 840px with two 170px
+  selects and a flexible search capped at 472px. At 1100px, selects shrink to 145px with
+  10px gaps; at 700px, search spans a second row, and at 420px controls stack individually.
+  Existing accessible control names and shared dark theme hooks remain in use.
+- Verification: Next SWC compiles the component, PostCSS parses its stylesheet and
+  `git diff --check` passes. A separate code review confirms filter-state cleanup and
+  responsive grid placement. Browser rendering, a production build and live API/database
+  behavior were not exercised for this small UI change; no deployment occurred.
 
 ### 26 Nov — Compact Notifications filters matching Clients search width
 

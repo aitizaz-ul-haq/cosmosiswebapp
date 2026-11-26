@@ -11,15 +11,17 @@
 .notifications-date { color: var(--notifications-muted); font-size: 12px; line-height: 1.6; }
 .notifications-status { display: inline-flex; align-items: center; }
 .notifications-table-page .management-row-action { white-space: nowrap; }
-.notifications-filters { display: flex; align-items: center; gap: 14px; width: min(100%, 840px); min-width: 0; }
+.notifications-table-page .management-table-toolbar { flex-wrap: wrap; justify-content: flex-start; gap: 14px; max-width: 840px; }
+.notifications-table-page .management-table-filters { flex: 1; width: auto; }
+.notifications-filters { display: flex; align-items: center; flex: 0 0 170px; min-width: 0; }
 .notifications-filter { display: flex; min-width: 0; }
-.notifications-status-filter { flex: 0 0 170px; }
-.notifications-search-filter { flex: 1; }
+.notifications-status-filter { flex: 1; }
 .notifications-filter :is(select, input) { width: 100%; min-width: 0; height: 43px; padding: 0 14px; border: 1px solid var(--notifications-border); border-radius: 10px; background: var(--notifications-soft); color: var(--notifications-text); font: inherit; font-size: 13px; }
 .notifications-filter select { cursor: pointer; }
 .notifications-filter input::placeholder { color: var(--notifications-muted); opacity: 1; }
 .notifications-filter :is(select, input):focus-visible { outline: 2px solid var(--notifications-focus); outline-offset: 2px; }
 .notifications-error, .notifications-load-error { margin: 0 0 18px; padding: 13px 16px; border: 1px solid #ffdce3; border-radius: 10px; background: #fff0f3; color: #a43c52; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.notifications-load-error { flex-basis: 100%; }
 .notifications-error p, .notifications-load-error p { margin: 0 0 10px; }
 .notifications-notice { margin: 0 0 16px; color: var(--notifications-muted); font-size: 12px; line-height: 1.6; }
 .notification-details-overlay .mk-title, .notification-details-overlay .mk-subtitle { overflow-wrap: anywhere; }
@@ -40,8 +42,8 @@
 html[data-dashboard-theme="dark"] .notifications-table-page { --notifications-text: var(--dm-text); --notifications-muted: var(--dm-muted); --notifications-border: var(--dm-border); --notifications-soft: var(--dm-input); --notifications-surface: var(--dm-surface); --notifications-focus: var(--dm-teal); }
 html[data-dashboard-theme="dark"] :is(.notifications-error, .notifications-load-error, .notification-details-read-error) { border-color: var(--dm-border); background: var(--dm-red-bg); color: #ff91a1; }
 @media (max-width: 1100px) {
-  .notifications-filters { gap: 10px; }
-  .notifications-status-filter { flex-basis: 145px; }
+  .notifications-table-page .management-table-toolbar { gap: 10px; }
+  .notifications-filters { flex-basis: 145px; }
   .notifications-table-page .management-table-panel .generic-table { display: block; min-width: 0; }
   .notifications-table-page .generic-table thead { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); }
   .notifications-table-page .generic-table tbody { display: block; }
@@ -59,15 +61,15 @@ html[data-dashboard-theme="dark"] :is(.notifications-error, .notifications-load-
   .notifications-description { display: block; overflow: visible; }
 }
 @media (max-width: 760px) {
-  .notifications-status-filter { flex-basis: 125px; }
+  .notifications-filters { flex-basis: 125px; }
 }
 @media (max-width: 600px) {
+  .notifications-table-page .management-table-filters { flex-basis: 100%; width: 100%; }
   .notifications-table-page .generic-table td { grid-template-columns: 88px minmax(0, 1fr); gap: 10px; }
   .notification-details-overlay { padding: 16px; }
   .notification-details-overlay .mk-card { max-height: calc(100dvh - 32px); }
   .notification-details-metadata > div { grid-template-columns: 90px minmax(0, 1fr); gap: 10px; }
 }
 @media (max-width: 400px) {
-  .notifications-filters { flex-wrap: wrap; }
-  .notifications-status-filter, .notifications-search-filter { flex-basis: 100%; }
+  .notifications-filters { flex-basis: 100%; }
 }

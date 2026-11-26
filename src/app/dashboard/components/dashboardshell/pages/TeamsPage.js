@@ -337,7 +337,7 @@ export default function TeamsPage() {
   const columns = [
     { accessorKey: "name", header: "Team Name", meta: { showTitle: true }, cell: ({ getValue }) => <span className="teams-cell-text">{getValue()}</span> },
     { id: "leaderName", header: "Team Leader", accessorFn: (team) => managerName(team.leader), meta: { showTitle: true }, cell: ({ getValue }) => <span className="teams-cell-text">{getValue()}</span> },
-    { id: "memberNames", header: "Team Members", accessorFn: (team) => (team.memberUserIds || []).map((id) => managerName(teamPerson(team, id))).join(", "), meta: { showTitle: true }, cell: ({ getValue }) => <span className="teams-cell-text">{getValue() || "No members"}</span> },
+    { id: "memberNames", header: "Team Members", accessorFn: (team) => (team.memberUserIds || []).map((id) => managerName(teamPerson(team, id))).join(", ") || "No members", meta: { showTitle: true }, cell: ({ getValue }) => <span className="teams-cell-text">{getValue()}</span> },
     {
       id: "actions", header: "Actions", cell: ({ row }) => {
         const team = row.original;

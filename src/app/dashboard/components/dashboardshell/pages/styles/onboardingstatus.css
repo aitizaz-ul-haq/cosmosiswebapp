@@ -21,8 +21,8 @@
 
 .onbs-toolbar {
   display: grid;
-  grid-template-columns: minmax(140px, .9fr) minmax(140px, .86fr) minmax(150px, .92fr) minmax(260px, 3.25fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, 170px) minmax(0, 472px);
+  gap: 14px;
   margin-bottom: 10px;
   padding: 10px 13px;
   border: 1px solid #e7ebfb;
@@ -799,14 +799,6 @@
 }
 
 @media (max-width: 1180px) {
-  .onbs-toolbar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .onbs-toolbar .management-filter-search {
-    grid-column: 1 / -1;
-  }
-
   .onbs-item {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 9px 18px;
@@ -823,8 +815,16 @@
   .onbs-client-details dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+@media (max-width: 1100px) {
+  .onbs-toolbar {
+    grid-template-columns: repeat(2, 145px) minmax(0, 530px);
+    gap: 10px;
+  }
+}
+
 @media (max-width: 700px) {
-  .onbs-toolbar { gap: 8px; padding: 10px; }
+  .onbs-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 10px; }
+  .onbs-toolbar .management-filter-search { grid-column: 1 / -1; }
   .onbs-toolbar .management-filter-select select { padding-left: 10px; padding-right: 27px; font-size: 11px; }
   .onbs-toolbar .management-filter-select > svg { right: 9px; }
   .onbs-toolbar .management-filter-search input { font-size: 12px; }

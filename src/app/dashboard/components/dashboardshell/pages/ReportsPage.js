@@ -6,7 +6,7 @@ const columns = [
   { accessorKey: "name", header: "Report" },
   { accessorKey: "companyName", header: "Company" },
   { accessorKey: "type", header: "Type" },
-  { accessorKey: "createdDate", header: "Created Date" },
+  { accessorKey: "createdDate", header: "Created Date", meta: { filterInputType: "search" } },
   { accessorKey: "status", header: "Status" },
 ];
 

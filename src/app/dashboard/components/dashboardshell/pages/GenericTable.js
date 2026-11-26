@@ -33,6 +33,7 @@ export default function GenericTable({
   hideDefaultFilter = false,
   filtersSlot = null,
   resetPaginationKey,
+  matchAllSearchTerms = false,
 }) {
   const { user } = useUser();
   const pageSize = getDashboardPageSize(user?.role);
@@ -242,17 +243,19 @@ export default function GenericTable({
 
   const searchableFields = useMemo(() => {
     const fields = filterableFields.filter(Boolean);
-    return fields.length ? fields : columns
+    if (fields.length && user?.role !== "supervisor") return fields;
+    return columns
       .filter((column) => column.accessorKey || column.accessorFn)
       .map((column) => column.accessorKey || column.id)
       .filter(Boolean);
-  }, [columns, filterableFields]);
+  }, [columns, filterableFields, user?.role]);
 
   const filteredData = useMemo(() => {
     const query = filterValue.trim().toLowerCase();
     if (!query) return data;
+    const terms = matchAllSearchTerms ? query.split(/\s+/) : [query];
     const fields = filterField === "all" ? searchableFields : [filterField];
-    return data.filter((row, index) => fields.some((field) => {
+    return data.filter((row, index) => terms.every((term) => fields.some((field) => {
       const column = columns.find((item) => (item.accessorKey || item.id) === field);
       const value = column?.accessorFn
         ? column.accessorFn(row, index)
@@ -260,9 +263,11 @@ export default function GenericTable({
       const text = field === "role"
         ? getRoleLabel(value)
         : value instanceof Date ? value.toISOString() : String(value ?? "");
-      return text.toLowerCase().includes(query);
-    }));
-  }, [data, columns, filterField, filterValue, searchableFields]);
+      // Supplement broad search while keeping a selected column limited to its own value.
+      const extraText = filterField === "all" ? column?.meta?.searchValue?.(row, index) : "";
+      return `${text} ${extraText ?? ""}`.toLowerCase().includes(term);
+    })));
+  }, [data, columns, filterField, filterValue, searchableFields, matchAllSearchTerms]);
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));

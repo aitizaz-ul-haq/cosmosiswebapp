@@ -138,27 +138,25 @@
 .management-table-panel .generic-table .dash-btn-danger { background: #ffebee; color: #ef2336; }
 .management-table-panel .generic-table .generic-table-empty { height: 160px; color: #8792b6; }
 
-/* Compact supervisor rows reserve enough space for every action on one line. */
+/* Equal data columns keep headings and badges readable alongside the row actions. */
 .supervisor-clients-table .generic-table {
   width: 100%;
-  min-width: 0;
+  min-width: 1280px;
   table-layout: fixed;
 }
 .supervisor-clients-table .generic-table th {
+  width: calc((100% - 300px) / 7);
   padding: 8px;
   line-height: 1.25;
   white-space: normal;
 }
 .supervisor-clients-table .generic-table td {
-  height: 55px;
+  height: 60px;
   padding: 9px 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.supervisor-clients-table .generic-table th:nth-child(2) { width: 126px; }
-.supervisor-clients-table .generic-table th:nth-child(3) { width: 136px; }
-.supervisor-clients-table .generic-table th:nth-child(4) { width: 112px; }
 .supervisor-clients-table .generic-table th:nth-child(8) { width: 300px; }
 .supervisor-clients-table .generic-table td.table-action-cell { width: auto; }
 .supervisor-clients-table .generic-table td > span {
@@ -166,6 +164,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.supervisor-clients-table .generic-table td:nth-child(2) > span {
+  white-space: normal;
 }
 .supervisor-clients-table .management-row-actions { flex-wrap: nowrap; gap: 6px; }
 .supervisor-clients-table .management-row-action {
@@ -176,8 +177,15 @@
 }
 .supervisor-clients-table .management-row-action svg { flex-shrink: 0; }
 
+@media (min-width: 1101px) {
+  .supervisor-clients-table .generic-table td:nth-child(2) {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+
 @media (max-width: 1100px) {
-  .supervisor-clients-table .generic-table { display: block; }
+  .supervisor-clients-table .generic-table { display: block; min-width: 0; }
   .supervisor-clients-table .generic-table thead {
     position: absolute;
     width: 1px;

@@ -22,7 +22,6 @@ function ComplianceNotifications({ user }) {
   const [loadError, setLoadError] = useState("");
   const [loadVersion, setLoadVersion] = useState(0);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [readUpdates, setReadUpdates] = useState({});
   const mounted = useRef(false);
@@ -81,14 +80,9 @@ function ComplianceNotifications({ user }) {
     return [{ ...event, key, date: new Date(event.date).toISOString(), dateLabel: formatDate(event.date, true), status: readKeys.has(key) ? "Read" : "Unread" }];
   }), [clients, readKeys]);
 
-  const filtered = useMemo(() => {
-    const terms = search.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    return notifications.filter((notification) => {
-      if (statusFilter !== "all" && notification.status.toLowerCase() !== statusFilter) return false;
-      const text = [notification.title, notification.description, notification.dateLabel, notification.date, notification.status, notification.userName, notification.username, notification.userEmail].join(" ").toLowerCase();
-      return terms.every((term) => text.includes(term));
-    });
-  }, [notifications, statusFilter, search]);
+  const filtered = useMemo(() => notifications.filter((notification) =>
+    statusFilter === "all" || notification.status.toLowerCase() === statusFilter
+  ), [notifications, statusFilter]);
 
   const markRead = useCallback(async (notification) => {
     if (readKeys.has(notification.key) || requests.current.has(notification.key)) return;
@@ -137,8 +131,8 @@ function ComplianceNotifications({ user }) {
 
   const columns = useMemo(() => [
     { accessorKey: "title", header: "Title", cell: ({ row }) => <span className={`notifications-title${row.original.status === "Unread" ? " is-unread" : ""}`} title={row.original.title}>{row.original.title}</span> },
-    { accessorKey: "description", header: "Description", cell: ({ getValue }) => <span className="notifications-description" title={getValue()}>{getValue()}</span> },
-    { accessorKey: "dateLabel", header: "Date", cell: ({ row }) => <time className="notifications-date" dateTime={row.original.date}>{row.original.dateLabel}</time> },
+    { accessorKey: "description", header: "Description", meta: { searchValue: (notification) => [notification.description, notification.userName, notification.username, notification.userEmail].join(" ") }, cell: ({ getValue }) => <span className="notifications-description" title={getValue()}>{getValue()}</span> },
+    { accessorKey: "dateLabel", header: "Date", meta: { filterInputType: "search", searchValue: (notification) => `${notification.dateLabel} ${notification.date}` }, cell: ({ row }) => <time className="notifications-date" dateTime={row.original.date}>{row.original.dateLabel}</time> },
     { accessorKey: "status", header: "Status", cell: ({ getValue }) => <span className="notifications-status"><StatusPill tone={getValue() === "Read" ? "green" : "blue"}>{getValue()}</StatusPill></span> },
     { id: "actions", header: "Open", cell: ({ row }) => <button type="button" className="management-row-action is-info" data-notification-key={row.original.key} data-log-title={`Open notification: ${row.original.title} for ${row.original.userName}`} aria-label={`Open ${row.original.title.toLowerCase()} for ${row.original.userName}`} onClick={() => openNotification(row.original)}>Open</button> },
   ], [openNotification]);
@@ -152,12 +146,11 @@ function ComplianceNotifications({ user }) {
       columns={columns}
       loading={loading}
       disableRowModal
-      hideDefaultFilter
-      resetPaginationKey={`${statusFilter}:${search}`}
+      matchAllSearchTerms
+      resetPaginationKey={statusFilter}
       filtersSlot={<>
         <div className="notifications-filters">
           <label className="notifications-filter notifications-status-filter"><select aria-label="Filter notifications by read status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} data-log-title="Filter notification read status"><option value="all">All notifications</option><option value="unread">Unread</option><option value="read">Read</option></select></label>
-          <label className="notifications-filter notifications-search-filter"><input type="search" aria-label="Search notifications" placeholder="Search title, description, date or user…" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
         </div>
         {loadError && <div className="notifications-load-error"><p role="alert">{loadError}</p><ModalButton icon="clock" onClick={() => setLoadVersion((version) => version + 1)} data-log-title="Retry loading notifications">Retry</ModalButton></div>}
       </>}

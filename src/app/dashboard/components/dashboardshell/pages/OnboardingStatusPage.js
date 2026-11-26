@@ -29,14 +29,7 @@ const STATUS_OPTIONS = [
   { value: "cancelled", label: "Cancelled", dot: "#f87171" },
 ];
 const STATUS_LABEL = Object.fromEntries(STATUS_OPTIONS.map((o) => [o.value, o.label]));
-const FILTERABLE_FIELDS = ["fullName", "created", "rmRemarks", "status", "phase"];
-const FILTER_COLUMNS = [
-  { accessorKey: "fullName", header: "Client" },
-  { accessorKey: "created", header: "Created" },
-  { accessorKey: "rmRemarks", header: "Investment Manager remarks" },
-  { accessorKey: "status", header: "Status" },
-  { accessorKey: "phase", header: "Phase" },
-];
+const SEARCH_FIELDS = ["fullName", "created", "rmRemarks", "status", "phase"];
 
 const formatCreated = (value) => {
   if (!value) return "—";
@@ -405,8 +398,6 @@ function RemarksIcon() {
 }
 
 function OnboardingToolbar({
-  filterField,
-  setFilterField,
   filterValue,
   setFilterValue,
   statusFilter,
@@ -415,18 +406,6 @@ function OnboardingToolbar({
   setPhaseFilter,
 }) {
   const selects = [
-    {
-      label: "Filter onboarding status by field",
-      value: filterField,
-      onChange: setFilterField,
-      options: [
-        { value: "all", label: "All Fields" },
-        ...FILTER_COLUMNS.map((column) => ({
-          value: column.accessorKey,
-          label: column.header,
-        })),
-      ],
-    },
     {
       label: "Filter by onboarding status",
       value: statusFilter,
@@ -690,7 +669,6 @@ export default function OnboardingStatusPage({ onNavigate }) {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filterField, setFilterField] = useState("all");
   const [filterValue, setFilterValue] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [phaseFilter, setPhaseFilter] = useState("all");
@@ -777,17 +755,16 @@ export default function OnboardingStatusPage({ onNavigate }) {
 
   const filteredRows = useMemo(() => {
     const needle = filterValue.trim().toLowerCase();
-    const fields = filterField === "all" ? FILTERABLE_FIELDS : [filterField];
     return rows.filter((row) =>
       (statusFilter === "all" || row.statusKey === statusFilter) &&
       (phaseFilter === "all" || String(row.cfg?.phase) === phaseFilter) &&
-      (!needle || fields.some((field) => String(row[field] ?? "").toLowerCase().includes(needle)))
+      (!needle || SEARCH_FIELDS.some((field) => String(row[field] ?? "").toLowerCase().includes(needle)))
     );
-  }, [rows, filterField, filterValue, statusFilter, phaseFilter]);
+  }, [rows, filterValue, statusFilter, phaseFilter]);
 
   useEffect(() => {
     setPageIndex(0);
-  }, [filterField, filterValue, statusFilter, phaseFilter, pageSize, user?.id, user?._id, user?.companyId]);
+  }, [filterValue, statusFilter, phaseFilter, pageSize, user?.id, user?._id, user?.companyId]);
 
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const currentIndex = Math.min(pageIndex, pageCount - 1);
@@ -805,8 +782,6 @@ export default function OnboardingStatusPage({ onNavigate }) {
       loading={loading}
     >
       <OnboardingToolbar
-        filterField={filterField}
-        setFilterField={setFilterField}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
         statusFilter={statusFilter}

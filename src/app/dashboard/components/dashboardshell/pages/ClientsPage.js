@@ -622,10 +622,11 @@ export default function ClientsPage() {
     {
       id: "progress",
       header: "Progress",
-      accessorFn: (row) =>
-        (row.onboardingType || "individual") === "individual"
-          ? `${getPhaseConfig(row).pct}%`
-          : "—",
+      accessorFn: (row) => {
+        if ((row.onboardingType || "individual") !== "individual") return "—";
+        const cfg = getPhaseConfig(row);
+        return isSupervisor ? `${cfg.pct}% · Phase ${cfg.phase}` : `${cfg.pct}%`;
+      },
       cell: ({ row }) => <ProgressOval client={row.original} />,
     },
     {
@@ -640,10 +641,12 @@ export default function ClientsPage() {
           {
             id: "sharedWith",
             header: "Shared With",
-            accessorFn: (row) =>
-              row.isShared && Array.isArray(row.sharedWithNames)
+            accessorFn: (row) => {
+              const names = row.isShared && Array.isArray(row.sharedWithNames)
                 ? row.sharedWithNames.join(", ")
-                : "",
+                : "";
+              return names || (isSupervisor ? "—" : "");
+            },
             cell: ({ row }) =>
               row.original.isShared &&
               Array.isArray(row.original.sharedWithNames) &&

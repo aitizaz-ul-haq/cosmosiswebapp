@@ -24,6 +24,11 @@ const FILTER_COLUMNS = [
   { accessorKey: "status", header: "Status" },
   { accessorKey: "phase", header: "Phase" },
 ];
+const COMPLIANCE_FILTER_COLUMNS = [
+  ...FILTER_COLUMNS,
+  { accessorKey: "created", header: "Date created" },
+];
+const COMPLIANCE_FILTERABLE_FIELDS = COMPLIANCE_FILTER_COLUMNS.map((column) => column.accessorKey);
 
 const getRowId = (client) => String(client.profileId || client.userId);
 
@@ -293,6 +298,7 @@ export default function SubmissionsPage({ onCancel }) {
   const pageSize = getDashboardPageSize(user?.role);
   const isComplianceOfficer = user?.role === "supervisor";
   const sectionTitle = isComplianceOfficer ? "Submitted Information" : "Submissions";
+  const filterableFields = isComplianceOfficer ? COMPLIANCE_FILTERABLE_FIELDS : FILTERABLE_FIELDS;
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -343,11 +349,11 @@ export default function SubmissionsPage({ onCancel }) {
   const filteredRows = useMemo(() => {
     const needle = filterValue.trim().toLowerCase();
     if (!needle) return rows;
-    const fields = filterField === "all" ? FILTERABLE_FIELDS : [filterField];
+    const fields = filterField === "all" ? filterableFields : [filterField];
     return rows.filter((r) =>
       fields.some((f) => String(r[f] ?? "").toLowerCase().includes(needle))
     );
-  }, [rows, filterField, filterValue]);
+  }, [rows, filterField, filterValue, filterableFields]);
 
   useEffect(() => {
     setPageIndex(0);
@@ -380,13 +386,13 @@ export default function SubmissionsPage({ onCancel }) {
         <div className="sub-toolbar">
           <ManagementTableToolbar
             title={sectionTitle}
-            columns={FILTER_COLUMNS}
+            columns={isComplianceOfficer ? COMPLIANCE_FILTER_COLUMNS : FILTER_COLUMNS}
             filterField={filterField}
             setFilterField={setFilterField}
             filterValue={filterValue}
             setFilterValue={setFilterValue}
-            filterableFields={FILTERABLE_FIELDS}
-            searchPlaceholder={isComplianceOfficer ? "Search submitted information by client, status, or phase..." : "Search submissions by client, status, or phase..."}
+            filterableFields={filterableFields}
+            searchPlaceholder={isComplianceOfficer ? "Search submitted information by client, status, phase, or date..." : "Search submissions by client, status, or phase..."}
           />
           {!isComplianceOfficer && unlocked && !loading && (
             <SubmissionsPagination
