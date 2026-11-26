@@ -4,14 +4,21 @@ This file is the hand-off for any AI coding agent (Codex, Copilot, etc.) working
 Read sections 1–9 before changing anything. Section 10 lists what was changed recently, section 11
 lists known problems. Everything here was verified against the code unless marked *(not reviewed)*.
 
-Last updated: 2026-11-25. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
+Last updated: 2026-11-26. Repo: `aitizaz-ul-haq/cosmosiswebapp`, branch `main`.
 
 **Standing user instruction:** Whenever you change this application, update `agent.md` in the
 same task before handing it back. Record the resulting behaviour, relevant files, verification
 performed and remaining limitations; correct any descriptions made stale by the change. Keep
 the latest handoff and change log current so GitHub Copilot or another agent can continue.
 
-## Latest handoff for GitHub Copilot — 25 Nov 2026
+## Latest handoff for GitHub Copilot — 26 Nov 2026
+
+- Compliance Officer Notifications loading again uses effect-local active guards, matching
+  the earlier dashboard cleanup fix. Its two GETs finish in the background after navigation,
+  retry or Strict Mode cleanup; obsolete successes, errors and loading updates are ignored.
+  Cleanup no longer calls `abort()` for these loads, removing the reported AbortError trigger.
+  Mark-as-read requests retain their existing cancellation and confirmation behavior.
+  Sixteen controlled lifecycle checks, full-source ESLint and an isolated build pass; see log.
 
 - Compliance Officer **Notifications** is now a standard table with **Title, Description,
   Date, Status (Read/Unread), Open** and the shared 10-record footer. Search covers titles,
@@ -785,6 +792,25 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
 
 ## 10. Change log — what was done in the last four days
 
+### 26 Nov — Notifications loader cleanup AbortError
+
+- Removed the load effect's AbortController, fetch signal and cleanup abort from
+  `NotificationsPage.js`. Both GETs retain effect-local active checks for success, error and
+  loading state; cleanup only deactivates the old effect. This restores the established
+  dashboard loader pattern after the new table reintroduced abort-driven cleanup.
+- Load failures still show Retry, with a fallback message even for missing rejection details.
+  Read receipt PATCH requests retain their existing controller and lifecycle handling.
+- Verification: **16/16** controlled lifecycle checks pass with zero unhandled rejections,
+  executing the actual component with installed Next SWC and deferred headers/JSON. Cases
+  cover concurrent endpoints, HTTP/network/malformed-data failures, navigation cleanup,
+  Strict Mode stale success/failure and retry isolation. Harness/report:
+  `/tmp/cosmosis-notifications-lifecycle.cjs` and
+  `/tmp/cosmosis-notifications-lifecycle-results.json`.
+- Full-source ESLint passes with the existing Profile hook warning; isolated production build
+  passes with the existing `/api/logs` dynamic-render diagnostic. No browser reproduction or
+  live database testing was performed. In-flight GETs can finish after cleanup; inactive
+  effects ignore them. No deployment or dependency changes.
+
 ### 25 Nov — Notifications table, details dialog and persisted read status
 
 - Replaced the officer's activity list/arrows with GenericTable columns Title, Description,
@@ -801,7 +827,8 @@ Their **width/height must not change** (`.onb-modal { width:80vw; max-width:80vw
   account/event index preserve first read time, handle duplicate simultaneous opens, isolate
   accounts and treat later event dates as new unread activity. PATCH checks accessible client
   and actual source date; requests reject forged tenant/user fields. UI updates Read only
-  after successful server confirmation, supports retry, and aborts on account/navigation changes.
+  after successful server confirmation and supports retry. Read receipt PATCH requests abort
+  on account/navigation changes; source GETs ignore obsolete results after cleanup.
 - Added subject/type metadata to `clientEvents` without changing its legacy output contract,
   and updated Help. Existing Investment Manager/superadmin Notifications presentation remains.
 - Verification: full-source ESLint passes with the existing Profile hook warning; source

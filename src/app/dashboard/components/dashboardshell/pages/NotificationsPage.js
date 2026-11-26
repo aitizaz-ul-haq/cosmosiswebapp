@@ -39,7 +39,6 @@ function ComplianceNotifications({ user }) {
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
     let active = true;
     requests.current.forEach((request) => request.abort());
     requests.current.clear();
@@ -52,7 +51,7 @@ function ComplianceNotifications({ user }) {
     const load = async () => {
       try {
         const get = async (url) => {
-          const response = await fetch(url, { credentials: "include", cache: "no-store", signal: controller.signal });
+          const response = await fetch(url, { credentials: "include", cache: "no-store" });
           const data = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(data.error || "Unable to load notifications. Please try again.");
           return data;
@@ -64,13 +63,16 @@ function ComplianceNotifications({ user }) {
           setReadKeys(new Set(receiptData.reads.map((read) => read?.key).filter((key) => typeof key === "string")));
         }
       } catch (error) {
-        if (active && error.name !== "AbortError") setLoadError(error.message || "Unable to load notifications. Please try again.");
+        if (active && error?.name !== "AbortError") setLoadError(error?.message || "Unable to load notifications. Please try again.");
       } finally {
         if (active) setLoading(false);
       }
     };
     load();
-    return () => { active = false; controller.abort(); };
+    return () => {
+      // Let in-flight loads finish; inactive effects ignore their results.
+      active = false;
+    };
   }, [loadVersion]);
 
   const notifications = useMemo(() => clientEvents(clients).flatMap((event) => {
